@@ -2,5 +2,127 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "projects": {}
+  "projects": {
+    "rc-whitelabel-app": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/rc-whitelabel-app",
+      "sourceRoot": "projects/rc-whitelabel-app/src",
+      "prefix": "rdl",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/rc-whitelabel-app",
+            "index": "projects/rc-whitelabel-app/src/index.html",
+            "main": "projects/rc-whitelabel-app/src/main.ts",
+            "polyfills": "projects/rc-whitelabel-app/src/polyfills.ts",
+            "tsConfig": "projects/rc-whitelabel-app/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/rc-whitelabel-app/src/favicon.ico",
+              "projects/rc-whitelabel-app/src/assets"
+            ],
+            "styles": [
+              "projects/rc-whitelabel-app/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/rc-whitelabel-app/src/environments/environment.ts",
+                  "with": "projects/rc-whitelabel-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "rc-whitelabel-app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "rc-whitelabel-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "rc-whitelabel-app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/rc-whitelabel-app/src/test.ts",
+            "polyfills": "projects/rc-whitelabel-app/src/polyfills.ts",
+            "tsConfig": "projects/rc-whitelabel-app/tsconfig.spec.json",
+            "karmaConfig": "projects/rc-whitelabel-app/karma.conf.js",
+            "assets": [
+              "projects/rc-whitelabel-app/src/favicon.ico",
+              "projects/rc-whitelabel-app/src/assets"
+            ],
+            "styles": [
+              "projects/rc-whitelabel-app/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/rc-whitelabel-app/tsconfig.app.json",
+              "projects/rc-whitelabel-app/tsconfig.spec.json",
+              "projects/rc-whitelabel-app/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/rc-whitelabel-app/e2e/protractor.conf.js",
+            "devServerTarget": "rc-whitelabel-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "rc-whitelabel-app:serve:production"
+            }
+          }
+        }
+      }
+    }},
+  "defaultProject": "rc-whitelabel-app"
 }
