@@ -5,9 +5,11 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { PartnerHeaderComponent } from './layout/partner-header/partner-header.component';
+import { FooterComponent } from './layout/footer/footer.component';
 
 @NgModule({
-  declarations: [MainLayoutComponent],
+  declarations: [MainLayoutComponent, PartnerHeaderComponent, FooterComponent],
   exports: [
     MainLayoutComponent
   ],
