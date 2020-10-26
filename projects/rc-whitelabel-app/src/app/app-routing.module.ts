@@ -5,18 +5,21 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'search'
+    redirectTo: 'browse'
   },
   {
     path: 'search',
     loadChildren: () => import('./features/search/search.module').then(m => m.SearchModule)
   },
   {
-    path: 'about',
-    loadChildren: () => import('./features/about/about.module').then(m => m.AboutModule) },
+    path: 'browse',
+    loadChildren: () => import('./features/browse/browse.module').then(m => m.BrowseModule) },
+  {
+    path: 'results',
+    loadChildren: () => import('./features/results/results.module').then(m => m.ResultsModule) },
   {
     path: '**',
-    redirectTo: 'search'
+    redirectTo: 'browse'
   }
 ];
 

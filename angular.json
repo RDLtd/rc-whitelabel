@@ -12,7 +12,7 @@
       },
       "root": "projects/rc-whitelabel-app",
       "sourceRoot": "projects/rc-whitelabel-app/src",
-      "prefix": "rdl",
+      "prefix": "rd",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
