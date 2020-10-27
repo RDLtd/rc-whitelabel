@@ -43,68 +43,149 @@ body {
 }
 
 // Vars
-$colour-primary: #ff3300;
+$colour-primary: #3994f0;
 $colour-gray: rgb(74, 74, 74);
+$colour-accent: #007bff;
+$header-height: 64px;
+
+.browse-icon {
+  margin-left: -12px;
+  path {
+    fill: $colour-primary;
+    opacity: .25;
+  }
+}
 
 // Utilities
 .spacer { flex: 1 0 auto; }
-.amp {
-  font-family: "Libre Baskerville";
-  font-style: italic;
-  font-weight: bold;
-  font-size: 1.5em;
-}
 
 // Layout
 main {
   max-width: 960px;
-  min-height: 90vh;
-  padding: 1rem 18px;
+  margin: 0 auto;
+  min-height: calc(99.9vh - 64px);
+  padding: $header-height 0 0;
 }
-.rd-header {
+rd-header header {
+  width: 100vw;
+  z-index: 10;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  transition: transform 0.4s;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  border-bottom: 1px solid #e0e0e0;
-  a {
+  .rd-header-content {
     display: flex;
     align-items: center;
-  }
-  .rd-logo {
-    height: 40px;
-  }
-  h1 {
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 1;
-    margin: 0;
-    text-align: center;
-  }
-  .mat-flat-button {
-    font-size: 12px !important;
+    background: $colour-primary;
+    padding: 12px;
+    color: white;
+    a {
+      display: flex;
+      align-items: center;
+    }
+    .rd-logo { height: 40px; }
+    h1 {
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 1;
+      margin: 0;
+      text-align: center;
+    }
+    .mat-button {
+      font-weight: 300;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
   }
 }
-rd-footer {
+rd-footer footer {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  padding: 24px 0;
+  padding: 12px 0;
   background: rgb(240, 240, 240);
+  font-size: 9px;
+  text-transform: uppercase;
+  img {
+    height: 36px;
+  }
 }
 
 // Browse
-h3 {
-  font-size: 11px !important;
-  color: $colour-gray;
+.rd-browse {
+  padding: 32px 24px;
+  section {
+    margin: 0 0 1rem 0;
+    h3 {
+      display: flex;
+      align-items: center;
+      font: 700 18px/18px 'Merriweather', serif;
+      color: $colour-gray;
+      margin: 0 0 4px 0;
+      text-transform: capitalize;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+    li {
+      display: block;
+      width: 100%;
+      list-style: none;
+      border-bottom: 1px solid rgb(235,235,235);
+      a {
+        display: block;
+        width: 100%;
+        text-decoration: none;
+        padding: 8px 0;
+        color: $colour-gray;
+        font-weight: 300;
+      }
+    }
+  }
 }
-.rd-restaurant-group {
-  margin-top: 64px;
-  height: 50vh;
+
+.rd-results-container {
+
+  .rd-restaurant {
+
+    border-bottom: 3px solid $colour-gray;
+    img {
+      width: 100%;
+    }
+    .rd-restaurant-detail {
+      padding: 0 12px 8px;
+      h2 {
+        font: 500 18px/22px Merriweather;
+        margin: 0;
+        padding: 4px 0 0;
+      }
+      h3 {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 12px;
+        text-transform: uppercase;
+        margin: 0;
+        padding: 0;
+      }
+      p {
+        font-size: 12px;
+        font-weight: 300;
+        line-height: 14px;
+        margin: 8px 0;
+      }
+      .mat-chip-list-wrapper {
+        margin: 0;
+      }
+      .mat-chip {
+        font-size: 10px;
+        text-transform: uppercase;
+        margin: 2px 2px 2px 0;
+        padding: 0 8px;
+      }
+      .mat-standard-chip {
+        min-height: 24px;
+      }
+    }
+
+  }
 }
+

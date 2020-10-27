@@ -15,8 +15,17 @@ const routes: Routes = [
     path: 'browse',
     loadChildren: () => import('./features/browse/browse.module').then(m => m.BrowseModule) },
   {
-    path: 'results',
-    loadChildren: () => import('./features/results/results.module').then(m => m.ResultsModule) },
+    path: 'restaurants',
+    loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
+  },
+  {
+    path: 'restaurants/:filter',
+    loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
+  },
+  {
+    path: 'restaurants/nearest/:filter',
+    loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
+  },
   {
     path: '**',
     redirectTo: 'browse'

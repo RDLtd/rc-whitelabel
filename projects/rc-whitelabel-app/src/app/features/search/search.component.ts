@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'rdl-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  selector: 'rd-search',
+  templateUrl: './search.component.html'
 })
 export class SearchComponent implements OnInit {
 

@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { FooterComponent } from './layout/footer/footer.component';
+import { HideableHeaderModule } from 'ngx-hideable-header';
 import { MatIconModule } from '@angular/material/icon';
 
 
@@ -15,9 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
     MainLayoutComponent,
     HeaderComponent,
     FooterComponent],
-  exports: [
-    MainLayoutComponent
-  ],
   imports: [
     // Vendor
     BrowserModule,
@@ -26,7 +24,11 @@ import { MatIconModule } from '@angular/material/icon';
     // Material
     MatToolbarModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    HideableHeaderModule
+  ],
+  exports: [
+    MainLayoutComponent
   ]
 })
 export class CoreModule { }

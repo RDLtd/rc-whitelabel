@@ -1,11 +1,58 @@
-<section class="rd-restaurant-group">
-  <h3>RECENTLY VIEWED</h3>
-</section>
 
-<section class="rd-restaurant-group">
-  <h3>POPULAR CUISINES</h3>
-</section>
+<div class="rd-browse">
+  <section>
+    <h3>
+      <svg width="48px" height="48px" class="browse-icon" viewBox="0 0 48 48"
+           xmlns="http://www.w3.org/2000/svg">
+        <g id="Whitelabel" stroke="none" stroke-width="1" fill="none">
+          <polygon id="Path" points="0 0 48 0 48 48 0 48"></polygon>
+          <path d="M24,42.7 L21.1,40.06 C10.8,30.72 4,24.56 4,17 C4,10.84 8.84,6 15,6 C18.48,6 21.82,7.62 24,10.18 C26.18,7.62 29.52,6 33,6 C39.16,6 44,10.84 44,17 C44,24.56 37.2,30.72 26.9,40.08 L24,42.7 Z" id="Path" fill="#000000" fill-rule="nonzero"></path>
+        </g>
+      </svg>
+      Last viewed</h3>
+    <ul>
+      <li><a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">Ken & Jim's Rib Shack</a></li>
+      <li><a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">Chez Mafflard</a></li>
+    </ul>
+  </section>
 
-<section class="rd-restaurant-group">
-  <h3>NEAREST TO</h3>
-</section>
+  <section>
+    <h3>
+      <svg width="48px" height="48px" class="browse-icon" viewBox="0 0 48 48"
+           xmlns="http://www.w3.org/2000/svg">
+        <g id="Whitelabel" stroke="none" stroke-width="1" fill="none">
+          <polygon id="Path" points="0 0 48 0 48 48 0 48"></polygon>
+          <path d="M42.1,35.12 L6.16,37 L6,34 L41.96,32.12 L42.1,35.12 Z M42,38.96 L6,38.96 L6,41.96 L42,41.96 L42,38.96 Z M44,10 L44,24 C44,26.2 42.2,28 40,28 L8,28 C5.8,28 4,26.2 4,24 L4,10 C4,7.8 5.8,6 8,6 L40,6 C42.2,6 44,7.8 44,10 Z M40,12 C36.64,12 33.92,13.96 33.58,16.46 C32.3,15 28.12,11 20.5,11 C11.16,11 7,17 7,17 C7,17 11.16,23 20.5,23 C28.12,23 32.3,19 33.58,17.54 C33.92,20.04 36.64,22 40,22 L40,12 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+        </g>
+      </svg>
+      Top cuisines</h3>
+    <ul>
+      <li><a [routerLink]="['/restaurants','italian']">Italian (9)</a></li>
+      <li><a [routerLink]="['/restaurants','chinese']">Chinese (8)</a></li>
+      <li><a [routerLink]="['/restaurants','pizza']">Pizza (6)</a></li>
+      <li><a [routerLink]="['/restaurants','indian']">Indian (5)</a></li>
+      <li><a [routerLink]="['/restaurants']">All other cuisines (14)</a></li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>
+      <svg width="48px" height="48px" class="browse-icon" viewBox="0 0 48 48"
+           xmlns="http://www.w3.org/2000/svg">
+        <g id="Whitelabel" stroke="none" stroke-width="1" fill="none">
+            <polygon id="Path" points="0 0 48 0 48 48 0 48"></polygon>
+            <path
+              d="M24,4 C16.26,4 10,10.26 10,18 C10,28.5 24,44 24,44 C24,44 38,28.5 38,18 C38,10.26 31.74,4 24,4 Z M24,23 C21.24,23 19,20.76 19,18 C19,15.24 21.24,13 24,13 C26.76,13 29,15.24 29,18 C29,20.76 26.76,23 24,23 Z" id="icon-location" fill="#ff3300" fill-rule="nonzero"></path>
+          </g>
+      </svg>
+      Nearest to</h3>
+    <ul>
+      <li><a [routerLink]="['/restaurants/nearest','current_location']">Your current location</a></li>
+      <li><a [routerLink]="['/restaurants/nearest','exhibition_centre']">Brighton Exhibition Centre</a></li>
+      <li><a [routerLink]="['/restaurants/nearest','regency_palace']">The Regency Palace</a></li>
+      <li><a [routerLink]="['/restaurants/nearest','palace_theatre']">Palace Theatre</a></li>
+      <li><a [routerLink]="['/restaurants/nearest','west_pier']">West Pier</a></li>
+    </ul>
+  </section>
+</div>
+
