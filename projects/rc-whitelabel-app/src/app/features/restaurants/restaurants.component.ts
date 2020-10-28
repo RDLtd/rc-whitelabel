@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { HideableHeaderDirective } from 'ngx-hideable-header';
+import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'rd-restaurants',
@@ -8,21 +7,17 @@ import { HideableHeaderDirective } from 'ngx-hideable-header';
 })
 export class RestaurantsComponent implements OnInit {
 
-  @ViewChild(HideableHeaderDirective)
-  hidableElement!: HideableHeaderDirective;
-
   constructor(private router: Router) { }
 
-  ngOnInit(): void { }
-
-  public hide(): void {
-    this.hidableElement.hide();
+  ngOnInit(): void {
+    // Reset page scroll
+    this.router.events.subscribe((event) => {
+      if (!(event instanceof NavigationEnd)) {
+        return;
+      }
+      window.scrollTo(0, 0);
+    });
   }
-
-  show(): void {
-    this.hidableElement.show();
-  }
-
 
   openSPW(url: string): void {
     console.log('open:', url);

@@ -47,17 +47,12 @@ $colour-primary: #3994f0;
 $colour-gray: rgb(74, 74, 74);
 $colour-accent: #007bff;
 $header-height: 64px;
+$arrow-size: 60px;
 
-.browse-icon {
-  margin-left: -12px;
-  path {
-    fill: $colour-primary;
-    opacity: .25;
-  }
-}
 
 // Utilities
 .spacer { flex: 1 0 auto; }
+
 
 // Layout
 main {
@@ -66,78 +61,86 @@ main {
   min-height: calc(99.9vh - 64px);
   padding: $header-height 0 0;
 }
-rd-header header {
+header {
   width: 100vw;
   z-index: 10;
   position: fixed;
-  .rd-header-content {
+}
+rd-header {
+  display: flex;
+  align-items: center;
+  background: $colour-primary;
+  padding: 12px;
+  color: white;
+  a {
     display: flex;
     align-items: center;
-    background: $colour-primary;
-    padding: 12px;
-    color: white;
-    a {
-      display: flex;
-      align-items: center;
-    }
-    .rd-logo { height: 40px; }
-    h1 {
-      font-size: 16px;
-      font-weight: bold;
-      line-height: 1;
-      margin: 0;
-      text-align: center;
-    }
-    .mat-button {
-      font-weight: 300;
-      font-size: 12px;
-      letter-spacing: 1px;
-    }
+  }
+  .rd-logo { height: 40px; }
+  h1 {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    margin: 0;
+    text-align: center;
+  }
+  .mat-button {
+    font-weight: 300;
+    font-size: 12px;
+    letter-spacing: 1px;
   }
 }
-rd-footer footer {
+rd-footer {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 12px 0;
-  background: rgb(240, 240, 240);
+  //background: $colour-gray;
+  color: $colour-gray;
   font-size: 9px;
   text-transform: uppercase;
-  img {
-    height: 36px;
-  }
 }
 
 // Browse
-.rd-browse {
-  padding: 32px 24px;
+.rd-browse-content {
   section {
-    margin: 0 0 1rem 0;
+    padding: 24px 12px 0 24px;
+    margin: 0 0 12px 0;
     h3 {
       display: flex;
       align-items: center;
-      font: 700 18px/18px 'Merriweather', serif;
+      font: 500 24px/24px 'Roboto Slab', serif;
       color: $colour-gray;
-      margin: 0 0 4px 0;
+      margin: 0;
       text-transform: capitalize;
     }
     ul {
       margin: 0;
-      padding: 0;
+      padding: 0 48px;
     }
     li {
       display: block;
-      width: 100%;
       list-style: none;
-      border-bottom: 1px solid rgb(235,235,235);
+      //border-bottom: 1px solid rgb(235,235,235);
       a {
         display: block;
-        width: 100%;
         text-decoration: none;
         padding: 8px 0;
         color: $colour-gray;
         font-weight: 300;
+        font-size: 18px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+      }
+    }
+    .browse-icon {
+      margin: 0 4px 0 -4px;
+      path {
+        fill: $colour-primary;
+        opacity: .25;
       }
     }
   }
@@ -146,16 +149,13 @@ rd-footer footer {
 .rd-results-container {
 
   .rd-restaurant {
-
-    border-bottom: 3px solid $colour-gray;
-    img {
-      width: 100%;
-    }
+    border-bottom: 1px solid $colour-primary;
     .rd-restaurant-detail {
-      padding: 0 12px 8px;
+      position: relative;
+      padding: 4px 12px 8px;
       h2 {
-        font: 500 18px/22px Merriweather;
-        margin: 0;
+        font: 500 22px/22px 'Roboto Slab';
+        margin: 0 0 8px;
         padding: 4px 0 0;
       }
       h3 {
@@ -173,7 +173,7 @@ rd-footer footer {
         margin: 8px 0;
       }
       .mat-chip-list-wrapper {
-        margin: 0;
+        margin: 8px 0;
       }
       .mat-chip {
         font-size: 10px;
@@ -184,8 +184,28 @@ rd-footer footer {
       .mat-standard-chip {
         min-height: 24px;
       }
-    }
+      span {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin: -1px 0 0 -60px;
+        z-index: 5;
+        width: 0;
+        height: 0;
+        border-left: $arrow-size solid transparent;
+        border-right: $arrow-size solid transparent;
+        border-top: $arrow-size/3 solid white;
+      }
 
+    }
+    img {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      overflow: hidden;
+    }
   }
 }
 
