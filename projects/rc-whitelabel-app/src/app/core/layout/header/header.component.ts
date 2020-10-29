@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'rd-header',
@@ -7,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
 
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  @Input() direction = '';
+
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

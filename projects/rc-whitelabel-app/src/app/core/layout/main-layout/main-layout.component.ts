@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 
 @Component({
   selector: 'rd-main-layout',
@@ -6,7 +6,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainLayoutComponent implements OnInit {
 
-  constructor() { }
+  lastScrollTop = 0;
+  hideHeader = false;
+
+  constructor(ngz: NgZone) {
+    window.onscroll = () => {
+      const pos = window.pageYOffset;
+      let hide = this.hideHeader;
+      hide = pos > this.lastScrollTop;
+      this.lastScrollTop = pos;
+      ngz.run(() => {
+        this.hideHeader = hide;
+      });
+    };
+  }
 
   ngOnInit(): void {
   }

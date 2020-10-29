@@ -1,2 +1,51 @@
-<h2>Control, Learn and Succeed Together</h2>
-<button mat-flat-button color="primary">SEARCH</button>
+<span class="top"></span>
+<div class="rd-search-content">
+  <form #rdSearchForm="ngForm" (ngSubmit)="search(rdSearchForm.form.value)">
+  <mat-form-field class="rd-full-width" floatLabel="never">
+    <input
+      #rdSearchInput
+      name="searchString"
+      matInput
+      autocomplete="off"
+      type="text"
+      [(ngModel)]="searchString"
+      placeholder="Search by name or location">
+    <button
+      mat-button
+      type="button"
+      *ngIf="searchString"
+      matSuffix
+      mat-icon-button
+      aria-label="Clear"
+      (click)="searchString=''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  </form>
+  <ul class="rd-search-suggestions">
+    <li class="location">
+      <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
+        <mat-icon>my_location</mat-icon>
+        Near me
+      </a>
+    </li>
+    <li class="name">
+      <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
+        <mat-icon>home</mat-icon>
+        Pizza Express - Brighton
+      </a>
+    </li>
+    <li class="location">
+      <a [routerLink]="['/restaurants/nearest','Brighton']">
+        <mat-icon>location_on</mat-icon>
+        Near Piazza Square</a>
+    </li>
+    <li class="cuisine">
+      <a [routerLink]="['/restaurants','pizza']">
+        <mat-icon>set_meal</mat-icon>
+        Any Pizza Restaurant
+      </a>
+    </li>
+  </ul>
+</div>
+

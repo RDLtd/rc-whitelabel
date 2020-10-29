@@ -12,8 +12,8 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$rc-whitelabel-app-primary: mat-palette($mat-deep-orange, A400);
-$rc-whitelabel-app-accent: mat-palette($mat-pink, A200, A100, A400);
+$rc-whitelabel-app-primary: mat-palette($mat-deep-orange, A200);
+$rc-whitelabel-app-accent: mat-palette($mat-orange, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
 $rc-whitelabel-app-warn: mat-palette($mat-red);
@@ -47,12 +47,11 @@ $colour-primary: #3994f0;
 $colour-gray: rgb(74, 74, 74);
 $colour-accent: #007bff;
 $header-height: 64px;
-$arrow-size: 60px;
-
+$arrow-size: 48px;
+$font-family-heading: 'Roboto Slab', 'Georgia', serif;
 
 // Utilities
 .spacer { flex: 1 0 auto; }
-
 
 // Layout
 main {
@@ -65,7 +64,9 @@ header {
   width: 100vw;
   z-index: 10;
   position: fixed;
+  transition: all .6s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.hideHeader { transform: translateY(-64px); }
 rd-header {
   display: flex;
   align-items: center;
@@ -104,40 +105,40 @@ rd-footer {
 
 // Browse
 .rd-browse-content {
+  padding-top: 24px;
   section {
-    padding: 24px 12px 0 24px;
+    padding: 0 12px 0 24px;
     margin: 0 0 12px 0;
     h3 {
       display: flex;
       align-items: center;
-      font: 500 24px/24px 'Roboto Slab', serif;
+      font: 500 20px/20px $font-family-heading;
       color: $colour-gray;
       margin: 0;
       text-transform: capitalize;
     }
     ul {
       margin: 0;
-      padding: 0 48px;
+      padding: 0 18px 0 48px;
     }
     li {
       display: block;
       list-style: none;
-      //border-bottom: 1px solid rgb(235,235,235);
       a {
         display: block;
         text-decoration: none;
         padding: 8px 0;
         color: $colour-gray;
         font-weight: 300;
-        font-size: 18px;
+        font-size: 16px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
 
       }
     }
-    .browse-icon {
-      margin: 0 4px 0 -4px;
+    .rd-browse-icon {
+      margin: 6px 4px 0 -4px;
       path {
         fill: $colour-primary;
         opacity: .25;
@@ -145,18 +146,16 @@ rd-footer {
     }
   }
 }
-
+// Restaurant listing
 .rd-results-container {
-
   .rd-restaurant {
-    border-bottom: 1px solid $colour-primary;
+    //border-bottom: 1px solid black;
     .rd-restaurant-detail {
       position: relative;
-      padding: 4px 12px 8px;
+      padding: 12px 16px 10px;
       h2 {
-        font: 500 22px/22px 'Roboto Slab';
-        margin: 0 0 8px;
-        padding: 4px 0 0;
+        font: 500 22px/28px 'Roboto Slab';
+        margin: 0;
       }
       h3 {
         font-size: 12px;
@@ -173,12 +172,12 @@ rd-footer {
         margin: 8px 0;
       }
       .mat-chip-list-wrapper {
-        margin: 8px 0;
+        margin: 0;
       }
       .mat-chip {
-        font-size: 10px;
+        font-size: 8px;
         text-transform: uppercase;
-        margin: 2px 2px 2px 0;
+        margin: 0 2px 2px 0;
         padding: 0 8px;
       }
       .mat-standard-chip {
@@ -187,16 +186,15 @@ rd-footer {
       span {
         position: absolute;
         top: 100%;
-        left: 50%;
-        margin: -1px 0 0 -60px;
+        right: 10vw;
+        margin: -1px 0 0 -0;
         z-index: 5;
         width: 0;
         height: 0;
         border-left: $arrow-size solid transparent;
         border-right: $arrow-size solid transparent;
-        border-top: $arrow-size/3 solid white;
+        border-top: $arrow-size/2 solid white;
       }
-
     }
     img {
       display: block;
@@ -205,6 +203,50 @@ rd-footer {
       height: 200px;
       object-fit: cover;
       overflow: hidden;
+    }
+  }
+}
+// Search
+.rd-search-content {
+  padding: 12px 18px;
+  .rd-full-width {
+    width: 100%;
+  }
+  .mat-form-field {
+    font-size: 16px;
+  }
+
+  .rd-search-suggestions {
+    margin: -12px 0 0;
+    padding: 0;
+    width: 100%;
+    li {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      &:first-child { }
+      a {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 300;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-decoration: none;
+        color: $colour-gray;
+        .mat-icon {
+          color: $colour-primary;
+          opacity: .5;
+          margin-right: 8px;
+        }
+        .distance {
+          font-size: 9px;
+          font-weight: 500;
+        }
+      }
     }
   }
 }
