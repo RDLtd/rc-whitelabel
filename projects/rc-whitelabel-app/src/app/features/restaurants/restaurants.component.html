@@ -43,4 +43,18 @@
     <img src="assets/images/rest1.jpg" alt="restaurant image">
   </div>
 
+<!--  <div class="rd-more">-->
+<!--    <button mat-button>LOAD MORE RESULTS</button>-->
+<!--  </div>-->
+
+  <div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
+    <button mat-raised-button (click)="openFilterOptions()">FILTER RESULTS</button>
+  </div>
+
+  <section>
+    <div class="rd-filter-options">
+      <h1>Filters</h1>
+    </div>
+  </section>
+
 </div>

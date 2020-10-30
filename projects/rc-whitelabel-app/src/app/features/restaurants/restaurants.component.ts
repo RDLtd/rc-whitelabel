@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { FilterOptionsDialogComponent } from './filter-options-dialog.component';
 
 @Component({
   selector: 'rd-restaurants',
@@ -7,15 +8,26 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class RestaurantsComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  showFilterOptions = false;
+
+  constructor(
+    public dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
-    // Reset page scroll
-    this.router.events.subscribe((event) => {
-      if (!(event instanceof NavigationEnd)) {
-        return;
-      }
-      window.scrollTo(0, 0);
+    setTimeout( () => {
+      this.showFilterOptions = true;
+    }, 1500);
+  }
+
+  openFilterOptions(): void {
+    const dialogRef = this.dialog.open(FilterOptionsDialogComponent, {
+      width: '250px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
     });
   }
 

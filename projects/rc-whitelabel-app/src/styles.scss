@@ -33,22 +33,28 @@ $rc-whitelabel-app-theme: mat-light-theme((
 // that you are using.
 @include angular-material-theme($rc-whitelabel-app-theme);
 
-/* You can add global styles to this file, and also import other style files */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  color: rgb(74, 74, 74);
-}
-
 // Vars
 $colour-primary: #3994f0;
 $colour-gray: rgb(74, 74, 74);
 $colour-accent: #007bff;
 $header-height: 64px;
 $arrow-size: 48px;
+$font-family-default: Roboto, "Helvetica Neue", sans-serif;
 $font-family-heading: 'Roboto Slab', 'Georgia', serif;
+
+// Globals
+* { box-sizing: border-box; }
+ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: $font-family-default;
+  color: $colour-gray;
+}
 
 // Utilities
 .spacer { flex: 1 0 auto; }
@@ -65,14 +71,14 @@ header {
   z-index: 10;
   position: fixed;
   transition: all .6s cubic-bezier(0.16, 1, 0.3, 1);
+  background: var(--brand-bgd);
+  color: var(--brand-bgd-color);
 }
-.hideHeader { transform: translateY(-64px); }
+.hideHeader { transform: translateY(-56px); }
 rd-header {
   display: flex;
   align-items: center;
-  background: $colour-primary;
   padding: 12px;
-  color: white;
   a {
     display: flex;
     align-items: center;
@@ -140,7 +146,7 @@ rd-footer {
     .rd-browse-icon {
       margin: 6px 4px 0 -4px;
       path {
-        fill: $colour-primary;
+        fill: var(--brand-fill);
         opacity: .25;
       }
     }
@@ -149,7 +155,6 @@ rd-footer {
 // Restaurant listing
 .rd-results-container {
   .rd-restaurant {
-    //border-bottom: 1px solid black;
     .rd-restaurant-detail {
       position: relative;
       padding: 12px 16px 10px;
@@ -188,7 +193,7 @@ rd-footer {
         top: 100%;
         right: 10vw;
         margin: -1px 0 0 -0;
-        z-index: 5;
+        z-index: 3;
         width: 0;
         height: 0;
         border-left: $arrow-size solid transparent;
@@ -205,49 +210,99 @@ rd-footer {
       overflow: hidden;
     }
   }
+  .rd-more {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+  }
+  .rd-filter-btn {
+    position: fixed;
+    z-index: 50;
+    display: flex;
+    justify-content: center;
+    top: 80vh;
+    width: 100%;
+    transform: scale(0);
+    .mat-raised-button {
+      padding: 6px 18px;
+      border-radius: 48px;
+      background: $colour-primary;
+      color: white;
+    }
+  }
+  .rd-filter-options {
+    position: fixed;
+    z-index: 3;
+    top: 0; left: 0;;
+    display: none;
+    background: #666;
+    width: 100%;
+    height: 100%;
+  }
 }
 // Search
 .rd-search-content {
   padding: 12px 18px;
-  .rd-full-width {
-    width: 100%;
-  }
-  .mat-form-field {
-    font-size: 16px;
-  }
-
-  .rd-search-suggestions {
+  .rd-full-width { width: 100%; }
+  .mat-form-field { font-size: 16px; }
+  ul.rd-search-suggestions {
     margin: -12px 0 0;
-    padding: 0;
     width: 100%;
-    li {
-      padding: 0;
+    li > a {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
       margin: 0;
-      list-style: none;
-      &:first-child { }
-      a {
-        display: flex;
-        align-items: center;
-        padding: 8px 0;
-        margin: 0;
-        font-size: 14px;
-        font-weight: 300;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-decoration: none;
-        color: $colour-gray;
-        .mat-icon {
-          color: $colour-primary;
-          opacity: .5;
-          margin-right: 8px;
-        }
-        .distance {
-          font-size: 9px;
-          font-weight: 500;
-        }
+      font-size: 14px;
+      font-weight: 300;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-decoration: none;
+      color: $colour-gray;
+      .mat-icon {
+        color: var(--brand-primary);
+        opacity: .5;
+        margin-right: 8px;
       }
     }
   }
+
 }
+
+/**
+ * ----------------------------------------
+ * Animations
+ * ----------------------------------------
+ */
+.scale-in-center {
+  -webkit-animation: scale-in-center 0.3s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+  animation: scale-in-center 0.3s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+}
+@-webkit-keyframes scale-in-center {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes scale-in-center {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
 
