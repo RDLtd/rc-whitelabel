@@ -4,6 +4,7 @@ import { ChannelService } from '../../channel.service';
 interface DisplayElement {
   name: string;
   icon: string;
+  index: number;
 }
 
 interface RestaurantDataElement {
@@ -97,39 +98,42 @@ export class SearchComponent implements OnInit {
       // clear the display list
       this.displayList = [];
       // first check in the locations
-      let jsonData: DisplayElement = { name: '', icon: ''};
+      let jsonData: DisplayElement = { name: '', icon: '', index: 0 };
       // first the attributes
       if (this.landmarks && this.landmarks.length > 0) {
-        for (let i = 0; i < this.landmarks.length; i++) {
-          if (this.landmarks[i].name.toUpperCase().includes(this.searchString.toUpperCase())) {
-            jsonData = { name: '', icon: ''};
-            console.log(this.landmarks[i].name);
-            jsonData.name = this.landmarks[i].name;
+        for (const landmark of this.landmarks) {
+          if (landmark.name.toUpperCase().includes(this.searchString.toUpperCase())) {
+            jsonData = { name: '', icon: '', index: 0 };
+            console.log(landmark.name);
+            jsonData.name = landmark.name;
             jsonData.icon = 'location_on';
+            jsonData.index = landmark.name.toUpperCase().indexOf(this.searchString.toUpperCase());
             this.displayList.push(jsonData);
           }
         }
       }
       // now cuisines
       if (this.restaurants && this.restaurants.length > 0) {
-        for (let i = 0; i < this.restaurants.length; i++) {
-          if (this.restaurants[i].restaurant_cuisine_1.toUpperCase().includes(this.searchString.toUpperCase())) {
-            jsonData = { name: '', icon: ''};
-            console.log(this.restaurants[i].restaurant_name);
-            jsonData.name = this.restaurants[i].restaurant_name + '(' + this.restaurants[i].restaurant_cuisine_1 + ')';
+        for (const restaurant of this.restaurants) {
+          if (restaurant.restaurant_cuisine_1.toUpperCase().includes(this.searchString.toUpperCase())) {
+            jsonData = { name: '', icon: '', index: 0 };
+            console.log(restaurant.restaurant_name);
+            jsonData.name = restaurant.restaurant_name + '(' + restaurant.restaurant_cuisine_1 + ')';
             jsonData.icon = 'food_bank';
+            jsonData.index = restaurant.restaurant_cuisine_1.toUpperCase().indexOf(this.searchString.toUpperCase());
             this.displayList.push(jsonData);
           }
         }
       }
-      // finally names
+      // finally names - can't do this in the same loop as cuisines as want to keep the sections separate
       if (this.restaurants && this.restaurants.length > 0) {
-        for (let i = 0; i < this.restaurants.length; i++) {
-          if (this.restaurants[i].restaurant_name.toUpperCase().includes(this.searchString.toUpperCase())) {
-            jsonData = { name: '', icon: ''};
-            console.log(this.restaurants[i].restaurant_name);
-            jsonData.name = this.restaurants[i].restaurant_name;
-            jsonData.icon = 'food_bank';
+        for (const restaurant of this.restaurants) {
+          if (restaurant.restaurant_name.toUpperCase().includes(this.searchString.toUpperCase())) {
+            jsonData = { name: '', icon: '', index: 0 };
+            console.log(restaurant.restaurant_name);
+            jsonData.name = restaurant.restaurant_name;
+            jsonData.icon = 'restaurant ';
+            jsonData.index = restaurant.restaurant_name.toUpperCase().indexOf(this.searchString.toUpperCase());
             this.displayList.push(jsonData);
           }
         }
@@ -137,9 +141,10 @@ export class SearchComponent implements OnInit {
       console.log(this.displayList);
       // need to contemplate how we might sort this list based things like where the search text was found...
       // we could store the position of the start of the search text and then sort based on that?
+      // I now store that in the displayList as 'index'
       // plus limit the list, perhaps in each category like OpenTable?
     } else {
-      // remove the search if we get back to less thah the minimum number of characters
+      // remove the search if we get back to less than the minimum number of characters
       this.displayList = [];
     }
   }
