@@ -1,5 +1,22 @@
 <div class="rd-search-content">
   <!-- SEARCH FORM -->
+
+  <button
+    mat-button
+    (click)="doTest(1)">
+    Channel Info
+  </button>
+  <button
+    mat-button
+    (click)="doTest(2)">
+    Landmarks
+  </button>
+  <button
+    mat-button
+    (click)="doTest(3)">
+    Restaurant List
+  </button>
+
   <form #rdSearchForm="ngForm" (ngSubmit)="search(rdSearchForm.form.value)">
     <mat-form-field floatLabel="never">
       <input
