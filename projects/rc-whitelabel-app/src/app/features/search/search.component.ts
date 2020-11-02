@@ -135,6 +135,12 @@ export class SearchComponent implements OnInit {
         }
       }
       console.log(this.displayList);
+      // need to contemplate how we might sort this list based things like where the search text was found...
+      // we could store the position of the start of the search text and then sort based on that?
+      // plus limit the list, perhaps in each category like OpenTable?
+    } else {
+      // remove the search if we get back to less thah the minimum number of characters
+      this.displayList = [];
     }
   }
 
