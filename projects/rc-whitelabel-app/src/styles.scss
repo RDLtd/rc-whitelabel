@@ -325,6 +325,7 @@ ul.rd-search-autofill {
        height: 32px;
        font-size: 32px;
        margin-right: 4px;
+       color: rgba(var(--brand-primary-rgb), 1);
      }
 
      display: flex;
@@ -332,6 +333,8 @@ ul.rd-search-autofill {
      width: 100%;
      padding: 16px 0;
      font-size: 18px;
+     font-weight: 500;
+     color: black;
      text-decoration: none;
      &:hover {
        background-color: #eee;
