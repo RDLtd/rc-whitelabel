@@ -50,7 +50,7 @@ export class RestaurantsComponent implements OnInit {
 
   openSPW(url: string): void {
     console.log('open:', url);
-    window.open(url, '_blank');
+    window.open(url, '_self');
   }
 
 }

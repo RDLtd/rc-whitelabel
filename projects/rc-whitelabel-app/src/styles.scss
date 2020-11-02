@@ -27,13 +27,14 @@ $arrow-size: 48px;
 $font-family-default: Roboto, "Helvetica Neue", sans-serif;
 $font-family-heading: 'Roboto Slab', 'Georgia', serif;
 
-// Globals
+// Global resets
 * { box-sizing: border-box; }
 ul, li {
   margin: 0;
   padding: 0;
   list-style: none;
 }
+a { text-decoration: none; }
 html, body { height: 100%; }
 body {
   margin: 0;
@@ -58,8 +59,11 @@ header {
   transition: all .6s cubic-bezier(0.16, 1, 0.3, 1);
   background: var(--brand-bgd);
   color: var(--brand-bgd-color);
+  &.rd-hideHeader {
+    transform: translateY(-56px);
+  }
 }
-.hideHeader { transform: translateY(-56px); }
+
 rd-header {
   display: flex;
   align-items: center;
@@ -88,7 +92,6 @@ rd-footer {
   justify-content: center;
   align-items: center;
   padding: 12px 0;
-  //background: $colour-gray;
   color: $colour-gray;
   font-size: 9px;
   text-transform: uppercase;
@@ -137,7 +140,8 @@ rd-footer {
     }
   }
 }
-// Restaurant listing
+
+// Restaurant results
 .rd-results-container {
   .rd-restaurant {
     .rd-restaurant-detail {
@@ -243,7 +247,6 @@ rd-footer {
     border-bottom: 1px solid #eee;
     > a {
       display: flex;
-      text-decoration: none;
       width: 100%;
       font-size: 16px;
       padding: 8px 0 8px 0;
@@ -294,7 +297,6 @@ rd-footer {
       > a {
         display: flex;
         align-items: center;
-        text-decoration: none;
         padding: 6px 0;
         font-size: 16px;
         color: $colour-gray;
@@ -302,6 +304,9 @@ rd-footer {
       }
     }
   }
+}
+.dim {
+  opacity: .75;
 }
 ul.rd-search-autofill.open {
   height: auto;
@@ -343,23 +348,22 @@ ul.rd-search-autofill {
   }
 }
 
-// Search
+// SEARCH
 .rd-search-content {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   padding: 12px 18px;
-  //height: 100vh;
   h3 {
     font-family: $font-family-heading;
     margin: 0;
     padding: 0;
   }
-
-  .rd-full-width { width: 100%; }
+  .rd-full-width { }
   .mat-form-field {
     font-size: 18px;
     line-height: 24px;
+    width: 100%;
   }
   ul.rd-search-suggestions {
     margin: 0 0 12px;
@@ -382,7 +386,6 @@ ul.rd-search-autofill {
       }
     }
   }
-
 }
 
 /**

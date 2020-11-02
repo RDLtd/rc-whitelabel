@@ -1,7 +1,7 @@
 <div class="rd-search-content">
-
+  <!-- SEARCH FORM -->
   <form #rdSearchForm="ngForm" (ngSubmit)="search(rdSearchForm.form.value)">
-    <mat-form-field class="rd-full-width" floatLabel="never">
+    <mat-form-field floatLabel="never">
       <input
         #rdSearchInput
         name="searchString"
@@ -23,102 +23,97 @@
       </button>
     </mat-form-field>
   </form>
-
+  <!-- SEARCH SUGGESTIONS -->
   <ul class="rd-search-autofill" [class.open]="!!rdSearchInput.value">
     <li>
-      <a routerLink=""><mat-icon>location_on</mat-icon>Near Landmark</a>
+      <a [routerLink]="['/restaurants/nearest', 'west_pier']"><mat-icon>location_on</mat-icon>Nearest The West Pier</a>
     </li>
     <li>
-      <a routerLink=""><mat-icon>food_bank</mat-icon>Restaurant</a>
+      <a href="https://spw.restaurantcollective.uk/85719-sarao-2/"><mat-icon>food_bank</mat-icon>Pier
+        Restaurant & Bar</a>
     </li>
   </ul>
-
-  <div class="rd-quick-links-container">
-
-  <section class="rd-quick-links">
-    <div>
-      <mat-icon>watch_later</mat-icon>
-      <h2>Recently viewed</h2>
-    </div>
-    <ul>
-      <li>
-        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-          Chez Bruno - Hove
-        </a>
-      </li>
-      <li>
-        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-          Pizza Express - Brighton
-        </a>
-      </li>
-    </ul>
-  </section>
-
-  <section class="rd-quick-links">
-    <div>
-      <mat-icon>my_location</mat-icon>
-      <h2>Nearest to</h2>
-    </div>
-    <ul>
-      <li>
-        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-          My current location
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants/nearest','regency_palace']">
-          The Regency Palace</a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants/nearest','west_pier']">
-          The West Pier</a>
-      </li>
-    </ul>
-  </section>
-
-  <section class="rd-quick-links">
-    <div>
-      <mat-icon>food_bank</mat-icon>
-      <h2>Cuisines</h2>
-    </div>
-    <ul>
-      <li>
-        <a [routerLink]="['/restaurants','pizza']">
-          Chinese Restaurants
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants','indian']">
-          Indian Restaurants
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants','indian']">
-          Pizza Restaurants
-        </a>
-      </li>
-    </ul>
-  </section>
-
-  <section class="rd-quick-links">
-    <div>
-      <mat-icon>fastfood</mat-icon>
-      <h2>Take Away Services</h2>
-    </div>
-    <ul>
-      <li>
-        <a [routerLink]="['/restaurants','take_away']">
-          Burgers
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants','take_away']">
-          Fish and Chips
-        </a>
-      </li>
-    </ul>
-  </section>
+  <!-- QUICK LINKS -->
+  <div class="rd-quick-links-container" [class.dim]="rdSearchInput.value">
+    <section class="rd-quick-links">
+      <div>
+        <mat-icon>watch_later</mat-icon>
+        <h2>Recently Viewed</h2>
+      </div>
+      <ul>
+        <li>
+          <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
+            Jeremy's Chicken Shack - Hove
+          </a>
+        </li>
+        <li>
+          <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
+            Pizza Express - Brighton
+          </a>
+        </li>
+      </ul>
+    </section>
+    <section class="rd-quick-links">
+      <div>
+        <mat-icon>my_location</mat-icon>
+        <h2>Nearest to</h2>
+      </div>
+      <ul>
+        <li>
+          <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
+            My current location
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/restaurants/nearest','regency_palace']">
+            The Royal Pavilion</a>
+        </li>
+        <li>
+          <a [routerLink]="['/restaurants/nearest','exhibition_centre']">
+            Exhibition Centre</a>
+        </li>
+      </ul>
+    </section>
+    <section class="rd-quick-links">
+      <div>
+        <mat-icon>restaurant</mat-icon>
+        <h2>Cuisines</h2>
+      </div>
+      <ul>
+        <li>
+          <a [routerLink]="['/restaurants','pizza']">
+            Chinese Restaurants
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/restaurants','indian']">
+            Indian Restaurants
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/restaurants','indian']">
+            Pizza Restaurants
+          </a>
+        </li>
+      </ul>
+    </section>
+    <section class="rd-quick-links">
+      <div>
+        <mat-icon>fastfood</mat-icon>
+        <h2>Features</h2>
+      </div>
+      <ul>
+        <li>
+          <a [routerLink]="['/restaurants','take_away']">
+            Take-Away Services
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/restaurants','alfresco']">
+            Outside Dining
+          </a>
+        </li>
+      </ul>
+    </section>
   </div>
 </div>
-
-
