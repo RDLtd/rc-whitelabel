@@ -9,5 +9,4 @@ export class FilterOptionsDialogComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void { }
-
 }

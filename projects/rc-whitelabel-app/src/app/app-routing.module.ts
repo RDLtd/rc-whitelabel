@@ -5,7 +5,7 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'browse'
+    redirectTo: 'search'
   },
   {
     path: 'search',
@@ -28,7 +28,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'browse'
+    redirectTo: 'search'
   }
 ];
 

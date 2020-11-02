@@ -4,7 +4,7 @@
   <div class="rd-restaurant" (click)="openSPW('https://spw.restaurantcollective.uk/85719-sarao-2/')">
     <div class="rd-restaurant-detail">
       <h2>Sarao Restaurant & Bar</h2>
-      <h3>Italian – Nice</h3>
+      <h3>Italian – Brighton - BN1 1HH</h3>
       <p>A la carte you will find traditional homemade dishes from Italia and Niçoises Dishes in honor of the local cuisine.</p>
       <mat-chip-list aria-label="Fish selection">
         <mat-chip>Take-Away</mat-chip>
@@ -43,18 +43,20 @@
     <img src="assets/images/rest1.jpg" alt="restaurant image">
   </div>
 
-<!--  <div class="rd-more">-->
-<!--    <button mat-button>LOAD MORE RESULTS</button>-->
-<!--  </div>-->
-
   <div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
-    <button mat-raised-button (click)="openFilterOptions()">FILTER RESULTS</button>
+    <button
+      *ngIf="!filtersOn"
+      mat-raised-button
+      (click)="openFilterOptions()">
+      Sort/Filter
+      <mat-icon>filter_list</mat-icon>
+    </button>
+    <button
+      *ngIf="filtersOn"
+      mat-raised-button
+      (click)="clearFilters()">
+      Clear filters
+      <mat-icon>cancel</mat-icon>
+    </button>
   </div>
-
-  <section>
-    <div class="rd-filter-options">
-      <h1>Filters</h1>
-    </div>
-  </section>
-
 </div>

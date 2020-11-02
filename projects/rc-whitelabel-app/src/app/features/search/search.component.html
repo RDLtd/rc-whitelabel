@@ -1,51 +1,124 @@
-<span class="top"></span>
 <div class="rd-search-content">
+
   <form #rdSearchForm="ngForm" (ngSubmit)="search(rdSearchForm.form.value)">
-  <mat-form-field class="rd-full-width" floatLabel="never">
-    <input
-      #rdSearchInput
-      name="searchString"
-      matInput
-      autocomplete="off"
-      type="text"
-      [(ngModel)]="searchString"
-      placeholder="Search by name or location">
-    <button
-      mat-button
-      type="button"
-      *ngIf="searchString"
-      matSuffix
-      mat-icon-button
-      aria-label="Clear"
-      (click)="searchString=''">
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-form-field>
+    <mat-form-field class="rd-full-width" floatLabel="never">
+      <input
+        #rdSearchInput
+        name="searchString"
+        matInput
+        autocomplete="off"
+        type="text"
+        [(ngModel)]="searchString"
+        placeholder="Search by name or location"
+        tabindex="1">
+      <button
+        mat-button
+        type="button"
+        *ngIf="searchString"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="searchString=''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
   </form>
-  <ul class="rd-search-suggestions">
-    <li class="location">
-      <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-        <mat-icon>my_location</mat-icon>
-        Near me
-      </a>
+
+  <ul class="rd-search-autofill" [class.open]="!!rdSearchInput.value">
+    <li>
+      <a routerLink=""><mat-icon>location_on</mat-icon>Near Landmark</a>
     </li>
-    <li class="name">
-      <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-        <mat-icon>food_bank</mat-icon>
-        Pizza Express - Brighton
-      </a>
-    </li>
-    <li class="location">
-      <a [routerLink]="['/restaurants/nearest','Brighton']">
-        <mat-icon>place</mat-icon>
-        Near Piazza Square</a>
-    </li>
-    <li class="cuisine">
-      <a [routerLink]="['/restaurants','pizza']">
-        <mat-icon>set_meal</mat-icon>
-        Any Pizza Restaurant
-      </a>
+    <li>
+      <a routerLink=""><mat-icon>food_bank</mat-icon>Restaurant</a>
     </li>
   </ul>
+
+  <div class="rd-quick-links-container">
+
+  <section class="rd-quick-links">
+    <div>
+      <mat-icon>watch_later</mat-icon>
+      <h2>Recently viewed</h2>
+    </div>
+    <ul>
+      <li>
+        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
+          Chez Bruno - Hove
+        </a>
+      </li>
+      <li>
+        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
+          Pizza Express - Brighton
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="rd-quick-links">
+    <div>
+      <mat-icon>my_location</mat-icon>
+      <h2>Nearest to</h2>
+    </div>
+    <ul>
+      <li>
+        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
+          My current location
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/restaurants/nearest','regency_palace']">
+          The Regency Palace</a>
+      </li>
+      <li>
+        <a [routerLink]="['/restaurants/nearest','west_pier']">
+          The West Pier</a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="rd-quick-links">
+    <div>
+      <mat-icon>food_bank</mat-icon>
+      <h2>Cuisines</h2>
+    </div>
+    <ul>
+      <li>
+        <a [routerLink]="['/restaurants','pizza']">
+          Chinese Restaurants
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/restaurants','indian']">
+          Indian Restaurants
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/restaurants','indian']">
+          Pizza Restaurants
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="rd-quick-links">
+    <div>
+      <mat-icon>fastfood</mat-icon>
+      <h2>Take Away Services</h2>
+    </div>
+    <ul>
+      <li>
+        <a [routerLink]="['/restaurants','take_away']">
+          Burgers
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/restaurants','take_away']">
+          Fish and Chips
+        </a>
+      </li>
+    </ul>
+  </section>
+  </div>
 </div>
+
 
