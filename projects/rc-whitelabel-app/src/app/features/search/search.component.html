@@ -22,6 +22,7 @@
         #rdSearchInput
         name="searchString"
         matInput
+        (keyup)="doSearch()"
         autocomplete="off"
         type="text"
         [(ngModel)]="searchString"
@@ -40,14 +41,24 @@
     </mat-form-field>
   </form>
 
-  <ul class="rd-search-autofill" [class.open]="!!rdSearchInput.value">
-    <li>
-      <a routerLink=""><mat-icon>location_on</mat-icon>Near Landmark</a>
-    </li>
-    <li>
-      <a routerLink=""><mat-icon>food_bank</mat-icon>Restaurant</a>
-    </li>
-  </ul>
+<!--  <ul class="rd-search-autofill" [class.open]="!!rdSearchInput.value">-->
+<!--    <li>-->
+<!--      <a routerLink=""><mat-icon>location_on</mat-icon>Near Landmark</a>-->
+<!--    </li>-->
+<!--    <li>-->
+<!--      <a routerLink=""><mat-icon>food_bank</mat-icon>Restaurant</a>-->
+<!--    </li>-->
+<!--  </ul>-->
+
+  <div *ngIf="displayList && displayList.length > 0">
+    {{ displayList.length }} items found
+    <ul>
+      <li *ngFor="let displayItem of displayList">
+        <mat-icon>{{ displayItem.icon }}</mat-icon>{{ displayItem.name }}
+      </li>
+    </ul>
+  </div>
+
 
   <div class="rd-quick-links-container">
 
