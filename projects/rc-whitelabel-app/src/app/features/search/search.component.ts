@@ -143,7 +143,9 @@ export class SearchComponent implements OnInit {
           if (restaurant.restaurant_cuisine_1.toUpperCase().includes(this.searchString.toUpperCase())) {
             jsonData = { name: '', icon: '', index: 0 };
             console.log(restaurant.restaurant_name + ' (' + restaurant.restaurant_cuisine_1 + ')');
-            jsonData.name = restaurant.restaurant_name + ' (' + restaurant.restaurant_cuisine_1 + ')';
+            jsonData.name = restaurant.restaurant_name + ' (' + restaurant.restaurant_cuisine_1 + ', ' +
+              this.computeDistance(this.lat, this.lng,
+                restaurant.restaurant_lat, restaurant.restaurant_lng).toFixed(2) + 'km)';
             jsonData.icon = 'food_bank';
             jsonData.index = restaurant.restaurant_cuisine_1.toUpperCase().indexOf(this.searchString.toUpperCase());
             this.displayList.push(jsonData);
