@@ -5,6 +5,7 @@ interface DisplayElement {
   name: string;
   icon: string;
   index: number;
+  distance: number;
 }
 
 interface RestaurantDataElement {
@@ -121,16 +122,14 @@ export class SearchComponent implements OnInit {
       // clear the display list
       this.displayList = [];
       // first check in the locations
-      let jsonData: DisplayElement = { name: '', icon: '', index: 0 };
+      let jsonData: DisplayElement = { name: '', icon: '', index: 0, distance: 0 };
       // first the attributes
       if (this.landmarks && this.landmarks.length > 0) {
         for (const landmark of this.landmarks) {
           if (landmark.name.toUpperCase().includes(this.searchString.toUpperCase())) {
-            jsonData = { name: '', icon: '', index: 0 };
-            console.log(landmark.name + ' (' +
-              this.computeDistance(this.lat, this.lng, landmark.lat, landmark.lng).toFixed(2) + 'km)');
-            jsonData.name = landmark.name + ' (' +
-              this.computeDistance(this.lat, this.lng, landmark.lat, landmark.lng).toFixed(2) + 'km)';
+            jsonData = { name: '', icon: '', index: 0, distance: 0 };
+            jsonData.distance = this.computeDistance(this.lat, this.lng, landmark.lat, landmark.lng);
+            jsonData.name = landmark.name + ' (' + jsonData.distance.toFixed(2) + 'km)';
             jsonData.icon = 'location_on';
             jsonData.index = landmark.name.toUpperCase().indexOf(this.searchString.toUpperCase());
             this.displayList.push(jsonData);
@@ -141,11 +140,11 @@ export class SearchComponent implements OnInit {
       if (this.restaurants && this.restaurants.length > 0) {
         for (const restaurant of this.restaurants) {
           if (restaurant.restaurant_cuisine_1.toUpperCase().includes(this.searchString.toUpperCase())) {
-            jsonData = { name: '', icon: '', index: 0 };
-            console.log(restaurant.restaurant_name + ' (' + restaurant.restaurant_cuisine_1 + ')');
+            jsonData = { name: '', icon: '', index: 0, distance: 0 };
+            jsonData.distance = this.computeDistance(this.lat, this.lng,
+              restaurant.restaurant_lat, restaurant.restaurant_lng);
             jsonData.name = restaurant.restaurant_name + ' (' + restaurant.restaurant_cuisine_1 + ', ' +
-              this.computeDistance(this.lat, this.lng,
-                restaurant.restaurant_lat, restaurant.restaurant_lng).toFixed(2) + 'km)';
+              jsonData.distance.toFixed(2) + 'km)';
             jsonData.icon = 'food_bank';
             jsonData.index = restaurant.restaurant_cuisine_1.toUpperCase().indexOf(this.searchString.toUpperCase());
             this.displayList.push(jsonData);
@@ -156,24 +155,26 @@ export class SearchComponent implements OnInit {
       if (this.restaurants && this.restaurants.length > 0) {
         for (const restaurant of this.restaurants) {
           if (restaurant.restaurant_name.toUpperCase().includes(this.searchString.toUpperCase())) {
-            jsonData = { name: '', icon: '', index: 0 };
-            console.log(restaurant.restaurant_name  + ' (' +
-              this.computeDistance(this.lat, this.lng,
-                restaurant.restaurant_lat, restaurant.restaurant_lng).toFixed(2) + 'km)');
-            jsonData.name = restaurant.restaurant_name + ' (' +
-              this.computeDistance(this.lat, this.lng,
-                restaurant.restaurant_lat, restaurant.restaurant_lng).toFixed(2) + 'km)';
+            jsonData = { name: '', icon: '', index: 0, distance: 0 };
+            jsonData.distance = this.computeDistance(this.lat, this.lng,
+              restaurant.restaurant_lat, restaurant.restaurant_lng);
+            jsonData.name = restaurant.restaurant_name + ' (' + jsonData.distance.toFixed(2) + 'km)';
             jsonData.icon = 'restaurant ';
             jsonData.index = restaurant.restaurant_name.toUpperCase().indexOf(this.searchString.toUpperCase());
             this.displayList.push(jsonData);
           }
         }
       }
+
       // make the search substring bold
       for (const displayElement of this.displayList) {
         displayElement.name = this.boldQuery(displayElement.name, this.searchString);
       }
       console.log(this.displayList);
+
+      // let's see what this look like when the whole displayList is sorted by distance
+      this.displayList.sort((a, b) => a.distance - b.distance);
+
       // need to contemplate how we might sort this list based things like where the search text was found...
       // we could store the position of the start of the search text and then sort based on that?
       // I now store that in the displayList as 'index'
