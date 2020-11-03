@@ -1,20 +1,20 @@
 <div class="rd-search-content">
 
-  <button
-    mat-button
-    (click)="doTest(1)">
-    Channel Info
-  </button>
-  <button
-    mat-button
-    (click)="doTest(2)">
-    Landmarks
-  </button>
-  <button
-    mat-button
-    (click)="doTest(3)">
-    Restaurant List
-  </button>
+<!--  <button-->
+<!--    mat-button-->
+<!--    (click)="doTest(1)">-->
+<!--    Channel Info-->
+<!--  </button>-->
+<!--  <button-->
+<!--    mat-button-->
+<!--    (click)="doTest(2)">-->
+<!--    Landmarks-->
+<!--  </button>-->
+<!--  <button-->
+<!--    mat-button-->
+<!--    (click)="doTest(3)">-->
+<!--    Restaurant List-->
+<!--  </button>-->
 
   <form #rdSearchForm="ngForm" (ngSubmit)="search(rdSearchForm.form.value)">
     <mat-form-field class="rd-full-width" floatLabel="never">
@@ -54,7 +54,8 @@
     {{ displayList.length }} items found
     <ul>
       <li *ngFor="let displayItem of displayList">
-        <mat-icon>{{ displayItem.icon }}</mat-icon>{{ displayItem.name }}
+        <mat-icon>{{ displayItem.icon }}</mat-icon>
+        <p [innerHTML]=[displayItem.name]></p>
       </li>
     </ul>
   </div>

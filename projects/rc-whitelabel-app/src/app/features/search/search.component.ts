@@ -38,6 +38,12 @@ export class SearchComponent implements OnInit {
 
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
 
+  // for now just setting up the parameters locally... Indeed, how WILL we set these up?
+  channelAccessCode = 'FR0100';
+  channelAccessAPIKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)kH2';
+  lat = 43.695;
+  lng = 7.266;
+
   searchString = '';
   restaurants: RestaurantElement[] | undefined;
   landmarks: LandmarkElement[] | undefined;
@@ -49,12 +55,8 @@ export class SearchComponent implements OnInit {
     //
     // get the core set of restaurants so we can start to do the search
     //
-    // for now just setting up the parameters locally... Indeed, how WILL we set these up?
-    const channelAccessCode = 'FR0100';
-    const channelAccessAPIKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)kH2';
-    const lat = 43.695;
-    const lng = 7.266;
-    this.channelService.getRestaurants(channelAccessCode, channelAccessAPIKey, 'test', lat, lng).subscribe(
+    this.channelService.getRestaurants(this.channelAccessCode, this.channelAccessAPIKey, 'not used',
+      this.lat, this.lng).subscribe(
       (data: RestaurantDataElement) => {
         this.restaurants = data.restaurants;
         console.log(data, this.restaurants);
@@ -64,7 +66,7 @@ export class SearchComponent implements OnInit {
       });
 
     // also get the landmarks
-    this.channelService.getChannelLandmarks(channelAccessCode, channelAccessAPIKey).subscribe(
+    this.channelService.getChannelLandmarks(this.channelAccessCode, this.channelAccessAPIKey).subscribe(
       (data: LandmarkDataElement) => {
         this.landmarks = data.landmarks;
         console.log(data, this.landmarks);
@@ -80,12 +82,33 @@ export class SearchComponent implements OnInit {
 
   search(val: string): void {
     console.log('SEARCH', val);
+  }
 
-
-    interface Employee {
-      name: string;
-      code: number;
+  deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
+  }
+  computeDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    // https://stackoverflow.com/questions/18883601/function-to-calculate-distance-between-two-coordinates
+    const R = 6371; // Radius of the earth in km
+    const dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
+    const dLon = this.deg2rad(lng2 - lng1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    ;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+  }
+  boldQuery(str: string, query: string): string {
+    const n = str.toUpperCase();
+    const q = query.toUpperCase();
+    const x = n.indexOf(q);
+    if (!q || x === -1) {
+      return str; // bail early
     }
+    const l = q.length;
+    return str.substr(0, x) + '<b>' + str.substr(x, l) + '</b>' + str.substr(x + l);
   }
 
   doSearch(): void {
@@ -104,8 +127,10 @@ export class SearchComponent implements OnInit {
         for (const landmark of this.landmarks) {
           if (landmark.name.toUpperCase().includes(this.searchString.toUpperCase())) {
             jsonData = { name: '', icon: '', index: 0 };
-            console.log(landmark.name);
-            jsonData.name = landmark.name;
+            console.log(landmark.name + ' (' +
+              this.computeDistance(this.lat, this.lng, landmark.lat, landmark.lng).toFixed(2) + 'km)');
+            jsonData.name = landmark.name + ' (' +
+              this.computeDistance(this.lat, this.lng, landmark.lat, landmark.lng).toFixed(2) + 'km)';
             jsonData.icon = 'location_on';
             jsonData.index = landmark.name.toUpperCase().indexOf(this.searchString.toUpperCase());
             this.displayList.push(jsonData);
@@ -117,8 +142,8 @@ export class SearchComponent implements OnInit {
         for (const restaurant of this.restaurants) {
           if (restaurant.restaurant_cuisine_1.toUpperCase().includes(this.searchString.toUpperCase())) {
             jsonData = { name: '', icon: '', index: 0 };
-            console.log(restaurant.restaurant_name);
-            jsonData.name = restaurant.restaurant_name + '(' + restaurant.restaurant_cuisine_1 + ')';
+            console.log(restaurant.restaurant_name + ' (' + restaurant.restaurant_cuisine_1 + ')');
+            jsonData.name = restaurant.restaurant_name + ' (' + restaurant.restaurant_cuisine_1 + ')';
             jsonData.icon = 'food_bank';
             jsonData.index = restaurant.restaurant_cuisine_1.toUpperCase().indexOf(this.searchString.toUpperCase());
             this.displayList.push(jsonData);
@@ -130,13 +155,21 @@ export class SearchComponent implements OnInit {
         for (const restaurant of this.restaurants) {
           if (restaurant.restaurant_name.toUpperCase().includes(this.searchString.toUpperCase())) {
             jsonData = { name: '', icon: '', index: 0 };
-            console.log(restaurant.restaurant_name);
-            jsonData.name = restaurant.restaurant_name;
+            console.log(restaurant.restaurant_name  + ' (' +
+              this.computeDistance(this.lat, this.lng,
+                restaurant.restaurant_lat, restaurant.restaurant_lng).toFixed(2) + 'km)');
+            jsonData.name = restaurant.restaurant_name + ' (' +
+              this.computeDistance(this.lat, this.lng,
+                restaurant.restaurant_lat, restaurant.restaurant_lng).toFixed(2) + 'km)';
             jsonData.icon = 'restaurant ';
             jsonData.index = restaurant.restaurant_name.toUpperCase().indexOf(this.searchString.toUpperCase());
             this.displayList.push(jsonData);
           }
         }
+      }
+      // make the search substring bold
+      for (const displayElement of this.displayList) {
+        displayElement.name = this.boldQuery(displayElement.name, this.searchString);
       }
       console.log(this.displayList);
       // need to contemplate how we might sort this list based things like where the search text was found...
@@ -148,54 +181,4 @@ export class SearchComponent implements OnInit {
       this.displayList = [];
     }
   }
-
-  doTest(index: number): void {
-    // tslint:disable-next-line:variable-name
-    const channel_access_code = 'FR0100';
-    // tslint:disable-next-line:variable-name
-    const channel_access_api_key = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)kH2';
-    switch (index) {
-      case 1: {
-        this.channelService.getChannelInfo(channel_access_code, channel_access_api_key).subscribe(
-          // tslint:disable-next-line:no-any
-          (data: any) => {
-            console.log(data);
-          },
-          // tslint:disable-next-line:no-any
-          (error: any) => {
-            console.log(error);
-          });
-        break;
-      }
-      case 2: {
-        this.channelService.getChannelLandmarks(channel_access_code, channel_access_api_key).subscribe(
-          // tslint:disable-next-line:no-any
-          (data: any) => {
-            console.log(data);
-          },
-          // tslint:disable-next-line:no-any
-          (error: any) => {
-            console.log(error);
-          });
-        break;
-      }
-      case 3: {
-        const params = 'test';
-        const lat = 43.695;
-        const lng = 7.266;
-        this.channelService.getRestaurantsSummary(channel_access_code, channel_access_api_key, lat, lng).subscribe(
-          // tslint:disable-next-line:no-any
-          (data: any) => {
-            console.log(data);
-          },
-          // tslint:disable-next-line:no-any
-          (error: any) => {
-            console.log(error);
-          });
-        break;
-      }
-    }
-
-  }
-
 }
