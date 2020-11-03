@@ -44,6 +44,20 @@ body {
 
 // Utilities
 .rd-flex-spacer { flex: 1 0 auto; }
+.rd-hide { display: none; }
+.rd-show { opacity: 1!important;}
+rd-loader {
+  position: absolute;
+  height: calc(100vh - 64px);
+  width: 100vw;
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+}
 
 // Layout
 main {
@@ -350,10 +364,12 @@ ul.rd-search-autofill {
 
 // SEARCH
 .rd-search-content {
+  opacity: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   padding: 12px 18px;
+  transition: opacity .3s ease-out;
   h3 {
     font-family: $font-family-heading;
     margin: 0;

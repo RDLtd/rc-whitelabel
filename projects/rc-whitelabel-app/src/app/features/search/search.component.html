@@ -1,22 +1,6 @@
-<div class="rd-search-content">
+<rd-loader [class.rd-hide]="isLoaded">LOADING</rd-loader>
+<div class="rd-search-content" [class.rd-show]="isLoaded">
   <!-- SEARCH FORM -->
-
-  <button
-    mat-button
-    (click)="doTest(1)">
-    Channel Info
-  </button>
-  <button
-    mat-button
-    (click)="doTest(2)">
-    Landmarks
-  </button>
-  <button
-    mat-button
-    (click)="doTest(3)">
-    Restaurant List
-  </button>
-
   <form #rdSearchForm="ngForm" (ngSubmit)="search(rdSearchForm.form.value)">
     <mat-form-field floatLabel="never">
       <input
@@ -70,24 +54,16 @@
         </li>
       </ul>
     </section>
-    <section class="rd-quick-links">
+    <section class="rd-quick-links" *ngIf="landmarks">
       <div>
         <mat-icon>my_location</mat-icon>
         <h2>Nearest to</h2>
       </div>
       <ul>
-        <li>
-          <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-            My current location
+        <li *ngFor="let landmark of landmarks">
+          <a [routerLink]="" target="_blank">
+            {{ landmark.name }}
           </a>
-        </li>
-        <li>
-          <a [routerLink]="['/restaurants/nearest','regency_palace']">
-            The Royal Pavilion</a>
-        </li>
-        <li>
-          <a [routerLink]="['/restaurants/nearest','exhibition_centre']">
-            Exhibition Centre</a>
         </li>
       </ul>
     </section>
