@@ -12,9 +12,6 @@ const routes: Routes = [
     loadChildren: () => import('./features/search/search.module').then(m => m.SearchModule)
   },
   {
-    path: 'browse',
-    loadChildren: () => import('./features/browse/browse.module').then(m => m.BrowseModule) },
-  {
     path: 'restaurants',
     loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
   },

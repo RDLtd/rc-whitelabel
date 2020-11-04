@@ -1,56 +1,64 @@
-<rd-loader [class.rd-hide]="isLoaded">LOADING</rd-loader>
+<rd-loader [class.rd-hide]="isLoaded && restaurantsLoaded">LOADING</rd-loader>
 <div class="rd-search-content" [class.rd-show]="isLoaded">
   <!-- SEARCH FORM -->
-  <form #rdSearchForm="ngForm" (ngSubmit)="search(rdSearchForm.form.value)">
+  <form #rdSearchForm="ngForm" (ngSubmit)="doSearch(rdSearchInput.value)">
     <mat-form-field floatLabel="never">
       <input
         #rdSearchInput
         name="searchString"
         matInput
-        (keyup)="doSearch()"
+        (keyup)="doSearch(rdSearchInput.value)"
         autocomplete="off"
         type="text"
-        [(ngModel)]="searchString"
+        ngModel
         placeholder="Search by name or location"
         tabindex="1">
       <button
         mat-button
         type="button"
-        *ngIf="searchString"
+        *ngIf="rdSearchInput.value"
         matSuffix
         mat-icon-button
         aria-label="Clear"
-        (click)="searchString=''">
+        (click)="searchReset()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
+    <mat-error *ngIf="rdSearchInput.value.length >= minChars && searchSuggestions?.length === 0">No matching search results,
+    try one of the options below</mat-error>
   </form>
+  <!--  Search Results -->
+  <ul [class.open]="!!rdSearchInput.value && !!searchSuggestions" class="rd-search-autofill">
 
-<!--  <ul class="rd-search-autofill" [class.open]="!!rdSearchInput.value">-->
-<!--    <li>-->
-<!--      <a routerLink=""><mat-icon>location_on</mat-icon>Near Landmark</a>-->
-<!--    </li>-->
-<!--    <li>-->
-<!--      <a routerLink=""><mat-icon>food_bank</mat-icon>Restaurant</a>-->
-<!--    </li>-->
-<!--  </ul>-->
-
-  <div *ngIf="displayList && displayList.length > 0">
-    {{ displayList.length }} items found
-    <ul>
-      <li *ngFor="let displayItem of displayList">
-        <mat-icon>{{ displayItem.icon }}</mat-icon>
-        <p [innerHTML]=[displayItem.name]></p>
-      </li>
-    </ul>
-  </div>
-
-
-  <div class="rd-quick-links-container">
-
+    <li *ngFor="let displayItem of searchSuggestions; let i = index" [tabindex]="i + 1" [ngSwitch]="displayItem.cat">
+      <!-- Landmarks -->
+      <a *ngSwitchCase="'location'" [routerLink]="displayItem.route">
+        <mat-icon>{{ icons['location'] }}</mat-icon>
+        {{ displayItem?.name }}
+        <span class="rd-flex-spacer"></span>
+        <!-- <span>{{ displayItem?.distance | number: '1.0-1' }} km</span>-->
+      </a>
+      <!-- Restaurants -->
+      <a *ngSwitchCase="'restaurant'" [href]="displayItem.spw">
+        <mat-icon>{{ icons['restaurant'] }}</mat-icon>
+        {{ displayItem?.name }}
+        <span class="rd-flex-spacer"></span>
+        <span>{{ displayItem.misc }}</span>
+      </a>
+      <!-- Cuisines -->
+      <a *ngSwitchCase="'cuisine'" [routerLink]="displayItem.route">
+        <mat-icon>{{ icons['cuisine'] }}</mat-icon>
+        {{ displayItem?.name }}
+        <span class="rd-flex-spacer"></span>
+        <span>{{ displayItem.misc }}</span>
+      </a>
+    </li>
+  </ul>
+  <!-- Quick links -->
+  <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
   <section class="rd-quick-links">
     <div>
-      <mat-icon>watch_later</mat-icon>
+      <mat-icon>{{ icons.recent }}</mat-icon>
       <h2>Recently viewed</h2>
     </div>
     <ul>
@@ -67,69 +75,40 @@
     </ul>
   </section>
 
-  <section class="rd-quick-links">
+  <section class="rd-quick-links" *ngIf="landmarks.length">
     <div>
-      <mat-icon>my_location</mat-icon>
+      <mat-icon>{{ icons.nearest }}</mat-icon>
       <h2>Nearest to</h2>
     </div>
     <ul>
-      <li>
-        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
+      <li *ngIf="!!currentLocation.lat">
+        <a [routerLink]="['/restaurants/nearest/', currentLocation?.lat + ':' + currentLocation?.lng]">
           My current location
         </a>
       </li>
-      <li>
-        <a [routerLink]="['/restaurants/nearest','regency_palace']">
-          The Regency Palace</a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants/nearest','west_pier']">
-          The West Pier</a>
+      <li *ngFor="let landmark of landmarks">
+        <a [routerLink]="['/restaurants/nearest/', landmark?.lat + ':' + landmark?.lng]">
+          {{ landmark?.name }}
+        </a>
       </li>
     </ul>
   </section>
 
-  <section class="rd-quick-links">
+  <section class="rd-quick-links" *ngIf="cuisines.length">
     <div>
-      <mat-icon>food_bank</mat-icon>
+      <mat-icon>{{ icons.cuisine }}</mat-icon>
       <h2>Cuisines</h2>
     </div>
     <ul>
-      <li>
-        <a [routerLink]="['/restaurants','pizza']">
-          Chinese Restaurants
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants','indian']">
-          Indian Restaurants
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants','indian']">
-          Pizza Restaurants
+      <li *ngFor="let cuisine of cuisines">
+        <a [routerLink]="['/restaurants', cuisine.label]">
+          {{ cuisine?.label }}
+          <span class="rd-flex-spacer"></span>
+          <span>{{ cuisine?.total }}</span>
         </a>
       </li>
     </ul>
   </section>
 
-  <section class="rd-quick-links">
-    <div>
-      <mat-icon>fastfood</mat-icon>
-      <h2>Take Away Services</h2>
-    </div>
-    <ul>
-      <li>
-        <a [routerLink]="['/restaurants','take_away']">
-          Burgers
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants','take_away']">
-          Fish and Chips
-        </a>
-      </li>
-    </ul>
-  </section>
   </div>
 </div>

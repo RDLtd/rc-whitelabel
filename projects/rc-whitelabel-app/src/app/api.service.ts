@@ -1,9 +1,10 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 
-export class ChannelService {
+export class ApiService {
 
   constructor(private http: HttpClient) { }
 
