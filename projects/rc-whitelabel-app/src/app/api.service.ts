@@ -2,15 +2,26 @@
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
+export class Rest {
+  name: string | undefined;
+}
+
 @Injectable()
 
 export class ApiService {
 
-  constructor(private http: HttpClient) { }
-
   // will need to get this from the ENV
-  apiUrl = 'http://localhost:4000';
-  // apiUrl = 'https://rc-server-prod.herokuapp.com';
+  private apiUrl = 'http://localhost:4000';
+  private apiAccessCode = 'EN0100';
+  private apiKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)ss3';
+  private lat = 50.8226;
+  private lng = -0.1365;
+
+  // private allRests = new BehaviorSubject<Rest[]>([]);
+  // private dataStore: { rests: Rest[] } = { rests: [] };
+  // readonly rests = this.allRests.asObservable();
+
+  constructor(private http: HttpClient) { }
 
   // Administration
   // tslint:disable-next-line:variable-name
@@ -65,6 +76,4 @@ export class ApiService {
     return this.http.post(this.apiUrl + '/public/channel/restaurants/summary',
       { channel_access_code, channel_access_api_key, lat, lng});
   }
-
 }
-

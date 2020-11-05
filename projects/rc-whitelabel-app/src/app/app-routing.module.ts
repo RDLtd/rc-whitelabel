@@ -20,7 +20,7 @@ const routes: Routes = [
     loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
   },
   {
-    path: 'restaurants/nearest/:filter',
+    path: 'restaurants/nearest/:sort',
     loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
   },
   {

@@ -1,4 +1,4 @@
-<rd-loader [class.rd-hide]="isLoaded && restaurantsLoaded">LOADING</rd-loader>
+<rd-loader [class.rd-hide]="isLoaded">LOADING</rd-loader>
 <div class="rd-search-content" [class.rd-show]="isLoaded">
   <!-- SEARCH FORM -->
   <form #rdSearchForm="ngForm" (ngSubmit)="doSearch(rdSearchInput.value)">
@@ -56,39 +56,35 @@
   </ul>
   <!-- Quick links -->
   <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
-  <section class="rd-quick-links">
+  <section class="rd-quick-links" *ngIf="recentlyViewed?.length">
     <div>
       <mat-icon>{{ icons.recent }}</mat-icon>
       <h2>Recently viewed</h2>
     </div>
     <ul>
-      <li>
-        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-          Chez Bruno - Hove
-        </a>
-      </li>
-      <li>
-        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-          Pizza Express - Brighton
+      <li *ngFor="let recent of recentlyViewed">
+        <a [href]="recent" target="_blank">
+          {{ recent.name }}
         </a>
       </li>
     </ul>
   </section>
 
-  <section class="rd-quick-links" *ngIf="landmarks.length">
+  <section class="rd-quick-links" *ngIf="landmarks?.length">
     <div>
       <mat-icon>{{ icons.nearest }}</mat-icon>
       <h2>Nearest to</h2>
     </div>
     <ul>
-      <li *ngIf="!!currentLocation.lat">
-        <a [routerLink]="['/restaurants/nearest/', currentLocation?.lat + ':' + currentLocation?.lng]">
+      <li *ngIf="!!currentLocation">
+        <a [routerLink]="['/restaurants/nearest/', currentLocation?.coords.latitude + ':' +
+        currentLocation?.coords.longitude]">
           My current location
         </a>
       </li>
       <li *ngFor="let landmark of landmarks">
-        <a [routerLink]="['/restaurants/nearest/', landmark?.lat + ':' + landmark?.lng]">
-          {{ landmark?.name }}
+        <a [routerLink]="['/restaurants/nearest/', landmark?.channel_landmark_lat + ':' + landmark?.channel_landmark_lng]">
+          {{ landmark?.channel_landmark_name }}
         </a>
       </li>
     </ul>

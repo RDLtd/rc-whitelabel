@@ -1,5 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '../../api.service';
+import { LocalStorageService } from '../../local-storage.service';
+import { DataService, Restaurant } from '../../data.service';
 
 interface SearchSuggestion {
   cat: string;
@@ -9,18 +11,13 @@ interface SearchSuggestion {
   spw?: string;
   misc?: any;
 }
-interface Restaurant {
-  restaurant_name: string;
-  restaurant_number: string;
-  restaurant_cuisine_1: string;
-  restaurant_lat: number;
-  restaurant_lng: number;
-  restaurant_spw_url: string;
-}
 interface Landmark {
-  name: string;
-  lat: number;
-  lng: number;
+  channel_landmark_channel_id: string;
+  channel_landmark_id: number;
+  channel_landmark_lat: string;
+  channel_landmark_lng: string;
+  channel_landmark_name: string;
+  channel_landmark_number: number;
 }
 interface Cuisine {
   label: string;
@@ -39,8 +36,7 @@ interface Location {
 
 export class SearchComponent implements OnInit {
   isLoaded = false;
-  restaurantsLoaded = false;
-
+  // Reference to search element
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
 
   // Confic
@@ -58,57 +54,97 @@ export class SearchComponent implements OnInit {
     recent: 'watch_later'
   };
 
-  restaurants: Restaurant[] = [];
+  restaurants: any[] = [];
+  searchRestaurants: any[] = [];
   landmarks: Landmark[] = [];
+  features: any[] = [];
   searchSuggestions: SearchSuggestion[] = [];
   cuisines: Cuisine[] = [];
+  recentlyViewed: any[] = [];
+  // This will be a GeoPositionLocation
+  currentLocation: any | undefined;
 
-  currentLocation: Location = {};
-
-  constructor(private api: ApiService) {}
+  constructor(
+    private api: ApiService,
+    private localStorageService: LocalStorageService,
+    private data: DataService
+  ) {}
 
   ngOnInit(): void {
+    this.loadRestaurants().then((res: any) => {
+      console.log('Restaurants loaded');
+    });
+
+    this.loadSummary().then((res: any) => {
+      this.isLoaded = true;
+      console.log('Summary loaded');
+    });
+
     this.getCurrentLocation();
-    this.getSummary();
-    this.getRestaurants();
-    this.getLandmarks();
     // So that we can focus the input field
+
     setTimeout( () => {
       this.rdSearchInput.nativeElement.focus();
-      this.isLoaded = true;
     }, 500);
+
+  }
+
+  public async loadRestaurants(): Promise<any> {
+    if (!this.data.getRestaurants().length) {
+      const promise = await this.api.getRestaurants(this.apiAccessCode, this.apiKey, 'not used',
+        40, 7)
+        .toPromise()
+        .then((res: any) => {
+          this.restaurants = res.restaurants;
+          this.data.setRestaurants(res.restaurants);
+          console.log('From API', res.restaurants);
+        });
+    } else {
+      this.restaurants = this.data.getRestaurants();
+      console.log('Local', this.restaurants);
+    }
+  }
+
+  public async loadSummary(): Promise<any> {
+    if (!this.data.getCuisines().length) {
+      const promise = await this.api.getRestaurantsSummary(this.apiAccessCode, this.apiKey, 40, 7)
+        .toPromise()
+        .then((res: any) => {
+          console.log(res);
+          this.data.setSummary(res);
+          this.searchRestaurants = res.restaurants;
+          this.landmarks = res.landmarks;
+          this.features = res.attributes;
+          this.cuisines = this.data.getCuisines();
+        });
+    } else {
+      this.searchRestaurants = this.data.getSearchRests();
+      this.cuisines = this.data.getCuisines();
+      this.landmarks = this.data.getLandmarks();
+      this.features = this.data.getFeatures();
+    }
   }
 
   getRecentlyViewed(): void {
-
+    this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
   }
 
   getCurrentLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
-        console.log(position);
-        this.currentLocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
+        console.log('Current location', position);
+        this.currentLocation = position;
+        this.localStorageService.set('rdCurrentLocation', {
+          timestamp: position.timestamp,
+          coords: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          }
+        });
       });
     } else {
       console.log('Geolocation is not supported by this browser.');
     }
-  }
-
-  // Load restaurants
-  getRestaurants(): void {
-    this.api.getRestaurants(this.apiAccessCode, this.apiKey, 'not used',
-      this.lat, this.lng).subscribe(
-      (data: any) => {
-        this.restaurants = data.restaurants;
-        this.restaurantsLoaded = true;
-        console.log('Rests', this.restaurants);
-      },
-      (error: object) => {
-        console.log(error);
-      });
   }
 
   // Load landmarks
@@ -116,43 +152,11 @@ export class SearchComponent implements OnInit {
     this.api.getChannelLandmarks(this.apiAccessCode, this.apiKey).subscribe(
       (data: any) => {
         this.landmarks = data.landmarks;
-        console.log(data, this.landmarks);
+        // console.log(data, this.landmarks);
       },
       (error: object) => {
         console.log(error);
       });
-  }
-
-  // Get summary data
-  getSummary(): void {
-    this.api.getRestaurantsSummary(this.apiAccessCode, this.apiKey, this.lat, this.lng).subscribe(
-      (data: any) => {
-        console.log(data);
-        this.setCuisines(data.cuisines);
-      },
-      (error: object) => {
-        console.log(error);
-      }
-    );
-  }
-
-  setCuisines(arr: any): void {
-    console.log(arr);
-    let i = arr.length - 1;
-    let c;
-    while (i--) {
-      c = arr[i];
-      if (c.Count) {
-        // @ts-ignore
-        this.cuisines.push({
-          label: c.Cuisine,
-          total: c.Count
-        });
-      }
-    }
-    this.cuisines.sort((a, b) => {
-      return b.total - a.total;
-    });
   }
 
   deg2rad(deg: number): number {
@@ -173,8 +177,9 @@ export class SearchComponent implements OnInit {
   }
 
   doSearch(str: string): void {
+
     // Scroll window to maximise room for search suggestions
-    window.scrollTo(0, 64);
+    // window.scrollTo(0, -200);
 
     if (str.length >= this.minChars) {
       // set uppercase version for string matching
@@ -182,28 +187,30 @@ export class SearchComponent implements OnInit {
       // clear current suggestions
       this.searchSuggestions = [];
 
+
       // Check for matching landmarks
       if (!!this.landmarks) {
         let i = this.landmarks.length - 1; let m;
         while (i--) {
           m = this.landmarks[i];
-          if (m.name.toUpperCase().includes(ucString)) {
+          if (m.channel_landmark_name.toUpperCase().includes(ucString)) {
             // Add SearchSuggestion
             this.searchSuggestions.push({
-              name: m.name,
+              name: m.channel_landmark_name,
               cat: 'location',
-              index: m.name.toUpperCase().indexOf(ucString),
-              route: ['/restaurants/nearest/', `${m.lat}:${m.lng}`]
+              index: m.channel_landmark_name.toUpperCase().indexOf(ucString),
+              route: ['/restaurants/nearest/', `${m.channel_landmark_lat}:${m.channel_landmark_lng}`]
             });
           }
         }
       }
       // Check for matching restaurants
-      if (!!this.restaurants) {
-        let i = this.restaurants.length - 1; let r;
+
+      if (!!this.searchRestaurants) {
+        let i = this.searchRestaurants.length - 1; let r;
         while (i--) {
-          r = this.restaurants[i];
-          if (r.restaurant_name.toUpperCase().includes(ucString)) {
+          r = this.searchRestaurants[i];
+          if (r.restaurant_name?.toUpperCase().includes(ucString)) {
             this.searchSuggestions.push({
               cat: 'restaurant',
               name: r.restaurant_name,
@@ -229,6 +236,9 @@ export class SearchComponent implements OnInit {
           }
         }
       }
+      this.searchSuggestions.sort((a, b) => {
+        return a.index - b.index;
+      });
     } else {
       // clear current suggestions
       this.searchSuggestions = [];
