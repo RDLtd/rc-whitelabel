@@ -26,6 +26,7 @@ $header-height: 64px;
 $arrow-size: 48px;
 $font-family-default: Roboto, "Helvetica Neue", sans-serif;
 $font-family-heading: 'Roboto Slab', 'Georgia', serif;
+$max-width: 960px;
 
 // Global resets
 * { box-sizing: border-box; }
@@ -51,7 +52,7 @@ body {
 
 // LAYOUT
 main {
-  max-width: 960px;
+  max-width: $max-width;
   margin: 0 auto;
   min-height: calc(99.9vh - 64px);
   padding: $header-height 0 0;
@@ -102,7 +103,7 @@ rd-footer {
 rd-loader {
   position: absolute;
   height: calc(100vh - 64px);
-  width: 100vw;
+  width: $max-width;
   div {
     display: flex;
     justify-content: center;
@@ -358,6 +359,7 @@ ul.rd-search-autofill {
     > a {
       display: flex;
       width: 100%;
+      cursor: pointer;
       font-size: 16px;
       padding: 8px 0 8px 0;
       font-weight: 300;
