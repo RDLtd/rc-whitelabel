@@ -88,7 +88,4 @@ export class ApiService {
     return this.http.post(this.apiUrl + '/public/channel/restaurants/filter',
       { channel_access_code, channel_access_api_key, params}).toPromise();
   }
-
-
-
 }
