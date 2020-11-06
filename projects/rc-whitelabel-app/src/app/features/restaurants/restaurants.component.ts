@@ -106,6 +106,7 @@ export class RestaurantsComponent implements OnInit {
       this.restaurants = this.cachedRestaurants;
       this.restaurants = this.sortByDistance(40, 7);
     }
+    this.isLoaded = true;
   }
 
   deg2rad(deg: number): number {
