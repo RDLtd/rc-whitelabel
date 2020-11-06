@@ -95,8 +95,8 @@ export class SearchComponent implements OnInit {
 
   public async loadRestaurants(): Promise<any> {
     if (!this.data.getRestaurants().length) {
-      const params = { cuisine: 'British', lat: 50.8226, lng: -0.1365, testing: true };
-      const promise = await this.api.getRestaurants(this.apiAccessCode, this.apiKey, 'not used', 52, 7)
+      const params = { testing: true };
+      const promise = await this.api.getRestaurantsFilter(this.apiAccessCode, this.apiKey, params)
         .toPromise()
         .then((res: any) => {
           this.restaurants = res.restaurants;

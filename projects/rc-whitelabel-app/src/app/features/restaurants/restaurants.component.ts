@@ -60,10 +60,11 @@ export class RestaurantsComponent implements OnInit {
 
   public async loadRestaurants(): Promise<any> {
     if (!this.data.getRestaurants().length) {
-      const params = { cuisine: 'any', lat: 50.8226, lng: -0.1365, testing: true };
-      const promise = await this.api.getRestaurants(this.apiAccessCode, this.apiKey, 'not used', 50, 7)
+      const params = { testing: true };
+      const promise = await this.api.getRestaurantsFilter(this.apiAccessCode, this.apiKey, params)
         .toPromise()
         .then((res: any) => {
+          console.log('R', res);
           this.cachedRestaurants = res.restaurants;
           this.data.setRestaurants(res.restaurants);
           console.log('From API', res.restaurants);
