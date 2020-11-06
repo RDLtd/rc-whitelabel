@@ -71,9 +71,24 @@ export class ApiService {
   }
 
   // tslint:disable-next-line:variable-name
+  getRestaurantsFilter(channel_access_code: string, channel_access_api_key: string, params: object): any {
+    console.log('Params:', params);
+    return this.http.post(this.apiUrl + '/public/channel/restaurants/filter',
+      { channel_access_code, channel_access_api_key, params});
+  }
+
+  // tslint:disable-next-line:variable-name
   getRestaurantsSummary(channel_access_code: string, channel_access_api_key: string,
                         lat: number, lng: number): any {
     return this.http.post(this.apiUrl + '/public/channel/restaurants/summary',
       { channel_access_code, channel_access_api_key, lat, lng});
   }
+  // tslint:disable-next-line:variable-name
+  getRests(channel_access_code: string, channel_access_api_key: string, params: object): any {
+    return this.http.post(this.apiUrl + '/public/channel/restaurants/filter',
+      { channel_access_code, channel_access_api_key, params}).toPromise();
+  }
+
+
+
 }

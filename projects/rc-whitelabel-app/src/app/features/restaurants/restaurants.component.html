@@ -1,3 +1,4 @@
+<rd-loader [class.rd-hide]="isLoaded">LOADING</rd-loader>
 <!-- RESTAURANT RESULTS -->
 <div class="rd-results-container">
 
@@ -6,13 +7,15 @@
     class="rd-restaurant" (click)="openSPW(restaurant?.restaurant_spw_url)">
     <div class="rd-restaurant-detail">
       <h2>{{ restaurant?.restaurant_name }}</h2>
-      <h3>{{ restaurant?.restaurant_cuisine_1 }}</h3>
-      <p>{{ restaurant?.restaurant_cuisine_1 }}</p>
+      <h3>
+        {{ restaurant?.restaurant_cuisine_1 }}
+        <span class="rd-flex-spacer"></span>
+        <span>{{ restaurant?.distance | number: '1.0-1' }} km</span></h3>
+      <p>{{ restaurant?.strap_line }}</p>
       <mat-chip-list aria-label="Fish selection">
-        <mat-chip>Take-Away</mat-chip>
-        <mat-chip>Outside Dining</mat-chip>
+        <mat-chip *ngFor="let feature of restaurant['attributes']">{{ feature }}</mat-chip>
       </mat-chip-list>
-      <span></span>
+      <span class="arrow"></span>
     </div>
     <img src="assets/images/rest1.jpg" alt="restaurant image">
   </div>
@@ -30,7 +33,7 @@
       *ngIf="filtersOn"
       mat-raised-button
       (click)="clearFilters()">
-      Clear filters
+      Filtered by {{ routeFilter || 'distance' }}
       <mat-icon>cancel</mat-icon>
     </button>
   </div>

@@ -1,62 +1,26 @@
 
 <div mat-dialog-content>
-  <section class="rd-filter-list">
+  <section class="rd-filter-list" *ngIf="data.cuisines.length > 1">
     <h1>Filter by Cuisine</h1>
     <ul>
-      <li>
-        <a [mat-dialog-close]="['/restaurants','indian']">
+      <li *ngFor="let cuisine of data.cuisines">
+        <a [mat-dialog-close]="{type: 'filter', value: cuisine.label}">
           <mat-icon>restaurant</mat-icon>
-          Indian
+          {{ cuisine.label }}
           <span class="rd-flex-spacer"></span>
-          <span class="rd-count">11</span>
-        </a>
-      </li>
-      <li>
-        <a [mat-dialog-close]="['/restaurants','chinese']">
-          <mat-icon>restaurant</mat-icon>
-          Chinese
-          <span class="rd-flex-spacer"></span>
-          <span class="rd-count">8</span>
-        </a>
-      </li>
-      <li>
-        <a [mat-dialog-close]="['/restaurants','pizza']">
-          <mat-icon>restaurant</mat-icon>
-          Pizza
-          <span class="rd-flex-spacer"></span>
-          <span class="rd-count">7</span>
-        </a>
-      </li>
-      <li>
-        <a [mat-dialog-close]="['/restaurants','french']">
-          <mat-icon>restaurant</mat-icon>
-          French
-          <span class="rd-flex-spacer"></span>
-          <span class="rd-count">4</span>
+          <span class="rd-count">{{ cuisine.total }}</span>
         </a>
       </li>
     </ul>
   </section>
-  <section class="rd-filter-list">
-    <h1>Filter by feature</h1>
-    <ul>
-      <li>
-        <a [mat-dialog-close]="['/restaurants/feature','take_away']">
-          <mat-icon>fastfood</mat-icon>
-          Take-Away Service
-          <span class="rd-flex-spacer"></span>
-          <span class="rd-count"></span>
-        </a>
-      </li>
-    </ul>
-  </section>
-  <section class="rd-filter-list">
+  <section class="rd-filter-list" *ngIf="data.landmarks.length">
     <h1>Sort by Location</h1>
     <ul>
-      <li>
-        <a [mat-dialog-close]="['/restaurants/nearest','west_pier']">
+      <li *ngFor="let landmark of data.landmarks">
+        <a
+          [mat-dialog-close]="{type: 'sort', lat: landmark?.channel_landmark_lat, lng: landmark?.channel_landmark_lng}">
           <mat-icon>location_on</mat-icon>
-          West Pier
+          {{ landmark.channel_landmark_name }}
           <span class="rd-flex-spacer"></span>
           <span class="rd-count"></span>
         </a>

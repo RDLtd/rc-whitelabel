@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { LocalStorageService } from '../../local-storage.service';
 import { DataService, Restaurant } from '../../data.service';
+import { HttpClient } from '@angular/common/http';
 
 interface SearchSuggestion {
   cat: string;
@@ -40,8 +41,8 @@ export class SearchComponent implements OnInit {
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
 
   // Confic
-  apiAccessCode = 'FR0100';
-  apiKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)kH2';
+  private apiAccessCode = 'EN0100';
+  private apiKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)ss3';
   lat = 43.695;
   lng = 7.266;
   minChars = 1;
@@ -67,7 +68,8 @@ export class SearchComponent implements OnInit {
   constructor(
     private api: ApiService,
     private localStorageService: LocalStorageService,
-    private data: DataService
+    private data: DataService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -87,12 +89,14 @@ export class SearchComponent implements OnInit {
       this.rdSearchInput.nativeElement.focus();
     }, 500);
 
+    console.log('Async', this.data.loadRestaurants());
+
   }
 
   public async loadRestaurants(): Promise<any> {
     if (!this.data.getRestaurants().length) {
-      const promise = await this.api.getRestaurants(this.apiAccessCode, this.apiKey, 'not used',
-        40, 7)
+      const params = { cuisine: 'British', lat: 50.8226, lng: -0.1365, testing: true };
+      const promise = await this.api.getRestaurants(this.apiAccessCode, this.apiKey, 'not used', 52, 7)
         .toPromise()
         .then((res: any) => {
           this.restaurants = res.restaurants;
@@ -157,23 +161,6 @@ export class SearchComponent implements OnInit {
       (error: object) => {
         console.log(error);
       });
-  }
-
-  deg2rad(deg: number): number {
-    return deg * (Math.PI / 180);
-  }
-  computeDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-    // https://stackoverflow.com/questions/18883601/function-to-calculate-distance-between-two-coordinates
-    const R = 6371; // Radius of the earth in km
-    const dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
-    const dLon = this.deg2rad(lng2 - lng1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2)
-    ;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in km
   }
 
   doSearch(str: string): void {
@@ -249,4 +236,7 @@ export class SearchComponent implements OnInit {
     this.rdSearchInput.nativeElement.value = '';
     this.searchSuggestions = [];
   }
+
+
+
 }

@@ -252,18 +252,30 @@ ul.rd-search-autofill {
         width: 100%;
       }
       h3 {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
         font-size: 12px;
         font-weight: 500;
-        line-height: 12px;
+        //line-height: 12px;
         text-transform: uppercase;
-        margin: 0;
+        margin: -4px 0 0;
         padding: 0;
+        span {
+          text-transform: lowercase;
+        }
+        .mat-icon {
+          font-size: 12px;
+          height: 12px;
+          width: 12px;
+        }
       }
       p {
         font-size: 12px;
         font-weight: 300;
         line-height: 14px;
-        margin: 8px 0;
+        margin: 0 0 8px;
+        padding: 0;
       }
       .mat-chip-list-wrapper {
         margin: 0;
@@ -278,7 +290,7 @@ ul.rd-search-autofill {
         min-height: 24px;
         background-color: rgba(var(--brand-primary-rgb), .5);
       }
-      span {
+      span.arrow {
         position: absolute;
         top: 100%;
         right: 10vw;
