@@ -1,7 +1,7 @@
 
 <div mat-dialog-content>
   <section class="rd-filter-list" *ngIf="data.cuisines.length > 1">
-    <h1>Filter by Cuisine</h1>
+    <h1>{{ config.i18n.Filter_by_cuisine }}</h1>
     <ul>
       <li *ngFor="let cuisine of data.cuisines">
         <a [mat-dialog-close]="{type: 'filter', value: cuisine.label}">
@@ -14,7 +14,7 @@
     </ul>
   </section>
   <section class="rd-filter-list" *ngIf="data.landmarks.length">
-    <h1>Sort by Location</h1>
+    <h1>{{ config.i18n.Sort_by_location }}</h1>
     <ul>
       <li *ngFor="let landmark of data.landmarks">
         <a
@@ -29,7 +29,7 @@
   </section>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-flat-button [mat-dialog-close]="null">CLOSE</button>
+  <button mat-flat-button [mat-dialog-close]="null">{{ config.i18n.Close }}</button>
 </div>
 
 

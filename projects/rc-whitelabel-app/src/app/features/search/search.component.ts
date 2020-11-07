@@ -3,6 +3,7 @@ import { ApiService } from '../../api.service';
 import { LocalStorageService } from '../../local-storage.service';
 import { DataService, Restaurant } from '../../data.service';
 import { HttpClient } from '@angular/common/http';
+import { AppConfig } from '../../app.config';
 
 interface SearchSuggestion {
   cat: string;
@@ -40,11 +41,7 @@ export class SearchComponent implements OnInit {
   // Reference to search element
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
 
-  // Confic
-  private apiAccessCode = 'EN0100';
-  private apiKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)ss3';
-  lat = 43.695;
-  lng = 7.266;
+  // Config
   minChars = 1;
   icons = {
     location: 'location_on',
@@ -69,7 +66,8 @@ export class SearchComponent implements OnInit {
     private api: ApiService,
     private localStorageService: LocalStorageService,
     private data: DataService,
-    private http: HttpClient
+    private http: HttpClient,
+    public config: AppConfig
   ) {}
 
   ngOnInit(): void {
@@ -95,8 +93,8 @@ export class SearchComponent implements OnInit {
 
   public async loadRestaurants(): Promise<any> {
     if (!this.data.getRestaurants().length) {
-      const params = { testing: true };
-      const promise = await this.api.getRestaurantsFilter(this.apiAccessCode, this.apiKey, params)
+      const params = { testing: this.config.testing };
+      const promise = await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey, params)
         .toPromise()
         .then((res: any) => {
           this.restaurants = res.restaurants;
@@ -111,7 +109,8 @@ export class SearchComponent implements OnInit {
 
   public async loadSummary(): Promise<any> {
     if (!this.data.getCuisines().length) {
-      const promise = await this.api.getRestaurantsSummary(this.apiAccessCode, this.apiKey, 40, 7)
+      const promise = await this.api.getRestaurantsSummary(this.config.channelAccessCode, this.config.channelAPIKey,
+        this.config.channelLat, this.config.channelLng)
         .toPromise()
         .then((res: any) => {
           console.log(res);
@@ -134,26 +133,52 @@ export class SearchComponent implements OnInit {
   }
 
   getCurrentLocation(): void {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        console.log('Current location', position);
-        this.currentLocation = position;
-        this.localStorageService.set('rdCurrentLocation', {
-          timestamp: position.timestamp,
-          coords: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          }
-        });
-      });
+    const d = new Date();
+    const now = d.toLocaleString();
+    if (this.config.testing) {
+      this.currentLocation = {
+        timestamp: now,
+        coords: {
+          latitude: this.config.channelLat,
+          longitude: this.config.channelLng
+        }
+      };
     } else {
-      console.log('Geolocation is not supported by this browser.');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          console.log('Current location', position);
+          this.currentLocation = position;
+          this.localStorageService.set('rdCurrentLocation', {
+            timestamp: position.timestamp,
+            coords: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            }
+          });
+        });
+      } else {
+        console.log('Geolocation is not supported by this browser, setting channel default location');
+        this.currentLocation = {
+          timestamp: now,
+          coords: {
+            latitude: this.config.channelLat,
+            longitude: this.config.channelLng
+          }
+        };
+      }
     }
+    this.localStorageService.set('rdCurrentLocation', {
+      timestamp: this.currentLocation.timestamp,
+      coords: {
+        latitude: this.currentLocation.coords.latitude,
+        longitude: this.currentLocation.coords.longitude
+      }
+    });
   }
 
   // Load landmarks
   getLandmarks(): void {
-    this.api.getChannelLandmarks(this.apiAccessCode, this.apiKey).subscribe(
+    this.api.getChannelLandmarks(this.config.channelAccessCode, this.config.channelAPIKey).subscribe(
       (data: any) => {
         this.landmarks = data.landmarks;
         // console.log(data, this.landmarks);

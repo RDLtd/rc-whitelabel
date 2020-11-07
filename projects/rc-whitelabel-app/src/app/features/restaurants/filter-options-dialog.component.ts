@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AppConfig } from '../../app.config';
 
 @Component({
   selector: 'rd-filter-options-dialog',
@@ -7,7 +8,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class FilterOptionsDialogComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {cuisines: any[], landmarks: any[]}) { }
+  constructor(public config: AppConfig, @Inject(MAT_DIALOG_DATA) public data: {cuisines: any[], landmarks: any[]}) { }
 
   ngOnInit(): void { }
 }

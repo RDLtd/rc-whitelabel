@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
 import { HttpClient } from '@angular/common/http';
+import { AppConfig } from './app.config';
 
 export interface Restaurant {
   name: string | undefined;
@@ -18,11 +19,6 @@ export interface Restaurant {
 
 export class DataService {
 
-  // Config
-  private apiUrl = 'http://localhost:4000';
-  private apiAccessCode = 'EN0100';
-  private apiKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)ss3';
-
   // Restaurants
   private restaurants: any[] = [];
   private searchRests: any[] = [];
@@ -35,16 +31,18 @@ export class DataService {
   constructor(
     private api: ApiService,
     private local: LocalStorageService,
-    private http: HttpClient
+    private http: HttpClient,
+    private config: AppConfig
   ) { }
 
-  async loadRestaurants(): Promise<any> {
+  async loadRestaurants(): Promise <any> {
     if (this.restaurants.length) {
       console.log('Async local');
       return this.restaurants;
     } else {
       console.log('Async remote');
-      return await this.api.getRestaurantsFilter(this.apiAccessCode, this.apiKey, {testing: true}).toPromise();
+      return await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey,
+        {testing: this.config.testing}).toPromise();
     }
   }
 

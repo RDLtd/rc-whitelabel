@@ -1,4 +1,4 @@
-<rd-loader [class.rd-hide]="isLoaded">LOADING</rd-loader>
+<rd-loader [class.rd-hide]="isLoaded">{{ config.i18n.Loading }}</rd-loader>
 <div class="rd-search-content" [class.rd-show]="isLoaded">
   <!-- SEARCH FORM -->
   <form #rdSearchForm="ngForm" (ngSubmit)="doSearch(rdSearchInput.value)">
@@ -11,7 +11,7 @@
         autocomplete="off"
         type="text"
         ngModel
-        placeholder="Search by name or location"
+        placeholder="{{ config.i18n.Search_by_name_or_location }}"
         tabindex="1">
       <button
         mat-button
@@ -24,8 +24,8 @@
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
-    <mat-error *ngIf="rdSearchInput.value.length >= minChars && searchSuggestions?.length === 0">No matching search results,
-    try one of the options below</mat-error>
+    <mat-error *ngIf="rdSearchInput.value.length >= minChars && searchSuggestions?.length === 0">
+      {{ config.i18n.No_matching_search_results }}</mat-error>
   </form>
   <!--  Search Results -->
   <ul [class.open]="!!rdSearchInput.value && !!searchSuggestions" class="rd-search-autofill">
@@ -59,7 +59,7 @@
   <section class="rd-quick-links" *ngIf="recentlyViewed?.length">
     <div>
       <mat-icon>{{ icons.recent }}</mat-icon>
-      <h2>Recently viewed</h2>
+      <h2>{{ config.i18n.Recently_viewed }}</h2>
     </div>
     <ul>
       <li *ngFor="let recent of recentlyViewed">
@@ -73,13 +73,13 @@
   <section class="rd-quick-links" *ngIf="landmarks?.length">
     <div>
       <mat-icon>{{ icons.nearest }}</mat-icon>
-      <h2>Nearest to</h2>
+      <h2>{{ config.i18n.Nearest_to }}</h2>
     </div>
     <ul>
       <li *ngIf="!!currentLocation">
         <a [routerLink]="['/restaurants/nearest/', currentLocation?.coords.latitude + ':' +
         currentLocation?.coords.longitude]">
-          My current location
+          {{ config.i18n.My_current_location }}
         </a>
       </li>
       <li *ngFor="let landmark of landmarks">
@@ -93,7 +93,7 @@
   <section class="rd-quick-links" *ngIf="cuisines.length">
     <div>
       <mat-icon>{{ icons.cuisine }}</mat-icon>
-      <h2>Cuisines</h2>
+      <h2>{{ config.i18n.Cuisines }}</h2>
     </div>
     <ul>
       <li *ngFor="let cuisine of cuisines">

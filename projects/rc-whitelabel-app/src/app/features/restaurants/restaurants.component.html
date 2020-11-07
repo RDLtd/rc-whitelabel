@@ -1,4 +1,4 @@
-<rd-loader [class.rd-hide]="isLoaded">LOADING</rd-loader>
+<rd-loader [class.rd-hide]="isLoaded">{{ config.i18n.Loading }}</rd-loader>
 <!-- RESTAURANT RESULTS -->
 <div class="rd-results-container">
 
@@ -10,7 +10,10 @@
       <h3>
         {{ restaurant?.restaurant_cuisine_1 }}
         <span class="rd-flex-spacer"></span>
-        <span>{{ restaurant?.distance | number: '1.0-1' }} km</span></h3>
+        <ng-container *ngIf="restaurant?.distance <= 10">
+          <span>{{ restaurant?.distance | number: '1.0-1' }} km</span>
+        </ng-container>
+      </h3>
       <p>{{ restaurant?.strap_line }}</p>
       <mat-chip-list aria-label="Fish selection">
         <mat-chip *ngFor="let feature of restaurant['attributes']">{{ feature }}</mat-chip>
@@ -26,14 +29,14 @@
       *ngIf="!filtersOn"
       mat-raised-button
       (click)="openFilterOptions()">
-      Sort/Filter
+      {{ config.i18n.Sort_filter }}
       <mat-icon>filter_list</mat-icon>
     </button>
     <button
       *ngIf="filtersOn"
       mat-raised-button
       (click)="clearFilters()">
-      Filtered by {{ routeFilter || 'distance' }}
+      {{ config.i18n.Clear_filters }} {{ routeFilter || 'distance' }}
       <mat-icon>cancel</mat-icon>
     </button>
   </div>

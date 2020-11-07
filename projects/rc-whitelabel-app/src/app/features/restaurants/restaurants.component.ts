@@ -5,6 +5,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { LocalStorageService } from '../../local-storage.service';
 import { DataService, Restaurant } from '../../data.service';
 import { ApiService } from '../../api.service';
+import { AppConfig } from '../../app.config';
 
 @Component({
   selector: 'rd-restaurants',
@@ -12,9 +13,6 @@ import { ApiService } from '../../api.service';
 })
 export class RestaurantsComponent implements OnInit {
 
-  // Confic
-  apiAccessCode = 'EN0100';
-  apiKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)ss3';
   isLoaded = false;
 
   showFilterOptions = false;
@@ -35,7 +33,8 @@ export class RestaurantsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private api: ApiService,
-    public data: DataService
+    public data: DataService,
+    public config: AppConfig
   ) { }
 
   ngOnInit(): void {
@@ -60,8 +59,8 @@ export class RestaurantsComponent implements OnInit {
 
   public async loadRestaurants(): Promise<any> {
     if (!this.data.getRestaurants().length) {
-      const params = { testing: true };
-      const promise = await this.api.getRestaurantsFilter(this.apiAccessCode, this.apiKey, params)
+      const params = { testing: this.config.testing };
+      const promise = await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey, params)
         .toPromise()
         .then((res: any) => {
           console.log('R', res);
@@ -77,7 +76,8 @@ export class RestaurantsComponent implements OnInit {
 
   public async loadSummary(): Promise<any> {
     if (!this.data.getCuisines().length) {
-      const promise = await this.api.getRestaurantsSummary(this.apiAccessCode, this.apiKey, 40, 7)
+      const promise = await this.api.getRestaurantsSummary(this.config.channelAccessCode, this.config.channelAPIKey,
+        this.config.channelLat, this.config.channelLng)
         .toPromise()
         .then((res: any) => {
           this.data.setSummary(res);
@@ -105,7 +105,7 @@ export class RestaurantsComponent implements OnInit {
       this.filtersOn = true;
     } else {
       this.restaurants = this.cachedRestaurants;
-      this.restaurants = this.sortByDistance(40, 7);
+      this.restaurants = this.sortByDistance(this.config.channelLat, this.config.channelLng);
     }
     this.isLoaded = true;
   }
@@ -148,7 +148,7 @@ export class RestaurantsComponent implements OnInit {
     let s;
     while (i--) {
       s = sortedRestaurants[i];
-      s.distance = this.computeDistance(s.restaurant_lat, lat, s.restaurant_lng, lng);
+      s.distance = this.computeDistance(s.restaurant_lat, s.restaurant_lng, lat, lng);
     }
     sortedRestaurants.sort((a, b) => {
       return a.distance - b.distance;

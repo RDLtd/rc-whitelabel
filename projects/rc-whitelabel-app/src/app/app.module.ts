@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { ApiService } from './api.service';
 import { HttpClientModule } from '@angular/common/http';
+import { AppConfig } from './app.config';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
   ],
   providers: [
-    ApiService
+    ApiService,
+    AppConfig
   ],
   bootstrap: [AppComponent]
 })
