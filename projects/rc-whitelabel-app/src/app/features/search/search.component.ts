@@ -66,9 +66,9 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.data.getUserLocation().then((geo: any) => {
-      this.currentLocation = geo;
-      console.log('Got geo', geo);
+    this.data.getUserLocation()
+      .then((geo: any) => {
+        this.currentLocation = geo;
     });
 
     this.loadRestaurants().then(() => {
@@ -83,6 +83,8 @@ export class SearchComponent implements OnInit {
     setTimeout( () => {
       this.rdSearchInput.nativeElement.focus();
     }, 500);
+
+    this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
 
     console.log('Async', this.data.loadRestaurants());
 
@@ -116,7 +118,6 @@ export class SearchComponent implements OnInit {
           this.landmarks = res.landmarks;
           this.features = res.attributes;
           this.cuisines = this.data.getCuisines();
-          this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
         });
     } else {
       this.searchRestaurants = this.data.getSearchRests();
