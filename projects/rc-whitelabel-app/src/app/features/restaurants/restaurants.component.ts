@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FilterOptionsDialogComponent } from './filter-options-dialog.component';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { LocalStorageService } from '../../local-storage.service';
-import { DataService, Restaurant } from '../../data.service';
+import { DataService } from '../../data.service';
 import { ApiService } from '../../api.service';
 import { AppConfig } from '../../app.config';
 
@@ -14,19 +13,18 @@ import { AppConfig } from '../../app.config';
 export class RestaurantsComponent implements OnInit {
 
   isLoaded = false;
-
+  currentLocation: any | undefined;
+  // filters
   showFilterOptions = false;
   filtersOn = false;
   routeFilter: any;
   routeSort: any;
-
-  restaurants: any[] = [];
-  cachedRestaurants: any[] = [];
-  restaurantsLoaded = false;
-
   landmarks: any[] = [];
   cuisines: any[] = [];
   features: any[] = [];
+  // Results
+  restaurants: any[] = [];
+  cachedRestaurants: any[] = [];
 
   constructor(
     public dialog: MatDialog,
@@ -44,16 +42,19 @@ export class RestaurantsComponent implements OnInit {
       this.routeFilter = params.get('filter');
       this.routeSort = params.get('sort');
       // load restaurants
-      this.loadRestaurants().then((res: any) => {
+      this.loadRestaurants().then(() => {
         console.log('Restaurants loaded');
         this.updateRestaurantResults();
       });
     });
-
     // load summary
-    this.loadSummary().then((res: any) => {
+    this.loadSummary().then(() => {
       console.log('Summary loaded');
       this.showFilterBtn();
+    });
+    this.data.getUserLocation().then((geo: any) => {
+      this.currentLocation = geo;
+      console.log('Got geo2', geo);
     });
   }
 
@@ -94,12 +95,12 @@ export class RestaurantsComponent implements OnInit {
   // Check for route params
   updateRestaurantResults(sort?: string, filter?: string): void {
     if (this.routeSort || sort) {
-      console.log('sort');
+      // console.log('sort');
       const coords = this.routeSort.split(':');
       this.restaurants = this.sortByDistance(coords[0], coords[1]);
       this.filtersOn = true;
     } else if ( this.routeFilter || filter ) {
-      console.log('filter');
+      // console.log('filter');
       this.restaurants = this.cachedRestaurants;
       this.restaurants = this.filterByCuisine(this.routeFilter);
       this.filtersOn = true;
@@ -128,8 +129,7 @@ export class RestaurantsComponent implements OnInit {
   }
 
   filterByCuisine(cuisine: string): any {
-    let i = this.restaurants.length;
-    let r;
+    let i = this.restaurants.length; let r;
     const filteredRests = [];
     while (i--) {
       r = this.restaurants[i];
@@ -138,14 +138,13 @@ export class RestaurantsComponent implements OnInit {
       }
     }
     this.restaurants = filteredRests;
-    console.log('Filtered', filteredRests);
+    // console.log('Filtered', filteredRests);
     return filteredRests;
   }
 
   sortByDistance(lat: number, lng: number): any[] {
     const sortedRestaurants = this.cachedRestaurants;
-    let i = sortedRestaurants.length;
-    let s;
+    let i = sortedRestaurants.length; let s;
     while (i--) {
       s = sortedRestaurants[i];
       s.distance = this.computeDistance(s.restaurant_lat, s.restaurant_lng, lat, lng);
@@ -158,14 +157,14 @@ export class RestaurantsComponent implements OnInit {
 
   openFilterOptions(): void {
     const dialogRef = this.dialog.open(FilterOptionsDialogComponent, {
-      width: '90%',
       data: {
         cuisines: this.data.getCuisines(),
-        landmarks: this.data.getLandmarks()
+        landmarks: this.data.getLandmarks(),
+        coords: this.currentLocation.coords
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Result', result);
+      // console.log('Result', result);
       if (!!result) {
         if (result.type === 'filter') {
           this.routeFilter = result.value;
@@ -178,7 +177,6 @@ export class RestaurantsComponent implements OnInit {
       } else {
         this.filtersOn = true;
       }
-
     });
   }
 
@@ -197,9 +195,10 @@ export class RestaurantsComponent implements OnInit {
     this.showFilterBtn();
   }
 
-  openSPW(url: string): void {
-    console.log('open:', url);
-    window.open(url, '_target');
+  openSPW(restaurant: any): void {
+    // Add to recents
+    this.data.setRecentlyViewed(restaurant);
+    window.open(restaurant.restaurant_spw_url, '_target');
   }
 
 }

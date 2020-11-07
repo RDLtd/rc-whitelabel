@@ -19,14 +19,16 @@ export interface Restaurant {
 
 export class DataService {
 
-  // Restaurants
+  // Caches
   private restaurants: any[] = [];
   private searchRests: any[] = [];
-  private summary: any = {};
+  private recentlyViewed: any = [];
   private cuisines: any[] = [];
   private landmarks: any[] = [];
   private features: any[] = [];
-  private data: any | undefined;
+
+  // User
+  private userLocation: any;
 
   constructor(
     private api: ApiService,
@@ -35,6 +37,43 @@ export class DataService {
     private config: AppConfig
   ) { }
 
+  // Get user location
+  async getGeoLocation(): Promise<any> {
+    return new Promise(resolve => {
+      // Testing
+      if (this.config.testing) {
+        const geo = {
+          timestamp: new Date().getTime(),
+          coords: {
+            latitude: this.config.channelLat,
+            longitude: this.config.channelLng
+          }
+        };
+        console.log('Geo test', geo);
+        resolve(geo);
+      } else
+      // check cache
+      if (!!this.userLocation) {
+        console.log('Geo local');
+        resolve(this.userLocation);
+      } else {
+        // Fetch from browser
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(position => {
+            console.log('Geo remote', position);
+            this.userLocation = position;
+            resolve(this.userLocation);
+          });
+        } else {
+          console.log('Geolocation is not supported by this browser, setting channel default location');
+        }
+      }
+    });
+  }
+  async getUserLocation(): Promise<any> {
+    return await this.getGeoLocation();
+  }
+  // Restaurants
   async loadRestaurants(): Promise <any> {
     if (this.restaurants.length) {
       console.log('Async local');
@@ -45,26 +84,22 @@ export class DataService {
         {testing: this.config.testing}).toPromise();
     }
   }
-
   getRestaurants(): any[] {
     return this.restaurants;
   }
-
   setRestaurants(arr: any[]): void {
     this.restaurants = arr;
   }
-
+  // Summary data
   setSummary(s: any): void {
     this.setCuisines(s.cuisines);
     this.landmarks = s.landmarks;
     this.features = s.features;
     this.searchRests = s.restaurants;
   }
-
   getCuisines(): any[] {
     return this.cuisines;
   }
-
   getLandmarks(): any[] {
     return this.landmarks;
   }
@@ -90,5 +125,24 @@ export class DataService {
     this.cuisines.sort((a, b) => {
       return b.total - a.total;
     });
+  }
+  // recently viewed
+  getRecentlyViewed(): any[] {
+    return this.recentlyViewed;
+  }
+  setRecentlyViewed(restaurant: any): void {
+    // Check whether value is the array
+    // TODO: use restaurant_number when in production
+    const max = 3;
+    const idx = this.recentlyViewed.map((item: any) => item.restaurant_name).indexOf(restaurant.restaurant_name);
+    // remove object
+    if (idx > -1) { this.recentlyViewed.splice(idx, 1); }
+    // add to beginning
+    this.recentlyViewed.unshift(restaurant);
+    this.recentlyViewed.splice(max);
+
+    // Sore locally
+    this.local.set('rdRecentlyViewed', this.recentlyViewed);
+    // console.log(this.recentlyViewed);
   }
 }

@@ -4,7 +4,7 @@
 
   <div
     *ngFor="let restaurant of restaurants"
-    class="rd-restaurant" (click)="openSPW(restaurant?.restaurant_spw_url)">
+    class="rd-restaurant" (click)="openSPW(restaurant)">
     <div class="rd-restaurant-detail">
       <h2>{{ restaurant?.restaurant_name }}</h2>
       <h3>
@@ -20,20 +20,19 @@
       </mat-chip-list>
       <span class="arrow"></span>
     </div>
-    <img [src]="restaurant?.image" loading="lazy">
+    <img [src]="restaurant?.image" loading="lazy" [alt]="restaurant?.restaurant_name">
   </div>
-
 
   <div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
     <button
-      *ngIf="!filtersOn"
+      *ngIf="!filtersOn && isLoaded"
       mat-raised-button
       (click)="openFilterOptions()">
       {{ config.i18n.Sort_filter }}
       <mat-icon>filter_list</mat-icon>
     </button>
     <button
-      *ngIf="filtersOn"
+      *ngIf="filtersOn && isLoaded"
       mat-raised-button
       (click)="clearFilters()">
       {{ config.i18n.Clear_filters }} {{ routeFilter || 'distance' }}

@@ -142,7 +142,7 @@ rd-loader {
     }
   }
   ul {
-    margin: 0 24px 12px 36px;
+    margin: 0 24px 12px 28px;
     li {
       > a {
         display: flex;
@@ -425,12 +425,14 @@ ul.rd-search-autofill {
 
   .rd-quick-links-container {
     flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+    align-items: stretch;
+    //flex-wrap: wrap;
+    justify-content: space-between;
+
   }
 
   .rd-quick-links {
-    width: 50%;
+    width: 33%;
   }
 }
 @media screen and ( min-width: 800px ) {

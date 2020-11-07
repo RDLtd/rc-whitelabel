@@ -1,8 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { LocalStorageService } from '../../local-storage.service';
-import { DataService, Restaurant } from '../../data.service';
-import { HttpClient } from '@angular/common/http';
+import { DataService } from '../../data.service';
 import { AppConfig } from '../../app.config';
 
 interface SearchSuggestion {
@@ -25,11 +24,6 @@ interface Cuisine {
   label: string;
   total: number;
 }
-interface Location {
-  label?: string;
-  lat?: number;
-  lng?: number;
-}
 
 @Component({
   selector: 'rd-search',
@@ -41,6 +35,7 @@ export class SearchComponent implements OnInit {
   // Reference to search element
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
 
+
   // Config
   minChars = 1;
   icons = {
@@ -48,7 +43,7 @@ export class SearchComponent implements OnInit {
     cuisine: 'restaurant',
     restaurant: 'food_bank',
     nearest: 'my_location',
-    takeaway: 'fastfood',
+    takeaway: 'fast_food',
     recent: 'watch_later'
   };
 
@@ -66,23 +61,25 @@ export class SearchComponent implements OnInit {
     private api: ApiService,
     private localStorageService: LocalStorageService,
     private data: DataService,
-    private http: HttpClient,
     public config: AppConfig
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.loadRestaurants().then((res: any) => {
+
+    this.data.getUserLocation().then((geo: any) => {
+      this.currentLocation = geo;
+      console.log('Got geo', geo);
+    });
+
+    this.loadRestaurants().then(() => {
       console.log('Restaurants loaded');
     });
 
-    this.loadSummary().then((res: any) => {
+    this.loadSummary().then(() => {
       this.isLoaded = true;
       console.log('Summary loaded');
     });
-
-    this.getCurrentLocation();
     // So that we can focus the input field
-
     setTimeout( () => {
       this.rdSearchInput.nativeElement.focus();
     }, 500);
@@ -119,61 +116,20 @@ export class SearchComponent implements OnInit {
           this.landmarks = res.landmarks;
           this.features = res.attributes;
           this.cuisines = this.data.getCuisines();
+          console.log(this.localStorageService.get('rdRecentlyViewed'));
+          this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
         });
     } else {
       this.searchRestaurants = this.data.getSearchRests();
       this.cuisines = this.data.getCuisines();
       this.landmarks = this.data.getLandmarks();
       this.features = this.data.getFeatures();
+      this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
     }
   }
 
   getRecentlyViewed(): void {
     this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
-  }
-
-  getCurrentLocation(): void {
-    const d = new Date();
-    const now = d.toLocaleString();
-    if (this.config.testing) {
-      this.currentLocation = {
-        timestamp: now,
-        coords: {
-          latitude: this.config.channelLat,
-          longitude: this.config.channelLng
-        }
-      };
-    } else {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          console.log('Current location', position);
-          this.currentLocation = position;
-          this.localStorageService.set('rdCurrentLocation', {
-            timestamp: position.timestamp,
-            coords: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude
-            }
-          });
-        });
-      } else {
-        console.log('Geolocation is not supported by this browser, setting channel default location');
-        this.currentLocation = {
-          timestamp: now,
-          coords: {
-            latitude: this.config.channelLat,
-            longitude: this.config.channelLng
-          }
-        };
-      }
-    }
-    this.localStorageService.set('rdCurrentLocation', {
-      timestamp: this.currentLocation.timestamp,
-      coords: {
-        latitude: this.currentLocation.coords.latitude,
-        longitude: this.currentLocation.coords.longitude
-      }
-    });
   }
 
   // Load landmarks

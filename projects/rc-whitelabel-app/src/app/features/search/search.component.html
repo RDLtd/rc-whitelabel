@@ -56,6 +56,7 @@
   </ul>
   <!-- Quick links -->
   <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
+
   <section class="rd-quick-links" *ngIf="recentlyViewed?.length">
     <div>
       <mat-icon>{{ icons.recent }}</mat-icon>
@@ -63,8 +64,8 @@
     </div>
     <ul>
       <li *ngFor="let recent of recentlyViewed">
-        <a [href]="recent" target="_blank">
-          {{ recent.name }}
+        <a [href]="recent.restaurant_spw_url" target="_blank">
+          {{ recent.restaurant_name }}
         </a>
       </li>
     </ul>

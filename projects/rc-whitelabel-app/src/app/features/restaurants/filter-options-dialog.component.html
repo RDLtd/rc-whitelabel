@@ -1,4 +1,4 @@
-
+<h1 mat-dialog-title>Filter & Sort</h1>
 <div mat-dialog-content>
   <section class="rd-filter-list" *ngIf="data.cuisines.length > 1">
     <h1>{{ config.i18n.Filter_by_cuisine }}</h1>
@@ -13,9 +13,18 @@
       </li>
     </ul>
   </section>
-  <section class="rd-filter-list" *ngIf="data.landmarks.length">
+  <section class="rd-filter-list" *ngIf="data.landmarks.length || !!data.coords">
     <h1>{{ config.i18n.Sort_by_location }}</h1>
     <ul>
+      <li>
+        <a
+          [mat-dialog-close]="{type: 'sort', lat: data?.coords.latitude, lng: data?.coords.longitude}">
+          <mat-icon>my_location</mat-icon>
+          {{ config.i18n.My_current_location }}
+          <span class="rd-flex-spacer"></span>
+          <span class="rd-count"></span>
+        </a>
+      </li>
       <li *ngFor="let landmark of data.landmarks">
         <a
           [mat-dialog-close]="{type: 'sort', lat: landmark?.channel_landmark_lat, lng: landmark?.channel_landmark_lng}">
