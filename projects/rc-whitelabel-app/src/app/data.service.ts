@@ -30,12 +30,15 @@ export class DataService {
   // User
   private userLocation: any;
 
+
   constructor(
     private api: ApiService,
     private local: LocalStorageService,
     private http: HttpClient,
     private config: AppConfig
-  ) { }
+  ) {
+    this.recentlyViewed = this.local.get('rdRecentlyViewed');
+  }
 
   // Get user location
   async getGeoLocation(): Promise<any> {
@@ -133,13 +136,13 @@ export class DataService {
   setRecentlyViewed(restaurant: any): void {
     // Check whether value is the array
     // TODO: use restaurant_number when in production
-    const max = 3;
+    const maxNum = 5;
     const idx = this.recentlyViewed.map((item: any) => item.restaurant_name).indexOf(restaurant.restaurant_name);
     // remove object
     if (idx > -1) { this.recentlyViewed.splice(idx, 1); }
     // add to beginning
     this.recentlyViewed.unshift(restaurant);
-    this.recentlyViewed.splice(max);
+    this.recentlyViewed.splice(maxNum);
 
     // Sore locally
     this.local.set('rdRecentlyViewed', this.recentlyViewed);

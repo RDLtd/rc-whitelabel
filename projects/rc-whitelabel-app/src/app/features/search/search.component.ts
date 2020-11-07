@@ -116,7 +116,6 @@ export class SearchComponent implements OnInit {
           this.landmarks = res.landmarks;
           this.features = res.attributes;
           this.cuisines = this.data.getCuisines();
-          console.log(this.localStorageService.get('rdRecentlyViewed'));
           this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
         });
     } else {
@@ -124,7 +123,6 @@ export class SearchComponent implements OnInit {
       this.cuisines = this.data.getCuisines();
       this.landmarks = this.data.getLandmarks();
       this.features = this.data.getFeatures();
-      this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
     }
   }
 
