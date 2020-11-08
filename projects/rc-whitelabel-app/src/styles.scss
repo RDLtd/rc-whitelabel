@@ -65,7 +65,7 @@ header {
   position: fixed;
   transition: all .6s cubic-bezier(0.16, 1, 0.3, 1);
   background: var(--brand-bgd);
-  color: var(--brand-bgd-color);
+  color: var(--brand-on-bgd-color);
   &.rd-hideHeader {
     transform: translateY(-56px);
   }

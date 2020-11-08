@@ -20,8 +20,6 @@ export class MainLayoutComponent implements OnInit {
       });
     };
   }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }
