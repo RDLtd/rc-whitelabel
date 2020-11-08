@@ -32,10 +32,11 @@
       <mat-icon>filter_list</mat-icon>
     </button>
     <button
+      class="clear"
       *ngIf="filtersOn && isLoaded"
       mat-raised-button
       (click)="clearFilters()">
-      {{ config.i18n.Clear_filters }} {{ routeFilter || 'distance' }}
+      {{ config.i18n.Clear_filters }}: {{ routeFilter || 'distance' }}
       <mat-icon>cancel</mat-icon>
     </button>
   </div>

@@ -45,12 +45,18 @@ body {
   font-family: $font-family-default;
   color: $colour-gray;
 }
+a, a:active, a:focus {
+  outline: none;
+}
 
 // UTILS
 .rd-flex-spacer { flex: 1 0 auto; }
 .rd-hide { display: none; }
 .rd-show { opacity: 1!important;}
 .rd-invisible { opacity: 0; pointer-events: none; }
+.rd-icon-restaurant { color: #e74f14;}
+.rd-icon-cuisine {}
+.rd-icon-location {color: #e74f14;}
 
 // LAYOUT
 main {
@@ -67,7 +73,7 @@ header {
   background: var(--brand-bgd);
   color: var(--brand-on-bgd-color);
   &.rd-hideHeader {
-    transform: translateY(-56px);
+    //transform: translateY(-56px);
   }
 }
 rd-header {
@@ -81,14 +87,14 @@ rd-header {
   .rd-logo { height: 40px; }
   h1 {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
     line-height: 1;
     margin: 0;
     text-align: center;
   }
   .mat-button {
-    font-weight: 300;
-    font-size: 12px;
+    font-weight: 400;
+    font-size: 14px;
     letter-spacing: 1px;
   }
 }
@@ -198,7 +204,7 @@ ul.rd-search-autofill {
   height: 0;
   max-height: 0;
   overflow: hidden;
-  margin: -20px 0 36px 0;
+  //margin: -20px 0 36px 0;
   width: 100%;
   transition: all .3s ease-out;
   li {
@@ -210,9 +216,9 @@ ul.rd-search-autofill {
       display: flex;
       align-items: center;
       width: 100%;
-      padding: 12px 0;
+      padding: 16px 0;
       font-size: 16px;
-      font-weight: 300;
+      font-weight: 400;
       color: black;
       .mat-icon {
         width: 20px;
@@ -220,6 +226,9 @@ ul.rd-search-autofill {
         font-size: 20px;
         margin-right: 4px;
         color: rgba(var(--brand-primary-rgb), .5);
+        &.rd-icon-cuisine { color: #0bb0d9; }
+        &.rd-icon-location { color: #ee4b08; }
+        &.rd-icon-restaurant { color: #484747;}
       }
       span:last-child {
         font-size: 11px;
@@ -228,7 +237,7 @@ ul.rd-search-autofill {
   }
   &.open {
     height: auto;
-    max-height: 500px;
+    max-height: 540px;
   }
 }
 .rd-search-content {
@@ -307,7 +316,7 @@ ul.rd-search-autofill {
         background-repeat:repeat-x;
       }
       h2 {
-        font: 500 22px/26px 'Roboto Slab';
+        font: 500 24px/28px 'Roboto Slab';
         margin: 0;
         display: flex;
         width: 100%;
@@ -316,11 +325,10 @@ ul.rd-search-autofill {
         display: flex;
         flex-direction: row;
         align-items: center;
-        font-size: 12px;
-        font-weight: 500;
-        //line-height: 12px;
+        font-size: 14px;
+        font-weight: 400;
         text-transform: uppercase;
-        margin: -4px 0 0;
+        margin: 0;
         padding: 0;
         span {
           text-transform: lowercase;
@@ -332,9 +340,9 @@ ul.rd-search-autofill {
         }
       }
       p {
-        font-size: 12px;
+        font-size: 16px;
         font-weight: 300;
-        line-height: 14px;
+        line-height: 20px;
         margin: 0 0 8px;
         padding: 0;
       }
@@ -342,7 +350,7 @@ ul.rd-search-autofill {
         margin: 0;
       }
       .mat-chip {
-        font-size: 9px;
+        font-size: 10px;
         text-transform: uppercase;
         margin: 0 3px 3px 0;
         padding: 0 8px;
@@ -390,8 +398,14 @@ ul.rd-search-autofill {
     .mat-raised-button {
       padding: 8px 20px;
       border-radius: 32px;
+      line-height: 40px;
+      text-transform: uppercase;
+      font-weight: 400;
       background: black;
       color: white;
+      &.clear {
+        background-color: #cb0202;
+      }
     }
     .mat-button-wrapper {
       display: flex;
@@ -478,6 +492,7 @@ ul.rd-search-autofill {
 /* -----------------------------------
 ** MEDIA QUERIES
 ** ----------------------------------- */
+
 @media screen and ( min-width : 600px ){
   .rd-quick-links-container {
     flex-direction: row;
@@ -486,6 +501,11 @@ ul.rd-search-autofill {
   }
   .rd-quick-links {
     width: 33%;
+  }
+  header {
+    &.rd-hideHeader {
+      transform: translateY(-56px);
+    }
   }
 }
 @media screen and ( min-width: 800px ) {
@@ -518,6 +538,16 @@ ul.rd-search-autofill {
     width: 50%;
     padding: 0 24px;
   }
+  .rd-search-content {
+    margin-top: 24px;
+  }
 }
+@media screen and ( min-width: 1200px ) {
 
+  //.rd-results-container {
+  //  grid-template-columns: repeat(3, 1fr);
+  //  grid-column-gap: 16px;
+  //  grid-row-gap: 16px;
+  //}
+}
 
