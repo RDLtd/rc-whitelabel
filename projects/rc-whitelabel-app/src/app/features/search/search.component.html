@@ -57,12 +57,15 @@
   </ul>
   <!-- Quick links -->
   <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
-  <section class="rd-quick-links" *ngIf="recentlyViewed?.length">
+  <section class="rd-quick-links">
     <div>
       <mat-icon>{{ icons.recent }}</mat-icon>
       <h2>{{ config.i18n.Recently_viewed }}</h2>
     </div>
     <ul>
+      <li *ngIf="!recentlyViewed?.length">
+        <a>You're new, so nothing here yet!</a>
+      </li>
       <li *ngFor="let recent of recentlyViewed">
         <a [href]="recent.restaurant_spw_url" target="_blank">
           {{ recent.restaurant_name }}
