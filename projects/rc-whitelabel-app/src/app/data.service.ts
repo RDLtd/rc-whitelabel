@@ -22,7 +22,7 @@ export class DataService {
   // Caches
   private restaurants: any[] = [];
   private searchRests: any[] = [];
-  readonly recentlyViewed: any = [];
+  recentlyViewed: any = [];
   private cuisines: any[] = [];
   private landmarks: any[] = [];
   private features: any[] = [];
@@ -138,12 +138,18 @@ export class DataService {
     // Check whether value is the array
     // TODO: use restaurant_number when in production
     const maxNum = 5;
-    const idx = this.recentlyViewed.map((item: any) => item.restaurant_name).indexOf(restaurant.restaurant_name);
-    // remove object
-    if (idx > -1) { this.recentlyViewed.splice(idx, 1); }
-    // add to beginning
-    this.recentlyViewed.unshift(restaurant);
-    this.recentlyViewed.splice(maxNum);
+    if (this.recentlyViewed) {
+      const idx = this.recentlyViewed.map((item: any) => item.restaurant_name).indexOf(restaurant.restaurant_name);
+      // remove object
+      if (idx > -1) {
+        this.recentlyViewed.splice(idx, 1);
+      }
+      // add to beginning
+      this.recentlyViewed.unshift(restaurant);
+      this.recentlyViewed.splice(maxNum);
+    } else {
+      this.recentlyViewed = [restaurant];
+    }
     // Sore locally
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
     // console.log(this.recentlyViewed);
