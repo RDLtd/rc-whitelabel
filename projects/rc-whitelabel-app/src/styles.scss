@@ -45,12 +45,18 @@ body {
   font-family: $font-family-default;
   color: $colour-gray;
 }
+a, a:active, a:focus {
+  outline: none;
+}
 
 // UTILS
 .rd-flex-spacer { flex: 1 0 auto; }
 .rd-hide { display: none; }
 .rd-show { opacity: 1!important;}
 .rd-invisible { opacity: 0; pointer-events: none; }
+.rd-icon-restaurant { color: #e74f14;}
+.rd-icon-cuisine {}
+.rd-icon-location {color: #e74f14;}
 
 // LAYOUT
 main {
@@ -198,7 +204,7 @@ ul.rd-search-autofill {
   height: 0;
   max-height: 0;
   overflow: hidden;
-  margin: -20px 0 36px 0;
+  //margin: -20px 0 36px 0;
   width: 100%;
   transition: all .3s ease-out;
   li {
@@ -220,6 +226,9 @@ ul.rd-search-autofill {
         font-size: 20px;
         margin-right: 4px;
         color: rgba(var(--brand-primary-rgb), .5);
+        &.rd-icon-cuisine { color: #0bb0d9; }
+        &.rd-icon-location { color: #ee4b08; }
+        &.rd-icon-restaurant { color: #484747;}
       }
       span:last-child {
         font-size: 11px;
@@ -389,7 +398,7 @@ ul.rd-search-autofill {
     .mat-raised-button {
       padding: 8px 20px;
       border-radius: 32px;
-      line-height: 48px;
+      line-height: 40px;
       text-transform: uppercase;
       font-weight: 400;
       background: black;
@@ -528,6 +537,9 @@ ul.rd-search-autofill {
     position: relative;
     width: 50%;
     padding: 0 24px;
+  }
+  .rd-search-content {
+    margin-top: 24px;
   }
 }
 @media screen and ( min-width: 1200px ) {

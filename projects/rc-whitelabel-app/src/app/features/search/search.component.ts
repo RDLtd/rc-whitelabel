@@ -34,14 +34,12 @@ export class SearchComponent implements OnInit {
   isLoaded = false;
   // Reference to search element
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
-
-
   // Config
   minChars = 1;
   icons = {
     location: 'location_on',
     cuisine: 'restaurant',
-    restaurant: 'food_bank',
+    restaurant: 'store',
     nearest: 'my_location',
     takeaway: 'fast_food',
     recent: 'watch_later'

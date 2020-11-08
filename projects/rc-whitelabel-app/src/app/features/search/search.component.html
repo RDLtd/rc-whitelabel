@@ -33,7 +33,7 @@
     <li *ngFor="let displayItem of searchSuggestions; let i = index" [tabindex]="i + 1" [ngSwitch]="displayItem.cat">
       <!-- Landmarks -->
       <a *ngSwitchCase="'location'" [routerLink]="displayItem.route">
-        <mat-icon>{{ icons['location'] }}</mat-icon>
+        <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
         {{ displayItem?.name }}
         <span class="rd-flex-spacer"></span>
         <!-- <span>{{ displayItem?.distance | number: '1.0-1' }} km</span>-->
@@ -41,14 +41,14 @@
       <!-- Restaurants -->
       <!-- TODO: need to add these to recently viewd but they are not full restaurant records? -->
       <a *ngSwitchCase="'restaurant'" [href]="displayItem.spw">
-        <mat-icon>{{ icons['restaurant'] }}</mat-icon>
+        <mat-icon class="rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
         {{ displayItem?.name }}
         <span class="rd-flex-spacer"></span>
         <span>{{ displayItem.misc }}</span>
       </a>
       <!-- Cuisines -->
       <a *ngSwitchCase="'cuisine'" [routerLink]="displayItem.route">
-        <mat-icon>{{ icons['cuisine'] }}</mat-icon>
+        <mat-icon class="rd-icon-cuisine">{{ icons['cuisine'] }}</mat-icon>
         {{ displayItem?.name }}
         <span class="rd-flex-spacer"></span>
         <span>{{ displayItem.misc }}</span>
@@ -67,8 +67,8 @@
         <a>You're new, so nothing here yet!</a>
       </li>
       <li *ngFor="let recent of recentlyViewed">
-        <a [href]="recent.restaurant_spw_url" target="_blank">
-          {{ recent.restaurant_name }}
+        <a [href]="recent['restaurant_spw_url']" target="_blank">
+          {{ recent['restaurant_name'] }}
         </a>
       </li>
     </ul>
