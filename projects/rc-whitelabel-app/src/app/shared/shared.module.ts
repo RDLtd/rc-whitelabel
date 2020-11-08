@@ -4,9 +4,12 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { LoaderComponent } from '../core/layout/loader/loader.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    LoaderComponent
+  ],
   imports: [
     // Vendor
     CommonModule,
@@ -20,7 +23,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     RouterModule,
     MatIconModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    LoaderComponent
   ]
 })
 export class SharedModule { }

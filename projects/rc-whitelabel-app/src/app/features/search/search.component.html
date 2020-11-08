@@ -1,124 +1,110 @@
-<div class="rd-search-content">
-
-  <form #rdSearchForm="ngForm" (ngSubmit)="search(rdSearchForm.form.value)">
-    <mat-form-field class="rd-full-width" floatLabel="never">
+<rd-loader [class.rd-hide]="isLoaded">{{ config.i18n.Loading }}</rd-loader>
+<div class="rd-search-content" [class.rd-show]="isLoaded">
+  <!-- SEARCH FORM -->
+  <form #rdSearchForm="ngForm" (ngSubmit)="doSearch(rdSearchInput.value)">
+    <mat-form-field floatLabel="never">
       <input
         #rdSearchInput
         name="searchString"
         matInput
+        (keyup)="doSearch(rdSearchInput.value)"
         autocomplete="off"
         type="text"
-        [(ngModel)]="searchString"
-        placeholder="Search by name or location"
+        ngModel
+        placeholder="{{ config.i18n.Search_by_name_or_location }}"
         tabindex="1">
       <button
         mat-button
         type="button"
-        *ngIf="searchString"
+        *ngIf="rdSearchInput.value"
         matSuffix
         mat-icon-button
         aria-label="Clear"
-        (click)="searchString=''">
+        (click)="searchReset()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
+    <mat-error *ngIf="rdSearchInput.value.length >= minChars && searchSuggestions?.length === 0">
+      {{ config.i18n.No_matching_search_results }}</mat-error>
   </form>
+  <!--  Search Results -->
+  <ul [class.open]="!!rdSearchInput.value && !!searchSuggestions" class="rd-search-autofill">
 
-  <ul class="rd-search-autofill" [class.open]="!!rdSearchInput.value">
-    <li>
-      <a routerLink=""><mat-icon>location_on</mat-icon>Near Landmark</a>
-    </li>
-    <li>
-      <a routerLink=""><mat-icon>food_bank</mat-icon>Restaurant</a>
+    <li *ngFor="let displayItem of searchSuggestions; let i = index" [tabindex]="i + 1" [ngSwitch]="displayItem.cat">
+      <!-- Landmarks -->
+      <a *ngSwitchCase="'location'" [routerLink]="displayItem.route">
+        <mat-icon>{{ icons['location'] }}</mat-icon>
+        {{ displayItem?.name }}
+        <span class="rd-flex-spacer"></span>
+        <!-- <span>{{ displayItem?.distance | number: '1.0-1' }} km</span>-->
+      </a>
+      <!-- Restaurants -->
+      <!-- TODO: need to add these to recently viewd but they are not full restaurant records? -->
+      <a *ngSwitchCase="'restaurant'" [href]="displayItem.spw">
+        <mat-icon>{{ icons['restaurant'] }}</mat-icon>
+        {{ displayItem?.name }}
+        <span class="rd-flex-spacer"></span>
+        <span>{{ displayItem.misc }}</span>
+      </a>
+      <!-- Cuisines -->
+      <a *ngSwitchCase="'cuisine'" [routerLink]="displayItem.route">
+        <mat-icon>{{ icons['cuisine'] }}</mat-icon>
+        {{ displayItem?.name }}
+        <span class="rd-flex-spacer"></span>
+        <span>{{ displayItem.misc }}</span>
+      </a>
     </li>
   </ul>
-
-  <div class="rd-quick-links-container">
-
-  <section class="rd-quick-links">
+  <!-- Quick links -->
+  <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
+  <section class="rd-quick-links" *ngIf="recentlyViewed?.length">
     <div>
-      <mat-icon>watch_later</mat-icon>
-      <h2>Recently viewed</h2>
+      <mat-icon>{{ icons.recent }}</mat-icon>
+      <h2>{{ config.i18n.Recently_viewed }}</h2>
     </div>
     <ul>
-      <li>
-        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-          Chez Bruno - Hove
-        </a>
-      </li>
-      <li>
-        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-          Pizza Express - Brighton
+      <li *ngFor="let recent of recentlyViewed">
+        <a [href]="recent.restaurant_spw_url" target="_blank">
+          {{ recent.restaurant_name }}
         </a>
       </li>
     </ul>
   </section>
 
-  <section class="rd-quick-links">
+  <section class="rd-quick-links" *ngIf="landmarks?.length">
     <div>
-      <mat-icon>my_location</mat-icon>
-      <h2>Nearest to</h2>
+      <mat-icon>{{ icons.nearest }}</mat-icon>
+      <h2>{{ config.i18n.Nearest_to }}</h2>
     </div>
     <ul>
-      <li>
-        <a href="https://spw.restaurantcollective.uk/85719-sarao-2/" target="_blank">
-          My current location
+      <li *ngIf="!!currentLocation">
+        <a [routerLink]="['/restaurants/nearest/', currentLocation?.coords.latitude + ':' +
+        currentLocation?.coords.longitude]">
+          {{ config.i18n.My_current_location }}
         </a>
       </li>
-      <li>
-        <a [routerLink]="['/restaurants/nearest','regency_palace']">
-          The Regency Palace</a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants/nearest','west_pier']">
-          The West Pier</a>
-      </li>
-    </ul>
-  </section>
-
-  <section class="rd-quick-links">
-    <div>
-      <mat-icon>food_bank</mat-icon>
-      <h2>Cuisines</h2>
-    </div>
-    <ul>
-      <li>
-        <a [routerLink]="['/restaurants','pizza']">
-          Chinese Restaurants
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants','indian']">
-          Indian Restaurants
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants','indian']">
-          Pizza Restaurants
+      <li *ngFor="let landmark of landmarks">
+        <a [routerLink]="['/restaurants/nearest/', landmark?.channel_landmark_lat + ':' + landmark?.channel_landmark_lng]">
+          {{ landmark?.channel_landmark_name }}
         </a>
       </li>
     </ul>
   </section>
 
-  <section class="rd-quick-links">
+  <section class="rd-quick-links" *ngIf="cuisines.length">
     <div>
-      <mat-icon>fastfood</mat-icon>
-      <h2>Take Away Services</h2>
+      <mat-icon>{{ icons.cuisine }}</mat-icon>
+      <h2>{{ config.i18n.Cuisines }}</h2>
     </div>
     <ul>
-      <li>
-        <a [routerLink]="['/restaurants','take_away']">
-          Burgers
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/restaurants','take_away']">
-          Fish and Chips
+      <li *ngFor="let cuisine of cuisines">
+        <a [routerLink]="['/restaurants', cuisine.label]">
+          {{ cuisine?.label }}
+          <span class="rd-flex-spacer"></span>
+          <span>{{ cuisine?.total }}</span>
         </a>
       </li>
     </ul>
   </section>
   </div>
 </div>
-
-

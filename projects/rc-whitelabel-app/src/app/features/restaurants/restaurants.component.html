@@ -1,61 +1,41 @@
+<rd-loader [class.rd-hide]="isLoaded">{{ config.i18n.Loading }}</rd-loader>
 <!-- RESTAURANT RESULTS -->
 <div class="rd-results-container">
 
-  <div class="rd-restaurant" (click)="openSPW('https://spw.restaurantcollective.uk/85719-sarao-2/')">
+  <div
+    *ngFor="let restaurant of restaurants"
+    class="rd-restaurant" (click)="openSPW(restaurant)">
     <div class="rd-restaurant-detail">
-      <h2>Sarao Restaurant & Bar</h2>
-      <h3>Italian – Brighton - BN1 1HH</h3>
-      <p>A la carte you will find traditional homemade dishes from Italia and Niçoises Dishes in honor of the local cuisine.</p>
+      <h2>{{ restaurant?.restaurant_name }}</h2>
+      <h3>
+        {{ restaurant?.restaurant_cuisine_1 }} | {{ restaurant?.restaurant_address_2 }}
+        <span class="rd-flex-spacer"></span>
+        <ng-container *ngIf="restaurant?.distance <= 10">
+          <span *ngIf="restaurant?.distance <= 0.5">{{ restaurant?.distance * 1000 | number: '1.0-0' }} m</span>
+          <span *ngIf="restaurant?.distance > 0.5">{{ restaurant?.distance | number: '1.0-1' }} Km</span>
+        </ng-container>
+      </h3>
+      <p>{{ restaurant?.strap_line }}</p>
       <mat-chip-list aria-label="Fish selection">
-        <mat-chip>Take-Away</mat-chip>
-        <mat-chip>Outside Dining</mat-chip>
+        <mat-chip *ngFor="let feature of restaurant['attributes']">{{ feature }}</mat-chip>
       </mat-chip-list>
-      <span></span>
     </div>
-    <img src="assets/images/rest1.jpg" alt="restaurant image">
-  </div>
-
-  <div class="rd-restaurant" (click)="openSPW('https://spw.restaurantcollective.uk/85719-sarao-2/')">
-    <div class="rd-restaurant-detail">
-      <h2>Sarao Restaurant & Bar</h2>
-      <h3>Cuisine – Location</h3>
-      <p>A la carte you will find traditional homemade dishes from Italia and Niçoises Dishes in honor of the local cuisine.</p>
-      <mat-chip-list aria-label="Fish selection">
-        <mat-chip>Take-Away</mat-chip>
-        <mat-chip>Outside Dining</mat-chip>
-      </mat-chip-list>
-      <span></span>
-    </div>
-    <img src="assets/images/rest1.jpg" alt="restaurant image">
-  </div>
-
-  <div class="rd-restaurant" (click)="openSPW('https://spw.restaurantcollective.uk/85719-sarao-2/')">
-    <div class="rd-restaurant-detail">
-      <h2>Sarao Restaurant & Bar</h2>
-      <h3>Italian – Nice</h3>
-      <p>A la carte you will find traditional homemade dishes from Italia and Niçoises Dishes in honor of the local cuisine.</p>
-      <mat-chip-list aria-label="Fish selection">
-        <mat-chip>Take-Away</mat-chip>
-        <mat-chip>Outside Dining</mat-chip>
-      </mat-chip-list>
-      <span></span>
-    </div>
-    <img src="assets/images/rest1.jpg" alt="restaurant image">
+    <img [src]="restaurant?.image" loading="lazy" [alt]="restaurant?.restaurant_name">
   </div>
 
   <div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
     <button
-      *ngIf="!filtersOn"
+      *ngIf="!filtersOn && isLoaded"
       mat-raised-button
       (click)="openFilterOptions()">
-      Sort/Filter
+      {{ config.i18n.Sort_filter }}
       <mat-icon>filter_list</mat-icon>
     </button>
     <button
-      *ngIf="filtersOn"
+      *ngIf="filtersOn && isLoaded"
       mat-raised-button
       (click)="clearFilters()">
-      Clear filters
+      {{ config.i18n.Clear_filters }} {{ routeFilter || 'distance' }}
       <mat-icon>cancel</mat-icon>
     </button>
   </div>
