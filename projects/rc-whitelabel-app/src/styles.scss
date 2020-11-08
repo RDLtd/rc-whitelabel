@@ -307,7 +307,7 @@ ul.rd-search-autofill {
         background-repeat:repeat-x;
       }
       h2 {
-        font: 500 22px/26px 'Roboto Slab';
+        font: 500 24px/28px 'Roboto Slab';
         margin: 0;
         display: flex;
         width: 100%;
@@ -316,14 +316,13 @@ ul.rd-search-autofill {
         display: flex;
         flex-direction: row;
         align-items: center;
-        font-size: 12px;
-        font-weight: 500;
-        //line-height: 12px;
+        font-size: 16px;
+        font-weight: 400;
         text-transform: uppercase;
         margin: -4px 0 0;
         padding: 0;
         span {
-          text-transform: lowercase;
+          //text-transform: lowercase;
         }
         .mat-icon {
           font-size: 12px;
@@ -332,9 +331,9 @@ ul.rd-search-autofill {
         }
       }
       p {
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 300;
-        line-height: 14px;
+        line-height: 18px;
         margin: 0 0 8px;
         padding: 0;
       }
@@ -342,7 +341,7 @@ ul.rd-search-autofill {
         margin: 0;
       }
       .mat-chip {
-        font-size: 9px;
+        font-size: 10px;
         text-transform: uppercase;
         margin: 0 3px 3px 0;
         padding: 0 8px;
