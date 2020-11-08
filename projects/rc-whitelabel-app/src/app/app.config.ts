@@ -9,12 +9,12 @@ export class AppConfig {
   public readonly apiUrl = environment.API_URL;
 
   // VISIT BRIGHTON
-  //
+
   // Channel specification
   public readonly channelAccessCode = 'EN0100';
   public readonly channelAPIKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)ss3';
   // Channel Design
-  public readonly channelLogo = 'logo-partner@3x.png';
+  public readonly channelLogo = 'logo-partner-vb@3x.png';
   public readonly channelBackgroundColor = '';
   // Channel data - these could all be read from the database
   public readonly channelName = 'Visit Brighton';
@@ -44,8 +44,8 @@ export class AppConfig {
   };
 
   // // NICE SHOPPING
-  // //
-  // // Channel specification
+  //
+  // Channel specification
   // public readonly channelAccessCode = 'FR0100';
   // public readonly channelAPIKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)kH2';
   // // Channel Design

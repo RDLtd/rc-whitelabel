@@ -22,7 +22,7 @@ export class DataService {
   // Caches
   private restaurants: any[] = [];
   private searchRests: any[] = [];
-  private recentlyViewed: any = [];
+  readonly recentlyViewed: any = [];
   private cuisines: any[] = [];
   private landmarks: any[] = [];
   private features: any[] = [];
@@ -37,6 +37,7 @@ export class DataService {
     private http: HttpClient,
     private config: AppConfig
   ) {
+    console.log(this.recentlyViewed);
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
 
@@ -143,7 +144,6 @@ export class DataService {
     // add to beginning
     this.recentlyViewed.unshift(restaurant);
     this.recentlyViewed.splice(maxNum);
-
     // Sore locally
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
     // console.log(this.recentlyViewed);

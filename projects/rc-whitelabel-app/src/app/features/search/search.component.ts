@@ -131,6 +131,11 @@ export class SearchComponent implements OnInit {
     // Scroll window to maximise room for search suggestions
     window.scrollTo(0, 64);
 
+    // const arrLandmarks = [];
+    // const arrRestaurants = [];
+    // const arrCuisines = [];
+    const maxSuggestions = 10;
+
     if (str.length >= this.minChars) {
       // set uppercase version for string matching
       const ucString = str.toUpperCase();
@@ -187,6 +192,7 @@ export class SearchComponent implements OnInit {
       this.searchSuggestions.sort((a, b) => {
         return a.index - b.index;
       });
+      this.searchSuggestions.splice(maxSuggestions);
     } else {
       // clear current suggestions
       this.searchSuggestions = [];

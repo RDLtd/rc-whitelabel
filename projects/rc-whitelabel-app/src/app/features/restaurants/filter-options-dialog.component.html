@@ -1,5 +1,6 @@
 <h1 mat-dialog-title>Filter & Sort</h1>
 <div mat-dialog-content>
+  <div class="rd-filter-list-container">
   <section class="rd-filter-list" *ngIf="data.cuisines.length > 1">
     <h1>{{ config.i18n.Filter_by_cuisine }}</h1>
     <ul>
@@ -36,6 +37,7 @@
       </li>
     </ul>
   </section>
+  </div>
 </div>
 <div mat-dialog-actions align="end">
   <button mat-flat-button [mat-dialog-close]="null">{{ config.i18n.Close }}</button>
