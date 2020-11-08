@@ -246,7 +246,7 @@ ul.rd-search-autofill {
   flex-direction: column;
   justify-content: flex-start;
   padding: 12px 18px;
-  transition: opacity .3s ease-out;
+  transition: all .3s ease-out;
   h3 {
     font-family: $font-family-heading;
     margin: 0;
@@ -260,7 +260,7 @@ ul.rd-search-autofill {
 
   }
   .mat-error {
-    margin-top: -12px;
+    margin: -12px 0 24px;
     color: $colour-gray;
   }
   ul.rd-search-suggestions {

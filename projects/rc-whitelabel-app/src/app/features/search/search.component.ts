@@ -50,10 +50,12 @@ export class SearchComponent implements OnInit {
   landmarks: Landmark[] = [];
   features: any[] = [];
   searchSuggestions: SearchSuggestion[] = [];
+  noSuggestions = false;
   cuisines: Cuisine[] = [];
   recentlyViewed: any[] = [];
   // This will be a GeoPositionLocation
   currentLocation: any | undefined;
+
 
   constructor(
     private api: ApiService,
@@ -191,6 +193,7 @@ export class SearchComponent implements OnInit {
         return a.index - b.index;
       });
       this.searchSuggestions.splice(maxSuggestions);
+      this.noSuggestions = this.searchSuggestions.length === 0;
     } else {
       // clear current suggestions
       this.searchSuggestions = [];
