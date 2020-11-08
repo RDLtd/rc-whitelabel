@@ -65,16 +65,14 @@ export class SearchComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
+    // Geolocation
     this.data.getUserLocation()
       .then((geo: any) => {
         this.currentLocation = geo;
     });
-
     this.loadRestaurants().then(() => {
       console.log('Restaurants loaded');
     });
-
     this.loadSummary().then(() => {
       this.isLoaded = true;
       console.log('Summary loaded');
@@ -83,11 +81,8 @@ export class SearchComponent implements OnInit {
     setTimeout( () => {
       this.rdSearchInput.nativeElement.focus();
     }, 500);
-
+    // Grab recents from local storage
     this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
-
-    console.log('Async', this.data.loadRestaurants());
-
   }
 
   public async loadRestaurants(): Promise<any> {
@@ -131,30 +126,16 @@ export class SearchComponent implements OnInit {
     this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
   }
 
-  // Load landmarks
-  getLandmarks(): void {
-    this.api.getChannelLandmarks(this.config.channelAccessCode, this.config.channelAPIKey).subscribe(
-      (data: any) => {
-        this.landmarks = data.landmarks;
-        // console.log(data, this.landmarks);
-      },
-      (error: object) => {
-        console.log(error);
-      });
-  }
-
   doSearch(str: string): void {
 
     // Scroll window to maximise room for search suggestions
-    // window.scrollTo(0, -200);
+    window.scrollTo(0, 64);
 
     if (str.length >= this.minChars) {
       // set uppercase version for string matching
       const ucString = str.toUpperCase();
-      // clear current suggestions
+      // Clear current suggestions
       this.searchSuggestions = [];
-
-
       // Check for matching landmarks
       if (!!this.landmarks) {
         let i = this.landmarks.length - 1; let m;
@@ -172,7 +153,6 @@ export class SearchComponent implements OnInit {
         }
       }
       // Check for matching restaurants
-
       if (!!this.searchRestaurants) {
         let i = this.searchRestaurants.length - 1; let r;
         while (i--) {
@@ -203,6 +183,7 @@ export class SearchComponent implements OnInit {
           }
         }
       }
+      // Sort results by index position
       this.searchSuggestions.sort((a, b) => {
         return a.index - b.index;
       });

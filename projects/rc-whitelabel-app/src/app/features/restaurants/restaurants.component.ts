@@ -38,7 +38,7 @@ export class RestaurantsComponent implements OnInit {
   ngOnInit(): void {
     // Check for sort/filtering
     this.route.paramMap.subscribe((params: ParamMap) => {
-      console.log('Param changed', params);
+      // console.log('Param changed', params);
       this.routeFilter = params.get('filter');
       this.routeSort = params.get('sort');
       // load restaurants
@@ -52,9 +52,9 @@ export class RestaurantsComponent implements OnInit {
       console.log('Summary loaded');
       this.showFilterBtn();
     });
+    // Get geo
     this.data.getUserLocation().then((geo: any) => {
       this.currentLocation = geo;
-      console.log('Got geo2', geo);
     });
   }
 
@@ -64,7 +64,6 @@ export class RestaurantsComponent implements OnInit {
       const promise = await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey, params)
         .toPromise()
         .then((res: any) => {
-          console.log('R', res);
           this.cachedRestaurants = res.restaurants;
           this.data.setRestaurants(res.restaurants);
           console.log('From API', res.restaurants);
@@ -74,7 +73,6 @@ export class RestaurantsComponent implements OnInit {
       console.log('Local', this.restaurants);
     }
   }
-
   public async loadSummary(): Promise<any> {
     if (!this.data.getCuisines().length) {
       const promise = await this.api.getRestaurantsSummary(this.config.channelAccessCode, this.config.channelAPIKey,
@@ -95,12 +93,10 @@ export class RestaurantsComponent implements OnInit {
   // Check for route params
   updateRestaurantResults(sort?: string, filter?: string): void {
     if (this.routeSort || sort) {
-      // console.log('sort');
       const coords = this.routeSort.split(':');
       this.restaurants = this.sortByDistance(coords[0], coords[1]);
       this.filtersOn = true;
     } else if ( this.routeFilter || filter ) {
-      // console.log('filter');
       this.restaurants = this.cachedRestaurants;
       this.restaurants = this.filterByCuisine(this.routeFilter);
       this.filtersOn = true;
@@ -138,7 +134,6 @@ export class RestaurantsComponent implements OnInit {
       }
     }
     this.restaurants = filteredRests;
-    // console.log('Filtered', filteredRests);
     return filteredRests;
   }
 
@@ -173,8 +168,6 @@ export class RestaurantsComponent implements OnInit {
           this.routeSort = `${result.lat}:${result.lng}`;
           this.router.navigate(['/restaurants/nearest', this.routeSort]);
         }
-        this.filtersOn = true;
-      } else {
         this.filtersOn = true;
       }
     });

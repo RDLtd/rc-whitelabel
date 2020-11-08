@@ -8,7 +8,7 @@
     <div class="rd-restaurant-detail">
       <h2>{{ restaurant?.restaurant_name }}</h2>
       <h3>
-        {{ restaurant?.restaurant_cuisine_1 }}
+        {{ restaurant?.restaurant_cuisine_1 }} | {{ restaurant?.restaurant_address_2 }}
         <span class="rd-flex-spacer"></span>
         <ng-container *ngIf="restaurant?.distance <= 10">
           <span>{{ restaurant?.distance | number: '1.0-1' }} km</span>
@@ -18,7 +18,6 @@
       <mat-chip-list aria-label="Fish selection">
         <mat-chip *ngFor="let feature of restaurant['attributes']">{{ feature }}</mat-chip>
       </mat-chip-list>
-      <span class="arrow"></span>
     </div>
     <img [src]="restaurant?.image" loading="lazy" [alt]="restaurant?.restaurant_name">
   </div>
