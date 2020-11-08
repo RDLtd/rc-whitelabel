@@ -67,7 +67,7 @@ header {
   background: var(--brand-bgd);
   color: var(--brand-on-bgd-color);
   &.rd-hideHeader {
-    transform: translateY(-56px);
+    //transform: translateY(-56px);
   }
 }
 rd-header {
@@ -81,14 +81,14 @@ rd-header {
   .rd-logo { height: 40px; }
   h1 {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
     line-height: 1;
     margin: 0;
     text-align: center;
   }
   .mat-button {
-    font-weight: 300;
-    font-size: 12px;
+    font-weight: 400;
+    font-size: 14px;
     letter-spacing: 1px;
   }
 }
@@ -210,9 +210,9 @@ ul.rd-search-autofill {
       display: flex;
       align-items: center;
       width: 100%;
-      padding: 12px 0;
+      padding: 16px 0;
       font-size: 16px;
-      font-weight: 300;
+      font-weight: 400;
       color: black;
       .mat-icon {
         width: 20px;
@@ -228,7 +228,7 @@ ul.rd-search-autofill {
   }
   &.open {
     height: auto;
-    max-height: 500px;
+    max-height: 540px;
   }
 }
 .rd-search-content {
@@ -316,13 +316,13 @@ ul.rd-search-autofill {
         display: flex;
         flex-direction: row;
         align-items: center;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 400;
         text-transform: uppercase;
-        margin: -4px 0 0;
+        margin: 0;
         padding: 0;
         span {
-          //text-transform: lowercase;
+          text-transform: lowercase;
         }
         .mat-icon {
           font-size: 12px;
@@ -331,9 +331,9 @@ ul.rd-search-autofill {
         }
       }
       p {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 300;
-        line-height: 18px;
+        line-height: 20px;
         margin: 0 0 8px;
         padding: 0;
       }
@@ -389,8 +389,14 @@ ul.rd-search-autofill {
     .mat-raised-button {
       padding: 8px 20px;
       border-radius: 32px;
+      line-height: 48px;
+      text-transform: uppercase;
+      font-weight: 400;
       background: black;
       color: white;
+      &.clear {
+        background-color: #cb0202;
+      }
     }
     .mat-button-wrapper {
       display: flex;
@@ -477,6 +483,7 @@ ul.rd-search-autofill {
 /* -----------------------------------
 ** MEDIA QUERIES
 ** ----------------------------------- */
+
 @media screen and ( min-width : 600px ){
   .rd-quick-links-container {
     flex-direction: row;
@@ -485,6 +492,11 @@ ul.rd-search-autofill {
   }
   .rd-quick-links {
     width: 33%;
+  }
+  header {
+    &.rd-hideHeader {
+      transform: translateY(-56px);
+    }
   }
 }
 @media screen and ( min-width: 800px ) {

@@ -129,7 +129,7 @@ export class SearchComponent implements OnInit {
   doSearch(str: string): void {
 
     // Scroll window to maximise room for search suggestions
-    window.scrollTo(0, 64);
+    // window.scrollTo(0, 64);
 
     // const arrLandmarks = [];
     // const arrRestaurants = [];
