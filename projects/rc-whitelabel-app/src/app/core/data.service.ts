@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
 import { HttpClient } from '@angular/common/http';
-import { AppConfig } from './app.config';
+import { AppConfig } from '../app.config';
 
 export interface Restaurant {
   name: string | undefined;

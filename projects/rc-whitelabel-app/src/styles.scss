@@ -19,16 +19,16 @@ $rc-whitelabel-app-theme: mat-light-theme((
 @include angular-material-theme($rc-whitelabel-app-theme);
 
 // Default vars
-$colour-primary: #3994f0;
 $colour-gray: rgb(74, 74, 74);
 $colour-accent: black;
+$colour-bgd: white;
 $header-height: 64px;
-$arrow-size: 48px;
 $font-family-default: Roboto, "Helvetica Neue", sans-serif;
 $font-family-heading: 'Roboto Slab', 'Georgia', serif;
+$font-weight-lite: 300;
+$font-weight-regular: 400;
+$font-weight-heavy: 500;
 $max-width: 960px;
-$bg: white;
-$fill: $colour-primary;
 
 // Global resets
 * { box-sizing: border-box; }
@@ -87,13 +87,13 @@ rd-header {
   .rd-logo { height: 40px; }
   h1 {
     font-size: 16px;
-    font-weight: 500;
+    font-weight: $font-weight-heavy;
     line-height: 1;
     margin: 0;
     text-align: center;
   }
   .mat-button {
-    font-weight: 400;
+    font-weight: $font-weight-regular;
     font-size: 14px;
     letter-spacing: 1px;
   }
@@ -108,6 +108,7 @@ rd-footer {
   font-size: 9px;
   text-transform: uppercase;
 }
+// Loader
 rd-loader {
   position: absolute;
   top:0;
@@ -125,35 +126,35 @@ rd-loader {
 }
 .hourglass{
   display:block;
-  background:$bg;
+  background: $colour-bgd;
   margin:1em auto;
   width:2em;
   height:4em;
-  animation:hourglass 1s linear infinite;
+  animation: hourglass 1s linear infinite;
 }
-.outer{ fill:$fill; }
-.middle{ fill:$bg; }
+.outer{ fill: var(--brand-primary) }
+.middle{ fill: white; }
 @keyframes hourglass{
   0%{
     transform:rotate(0deg);
     box-shadow:
-            inset $fill 0 -0em 0 0,
-            inset $bg 0 -2em 0 0,
-            inset $fill 0 -4em 0 0;
+            inset var(--brand-primary) 0 -0em 0 0,
+            inset $colour-bgd 0 -2em 0 0,
+            inset var(--brand-primary) 0 -4em 0 0;
   }
   80%{
     transform:rotate(0deg);
     box-shadow:
-            inset $fill 0 -2em 0 0,
-            inset $bg 0 -2em 0 0,
-            inset $fill 0 -2em 0 0;
+            inset var(--brand-primary) 0 -2em 0 0,
+            inset $colour-bgd 0 -2em 0 0,
+            inset var(--brand-primary) 0 -2em 0 0;
   }
   100%{
     transform:rotate(180deg);
     box-shadow:
-            inset $fill 0 -2em 0 0,
-            inset $bg 0 -2em 0 0,
-            inset $fill 0 -2em 0 0;
+            inset var(--brand-primary) 0 -2em 0 0,
+            inset $colour-bgd 0 -2em 0 0,
+            inset var(--brand-primary) 0 -2em 0 0;
   }
 }
 
@@ -191,7 +192,7 @@ rd-loader {
         padding: 6px 0;
         font-size: 16px;
         color: $colour-gray;
-        font-weight: 300;
+        font-weight: $font-weight-lite;
         span:last-child {
           font-size: 11px;
         }
@@ -204,7 +205,6 @@ ul.rd-search-autofill {
   height: 0;
   max-height: 0;
   overflow: hidden;
-  //margin: -20px 0 36px 0;
   width: 100%;
   transition: all .3s ease-out;
   li {
@@ -218,7 +218,7 @@ ul.rd-search-autofill {
       width: 100%;
       padding: 16px 0;
       font-size: 16px;
-      font-weight: 400;
+      font-weight: $font-weight-regular;
       color: black;
       .mat-icon {
         width: 20px;
@@ -230,9 +230,7 @@ ul.rd-search-autofill {
         &.rd-icon-location { color: #ee4b08; }
         &.rd-icon-restaurant { color: #484747;}
       }
-      span:last-child {
-        font-size: 11px;
-      }
+      span:last-child { font-size: 11px; }
     }
   }
   &.open {
@@ -252,12 +250,11 @@ ul.rd-search-autofill {
     margin: 0;
     padding: 0;
   }
-  .rd-full-width { }
+  .rd-full-width {}
   .mat-form-field {
     font-size: 18px;
     line-height: 24px;
     width: 100%;
-
   }
   .mat-error {
     margin: -12px 0 24px;
@@ -272,7 +269,7 @@ ul.rd-search-autofill {
       line-height: 36px;
       margin: 0;
       font-size: 14px;
-      font-weight: 300;
+      font-weight: $font-weight-lite;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -297,18 +294,21 @@ ul.rd-search-autofill {
     .rd-restaurant-detail {
       position: relative;
       padding: 12px 16px 10px;
+      // jagged border
       &:after {
         content:'';
-        width:100%;
-        height:5px;
-        position:absolute;
+        width: 100%;
+        height: 5px;
+        position: absolute;
         z-index: 2;
         left:0;
+        // Top edge
         //bottom: calc(100% - 1px);
         //background-image: linear-gradient(135deg, transparent 66%, white 67%),
         //linear-gradient(45deg, white 33%, gray 34%, transparent 44%);
+        // bottom edge
         top: calc(100% - 1px);
-        bottom:auto;
+        bottom: auto;
         background-image: linear-gradient(135deg, white 33%, gray 34%, transparent 44%),
         linear-gradient(45deg, transparent 66%, white 67%);
         background-position: -5px 0;
@@ -316,7 +316,7 @@ ul.rd-search-autofill {
         background-repeat:repeat-x;
       }
       h2 {
-        font: 500 24px/28px 'Roboto Slab';
+        font: $font-weight-heavy 24px/28px $font-family-heading;
         margin: 0;
         display: flex;
         width: 100%;
@@ -326,7 +326,7 @@ ul.rd-search-autofill {
         flex-direction: row;
         align-items: center;
         font-size: 14px;
-        font-weight: 400;
+        font-weight: $font-weight-regular;
         text-transform: uppercase;
         margin: 0;
         padding: 0;
@@ -341,7 +341,7 @@ ul.rd-search-autofill {
       }
       p {
         font-size: 16px;
-        font-weight: 300;
+        font-weight: $font-weight-lite;
         line-height: 20px;
         margin: 0 0 12px;
         padding: 0;
@@ -359,18 +359,6 @@ ul.rd-search-autofill {
         min-height: 24px;
         background-color: rgba(var(--brand-primary-rgb), .5);
       }
-      span.arrow {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        margin: -22px 0 0 -50px;
-        z-index: 3;
-        width: 0;
-        height: 0;
-        border-left: $arrow-size solid transparent;
-        border-right: $arrow-size solid transparent;
-        border-bottom: $arrow-size/2 solid white;
-      }
     }
     img {
       display: block;
@@ -380,11 +368,6 @@ ul.rd-search-autofill {
       object-fit: cover;
       overflow: hidden;
     }
-  }
-  .rd-more {
-    display: flex;
-    justify-content: center;
-    padding: 24px 0;
   }
   .rd-filter-btn {
     position: fixed;
@@ -400,7 +383,7 @@ ul.rd-search-autofill {
       border-radius: 32px;
       line-height: 40px;
       text-transform: uppercase;
-      font-weight: 400;
+      font-weight: $font-weight-regular;
       background: black;
       color: white;
       &.clear {
@@ -411,9 +394,7 @@ ul.rd-search-autofill {
       display: flex;
       align-items: center;
     }
-    .mat-icon {
-      margin-left: 8px;
-    }
+    .mat-icon { margin-left: 8px; }
   }
 }
 .rd-filter-list-container {
@@ -423,13 +404,12 @@ ul.rd-search-autofill {
 .rd-filter-list {
   position: relative;
   margin-bottom: 24px;
-
   h1 {
     margin: 0 0 4px;
     padding: 0;
     display: flex;
     align-items: center;
-    font: 500 12px/16px $font-family-default;
+    font: $font-weight-heavy 12px/16px $font-family-default;
     text-transform: uppercase;
   }
   li {
@@ -440,9 +420,9 @@ ul.rd-search-autofill {
       cursor: pointer;
       font-size: 16px;
       padding: 8px 0 8px 0;
-      font-weight: 300;
+      font-weight: $font-weight-lite;
       .rd-count {
-        font-weight: 500;
+        font-weight: $font-weight-heavy;
       }
       .mat-icon {
         color: rgb(var(--brand-primary-rgb), .5);
@@ -549,12 +529,5 @@ ul.rd-search-autofill {
     margin-top: 24px;
   }
 }
-@media screen and ( min-width: 1200px ) {
-
-  //.rd-results-container {
-  //  grid-template-columns: repeat(3, 1fr);
-  //  grid-column-gap: 16px;
-  //  grid-row-gap: 16px;
-  //}
-}
+@media screen and ( min-width: 1200px ) {}
 

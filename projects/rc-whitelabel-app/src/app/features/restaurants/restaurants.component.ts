@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FilterOptionsDialogComponent } from './filter-options-dialog.component';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { DataService } from '../../data.service';
-import { ApiService } from '../../api.service';
+import { DataService } from '../../core/data.service';
+import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 
 @Component({

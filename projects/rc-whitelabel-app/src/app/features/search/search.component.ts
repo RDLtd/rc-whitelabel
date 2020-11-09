@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ApiService } from '../../api.service';
-import { LocalStorageService } from '../../local-storage.service';
-import { DataService } from '../../data.service';
+import { ApiService } from '../../core/api.service';
+import { LocalStorageService } from '../../core/local-storage.service';
+import { DataService } from '../../core/data.service';
 import { AppConfig } from '../../app.config';
 import { Router } from '@angular/router';
 
