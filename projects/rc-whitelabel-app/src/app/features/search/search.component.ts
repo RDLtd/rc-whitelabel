@@ -135,6 +135,7 @@ export class SearchComponent implements OnInit {
     // const arrLandmarks = [];
     // const arrRestaurants = [];
     // const arrCuisines = [];
+    this.noSuggestions = false;
     const maxSuggestions = 10;
 
     if (str.length >= this.minChars) {
