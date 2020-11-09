@@ -1,9 +1,16 @@
 <!-- HEADER CONTENT -->
 <a href="/">
-  <img class="rd-logo" src="../../../../assets/images/{{ config.channelLogo }}" alt="Partner Logo">
+  <img
+    class="rd-logo"
+    src="assets/images/{{ config.channelLogo }}"
+    [alt]="config.channelName">
 </a>
 <span class="rd-flex-spacer"></span>
-<button mat-button routerLink="search"><mat-icon>search</mat-icon>{{ config.i18n.Search }}</button>
-<!--<button mat-icon-button routerLink="search"><mat-icon>search</mat-icon></button>-->
+<button
+  mat-button
+  routerLink="search">
+  <mat-icon>search</mat-icon>
+  {{ config.i18n.Search }}
+</button>
 
 

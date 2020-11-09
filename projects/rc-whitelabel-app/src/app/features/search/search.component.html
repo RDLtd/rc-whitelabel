@@ -30,17 +30,16 @@
   </form>
   <!--  Search Results -->
   <ul [class.open]="!!rdSearchInput.value && !!searchSuggestions" class="rd-search-autofill">
-
+    <!-- Suggestions -->
     <li *ngFor="let displayItem of searchSuggestions; let i = index" [tabindex]="i + 1" [ngSwitch]="displayItem.cat">
       <!-- Landmarks -->
       <a *ngSwitchCase="'location'" [routerLink]="displayItem.route">
         <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
         {{ displayItem?.name }}
         <span class="rd-flex-spacer"></span>
-        <!-- <span>{{ displayItem?.distance | number: '1.0-1' }} km</span>-->
+        <span></span>
       </a>
       <!-- Restaurants -->
-      <!-- TODO: need to add these to recently viewd but they are not full restaurant records? -->
       <a *ngSwitchCase="'restaurant'" [href]="displayItem.spw">
         <mat-icon class="rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
         {{ displayItem?.name }}

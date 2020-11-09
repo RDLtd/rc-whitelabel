@@ -53,7 +53,7 @@ a, a:active, a:focus {
 .rd-flex-spacer { flex: 1 0 auto; }
 .rd-hide { display: none; }
 .rd-show { opacity: 1!important;}
-.rd-invisible { opacity: 0; pointer-events: none; }
+.rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
 .rd-icon-restaurant { color: #e74f14;}
 .rd-icon-cuisine {}
 .rd-icon-location {color: #e74f14;}
@@ -237,7 +237,7 @@ ul.rd-search-autofill {
   }
   &.open {
     height: auto;
-    max-height: 540px;
+    max-height: 600px;
   }
 }
 .rd-search-content {
@@ -526,6 +526,13 @@ ul.rd-search-autofill {
       }
       .rd-restaurant-detail {
         padding: 8px 0;
+
+        p {
+          margin: 4px 0 12px;
+        }
+      }
+      img {
+        vertical-align: baseline;
       }
     }
   }
