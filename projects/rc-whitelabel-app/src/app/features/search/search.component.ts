@@ -50,10 +50,12 @@ export class SearchComponent implements OnInit {
   landmarks: Landmark[] = [];
   features: any[] = [];
   searchSuggestions: SearchSuggestion[] = [];
+  noSuggestions = false;
   cuisines: Cuisine[] = [];
   recentlyViewed: any[] = [];
   // This will be a GeoPositionLocation
   currentLocation: any | undefined;
+
 
   constructor(
     private api: ApiService,
@@ -81,6 +83,7 @@ export class SearchComponent implements OnInit {
     }, 500);
     // Grab recents from local storage
     this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
+
   }
 
   public async loadRestaurants(): Promise<any> {
@@ -137,19 +140,27 @@ export class SearchComponent implements OnInit {
     if (str.length >= this.minChars) {
       // set uppercase version for string matching
       const ucString = str.toUpperCase();
+
+      // const str2 = 'Hello Yes what are you aye doing yes'
+      // const removeStr = 'ye'; // variable
+      const regex =  new RegExp(`\\b${ucString}\\S*`, 'g'); // correct way
+      // const idx = str2.toLowerCase().search(regex); // it works
+
       // Clear current suggestions
       this.searchSuggestions = [];
       // Check for matching landmarks
       if (!!this.landmarks) {
-        let i = this.landmarks.length - 1; let m;
+        let i = this.landmarks.length - 1; let m; let idx;
         while (i--) {
           m = this.landmarks[i];
-          if (m.channel_landmark_name.toUpperCase().includes(ucString)) {
+          idx = m.channel_landmark_name.toUpperCase().search(regex);
+          if (idx > -1) {
+          // if (m.channel_landmark_name.toUpperCase().includes(ucString)) {
             // Add SearchSuggestion
             this.searchSuggestions.push({
               name: m.channel_landmark_name,
               cat: 'location',
-              index: m.channel_landmark_name.toUpperCase().indexOf(ucString),
+              index: idx, // .channel_landmark_name.toUpperCase().indexOf(ucString),
               route: ['/restaurants/nearest/', `${m.channel_landmark_lat}:${m.channel_landmark_lng}`]
             });
           }
@@ -157,14 +168,16 @@ export class SearchComponent implements OnInit {
       }
       // Check for matching restaurants
       if (!!this.searchRestaurants) {
-        let i = this.searchRestaurants.length - 1; let r;
+        let i = this.searchRestaurants.length - 1; let r; let idx;
         while (i--) {
           r = this.searchRestaurants[i];
-          if (r.restaurant_name?.toUpperCase().includes(ucString)) {
+          idx = r.restaurant_name.toUpperCase().search(regex);
+          if (idx > -1) {
+          // if (r.restaurant_name?.toUpperCase().includes(ucString)) {
             this.searchSuggestions.push({
               cat: 'restaurant',
               name: r.restaurant_name,
-              index: r.restaurant_name.toUpperCase().indexOf(ucString),
+              index: idx, // r.restaurant_name.toUpperCase().indexOf(ucString),
               spw: r.restaurant_spw_url
             });
           }
@@ -172,14 +185,16 @@ export class SearchComponent implements OnInit {
       }
       // Check for matching restaurants
       if (!!this.cuisines) {
-        let i = this.cuisines.length - 1; let c;
+        let i = this.cuisines.length - 1; let c; let idx;
         while (i--) {
           c = this.cuisines[i];
-          if (c.label.toUpperCase().includes(ucString)) {
+          idx = c.label.toUpperCase().search(regex);
+          if (idx > -1) {
+          // if (c.label.toUpperCase().includes(ucString)) {
             this.searchSuggestions.push({
               cat: 'cuisine',
               name: c.label,
-              index: c.label.toUpperCase().indexOf(ucString),
+              index: idx, // c.label.toUpperCase().indexOf(ucString),
               route: ['/restaurants', `${c.label}`],
               misc: c.total
             });
@@ -191,6 +206,7 @@ export class SearchComponent implements OnInit {
         return a.index - b.index;
       });
       this.searchSuggestions.splice(maxSuggestions);
+      this.noSuggestions = this.searchSuggestions.length === 0;
     } else {
       // clear current suggestions
       this.searchSuggestions = [];

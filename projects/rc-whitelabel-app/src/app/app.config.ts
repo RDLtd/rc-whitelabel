@@ -23,7 +23,7 @@ export class AppConfig {
   // temporary setup for i18n
   public readonly i18n = {
     Loading: 'LOADING',
-    Search_by_name_or_location: 'Search by name or location',
+    Search_by_name_or_location: 'Search by name, location or cuisine',
     No_matching_search_results: 'No matching search results, try one of the options below',
     Recently_viewed: 'Recently viewed',
     Nearest_to: 'Nearest to',
