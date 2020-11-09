@@ -132,9 +132,6 @@ export class SearchComponent implements OnInit {
     // Scroll window to maximise room for search suggestions
     // window.scrollTo(0, 64);
 
-    // const arrLandmarks = [];
-    // const arrRestaurants = [];
-    // const arrCuisines = [];
     this.noSuggestions = false;
     const maxSuggestions = 10;
 
@@ -217,6 +214,7 @@ export class SearchComponent implements OnInit {
   searchReset(): void {
     this.rdSearchInput.nativeElement.value = '';
     this.searchSuggestions = [];
+    this.noSuggestions = false;
   }
 
 
