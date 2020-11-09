@@ -3,6 +3,7 @@ import { ApiService } from '../../api.service';
 import { LocalStorageService } from '../../local-storage.service';
 import { DataService } from '../../data.service';
 import { AppConfig } from '../../app.config';
+import { Router } from '@angular/router';
 
 interface SearchSuggestion {
   cat: string;
@@ -35,7 +36,8 @@ export class SearchComponent implements OnInit {
   // Reference to search element
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
   // Config
-  minChars = 1;
+  minSearchChars = 1;
+  noSuggestions = false;
   icons = {
     location: 'location_on',
     cuisine: 'restaurant',
@@ -50,18 +52,17 @@ export class SearchComponent implements OnInit {
   landmarks: Landmark[] = [];
   features: any[] = [];
   searchSuggestions: SearchSuggestion[] = [];
-  noSuggestions = false;
   cuisines: Cuisine[] = [];
   recentlyViewed: any[] = [];
   // This will be a GeoPositionLocation
   currentLocation: any | undefined;
 
-
   constructor(
     private api: ApiService,
     private localStorageService: LocalStorageService,
     private data: DataService,
-    public config: AppConfig
+    public config: AppConfig,
+    public router: Router
   ) { }
 
   ngOnInit(): void {
@@ -132,12 +133,10 @@ export class SearchComponent implements OnInit {
     // Scroll window to maximise room for search suggestions
     // window.scrollTo(0, 64);
 
-    // const arrLandmarks = [];
-    // const arrRestaurants = [];
-    // const arrCuisines = [];
+    this.noSuggestions = false;
     const maxSuggestions = 10;
 
-    if (str.length >= this.minChars) {
+    if (str.length >= this.minSearchChars) {
       // set uppercase version for string matching
       const ucString = str.toUpperCase();
 
@@ -150,7 +149,7 @@ export class SearchComponent implements OnInit {
       this.searchSuggestions = [];
       // Check for matching landmarks
       if (!!this.landmarks) {
-        let i = this.landmarks.length - 1; let m; let idx;
+        let i = this.landmarks.length; let m; let idx;
         while (i--) {
           m = this.landmarks[i];
           idx = m.channel_landmark_name.toUpperCase().search(regex);
@@ -168,7 +167,7 @@ export class SearchComponent implements OnInit {
       }
       // Check for matching restaurants
       if (!!this.searchRestaurants) {
-        let i = this.searchRestaurants.length - 1; let r; let idx;
+        let i = this.searchRestaurants.length; let r; let idx;
         while (i--) {
           r = this.searchRestaurants[i];
           idx = r.restaurant_name.toUpperCase().search(regex);
@@ -185,7 +184,7 @@ export class SearchComponent implements OnInit {
       }
       // Check for matching restaurants
       if (!!this.cuisines) {
-        let i = this.cuisines.length - 1; let c; let idx;
+        let i = this.cuisines.length; let c; let idx;
         while (i--) {
           c = this.cuisines[i];
           idx = c.label.toUpperCase().search(regex);
@@ -205,7 +204,7 @@ export class SearchComponent implements OnInit {
       this.searchSuggestions.sort((a, b) => {
         return a.index - b.index;
       });
-      this.searchSuggestions.splice(maxSuggestions);
+      // this.searchSuggestions.splice(maxSuggestions);
       this.noSuggestions = this.searchSuggestions.length === 0;
     } else {
       // clear current suggestions
@@ -216,8 +215,15 @@ export class SearchComponent implements OnInit {
   searchReset(): void {
     this.rdSearchInput.nativeElement.value = '';
     this.searchSuggestions = [];
+    this.noSuggestions = false;
   }
-
-
-
+  addRecent(restaurant: any): void {
+    this.data.setRecentlyViewed({
+      restaurant_name: restaurant.name,
+      restaurant_spw_url: restaurant.spw,
+      restaurant_number: restaurant.number
+    });
+    console.log(restaurant);
+    window.open(restaurant.spw, '_blank');
+  }
 }

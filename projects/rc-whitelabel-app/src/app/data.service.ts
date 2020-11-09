@@ -114,7 +114,7 @@ export class DataService {
     return this.searchRests;
   }
   setCuisines(arr: any): void {
-    let i = arr.length - 1;
+    let i = arr.length;
     let c;
     while (i--) {
       c = arr[i];
@@ -129,6 +129,7 @@ export class DataService {
     this.cuisines.sort((a, b) => {
       return b.total - a.total;
     });
+    console.log(this.cuisines);
   }
   // recently viewed
   getRecentlyViewed(): any[] {

@@ -58,7 +58,7 @@ export class AppConfig {
   // // temporary setup for i18n
   // public readonly i18n = {
   //   Loading: 'CHARGEMENT',
-  //   Search_by_name_or_location: 'Rechercher par nom ou par lieu',
+  //   Search_by_name_or_location: 'Rechercher par nom, lieu, ou cuisine',
   //   No_matching_search_results: 'Aucun résultat de recherche correspondant, essayez l\'une des options ci-dessous',
   //   Recently_viewed: 'Vu récemment',
   //   Nearest_to: 'Le plus proche de',
