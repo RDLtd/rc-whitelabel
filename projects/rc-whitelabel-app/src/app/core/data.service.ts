@@ -37,7 +37,6 @@ export class DataService {
     private http: HttpClient,
     private config: AppConfig
   ) {
-    console.log(this.recentlyViewed);
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
 
@@ -77,28 +76,60 @@ export class DataService {
   async getUserLocation(): Promise<any> {
     return await this.getGeoLocation();
   }
+
   // Restaurants
-  async loadRestaurants(): Promise <any> {
-    if (this.restaurants.length) {
-      console.log('Async local');
-      return this.restaurants;
-    } else {
-      console.log('Async remote');
-      return await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey,
-        {testing: this.config.testing}).toPromise();
-    }
+  loadRestaurants(): Promise <any> {
+    return new Promise(async resolve => {
+      if (this.restaurants.length) {
+        console.log(`${this.restaurants.length} restaurants loaded from CACHE`);
+        resolve(this.restaurants);
+      } else {
+        await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey,
+          {testing: this.config.testing})
+          .toPromise()
+          .then((res: any) => {
+            this.restaurants = res.restaurants;
+            console.log(`${this.restaurants.length} restaurants loaded from API`);
+            resolve(this.restaurants);
+          })
+          .catch((error: any) => console.log('ERROR', error));
+      }
+    });
   }
-  getRestaurants(): any[] {
-    return this.restaurants;
-  }
-  setRestaurants(arr: any[]): void {
-    this.restaurants = arr;
+  // Summary
+  loadSummarisedData(): Promise <any> {
+    return new Promise(async resolve => {
+      if (this.cuisines.length) {
+        console.log('Summary loaded from CACHE');
+        resolve({
+          restaurants: this.searchRests,
+          landmarks: this.landmarks,
+          features: this.features,
+          cuisines: this.cuisines
+        });
+      } else {
+        await this.api.getRestaurantsSummary(this.config.channelAccessCode, this.config.channelAPIKey,
+          this.config.channelLat, this.config.channelLng)
+          .toPromise()
+          .then((res: any) => {
+            console.log('Summary loaded from API');
+            this.setSummary(res);
+            resolve({
+              restaurants: this.searchRests,
+              landmarks: this.landmarks,
+              features: this.features,
+              cuisines: this.cuisines
+            });
+          })
+          .catch((error: any) => console.log('ERROR', error));
+      }
+    });
   }
   // Summary data
   setSummary(s: any): void {
     this.setCuisines(s.cuisines);
     this.landmarks = s.landmarks;
-    this.features = s.features;
+    this.features = s.attributes;
     this.searchRests = s.restaurants;
   }
   getCuisines(): any[] {

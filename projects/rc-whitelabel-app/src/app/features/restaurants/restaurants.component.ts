@@ -42,54 +42,27 @@ export class RestaurantsComponent implements OnInit {
       this.routeFilter = params.get('filter');
       this.routeSort = params.get('sort');
       // load restaurants
-      this.loadRestaurants().then(() => {
-        console.log('Restaurants loaded');
+      this.data.loadRestaurants().then((res: any) => {
+        // console.log(res);
+        this.cachedRestaurants = res;
+        // Apply any filters
         this.updateRestaurantResults();
       });
     });
-    // load summary
-    this.loadSummary().then(() => {
-      console.log('Summary loaded');
+    // load summary for filter/sort options
+    this.data.loadSummarisedData().then((res: any) => {
+      // console.log('Summary loaded', res);
+      this.landmarks = res.landmarks;
+      this.cuisines = res.cuisines;
+      this.features = res.features;
       this.showFilterBtn();
     });
-    // Get geo
+    // Set user geo
     this.data.getUserLocation().then((geo: any) => {
       this.currentLocation = geo;
     });
   }
 
-  public async loadRestaurants(): Promise<any> {
-    if (!this.data.getRestaurants().length) {
-      const params = { testing: this.config.testing };
-      const promise = await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey, params)
-        .toPromise()
-        .then((res: any) => {
-          this.cachedRestaurants = res.restaurants;
-          this.data.setRestaurants(res.restaurants);
-          console.log('From API', res.restaurants);
-        });
-    } else {
-      this.cachedRestaurants = this.restaurants = this.data.getRestaurants();
-      console.log('Local', this.restaurants);
-    }
-  }
-  public async loadSummary(): Promise<any> {
-    if (!this.data.getCuisines().length) {
-      const promise = await this.api.getRestaurantsSummary(this.config.channelAccessCode, this.config.channelAPIKey,
-        this.config.channelLat, this.config.channelLng)
-        .toPromise()
-        .then((res: any) => {
-          this.data.setSummary(res);
-          this.landmarks = res.landmarks;
-          this.features = res.attributes;
-          this.cuisines = this.data.getCuisines();
-        });
-    } else {
-      this.cuisines = this.data.getCuisines();
-      this.landmarks = this.data.getLandmarks();
-      this.features = this.data.getFeatures();
-    }
-  }
   // Check for route params
   updateRestaurantResults(sort?: string, filter?: string): void {
     if (this.routeSort || sort) {
