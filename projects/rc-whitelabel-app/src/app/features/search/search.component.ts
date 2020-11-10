@@ -62,8 +62,7 @@ export class SearchComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private data: DataService,
     public config: AppConfig,
-    public router: Router,
-    private activeRoute: ActivatedRoute
+    public router: Router
   ) { }
 
   ngOnInit(): void {
@@ -126,7 +125,7 @@ export class SearchComponent implements OnInit {
     // window.scrollTo(0, 64);
 
     this.noSuggestions = false;
-    const maxSuggestions = 10;
+    //const maxSuggestions = 10;
 
     if (str.length >= this.minSearchChars) {
       // set uppercase version for string matching
@@ -208,7 +207,7 @@ export class SearchComponent implements OnInit {
       restaurant_spw_url: restaurant.spw,
       restaurant_number: restaurant.number
     });
-    console.log(restaurant);
+    this.searchSuggestions = [];
     window.open(restaurant.spw, '_blank');
   }
 }
