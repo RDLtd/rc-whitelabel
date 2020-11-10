@@ -15,17 +15,68 @@
       --brand-primary: #6bc7ee;
       /* Desaturated version of brand colour for icons and chips etc. */
       --brand-primary-rgb: 107, 199, 238;
+      /* PAGE BGD */
+      --page-bgd: #fff;
       /* Navigation bar & header panels */
       --brand-bgd: var(--brand-primary);
       /* Navigation bar & header panels text colour */
       --brand-on-bgd-color: #fff;
       /* Text input highlight */
       --brand-accent-colour: #e74f14;
+
     }
+    .load-wrapper {
+      position: absolute;
+      top:22px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+    }
+    .hourglass {
+      display:block;
+      background: var(--page-bgd);
+      margin:1em auto;
+      width:2em;
+      height:4em;
+      animation: hourglass 1s linear infinite;
+    }
+    .outer{ fill: #ddd }
+    .middle{ fill: white; }
+    @keyframes hourglass{
+      0%{
+        transform:rotate(0deg);
+        box-shadow:
+        inset #ddd 0 -0em 0 0,
+        inset var(--page-bgd) 0 -2em 0 0,
+        inset #ddd 0 -4em 0 0;
+      }
+      80%{
+        transform:rotate(0deg);
+        box-shadow:
+        inset #ddd 0 -2em 0 0,
+        inset var(--page-bgd) 0 -2em 0 0,
+        inset #ddd 0 -2em 0 0;
+      }
+      100%{
+        transform:rotate(180deg);
+        box-shadow:
+        inset #ddd 0 -2em 0 0,
+        inset var(--page-bgd) 0 -2em 0 0,
+        inset #ddd 0 -2em 0 0;
+      }
+    }
+
   </style>
 </head>
 <body class="mat-typography">
+  <rd-root>
+    <rd-loader></rd-loader>
+  </rd-root>
 
-  <rd-root></rd-root>
 </body>
 </html>

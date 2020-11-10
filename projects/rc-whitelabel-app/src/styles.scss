@@ -109,9 +109,12 @@ rd-footer {
   text-transform: uppercase;
 }
 // Loader
+.load-wrapper {
+
+}
 rd-loader {
   position: absolute;
-  top:0;
+  top:64px;
   left: 0;
   height: calc(100vh - 64px);
   width: 100%;

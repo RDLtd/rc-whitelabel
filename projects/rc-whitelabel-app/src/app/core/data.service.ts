@@ -21,7 +21,6 @@ export class DataService {
   // User
   private userLocation: any;
 
-
   constructor(
     private api: ApiService,
     private local: LocalStorageService,
@@ -87,6 +86,7 @@ export class DataService {
       }
     });
   }
+
   // Summary
   loadSummarisedData(): Promise <any> {
     return new Promise(async resolve => {
