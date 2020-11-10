@@ -2,48 +2,82 @@
 
 export class AppConfig {
 
-  // set up testing data if required
-  public readonly testing = true;
-
   // get the API base url from the environment...
   public readonly apiUrl = environment.API_URL;
 
+  // These read from URL parameters
+  public channelAccessCode = '';
+  public channelAPIKey = '';
+  public language = '';
+  public testing = false;
+
+  // These read from the database
+  public channelLogo = '';
+  public channelBackgroundColor = '';
+  public channelName = '';
+  public channelLat = 0;
+  public channelLng = 0;
+  public channelLanguage = '';
+  public  i18n = {
+    Loading: '',
+    Loading_data: '',
+    Search_by_name_or_location: '',
+    No_matching_search_results: '',
+    Recently_viewed: '',
+    Nearest_to: '',
+    My_current_location: '',
+    Cuisines: '',
+    Sort_filter: '',
+    Clear_filters: '',
+    Filter_by_cuisine: '',
+    Filter_by_feature: '',
+    Filtered_by: '',
+    Sort_by_location: '',
+    My_location: '',
+    Close: '',
+    Empowered_by: '',
+    Company: '',
+    Search: '',
+    Loader: '',
+    You_are_new: ''
+  };
+
   // VISIT BRIGHTON
 
-  // Channel specification
-  public readonly channelAccessCode = 'EN0100';
-  public readonly channelAPIKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)ss3';
-  // Channel Design
-  public readonly channelLogo = 'logo-partner-vb@3x.png';
-  public readonly channelBackgroundColor = '';
-  // Channel data - these could all be read from the database
-  public readonly channelName = 'Visit Brighton';
-  public readonly channelLat = 50.8226; // these are the 'central' coordinates of the channel
-  public readonly channelLng = -0.1365; // in testing they will be used as if this was the location of the user
+  // // Channel specification
+  // public readonly channelAccessCode = 'EN0100';
+  // public readonly channelAPIKey = 'Hy56%D9h@*hhbqijsG$D19Bsshy$)ss3';
+  // // Channel Design
+  // public readonly channelLogo = 'logo-partner-vb@3x.png';
+  // public readonly channelBackgroundColor = '';
+  // // Channel data - these could all be read from the database
+  // public readonly channelName = 'Visit Brighton';
+  // public readonly channelLat = 50.8226; // these are the 'central' coordinates of the channel
+  // public readonly channelLng = -0.1365; // in testing they will be used as if this was the location of the user
   // temporary setup for i18n
-  public readonly i18n = {
-    Loading: 'LOADING',
-    Loading_data: 'LOADING DATA',
-    Search_by_name_or_location: 'Search by name, location or cuisine',
-    No_matching_search_results: 'No matching search results, try one of the options below',
-    Recently_viewed: 'Recently viewed',
-    Nearest_to: 'Nearest to',
-    My_current_location: 'My current location',
-    Cuisines: 'Cuisines',
-    Sort_filter: 'Sort/Filter',
-    Clear_filters: 'Clear filters',
-    Filter_by_cuisine: 'Filter by Cuisine',
-    Filter_by_feature: 'Filter by Feature',
-    Filtered_by: 'Filtered by',
-    Sort_by_location: 'Sort by Location',
-    My_location: 'Nearest my current location',
-    Close: 'CLOSE',
-    Empowered_by: 'Empowered by',
-    Company: 'RESTAURANT COLLECTIVE',
-    Search: 'SEARCH',
-    Loader: 'LOADER',
-    You_are_new: 'You\'re new, so nothing here yet!'
-  };
+  // public readonly i18n = {
+  //   Loading: 'LOADING',
+  //   Loading_data: 'LOADING DATA',
+  //   Search_by_name_or_location: 'Search by name, location or cuisine',
+  //   No_matching_search_results: 'No matching search results, try one of the options below',
+  //   Recently_viewed: 'Recently viewed',
+  //   Nearest_to: 'Nearest to',
+  //   My_current_location: 'My current location',
+  //   Cuisines: 'Cuisines',
+  //   Sort_filter: 'Sort/Filter',
+  //   Clear_filters: 'Clear filters',
+  //   Filter_by_cuisine: 'Filter by Cuisine',
+  //   Filter_by_feature: 'Filter by Feature',
+  //   Filtered_by: 'Filtered by',
+  //   Sort_by_location: 'Sort by Location',
+  //   My_location: 'Nearest my current location',
+  //   Close: 'CLOSE',
+  //   Empowered_by: 'Empowered by',
+  //   Company: 'RESTAURANT COLLECTIVE',
+  //   Search: 'SEARCH',
+  //   Loader: 'LOADER',
+  //   You_are_new: 'You're new, so nothing here yet!'
+  // };
 
   // // NICE SHOPPING
   //

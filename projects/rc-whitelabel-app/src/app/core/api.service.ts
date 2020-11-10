@@ -41,6 +41,13 @@ export class ApiService {
       {channel_access_code, channel_access_api_key});
   }
 
+  // tslint:disable-next-line:variable-name
+  getChannelLanguage(channel_access_code: string, channel_access_api_key: string, language: string): any {
+    return this.http.post(this.config.apiUrl + '/public/channel/language',
+      {channel_access_code, channel_access_api_key, language});
+  }
+
+
   // Restaurant Detail
   // tslint:disable-next-line:variable-name
   getRestaurant(channel_access_code: string, channel_access_api_key: string, restaurant_number: string,
