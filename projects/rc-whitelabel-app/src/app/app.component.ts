@@ -25,6 +25,10 @@ export class AppComponent implements OnInit {
       this.config.language = params.lang || 'en';
       this.config.testing = params.testing || true;
     });
+    // console.log(this.config.channelAPIKey);
+    // console.log(this.config.channelAccessCode);
+    // console.log(this.config.language);
+    // console.log(this.config.testing);
 
     // Load config
     // Would like to move this to data service
