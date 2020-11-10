@@ -109,9 +109,12 @@ rd-footer {
   text-transform: uppercase;
 }
 // Loader
+.load-wrapper {
+
+}
 rd-loader {
   position: absolute;
-  top:0;
+  top:64px;
   left: 0;
   height: calc(100vh - 64px);
   width: 100%;
@@ -193,6 +196,17 @@ rd-loader {
         font-size: 16px;
         color: $colour-gray;
         font-weight: $font-weight-lite;
+        &.rd-my-location {
+          &:before {
+            content: "";
+            display: block;
+            background: url('assets/images/my_location-black-18dp.svg') no-repeat;
+            width: 20px;
+            height: 20px;
+            float: left;
+            margin: 2px 4px 0 -24px;
+          }
+        }
         span:last-child {
           font-size: 11px;
         }

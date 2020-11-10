@@ -41,12 +41,19 @@ export class ApiService {
       {channel_access_code, channel_access_api_key});
   }
 
+  // tslint:disable-next-line:variable-name
+  getChannelLanguage(channel_access_code: string, channel_access_api_key: string, language: string): any {
+    return this.http.post(this.config.apiUrl + '/public/channel/language',
+      {channel_access_code, channel_access_api_key, language});
+  }
+
+
   // Restaurant Detail
   // tslint:disable-next-line:variable-name
   getRestaurant(channel_access_code: string, channel_access_api_key: string, restaurant_number: string,
                 lat: number, lng: number): any {
     return this.http.post(this.config.apiUrl + '/public/channel/restaurant',
-      {channel_access_code, channel_access_api_key, restaurant_number, lat, lng});
+      {channel_access_code, channel_access_api_key, restaurant_number, lat, lng, testing: this.config.testing});
   }
 
   // Restaurants
@@ -54,7 +61,7 @@ export class ApiService {
   getRestaurants(channel_access_code: string, channel_access_api_key: string, params: string,
                  lat: number, lng: number): any {
     return this.http.post(this.config.apiUrl + '/public/channel/restaurants',
-      {channel_access_code, channel_access_api_key, params, lat, lng});
+      {channel_access_code, channel_access_api_key, params, lat, lng, testing: this.config.testing});
   }
 
   // tslint:disable-next-line:variable-name
@@ -68,7 +75,7 @@ export class ApiService {
   getRestaurantsSummary(channel_access_code: string, channel_access_api_key: string,
                         lat: number, lng: number): any {
     return this.http.post(this.config.apiUrl + '/public/channel/restaurants/summary',
-      {channel_access_code, channel_access_api_key, lat, lng});
+      {channel_access_code, channel_access_api_key, lat, lng, testing: this.config.testing});
   }
 
   // tslint:disable-next-line:variable-name

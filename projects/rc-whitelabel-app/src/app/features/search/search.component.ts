@@ -3,7 +3,7 @@ import { ApiService } from '../../core/api.service';
 import { LocalStorageService } from '../../core/local-storage.service';
 import { DataService } from '../../core/data.service';
 import { AppConfig } from '../../app.config';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface SearchSuggestion {
   cat: string;
@@ -62,45 +62,37 @@ export class SearchComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private data: DataService,
     public config: AppConfig,
-    public router: Router
+    public router: Router,
+    private activeRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+
     // Geolocation
     this.data.getUserLocation()
       .then((geo: any) => {
         this.currentLocation = geo;
     });
-    this.loadRestaurants().then(() => {
-      console.log('Restaurants loaded');
+    // Restaurants
+    this.data.loadRestaurants().then((res: any) => {
+      // console.log(res);
     });
-    this.loadSummary().then(() => {
+    // Summarised data
+    this.data.loadSummarisedData().then((data: any) => {
+      this.searchRestaurants = data.restaurants;
+      this.landmarks = data.landmarks;
+      this.features = data.attributes;
+      this.cuisines = data.cuisines;
       this.isLoaded = true;
-      console.log('Summary loaded');
     });
+
     // So that we can focus the input field
     setTimeout( () => {
       this.rdSearchInput.nativeElement.focus();
     }, 500);
+
     // Grab recents from local storage
     this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
-
-  }
-
-  public async loadRestaurants(): Promise<any> {
-    if (!this.data.getRestaurants().length) {
-      const params = { testing: this.config.testing };
-      const promise = await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey, params)
-        .toPromise()
-        .then((res: any) => {
-          this.restaurants = res.restaurants;
-          this.data.setRestaurants(res.restaurants);
-          console.log('From API', res.restaurants);
-        });
-    } else {
-      this.restaurants = this.data.getRestaurants();
-      console.log('Local', this.restaurants);
-    }
   }
 
   public async loadSummary(): Promise<any> {
@@ -109,7 +101,7 @@ export class SearchComponent implements OnInit {
         this.config.channelLat, this.config.channelLng)
         .toPromise()
         .then((res: any) => {
-          console.log(res);
+          console.log('S', res);
           this.data.setSummary(res);
           this.searchRestaurants = res.restaurants;
           this.landmarks = res.landmarks;
@@ -139,12 +131,8 @@ export class SearchComponent implements OnInit {
     if (str.length >= this.minSearchChars) {
       // set uppercase version for string matching
       const ucString = str.toUpperCase();
-
-      // const str2 = 'Hello Yes what are you aye doing yes'
-      // const removeStr = 'ye'; // variable
-      const regex =  new RegExp(`\\b${ucString}\\S*`, 'g'); // correct way
-      // const idx = str2.toLowerCase().search(regex); // it works
-
+      // Create regex that looks for beginning of word matches
+      const regex =  new RegExp(`\\b${ucString}\\S*`, 'g');
       // Clear current suggestions
       this.searchSuggestions = [];
       // Check for matching landmarks
@@ -154,12 +142,11 @@ export class SearchComponent implements OnInit {
           m = this.landmarks[i];
           idx = m.channel_landmark_name.toUpperCase().search(regex);
           if (idx > -1) {
-          // if (m.channel_landmark_name.toUpperCase().includes(ucString)) {
             // Add SearchSuggestion
             this.searchSuggestions.push({
               name: m.channel_landmark_name,
               cat: 'location',
-              index: idx, // .channel_landmark_name.toUpperCase().indexOf(ucString),
+              index: idx,
               route: ['/restaurants/nearest/', `${m.channel_landmark_lat}:${m.channel_landmark_lng}`]
             });
           }
@@ -172,28 +159,26 @@ export class SearchComponent implements OnInit {
           r = this.searchRestaurants[i];
           idx = r.restaurant_name.toUpperCase().search(regex);
           if (idx > -1) {
-          // if (r.restaurant_name?.toUpperCase().includes(ucString)) {
             this.searchSuggestions.push({
               cat: 'restaurant',
               name: r.restaurant_name,
-              index: idx, // r.restaurant_name.toUpperCase().indexOf(ucString),
+              index: idx,
               spw: r.restaurant_spw_url
             });
           }
         }
       }
-      // Check for matching restaurants
+      // Check for matching cuisines
       if (!!this.cuisines) {
         let i = this.cuisines.length; let c; let idx;
         while (i--) {
           c = this.cuisines[i];
           idx = c.label.toUpperCase().search(regex);
           if (idx > -1) {
-          // if (c.label.toUpperCase().includes(ucString)) {
             this.searchSuggestions.push({
               cat: 'cuisine',
               name: c.label,
-              index: idx, // c.label.toUpperCase().indexOf(ucString),
+              index: idx,
               route: ['/restaurants', `${c.label}`],
               misc: c.total
             });

@@ -16,7 +16,7 @@ import { AppConfig } from './app.config';
   imports: [
     AppRoutingModule,
     CoreModule,
-    HttpClientModule,
+    HttpClientModule
   ],
   providers: [
     ApiService,

@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Filter & Sort</h1>
+<h1 mat-dialog-title>{{ config.i18n.Sort_filter }} </h1>
 <div mat-dialog-content>
   <div class="rd-filter-list-container">
   <section class="rd-filter-list" *ngIf="data.cuisines.length > 1">
@@ -20,7 +20,7 @@
       <li>
         <a
           [mat-dialog-close]="{type: 'sort', lat: data?.coords.latitude, lng: data?.coords.longitude}">
-          <mat-icon>my_location</mat-icon>
+          <mat-icon style="color: #e74f14">my_location</mat-icon>
           {{ config.i18n.My_current_location }}
           <span class="rd-flex-spacer"></span>
           <span class="rd-count"></span>

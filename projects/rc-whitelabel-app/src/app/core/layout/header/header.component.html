@@ -1,8 +1,9 @@
 <!-- HEADER CONTENT -->
 <a href="/">
   <img
+    *ngIf="!!config.channelLogo"
     class="rd-logo"
-    src="assets/images/{{ config.channelLogo }}"
+    src="assets/images/{{ config?.channelLogo }}"
     [alt]="config.channelName">
 </a>
 <span class="rd-flex-spacer"></span>
