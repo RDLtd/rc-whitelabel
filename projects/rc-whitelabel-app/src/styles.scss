@@ -196,6 +196,7 @@ rd-loader {
         font-size: 16px;
         color: $colour-gray;
         font-weight: $font-weight-lite;
+        &.rd-my-location { color: var(--brand-accent-colour); font-weight: $font-weight-regular; }
         span:last-child {
           font-size: 11px;
         }

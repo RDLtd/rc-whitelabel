@@ -1,4 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
+import { AppConfig } from '../../../app.config';
 
 @Component({
   selector: 'rd-main-layout',
@@ -8,8 +9,14 @@ export class MainLayoutComponent implements OnInit {
 
   lastScrollTop = 0;
   hideHeader = false;
+  channelLoaded = false;
+  // TODO: Define and follow through all components
+  brandPrimary = 'red';
+  brandOnPrimaryColor = 'white';
+  brandAccentColor = 'black';
+  brandLogo = '';
 
-  constructor(ngz: NgZone) {
+  constructor(ngz: NgZone, private config: AppConfig) {
     window.onscroll = () => {
       const pos = window.pageYOffset;
       let hide = this.hideHeader;
@@ -20,6 +27,11 @@ export class MainLayoutComponent implements OnInit {
       });
     };
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.channelLoaded = !!this.config.channelAPIKey;
+    this.brandPrimary = this.config.channelBackgroundColor;
+    this.brandOnPrimaryColor = 'white';
+    this.brandLogo = this.config.channelLogo;
+  }
 
 }

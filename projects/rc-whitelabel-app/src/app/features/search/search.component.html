@@ -81,9 +81,9 @@
     </div>
     <ul>
       <li *ngIf="!!currentLocation">
-        <a [routerLink]="['/restaurants/nearest/', currentLocation?.coords.latitude + ':' +
+        <a class="rd-my-location" [routerLink]="['/restaurants/nearest/', currentLocation?.coords.latitude + ':' +
         currentLocation?.coords.longitude]">
-          {{ config.i18n.My_current_location }}
+          {{ config.i18n.My_current_location }}!
         </a>
       </li>
       <li *ngFor="let landmark of landmarks">

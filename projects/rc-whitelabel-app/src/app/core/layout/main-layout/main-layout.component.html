@@ -1,7 +1,8 @@
+
 <header
+  *ngIf="channelLoaded"
   [class.rd-hideHeader]="hideHeader"
-  style="color: var(--brand-on-bgd-color);
-  background-color: var(--brand-bgd);">
+  [ngStyle]="{'background-color': brandPrimary, 'color': brandOnPrimaryColor}">
   <rd-header></rd-header>
 </header>
 <main>

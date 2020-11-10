@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
     });
 
     // Load config
+    // Would like to move this to data service
     this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
       .toPromise()
       .then((data: any) => {
