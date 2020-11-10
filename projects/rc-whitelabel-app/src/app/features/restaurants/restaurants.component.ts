@@ -36,6 +36,7 @@ export class RestaurantsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
     // Check for sort/filtering
     this.route.paramMap.subscribe((params: ParamMap) => {
       // console.log('Param changed', params);

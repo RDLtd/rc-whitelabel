@@ -28,6 +28,8 @@ export class DataService {
     private config: AppConfig
   ) {
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
+    this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
+      .subscribe((val: any) => console.log(val));
   }
 
   // Get user location

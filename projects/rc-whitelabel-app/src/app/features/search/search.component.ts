@@ -3,7 +3,7 @@ import { ApiService } from '../../core/api.service';
 import { LocalStorageService } from '../../core/local-storage.service';
 import { DataService } from '../../core/data.service';
 import { AppConfig } from '../../app.config';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface SearchSuggestion {
   cat: string;
@@ -62,10 +62,12 @@ export class SearchComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private data: DataService,
     public config: AppConfig,
-    public router: Router
+    public router: Router,
+    private activeRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+
     // Geolocation
     this.data.getUserLocation()
       .then((geo: any) => {
