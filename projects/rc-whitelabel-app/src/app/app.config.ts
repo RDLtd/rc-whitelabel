@@ -23,6 +23,7 @@ export class AppConfig {
   // temporary setup for i18n
   public readonly i18n = {
     Loading: 'LOADING',
+    Loading_data: 'LOADING DATA',
     Search_by_name_or_location: 'Search by name, location or cuisine',
     No_matching_search_results: 'No matching search results, try one of the options below',
     Recently_viewed: 'Recently viewed',
@@ -40,7 +41,8 @@ export class AppConfig {
     Empowered_by: 'Empowered by',
     Company: 'RESTAURANT COLLECTIVE',
     Search: 'SEARCH',
-    Loader: 'LOADER'
+    Loader: 'LOADER',
+    You_are_new: 'You\'re new, so nothing here yet!'
   };
 
   // // NICE SHOPPING
@@ -58,6 +60,7 @@ export class AppConfig {
   // // temporary setup for i18n
   // public readonly i18n = {
   //   Loading: 'CHARGEMENT',
+  //   Loading_data: 'CHARGEMENT DES DONNÉES',
   //   Search_by_name_or_location: 'Rechercher par nom, lieu, ou cuisine',
   //   No_matching_search_results: 'Aucun résultat de recherche correspondant, essayez l\'une des options ci-dessous',
   //   Recently_viewed: 'Vu récemment',
@@ -76,5 +79,6 @@ export class AppConfig {
   //   Company: 'RESTAURATEURS INDEPENDANTS',
   //   Search: 'CHERCHER',
   //   Loader: 'CHARGEUR'
+  //   You_are_new: 'Vous êtes nouveau, donc rien ici encore!'
   // };
 }

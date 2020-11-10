@@ -166,7 +166,7 @@ export class SearchComponent implements OnInit {
           }
         }
       }
-      // Check for matching restaurants
+      // Check for matching cuisines
       if (!!this.cuisines) {
         let i = this.cuisines.length; let c; let idx;
         while (i--) {
