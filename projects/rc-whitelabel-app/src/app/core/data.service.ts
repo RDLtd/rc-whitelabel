@@ -4,15 +4,6 @@ import { LocalStorageService } from './local-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app.config';
 
-export interface Restaurant {
-  name: string | undefined;
-  number: string | undefined;
-  cuisine1: string | undefined;
-  lat: number | undefined;
-  lng: number | undefined;
-  spwUrl: string | undefined;
-}
-
 @Injectable({
   providedIn: 'root'
 })
