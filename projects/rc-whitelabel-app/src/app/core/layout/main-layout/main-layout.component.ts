@@ -9,12 +9,6 @@ export class MainLayoutComponent implements OnInit {
 
   lastScrollTop = 0;
   hideHeader = false;
-  channelLoaded = false;
-  // TODO: Define and follow through all components
-  brandPrimary = 'red';
-  brandOnPrimaryColor = 'white';
-  brandAccentColor = 'black';
-  brandLogo = '';
 
   constructor(ngz: NgZone, public config: AppConfig) {
     window.onscroll = () => {
@@ -27,11 +21,6 @@ export class MainLayoutComponent implements OnInit {
       });
     };
   }
-  ngOnInit(): void {
-    this.channelLoaded = !!this.config.channelAPIKey;
-    this.brandPrimary = this.config.channelBackgroundColor;
-    this.brandOnPrimaryColor = 'white';
-    this.brandLogo = this.config.channelLogo;
-  }
+  ngOnInit(): void { }
 
 }

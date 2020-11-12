@@ -1,5 +1,5 @@
 <header
-  *ngIf="channelLoaded"
+  *ngIf="config.configLoaded"
   [class.rd-hideHeader]="hideHeader"
   [ngStyle]="{'background-color': config.brand.primaryBgdColor, 'color': config.brand.primaryFgdColor }">
   <rd-header></rd-header>
@@ -10,3 +10,4 @@
 <footer>
   <rd-footer></rd-footer>
 </footer>
+

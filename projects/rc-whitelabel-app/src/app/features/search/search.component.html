@@ -81,7 +81,7 @@
       <h2>{{ config.i18n.Nearest_to }}</h2>
       </div>
       <ul>
-        <li *ngIf="!!currentLocation">
+        <li *ngIf="currentDistance < range">
 
           <a class="rd-my-location" [routerLink]="['/restaurants/nearest/', currentLocation?.coords.latitude +
           ':' +

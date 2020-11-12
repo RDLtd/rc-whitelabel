@@ -22,21 +22,15 @@ export class AppComponent implements OnInit {
     this.route.queryParams.subscribe((params: any) => {
       this.config.channelAccessCode = params.code || 'EN0100';
       this.config.channelAPIKey = params.key || 'Hy56%D9h@*hhbqijsG$D19Bsshy$)ss3';
-      this.config.language = params.lang || 'en';
-      this.config.testing = params.testing || true;
+      this.config.language = params.lang;
+      this.config.testing = params.testing;
     });
-
-    // console.log(this.config.channelAPIKey);
-    // console.log(this.config.channelAccessCode);
-    // console.log(this.config.language);
-    // console.log(this.config.testing);
-
     // Load config
     // Would like to move this to data service
     this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
       .toPromise()
       .then((data: any) => {
-        this.config.setChannel(data);
+        this.config.setChannel(data.channel_info);
         this.api.getChannelLanguage(this.config.channelAccessCode, this.config.channelAPIKey, this.config.language)
           .toPromise()
           .then((language: any) => {

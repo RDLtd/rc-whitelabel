@@ -3,6 +3,7 @@ import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app.config';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +29,6 @@ export class DataService {
     private config: AppConfig
   ) {
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
-    this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
-      .subscribe((val: any) => console.log(val));
   }
 
   // Get user location

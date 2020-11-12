@@ -3,7 +3,8 @@ import { ApiService } from '../../core/api.service';
 import { LocalStorageService } from '../../core/local-storage.service';
 import { DataService } from '../../core/data.service';
 import { AppConfig } from '../../app.config';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { LocationService } from '../../core/location.service';
 
 interface SearchSuggestion {
   cat: string;
@@ -54,23 +55,36 @@ export class SearchComponent implements OnInit {
   searchSuggestions: SearchSuggestion[] = [];
   cuisines: Cuisine[] = [];
   recentlyViewed: any[] = [];
-  // This will be a GeoPositionLocation
+  // User location
   currentLocation: any | undefined;
+  currentDistance = 1000;
+  range = 100; // max distance to offer 'near me' option
 
   constructor(
     private api: ApiService,
     private localStorageService: LocalStorageService,
     private data: DataService,
     public config: AppConfig,
-    public router: Router
+    public router: Router,
+    private location: LocationService
   ) { }
 
   ngOnInit(): void {
 
-    // Geolocation
-    this.data.getUserLocation()
-      .then((geo: any) => {
-        this.currentLocation = geo;
+    this.location.getUserGeoLocation().subscribe(pos => {
+      this.currentLocation = pos;
+      // If we have the channel centre geo
+      // see how far away the user is
+      if (this.config.configLoaded) {
+        this.currentDistance = this.location.getDistance(
+          this.config.channelLat,
+          this.config.channelLng,
+          this.currentLocation.coords.latitude,
+          this.currentLocation.coords.longitude
+        );
+        console.log(this.currentDistance);
+      }
+      console.log(this.currentLocation);
     });
 
     // Restaurants
@@ -205,9 +219,10 @@ export class SearchComponent implements OnInit {
   }
 
   addRecent(restaurant: any): void {
+    console.log(restaurant);
     this.data.setRecentlyViewed({
       restaurant_name: restaurant.name,
-      restaurant_spw_url: restaurant.spw,
+      restaurant_spw_url: restaurant.spw || restaurant.restaurant_spw_url,
       restaurant_number: restaurant.number
     });
     this.searchSuggestions = [];

@@ -10,11 +10,7 @@ export class AppConfig {
   public channelAPIKey = '';
   public language = '';
   public testing = false;
-  public testVal: any;
-
-  // These read from the database
-  public channelLogo = 'assets/images/rc-logo-white-white.png';
-  public channelBackgroundColor = '';
+  public configLoaded = false;
 
   public brand = {
     logoUrl: 'assets/images/rc-logo-white-white.png',
@@ -23,26 +19,10 @@ export class AppConfig {
     secondaryColor: '#f66e06',
     accentColor: '#ade3e3'
   };
-  // Visit Brighton
-  // public brand = {
-  //   logoUrl: 'https://www.visitbrighton.com/dbimgs/logo(3).png',
-  //   primaryBgdColor: '#00a8ec',
-  //   primaryFgdColor: '#fff',
-  //   secondaryColor: '#f66e06',
-  //   accentColor: '#ade3e3'
-  // };
-  // Nice Shopping
-  // public brand = {
-  //   logoUrl: 'https://niceshopping.fr/wp-content/uploads/2019/06/logo.png',
-  //   primaryBgdColor: '#3994f0',
-  //   primaryFgdColor: '#fff',
-  //   secondaryColor: '#f66e06',
-  //   accentColor: '#ade3e3'
-  // };
   public channelName = '';
   public channelLat = 0;
   public channelLng = 0;
-  public channelLanguage = '';
+  public channelLanguage = 'en';
   public i18n: any = {};
 
   setLanguage( obj: any): void {
@@ -53,18 +33,25 @@ export class AppConfig {
       }
     }
   }
-  setChannel( data: any ): void {
+  setChannel( data: any ): boolean {
+    console.log(data);
+
+    // Info
+    this.channelName = data.name;
+    this.channelLat = data.latitude;
+    this.channelLng = data.longitude;
+    this.channelLanguage = data.language;
+
     // Branding
-    this.channelLogo = data.channel_info.logo;
-    this.channelBackgroundColor = data.channel_info.background_color;
-    // Channel data - these could all be read from the database
-    this.channelName = data.channel_info.name;
-    this.channelLat = data.channel_info.latitude;
-    this.channelLng = data.channel_info.longitude;
-    this.channelLanguage = data.channel_info.language;
+    this.brand.logoUrl = data.logo;
+    this.brand.primaryBgdColor = data.primaryBgColor;
+    this.brand.primaryFgdColor = data.primaryFgColor;
+    this.brand.secondaryColor = data.secondaryColor;
 
     if (!this.language) {
       this.language = this.channelLanguage;
     }
+    this.configLoaded = true;
+    return true;
   }
 }
