@@ -16,7 +16,7 @@ export class MainLayoutComponent implements OnInit {
   brandAccentColor = 'black';
   brandLogo = '';
 
-  constructor(ngz: NgZone, private config: AppConfig) {
+  constructor(ngz: NgZone, public config: AppConfig) {
     window.onscroll = () => {
       const pos = window.pageYOffset;
       let hide = this.hideHeader;

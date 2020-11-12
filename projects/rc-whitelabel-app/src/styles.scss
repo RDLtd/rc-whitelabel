@@ -6,7 +6,7 @@
 $rc-whitelabel-app-primary: mat-palette($mat-deep-orange, A200);
 $rc-whitelabel-app-accent: mat-palette($mat-orange, A200, A100, A400);
 // The warn palette is optional (defaults to red).
-$rc-whitelabel-app-warn: mat-palette($mat-red);
+$rc-whitelabel-app-warn: mat-palette($mat-deep-orange);
 // Create the theme object
 $rc-whitelabel-app-theme: mat-light-theme((
   color: (
@@ -18,17 +18,21 @@ $rc-whitelabel-app-theme: mat-light-theme((
 
 @include angular-material-theme($rc-whitelabel-app-theme);
 
-// Default vars
-$colour-gray: rgb(74, 74, 74);
-$colour-accent: black;
-$colour-bgd: white;
-$header-height: 64px;
+// Default branding
+$col-text: rgb(74, 74, 74);
+$col-page-bgd: white;
+$col-timer-outer: #444;
+$col-timer-inner: #bbb;
+
+
+// Fonts
 $font-family-default: Roboto, "Helvetica Neue", sans-serif;
 $font-family-heading: 'Roboto Slab', 'Georgia', serif;
 $font-weight-lite: 300;
 $font-weight-regular: 400;
 $font-weight-heavy: 500;
-$max-width: 960px;
+$layout-header-height: 64px;
+$layout-max-width: 960px;
 
 // Global resets
 * { box-sizing: border-box; }
@@ -43,7 +47,7 @@ body {
   height: 100%;
   margin: 0;
   font-family: $font-family-default;
-  color: $colour-gray;
+  color: $col-text;
 }
 a, a:active, a:focus {
   outline: none;
@@ -54,24 +58,24 @@ a, a:active, a:focus {
 .rd-hide { display: none; }
 .rd-show { opacity: 1!important;}
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
-.rd-icon-restaurant { color: #e74f14;}
-.rd-icon-cuisine {}
-.rd-icon-location {color: #e74f14;}
+.rd-icon-restaurant { color: #484747 !important;}
+.rd-icon-cuisine { color: #0bb0d9 !important;}
+.rd-icon-location, .rd-icon-my-location { color: #ee4b08 !important; fill: #ee4b08}
 
 // LAYOUT
 main {
-  max-width: $max-width;
+  max-width: $layout-max-width;
   margin: 0 auto;
   min-height: calc(99.9vh - 64px);
-  padding: $header-height 0 0;
+  padding: $layout-header-height 0 0;
 }
 header {
   width: 100vw;
   z-index: 10;
   position: fixed;
   transition: all .6s cubic-bezier(0.16, 1, 0.3, 1);
-  background: var(--brand-bgd);
-  color: var(--brand-on-bgd-color);
+  background: $col-page-bgd;
+  color: $col-text;
   &.rd-hideHeader {
     //transform: translateY(-56px);
   }
@@ -104,17 +108,14 @@ rd-footer {
   justify-content: center;
   align-items: center;
   padding: 12px 0;
-  color: $colour-gray;
+  color: $col-text;
   font-size: 9px;
   text-transform: uppercase;
 }
 // Loader
-.load-wrapper {
-
-}
 rd-loader {
   position: absolute;
-  top:64px;
+  top:0;
   left: 0;
   height: calc(100vh - 64px);
   width: 100%;
@@ -129,35 +130,35 @@ rd-loader {
 }
 .hourglass{
   display:block;
-  background: $colour-bgd;
+  background: $col-page-bgd;
   margin:1em auto;
   width:2em;
   height:4em;
   animation: hourglass 1s linear infinite;
 }
-.outer{ fill: var(--brand-primary) }
-.middle{ fill: white; }
+.outer{ fill: $col-timer-outer }
+.middle{ fill: $col-page-bgd; }
 @keyframes hourglass{
   0%{
     transform:rotate(0deg);
     box-shadow:
-            inset var(--brand-primary) 0 -0em 0 0,
-            inset $colour-bgd 0 -2em 0 0,
-            inset var(--brand-primary) 0 -4em 0 0;
+            inset $col-timer-inner 0 -0em 0 0,
+            inset white 0 -2em 0 0,
+            inset $col-timer-inner 0 -4em 0 0;
   }
   80%{
     transform:rotate(0deg);
     box-shadow:
-            inset var(--brand-primary) 0 -2em 0 0,
-            inset $colour-bgd 0 -2em 0 0,
-            inset var(--brand-primary) 0 -2em 0 0;
+            inset $col-timer-inner 0 -2em 0 0,
+            inset white 0 -2em 0 0,
+            inset $col-timer-inner 0 -2em 0 0;
   }
   100%{
     transform:rotate(180deg);
     box-shadow:
-            inset var(--brand-primary) 0 -2em 0 0,
-            inset $colour-bgd 0 -2em 0 0,
-            inset var(--brand-primary) 0 -2em 0 0;
+            inset $col-timer-inner 0 -2em 0 0,
+            inset white 0 -2em 0 0,
+            inset $col-timer-inner 0 -2em 0 0;
   }
 }
 
@@ -183,7 +184,7 @@ rd-loader {
       height: 24px;
       width: 24px;
       margin-right: 4px;
-      color: rgba(var(--brand-primary-rgb), .5);
+      color: #666;
     }
   }
   ul {
@@ -194,18 +195,21 @@ rd-loader {
         align-items: center;
         padding: 6px 0;
         font-size: 16px;
-        color: $colour-gray;
+        color: $col-text;
         font-weight: $font-weight-lite;
         &.rd-my-location {
-          &:before {
-            content: "";
-            display: block;
-            background: url('assets/images/my_location-black-18dp.svg') no-repeat;
-            width: 20px;
-            height: 20px;
-            float: left;
-            margin: 2px 4px 0 -24px;
+          svg {
+            margin: 0 7px 0 -25px;
           }
+          //&:before {
+          //  content: "";
+          //  display: block;
+          //  background: url('assets/images/my_location-black-18dp.svg') no-repeat;
+          //  width: 20px;
+          //  height: 20px;
+          //  float: left;
+          //  margin: 2px 4px 0 -25px;
+          //}
         }
         span:last-child {
           font-size: 11px;
@@ -239,10 +243,7 @@ ul.rd-search-autofill {
         height: 20px;
         font-size: 20px;
         margin-right: 4px;
-        color: rgba(var(--brand-primary-rgb), .5);
-        &.rd-icon-cuisine { color: #0bb0d9; }
-        &.rd-icon-location { color: #ee4b08; }
-        &.rd-icon-restaurant { color: #484747;}
+        color: lightgray;
       }
       span:last-child { font-size: 11px; }
     }
@@ -272,7 +273,7 @@ ul.rd-search-autofill {
   }
   .mat-error {
     margin: -12px 0 24px;
-    color: $colour-gray;
+    color: $col-text;
   }
   ul.rd-search-suggestions {
     margin: 0 0 12px;
@@ -288,9 +289,9 @@ ul.rd-search-autofill {
       overflow: hidden;
       text-overflow: ellipsis;
       text-decoration: none;
-      color: $colour-gray;
+      color: $col-text;
       .mat-icon {
-        color: rgba(var(--brand-primary-rgb), .5);
+        color: red;
         margin-right: 8px;
       }
     }
@@ -367,11 +368,12 @@ ul.rd-search-autofill {
         font-size: 10px;
         text-transform: uppercase;
         margin: 0 3px 3px 0;
-        padding: 0 8px;
+        padding: 6px;
       }
       .mat-standard-chip {
         min-height: 24px;
-        background-color: rgba(var(--brand-primary-rgb), .5);
+        line-height: 13px;
+        border-radius: 10px;
       }
     }
     img {
@@ -400,8 +402,9 @@ ul.rd-search-autofill {
       font-weight: $font-weight-regular;
       background: black;
       color: white;
-      &.clear {
-        background-color: #cb0202;
+      @include mat-elevation(10);
+      &.rd-btn-clear {
+        background-color: #ff2600;
       }
     }
     .mat-button-wrapper {
@@ -439,7 +442,7 @@ ul.rd-search-autofill {
         font-weight: $font-weight-heavy;
       }
       .mat-icon {
-        color: rgb(var(--brand-primary-rgb), .5);
+        color: lightgray;
         margin-right: 4px;
       }
     }
@@ -516,7 +519,8 @@ ul.rd-search-autofill {
       border: 2px solid #eee;
       border-radius: 5px;
       &:hover {
-        border-color: var(--brand-primary);
+        border-color: black;
+        @include mat-elevation(2);
       }
       .rd-restaurant-detail {
         padding: 8px 0;

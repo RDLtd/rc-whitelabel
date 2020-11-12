@@ -72,10 +72,12 @@ export class SearchComponent implements OnInit {
       .then((geo: any) => {
         this.currentLocation = geo;
     });
+
     // Restaurants
     this.data.loadRestaurants().then((res: any) => {
       // console.log(res);
     });
+
     // Summarised data
     this.data.loadSummarisedData().then((data: any) => {
       this.searchRestaurants = data.restaurants;
@@ -125,7 +127,7 @@ export class SearchComponent implements OnInit {
     // window.scrollTo(0, 64);
 
     this.noSuggestions = false;
-    //const maxSuggestions = 10;
+    // const maxSuggestions = 10;
 
     if (str.length >= this.minSearchChars) {
       // set uppercase version for string matching
@@ -201,6 +203,7 @@ export class SearchComponent implements OnInit {
     this.searchSuggestions = [];
     this.noSuggestions = false;
   }
+
   addRecent(restaurant: any): void {
     this.data.setRecentlyViewed({
       restaurant_name: restaurant.name,

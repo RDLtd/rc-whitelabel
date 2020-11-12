@@ -6,7 +6,7 @@
     <ul>
       <li *ngFor="let cuisine of data.cuisines">
         <a [mat-dialog-close]="{type: 'filter', value: cuisine.label}">
-          <mat-icon>restaurant</mat-icon>
+          <mat-icon class="rd-icon-cuisine">restaurant</mat-icon>
           {{ cuisine.label }}
           <span class="rd-flex-spacer"></span>
           <span class="rd-count">{{ cuisine.total }}</span>
@@ -20,7 +20,7 @@
       <li>
         <a
           [mat-dialog-close]="{type: 'sort', lat: data?.coords.latitude, lng: data?.coords.longitude}">
-          <mat-icon style="color: #e74f14">my_location</mat-icon>
+          <mat-icon class="rd-icon-my-location">my_location</mat-icon>
           {{ config.i18n.My_current_location }}
           <span class="rd-flex-spacer"></span>
           <span class="rd-count"></span>
@@ -29,7 +29,7 @@
       <li *ngFor="let landmark of data.landmarks">
         <a
           [mat-dialog-close]="{type: 'sort', lat: landmark?.channel_landmark_lat, lng: landmark?.channel_landmark_lng}">
-          <mat-icon>location_on</mat-icon>
+          <mat-icon class="rd-icon-location">location_on</mat-icon>
           {{ landmark.channel_landmark_name }}
           <span class="rd-flex-spacer"></span>
           <span class="rd-count"></span>

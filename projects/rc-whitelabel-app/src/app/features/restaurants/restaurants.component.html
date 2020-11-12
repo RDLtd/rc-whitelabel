@@ -11,13 +11,17 @@
         {{ restaurant?.restaurant_cuisine_1 }} | {{ restaurant?.restaurant_address_2 }}
         <span class="rd-flex-spacer"></span>
         <ng-container *ngIf="restaurant?.distance <= 10">
+          <mat-icon class="rd-icon-my-location">my_location</mat-icon>&nbsp;
           <span *ngIf="restaurant?.distance <= 0.5">{{ restaurant?.distance * 1000 | number: '1.0-0' }} m</span>
           <span *ngIf="restaurant?.distance > 0.5">{{ restaurant?.distance | number: '1.0-1' }} Km</span>
         </ng-container>
       </h3>
       <p>{{ restaurant?.strap_line }}</p>
-      <mat-chip-list aria-label="Fish selection">
-        <mat-chip *ngFor="let feature of restaurant['attributes']">{{ feature }}</mat-chip>
+      <mat-chip-list>
+        <mat-chip
+          *ngFor="let feature of restaurant['attributes']">
+          {{ feature }}
+        </mat-chip>
       </mat-chip-list>
     </div>
     <img [src]="restaurant?.image" loading="lazy" [alt]="restaurant?.restaurant_name">
@@ -32,7 +36,7 @@
       <mat-icon>filter_list</mat-icon>
     </button>
     <button
-      class="clear"
+      class="rd-btn-clear"
       *ngIf="filtersOn && isLoaded"
       mat-raised-button
       (click)="clearFilters()">

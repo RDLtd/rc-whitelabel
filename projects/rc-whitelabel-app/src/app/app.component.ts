@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
       this.config.language = params.lang || 'en';
       this.config.testing = params.testing || true;
     });
+
     // console.log(this.config.channelAPIKey);
     // console.log(this.config.channelAccessCode);
     // console.log(this.config.language);
@@ -39,7 +40,7 @@ export class AppComponent implements OnInit {
         this.api.getChannelLanguage(this.config.channelAccessCode, this.config.channelAPIKey, this.config.language)
           .toPromise()
           .then((language: any) => {
-            this.config.setLanguage( language.language[0] );
+            this.config.setLanguage( language.language[0]);
           })
           .catch((error: any) => console.log('Unable to read Language information!', error)
           );
@@ -47,5 +48,4 @@ export class AppComponent implements OnInit {
       .catch((error: any) => console.log('Unable to read Channel information!', error)
       );
   }
-
 }

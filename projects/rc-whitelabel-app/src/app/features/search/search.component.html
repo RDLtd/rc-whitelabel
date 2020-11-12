@@ -57,46 +57,56 @@
   </ul>
   <!-- Quick links -->
   <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
-  <section class="rd-quick-links">
-    <div>
-      <mat-icon>{{ icons.recent }}</mat-icon>
-      <h2>{{ config.i18n.Recently_viewed }}</h2>
-    </div>
-    <ul>
-      <li *ngIf="!recentlyViewed?.length">
-        <a>{{ config.i18n.You_are_new }}</a>
-      </li>
-      <li *ngFor="let recent of recentlyViewed">
-        <a [href]="recent['restaurant_spw_url']" target="_blank">
-          {{ recent['restaurant_name'] }}
-        </a>
-      </li>
-    </ul>
-  </section>
 
-  <section class="rd-quick-links" *ngIf="landmarks?.length">
-    <div>
-      <mat-icon>{{ icons.location }}</mat-icon>
+    <section class="rd-quick-links">
+      <div>
+        <mat-icon class="rd-icon-restaurant">{{ icons.restaurant }}</mat-icon>
+        <h2>{{ config.i18n.Recently_viewed }}</h2>
+      </div>
+      <ul>
+        <li *ngIf="!recentlyViewed?.length">
+          <a>{{ config.i18n.You_are_new }}</a>
+        </li>
+        <li *ngFor="let recent of recentlyViewed">
+          <a [href]="recent['restaurant_spw_url']" target="_blank">
+            {{ recent['restaurant_name'] }}
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section class="rd-quick-links" *ngIf="landmarks?.length">
+      <div>
+        <mat-icon class="rd-icon-location">{{ icons.location }}</mat-icon>
       <h2>{{ config.i18n.Nearest_to }}</h2>
-    </div>
-    <ul>
-      <li *ngIf="!!currentLocation">
-        <a class="rd-my-location" [routerLink]="['/restaurants/nearest/', currentLocation?.coords.latitude + ':' +
-        currentLocation?.coords.longitude]">
-          {{ config.i18n.My_current_location }}!
-        </a>
-      </li>
-      <li *ngFor="let landmark of landmarks">
-        <a [routerLink]="['/restaurants/nearest/', landmark?.channel_landmark_lat + ':' + landmark?.channel_landmark_lng]">
-          {{ landmark?.channel_landmark_name }}
-        </a>
-      </li>
-    </ul>
-  </section>
+      </div>
+      <ul>
+        <li *ngIf="!!currentLocation">
+
+          <a class="rd-my-location" [routerLink]="['/restaurants/nearest/', currentLocation?.coords.latitude +
+          ':' +
+          currentLocation?.coords.longitude]">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
+              <path d="M0 0h24v24H0z" fill="none"/>
+              <path
+                class="rd-icon-my-location"
+                d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94
+    3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+            </svg>
+            {{ config.i18n.My_current_location }}!
+          </a>
+        </li>
+        <li *ngFor="let landmark of landmarks">
+          <a [routerLink]="['/restaurants/nearest/', landmark?.channel_landmark_lat + ':' + landmark?.channel_landmark_lng]">
+            {{ landmark?.channel_landmark_name }}
+          </a>
+        </li>
+      </ul>
+    </section>
 
   <section class="rd-quick-links" *ngIf="cuisines.length">
     <div>
-      <mat-icon>{{ icons.cuisine }}</mat-icon>
+      <mat-icon class="rd-icon-cuisine">{{ icons.cuisine }}</mat-icon>
       <h2>{{ config.i18n.Cuisines }}</h2>
     </div>
     <ul>
