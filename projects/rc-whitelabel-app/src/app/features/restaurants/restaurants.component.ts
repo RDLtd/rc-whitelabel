@@ -48,7 +48,7 @@ export class RestaurantsComponent implements OnInit {
       this.data.loadRestaurants().then((res: any) => {
         console.log(res);
         this.cachedRestaurants = res;
-        // Apply any filters
+        // Apply sort/filter
         this.updateRestaurantResults();
       });
     });

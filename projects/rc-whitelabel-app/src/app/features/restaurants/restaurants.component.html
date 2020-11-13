@@ -8,7 +8,8 @@
     <div class="rd-restaurant-detail">
       <h2>{{ restaurant?.restaurant_name }}</h2>
       <h3>
-        {{ restaurant?.restaurant_cuisine_1 }} | {{ restaurant?.restaurant_address_2 }}
+        <span [class.rd-highlight]="!!routeFilter">{{ restaurant?.restaurant_cuisine_1 }}</span>&nbsp;&nbsp;|&nbsp;&nbsp;{{
+        restaurant?.restaurant_address_2 }}
         <span class="rd-flex-spacer"></span>
         <ng-container *ngIf="restaurant?.distance && !!routeSort">
           <mat-icon class="rd-icon-my-location">my_location</mat-icon>&nbsp;

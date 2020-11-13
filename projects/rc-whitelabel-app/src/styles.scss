@@ -23,6 +23,7 @@ $col-text: rgb(74, 74, 74);
 $col-page-bgd: white;
 $col-timer-outer: #454540;
 $col-timer-inner: #bbb;
+$col-accent: #ff3d00;
 
 
 // Fonts
@@ -57,6 +58,7 @@ a, a:active, a:focus {
 .rd-flex-spacer { flex: 1 0 auto; }
 .rd-hide { display: none; }
 .rd-show { opacity: 1!important;}
+.rd-highlight { color: $col-accent}
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
 .rd-icon-restaurant { color: #484747 !important;}
 .rd-icon-cuisine { color: #0bb0d9 !important;}
@@ -345,8 +347,9 @@ ul.rd-search-autofill {
         text-transform: uppercase;
         margin: 0;
         padding: 0;
-        span {
+        span:last-child {
           text-transform: lowercase;
+          color: $col-accent;
         }
         .mat-icon {
           font-size: 12px;
