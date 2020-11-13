@@ -3,7 +3,6 @@ import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app.config';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -35,17 +34,17 @@ export class DataService {
   async getGeoLocation(): Promise<any> {
     return new Promise(resolve => {
       // Testing
-      if (this.config.testing) {
-        const geo = {
-          timestamp: new Date().getTime(),
-          coords: {
-            latitude: this.config.channelLat,
-            longitude: this.config.channelLng
-          }
-        };
-        console.log('Geo test', geo);
-        resolve(geo);
-      } else
+      // if (this.config.testMode) {
+      //   const geo = {
+      //     timestamp: new Date().getTime(),
+      //     coords: {
+      //       latitude: this.config.channelLat,
+      //       longitude: this.config.channelLng
+      //     }
+      //   };
+      //   console.log('Geo test', geo);
+      //   resolve(geo);
+      // } else
       // check cache
       if (!!this.userLocation) {
         console.log('Geo local');
@@ -76,7 +75,7 @@ export class DataService {
         resolve(this.restaurants);
       } else {
         await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey,
-          {testing: this.config.testing})
+          {testing: this.config.testMode})
           .toPromise()
           .then((res: any) => {
             this.restaurants = res.restaurants;

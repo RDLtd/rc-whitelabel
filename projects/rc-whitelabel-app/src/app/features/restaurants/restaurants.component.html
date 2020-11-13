@@ -10,7 +10,7 @@
       <h3>
         {{ restaurant?.restaurant_cuisine_1 }} | {{ restaurant?.restaurant_address_2 }}
         <span class="rd-flex-spacer"></span>
-        <ng-container *ngIf="restaurant?.distance <= 10">
+        <ng-container *ngIf="restaurant?.distance && !!routeSort">
           <mat-icon class="rd-icon-my-location">my_location</mat-icon>&nbsp;
           <span *ngIf="restaurant?.distance <= 0.5">{{ restaurant?.distance * 1000 | number: '1.0-0' }} m</span>
           <span *ngIf="restaurant?.distance > 0.5">{{ restaurant?.distance | number: '1.0-1' }} Km</span>

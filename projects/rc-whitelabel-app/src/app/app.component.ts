@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
       this.config.channelAccessCode = params.code || 'EN0100';
       this.config.channelAPIKey = params.key || 'Hy56%D9h@*hhbqijsG$D19Bsshy$)ss3';
       this.config.language = params.lang;
-      this.config.testing = params.testing;
+      this.config.testMode = params.testing;
     });
     // Load config
     // Would like to move this to data service

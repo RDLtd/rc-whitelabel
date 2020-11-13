@@ -9,7 +9,7 @@ export class AppConfig {
   public channelAccessCode = '';
   public channelAPIKey = '';
   public language = '';
-  public testing = false;
+  public testMode = false;
   public configLoaded = false;
 
   public brand = {
