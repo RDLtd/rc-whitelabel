@@ -120,7 +120,7 @@ export class RestaurantsComponent implements OnInit {
       data: {
         cuisines: this.data.getCuisines(),
         landmarks: this.data.getLandmarks(),
-        coords: this.currentLocation.coords
+        coords: this.currentLocation
       }
     });
     dialogRef.afterClosed().subscribe(result => {

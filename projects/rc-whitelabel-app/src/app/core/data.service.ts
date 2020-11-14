@@ -162,7 +162,7 @@ export class DataService {
     // TODO: use restaurant_number when in production
     const maxNum = 5;
     if (this.recentlyViewed) {
-      const idx = this.recentlyViewed.map((item: any) => item.restaurant_name).indexOf(restaurant.restaurant_name);
+      const idx = this.recentlyViewed.map((item: any) => item.restaurant_number).indexOf(restaurant.restaurant_number);
       // remove object
       if (idx > -1) {
         this.recentlyViewed.splice(idx, 1);

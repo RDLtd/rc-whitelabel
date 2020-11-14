@@ -17,7 +17,7 @@
   <section class="rd-filter-list" *ngIf="data.landmarks.length || !!data.coords">
     <h1>{{ config.i18n.Sort_by_location }}</h1>
     <ul>
-      <li>
+      <li *ngIf="!!data.coords">
         <a
           [mat-dialog-close]="{type: 'sort', lat: data?.coords.latitude, lng: data?.coords.longitude}">
           <mat-icon class="rd-icon-my-location">my_location</mat-icon>
