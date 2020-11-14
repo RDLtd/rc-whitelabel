@@ -158,22 +158,22 @@ export class DataService {
     return this.recentlyViewed;
   }
   setRecentlyViewed(restaurant: any): void {
-    // Check whether value is the array
-    // TODO: use restaurant_number when in production
+    // Check whether this restaurant is already in the array
     const maxNum = 5;
     if (this.recentlyViewed) {
-      const idx = this.recentlyViewed.map((item: any) => item.restaurant_number).indexOf(restaurant.restaurant_number);
-      // remove object
+      const idx = this.recentlyViewed.map((item: any) => item.restaurant_number)
+        .indexOf(restaurant.restaurant_number);
+      // If it is then remove it
       if (idx > -1) {
         this.recentlyViewed.splice(idx, 1);
       }
-      // add to beginning
+      // and add to beginning
       this.recentlyViewed.unshift(restaurant);
       this.recentlyViewed.splice(maxNum);
     } else {
       this.recentlyViewed = [restaurant];
     }
-    // Sore locally
+    // Update localStorage
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
     // console.log(this.recentlyViewed);
   }
