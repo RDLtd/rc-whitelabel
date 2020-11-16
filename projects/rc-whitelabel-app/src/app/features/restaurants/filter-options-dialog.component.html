@@ -14,12 +14,13 @@
       </li>
     </ul>
   </section>
-  <section class="rd-filter-list" *ngIf="data.landmarks.length || !!data.coords">
+  <section class="rd-filter-list" *ngIf="data?.landmarks.length || !!data?.currentLocation">
     <h1>{{ config.i18n.Sort_by_location }}</h1>
     <ul>
-      <li *ngIf="!!data.coords">
+      <li *ngIf="!!data?.currentLocation?.coords && data?.currentDistance < config.maxDistance">
         <a
-          [mat-dialog-close]="{type: 'sort', lat: data?.coords.latitude, lng: data?.coords.longitude}">
+          [mat-dialog-close]="{ type: 'sort', lat: data?.currentLocation?.coords.latitude, lng:
+          data?.currentLocation?.coords.longitude}">
           <mat-icon class="rd-icon-my-location">my_location</mat-icon>
           {{ config.i18n.My_current_location }}
           <span class="rd-flex-spacer"></span>

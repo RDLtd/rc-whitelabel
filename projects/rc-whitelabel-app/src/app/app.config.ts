@@ -11,6 +11,7 @@ export class AppConfig {
   public language = '';
   public testMode = false;
   public configLoaded = false;
+  public maxDistance = 75;
 
   public brand = {
     logoUrl: 'assets/images/rc-logo-white-white.png',

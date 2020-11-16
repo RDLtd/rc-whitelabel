@@ -58,7 +58,6 @@ export class SearchComponent implements OnInit {
   // User location
   currentLocation: any | undefined;
   currentDistance = 1000;
-  range = 100; // max distance to offer 'near me' option
 
   constructor(
     private api: ApiService,
@@ -144,10 +143,15 @@ export class SearchComponent implements OnInit {
     // const maxSuggestions = 10;
 
     if (str.length >= this.minSearchChars) {
-      // set uppercase version for string matching
-      const ucString = str.toUpperCase();
+      // Normalize any extended latin (if supported by browser)
+      // and force uppercase for matching
+      if (str.normalize !== undefined) {
+        str = str.normalize ('NFKD').replace (/[\u0300-\u036F]/g, '').toUpperCase();
+      } else {
+        str = str.toUpperCase();
+      }
       // Create regex that looks for beginning of word matches
-      const regex =  new RegExp(`\\b${ucString}\\S*`, 'g');
+      const regex =  new RegExp(`\\b${str}\\S*`, 'g');
       // Clear current suggestions
       this.searchSuggestions = [];
       // Check for matching landmarks

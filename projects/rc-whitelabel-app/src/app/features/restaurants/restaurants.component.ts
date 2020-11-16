@@ -15,6 +15,7 @@ export class RestaurantsComponent implements OnInit {
 
   isLoaded = false;
   currentLocation: any | undefined;
+  currentDistance: number | undefined;
   // filters
   showFilterOptions = false;
   filtersOn = false;
@@ -52,6 +53,7 @@ export class RestaurantsComponent implements OnInit {
         this.updateRestaurantResults();
       });
     });
+
     // load summary for filter/sort options
     this.data.loadSummarisedData().then((res: any) => {
       // console.log('Summary loaded', res);
@@ -64,9 +66,14 @@ export class RestaurantsComponent implements OnInit {
     this.location.getUserGeoLocation().subscribe(pos => {
       this.currentLocation = pos;
       console.log(this.currentLocation);
+      this.currentDistance = this.location.getDistance(
+        this.config.channelLat,
+        this.config.channelLng,
+        this.currentLocation.coords.latitude,
+        this.currentLocation.coords.longitude
+      );
     });
   }
-
   // Check for route params
   updateRestaurantResults(sort?: string, filter?: string): void {
 
@@ -120,7 +127,8 @@ export class RestaurantsComponent implements OnInit {
       data: {
         cuisines: this.data.getCuisines(),
         landmarks: this.data.getLandmarks(),
-        coords: this.currentLocation
+        currentLocation: this?.currentLocation,
+        currentDistance: this?.currentDistance
       }
     });
     dialogRef.afterClosed().subscribe(result => {
