@@ -4,13 +4,14 @@ export class AppConfig {
 
   // get the API base url from the environment...
   public readonly apiUrl = environment.API_URL;
+  public testMode = environment.testMode;
 
   // These read from URL parameters
   public channelAccessCode = '';
   public channelAPIKey = '';
   public language = '';
-  public testMode = false;
   public configLoaded = false;
+  // TODO: add to channel config
   public maxDistance = 75;
 
   public brand = {
