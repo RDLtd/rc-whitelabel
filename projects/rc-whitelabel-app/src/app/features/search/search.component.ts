@@ -3,7 +3,8 @@ import { ApiService } from '../../core/api.service';
 import { LocalStorageService } from '../../core/local-storage.service';
 import { DataService } from '../../core/data.service';
 import { AppConfig } from '../../app.config';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { LocationService } from '../../core/location.service';
 
 interface SearchSuggestion {
   cat: string;
@@ -54,8 +55,9 @@ export class SearchComponent implements OnInit {
   searchSuggestions: SearchSuggestion[] = [];
   cuisines: Cuisine[] = [];
   recentlyViewed: any[] = [];
-  // This will be a GeoPositionLocation
+  // User location
   currentLocation: any | undefined;
+  currentDistance = 1000;
 
   constructor(
     private api: ApiService,
@@ -63,20 +65,32 @@ export class SearchComponent implements OnInit {
     private data: DataService,
     public config: AppConfig,
     public router: Router,
-    private activeRoute: ActivatedRoute
+    private location: LocationService
   ) { }
 
   ngOnInit(): void {
 
-    // Geolocation
-    this.data.getUserLocation()
-      .then((geo: any) => {
-        this.currentLocation = geo;
+    this.location.getUserGeoLocation().subscribe(pos => {
+      this.currentLocation = pos;
+      // If we have the channel centre geo
+      // see how far away the user is
+      if (this.config.configLoaded) {
+        this.currentDistance = this.location.getDistance(
+          this.config.channelLat,
+          this.config.channelLng,
+          this.currentLocation.coords.latitude,
+          this.currentLocation.coords.longitude
+        );
+        console.log(this.currentDistance);
+      }
+      console.log(this.currentLocation);
     });
+
     // Restaurants
     this.data.loadRestaurants().then((res: any) => {
       // console.log(res);
     });
+
     // Summarised data
     this.data.loadSummarisedData().then((data: any) => {
       this.searchRestaurants = data.restaurants;
@@ -126,13 +140,18 @@ export class SearchComponent implements OnInit {
     // window.scrollTo(0, 64);
 
     this.noSuggestions = false;
-    const maxSuggestions = 10;
+    // const maxSuggestions = 10;
 
     if (str.length >= this.minSearchChars) {
-      // set uppercase version for string matching
-      const ucString = str.toUpperCase();
+      // Normalize any extended latin (if supported by browser)
+      // and force uppercase for matching
+      if (str.normalize !== undefined) {
+        str = str.normalize ('NFKD').replace (/[\u0300-\u036F]/g, '').toUpperCase();
+      } else {
+        str = str.toUpperCase();
+      }
       // Create regex that looks for beginning of word matches
-      const regex =  new RegExp(`\\b${ucString}\\S*`, 'g');
+      const regex =  new RegExp(`\\b${str}\\S*`, 'g');
       // Clear current suggestions
       this.searchSuggestions = [];
       // Check for matching landmarks
@@ -202,13 +221,15 @@ export class SearchComponent implements OnInit {
     this.searchSuggestions = [];
     this.noSuggestions = false;
   }
+
   addRecent(restaurant: any): void {
+    console.log(restaurant);
     this.data.setRecentlyViewed({
       restaurant_name: restaurant.name,
-      restaurant_spw_url: restaurant.spw,
+      restaurant_spw_url: restaurant.spw || restaurant.restaurant_spw_url,
       restaurant_number: restaurant.number
     });
-    console.log(restaurant);
+    this.searchSuggestions = [];
     window.open(restaurant.spw, '_blank');
   }
 }

@@ -28,25 +28,23 @@ export class DataService {
     private config: AppConfig
   ) {
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
-    this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
-      .subscribe((val: any) => console.log(val));
   }
 
   // Get user location
   async getGeoLocation(): Promise<any> {
     return new Promise(resolve => {
       // Testing
-      if (this.config.testing) {
-        const geo = {
-          timestamp: new Date().getTime(),
-          coords: {
-            latitude: this.config.channelLat,
-            longitude: this.config.channelLng
-          }
-        };
-        console.log('Geo test', geo);
-        resolve(geo);
-      } else
+      // if (this.config.testMode) {
+      //   const geo = {
+      //     timestamp: new Date().getTime(),
+      //     coords: {
+      //       latitude: this.config.channelLat,
+      //       longitude: this.config.channelLng
+      //     }
+      //   };
+      //   console.log('Geo test', geo);
+      //   resolve(geo);
+      // } else
       // check cache
       if (!!this.userLocation) {
         console.log('Geo local');
@@ -77,7 +75,7 @@ export class DataService {
         resolve(this.restaurants);
       } else {
         await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey,
-          {testing: this.config.testing})
+          {testing: this.config.testMode})
           .toPromise()
           .then((res: any) => {
             this.restaurants = res.restaurants;
@@ -160,22 +158,22 @@ export class DataService {
     return this.recentlyViewed;
   }
   setRecentlyViewed(restaurant: any): void {
-    // Check whether value is the array
-    // TODO: use restaurant_number when in production
+    // Check whether this restaurant is already in the array
     const maxNum = 5;
     if (this.recentlyViewed) {
-      const idx = this.recentlyViewed.map((item: any) => item.restaurant_name).indexOf(restaurant.restaurant_name);
-      // remove object
+      const idx = this.recentlyViewed.map((item: any) => item.restaurant_number)
+        .indexOf(restaurant.restaurant_number);
+      // If it is then remove it
       if (idx > -1) {
         this.recentlyViewed.splice(idx, 1);
       }
-      // add to beginning
+      // and add to beginning
       this.recentlyViewed.unshift(restaurant);
       this.recentlyViewed.splice(maxNum);
     } else {
       this.recentlyViewed = [restaurant];
     }
-    // Sore locally
+    // Update localStorage
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
     // console.log(this.recentlyViewed);
   }

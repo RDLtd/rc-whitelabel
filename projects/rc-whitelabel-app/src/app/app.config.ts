@@ -4,79 +4,56 @@ export class AppConfig {
 
   // get the API base url from the environment...
   public readonly apiUrl = environment.API_URL;
+  public testMode = environment.testMode;
 
   // These read from URL parameters
   public channelAccessCode = '';
   public channelAPIKey = '';
   public language = '';
-  public testing = false;
+  public configLoaded = false;
+  // TODO: add to channel config
+  public maxDistance = 25;
 
-  // These read from the database
-  public channelLogo = '';
-  public channelBackgroundColor = '';
+  public brand = {
+    logoUrl: 'assets/images/rc-logo-white-white.png',
+    primaryBgdColor: '#FF3D00',
+    primaryFgdColor: '#fff',
+    secondaryColor: '#f66e06',
+    accentColor: '#ade3e3'
+  };
   public channelName = '';
   public channelLat = 0;
   public channelLng = 0;
-  public channelLanguage = '';
-  public  i18n = {
-    Loading: '',
-    Loading_data: '',
-    Search_by_name_or_location: '',
-    No_matching_search_results: '',
-    Recently_viewed: '',
-    Nearest_to: '',
-    My_current_location: '',
-    Cuisines: '',
-    Sort_filter: '',
-    Clear_filters: '',
-    Filter_by_cuisine: '',
-    Filter_by_feature: '',
-    Filtered_by: '',
-    Sort_by_location: '',
-    My_location: '',
-    Close: '',
-    Empowered_by: '',
-    Company: '',
-    Search: '',
-    Loader: '',
-    You_are_new: ''
-  };
+  public channelLanguage = 'en';
+  public i18n: any = {};
 
-  setLanguage( lan: any): void {
-    this.i18n = {
-      Loading: lan.channel_language_Loading,
-      Loading_data: lan.channel_language_Loading_data,
-      Search_by_name_or_location: lan.channel_language_Search_by_name_or_location,
-      No_matching_search_results: lan.channel_language_No_matching_search_results,
-      Recently_viewed: lan.channel_language_Recently_viewed,
-      Nearest_to: lan.channel_language_Nearest_to,
-      My_current_location: lan.channel_language_My_current_location,
-      Cuisines: lan.channel_language_Cuisines,
-      Sort_filter: lan.channel_language_Sort_filter,
-      Clear_filters: lan.channel_language_Clear_filters,
-      Filter_by_cuisine: lan.channel_language_Filter_by_cuisine,
-      Filter_by_feature: lan.channel_language_Filter_by_feature,
-      Filtered_by: lan.channel_language_Filtered_by,
-      Sort_by_location: lan.channel_language_Sort_by_location,
-      My_location: lan.channel_language_My_location,
-      Close: lan.channel_language_Close,
-      Empowered_by: lan.channel_language_Empowered_by,
-      Company: lan.channel_language_Company,
-      Search: lan.channel_language_Search,
-      Loader: lan.channel_language_Loader,
-      You_are_new: lan.channel_language_You_are_new
-    };
+  setLanguage( obj: any): void {
+    for (const objKey in obj) {
+      if (obj.hasOwnProperty(objKey)) {
+        // remove 'channel_language' (17 chars) and just leave string label
+        this.i18n[objKey.substr(17)] = obj[objKey];
+      }
+    }
   }
-  setChannel( data: any ): void {
-    this.channelLogo = data.channel_info.logo;
-    this.channelBackgroundColor = data.channel_info.background_color;
-    // Channel data - these could all be read from the database
-    this.channelName = data.channel_info.name;
-    this.channelLat = data.channel_info.latitude;
-    this.channelLng = data.channel_info.longitude;
-    this.channelLanguage = data.channel_info.language;
+  setChannel( data: any ): boolean {
+    console.log(data);
+
+    // Info
+    this.channelName = data.name;
+    this.channelLat = data.latitude;
+    this.channelLng = data.longitude;
+    this.channelLanguage = data.language;
+
+    // Branding
+    this.brand.logoUrl = data.logo;
+    this.brand.primaryBgdColor = data.primaryBgColor;
+    this.brand.primaryFgdColor = data.primaryFgColor;
+    this.brand.secondaryColor = data.secondaryColor;
+
     if (!this.language) {
       this.language = this.channelLanguage;
     }
+    this.configLoaded = true;
+    return true;
   }
 }

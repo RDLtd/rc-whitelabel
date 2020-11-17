@@ -9,8 +9,10 @@ import { AppConfig } from '../../app.config';
 export class FilterOptionsDialogComponent implements OnInit {
 
   constructor(
-    public config: AppConfig, @Inject(MAT_DIALOG_DATA)
-    public data: { cuisines: any[], landmarks: any[], coords: any }) { }
+    public config: AppConfig,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    console.log('Filter data:', this.data);
+  }
 }

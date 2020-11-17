@@ -6,7 +6,7 @@
     <ul>
       <li *ngFor="let cuisine of data.cuisines">
         <a [mat-dialog-close]="{type: 'filter', value: cuisine.label}">
-          <mat-icon>restaurant</mat-icon>
+          <mat-icon class="rd-icon-cuisine">restaurant</mat-icon>
           {{ cuisine.label }}
           <span class="rd-flex-spacer"></span>
           <span class="rd-count">{{ cuisine.total }}</span>
@@ -14,13 +14,14 @@
       </li>
     </ul>
   </section>
-  <section class="rd-filter-list" *ngIf="data.landmarks.length || !!data.coords">
+  <section class="rd-filter-list" *ngIf="data?.landmarks.length || !!data?.currentLocation">
     <h1>{{ config.i18n.Sort_by_location }}</h1>
     <ul>
-      <li>
+      <li *ngIf="!!data?.currentLocation?.coords && data?.currentDistance < config.maxDistance">
         <a
-          [mat-dialog-close]="{type: 'sort', lat: data?.coords.latitude, lng: data?.coords.longitude}">
-          <mat-icon style="color: #e74f14">my_location</mat-icon>
+          [mat-dialog-close]="{ type: 'sort', lat: data?.currentLocation?.coords.latitude, lng:
+          data?.currentLocation?.coords.longitude}">
+          <mat-icon class="rd-icon-my-location">my_location</mat-icon>
           {{ config.i18n.My_current_location }}
           <span class="rd-flex-spacer"></span>
           <span class="rd-count"></span>
@@ -29,7 +30,7 @@
       <li *ngFor="let landmark of data.landmarks">
         <a
           [mat-dialog-close]="{type: 'sort', lat: landmark?.channel_landmark_lat, lng: landmark?.channel_landmark_lng}">
-          <mat-icon>location_on</mat-icon>
+          <mat-icon class="rd-icon-location">location_on</mat-icon>
           {{ landmark.channel_landmark_name }}
           <span class="rd-flex-spacer"></span>
           <span class="rd-count"></span>
@@ -42,7 +43,3 @@
 <div mat-dialog-actions align="end">
   <button mat-flat-button [mat-dialog-close]="null">{{ config.i18n.Close }}</button>
 </div>
-
-
-
-

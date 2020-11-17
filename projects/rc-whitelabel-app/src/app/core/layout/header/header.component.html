@@ -1,10 +1,10 @@
 <!-- HEADER CONTENT -->
 <a href="/">
   <img
-    *ngIf="!!config.channelLogo"
+    *ngIf="!!config.brand.logoUrl"
     class="rd-logo"
-    src="assets/images/{{ config?.channelLogo }}"
-    [alt]="config.channelName">
+    [src]="config?.brand?.logoUrl"
+    [alt]="config?.channelName">
 </a>
 <span class="rd-flex-spacer"></span>
 <button

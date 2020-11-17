@@ -5,6 +5,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DataService } from '../../core/data.service';
 import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
+import { LocationService } from '../../core/location.service';
 
 @Component({
   selector: 'rd-restaurants',
@@ -14,6 +15,7 @@ export class RestaurantsComponent implements OnInit {
 
   isLoaded = false;
   currentLocation: any | undefined;
+  currentDistance: number | undefined;
   // filters
   showFilterOptions = false;
   filtersOn = false;
@@ -32,7 +34,8 @@ export class RestaurantsComponent implements OnInit {
     private route: ActivatedRoute,
     private api: ApiService,
     public data: DataService,
-    public config: AppConfig
+    public config: AppConfig,
+    private location: LocationService
   ) { }
 
   ngOnInit(): void {
@@ -44,12 +47,13 @@ export class RestaurantsComponent implements OnInit {
       this.routeSort = params.get('sort');
       // load restaurants
       this.data.loadRestaurants().then((res: any) => {
-        // console.log(res);
+        console.log(res);
         this.cachedRestaurants = res;
-        // Apply any filters
+        // Apply sort/filter
         this.updateRestaurantResults();
       });
     });
+
     // load summary for filter/sort options
     this.data.loadSummarisedData().then((res: any) => {
       // console.log('Summary loaded', res);
@@ -59,43 +63,36 @@ export class RestaurantsComponent implements OnInit {
       this.showFilterBtn();
     });
     // Set user geo
-    this.data.getUserLocation().then((geo: any) => {
-      this.currentLocation = geo;
+    this.location.getUserGeoLocation().subscribe(pos => {
+      this.currentLocation = pos;
+      console.log(this.currentLocation);
+      this.currentDistance = this.location.getDistance(
+        this.config.channelLat,
+        this.config.channelLng,
+        this.currentLocation.coords.latitude,
+        this.currentLocation.coords.longitude
+      );
     });
   }
-
   // Check for route params
   updateRestaurantResults(sort?: string, filter?: string): void {
+
     if (this.routeSort || sort) {
       const coords = this.routeSort.split(':');
+      console.log('Sort distance:', coords);
       this.restaurants = this.sortByDistance(coords[0], coords[1]);
       this.filtersOn = true;
+
     } else if ( this.routeFilter || filter ) {
       this.restaurants = this.cachedRestaurants;
       this.restaurants = this.filterByCuisine(this.routeFilter);
       this.filtersOn = true;
+
     } else {
       this.restaurants = this.cachedRestaurants;
       this.restaurants = this.sortByDistance(this.config.channelLat, this.config.channelLng);
     }
     this.isLoaded = true;
-  }
-
-  deg2rad(deg: number): number {
-    return deg * (Math.PI / 180);
-  }
-  computeDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-    // https://stackoverflow.com/questions/18883601/function-to-calculate-distance-between-two-coordinates
-    const R = 6371; // Radius of the earth in km
-    const dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
-    const dLon = this.deg2rad(lng2 - lng1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2)
-    ;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in km
   }
 
   filterByCuisine(cuisine: string): any {
@@ -116,11 +113,12 @@ export class RestaurantsComponent implements OnInit {
     let i = sortedRestaurants.length; let s;
     while (i--) {
       s = sortedRestaurants[i];
-      s.distance = this.computeDistance(s.restaurant_lat, s.restaurant_lng, lat, lng);
+      s.distance = this.location.getDistance(s.restaurant_lat, s.restaurant_lng, lat, lng);
     }
     sortedRestaurants.sort((a, b) => {
       return a.distance - b.distance;
     });
+    // console.log('Dist:', sortedRestaurants);
     return sortedRestaurants;
   }
 
@@ -129,7 +127,8 @@ export class RestaurantsComponent implements OnInit {
       data: {
         cuisines: this.data.getCuisines(),
         landmarks: this.data.getLandmarks(),
-        coords: this.currentLocation.coords
+        currentLocation: this?.currentLocation,
+        currentDistance: this?.currentDistance
       }
     });
     dialogRef.afterClosed().subscribe(result => {
