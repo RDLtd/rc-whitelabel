@@ -12,7 +12,7 @@ export class AppConfig {
   public language = '';
   public configLoaded = false;
   // TODO: add to channel config
-  public maxDistance = 75;
+  public maxDistance = 25;
 
   public brand = {
     logoUrl: 'assets/images/rc-logo-white-white.png',

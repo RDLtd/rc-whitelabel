@@ -20,10 +20,11 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     // Grab Query parameters
     this.route.queryParams.subscribe((params: any) => {
-      this.config.channelAccessCode = params.code || 'FR0100';
-      this.config.channelAPIKey = params.key || 'Hy56eD9h@*hhbqijsG$D19Bsshy$)kH2';
+      this.config.channelAccessCode = params.code || 'EN0100';
+      this.config.channelAPIKey = params.key || 'Hy56eD9h@*hhbqijsG$D19Bsshy$)ss3';
       if (!!params.lang) { this.config.language = params.lang; }
-      if (!!params.testing) { this.config.testMode = params.testing; }
+      if (!!params.t) { this.config.testMode = params.t; }
+      if (!!params.d) { this.config.maxDistance = params.d; }
       console.log(this.config);
     });
 
