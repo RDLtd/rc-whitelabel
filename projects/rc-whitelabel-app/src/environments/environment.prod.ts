@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  testMode: false,
-  API_URL: 'https://rc-server-prod.herokuapp.com'
+  testMode: true,
+  API_URL: 'https://rc-server-staging.herokuapp.com'
 };
