@@ -81,9 +81,9 @@ export class SearchComponent implements OnInit {
           this.currentLocation.coords.latitude,
           this.currentLocation.coords.longitude
         );
-        console.log(this.currentDistance);
+        console.log('d=', this.currentDistance);
       }
-      console.log(this.currentLocation);
+      console.log('My location = ', this.currentLocation);
     });
 
     // Restaurants

@@ -3,6 +3,7 @@ import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app.config';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,8 @@ export class DataService {
     private api: ApiService,
     private local: LocalStorageService,
     private http: HttpClient,
-    private config: AppConfig
+    private config: AppConfig,
+    private router: Router
   ) {
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
@@ -82,7 +84,10 @@ export class DataService {
             console.log(`${this.restaurants.length} restaurants loaded from API`);
             resolve(this.restaurants);
           })
-          .catch((error: any) => console.log('ERROR', error));
+          .catch((error: any) => {
+            console.log('ERROR', error);
+            this.router.navigate(['/error']);
+          });
       }
     });
   }
@@ -176,5 +181,24 @@ export class DataService {
     // Update localStorage
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
     // console.log(this.recentlyViewed);
+  }
+
+  setChannelInfo(): void {
+    // Load config
+    // Would like to move this to data service
+    this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
+      .toPromise()
+      .then((data: any) => {
+        this.config.setChannel(data.channel_info);
+        this.api.getChannelLanguage(this.config.channelAccessCode, this.config.channelAPIKey, this.config.language)
+          .toPromise()
+          .then((language: any) => {
+            this.config.setLanguage( language.language[0]);
+          })
+          .catch((error: any) => console.log('Unable to read Language information!', error)
+          );
+      })
+      .catch((error: any) => console.log('Unable to read Channel information!', error)
+      );
   }
 }
