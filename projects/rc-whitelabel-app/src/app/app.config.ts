@@ -7,13 +7,11 @@ export class AppConfig {
   public testMode = environment.testMode;
 
   // These read from URL parameters
-  public channelAccessCode = '';
-  public channelAPIKey = '';
-  public language = '';
+  public channelAccessCode = 'RC0100';
+  public channelAPIKey = 'Hy56eD9h@*hhbqijsG$D19Bsshy$)fff';
+  public language = 'en';
   public configLoaded = false;
-  // TODO: add to channel config
   public maxDistance = 25;
-
   public brand = {
     logoUrl: 'assets/images/rc-logo-white-white.png',
     primaryBgdColor: '#FF3D00',
@@ -36,14 +34,7 @@ export class AppConfig {
     }
   }
   setChannel( data: any ): boolean {
-    console.log(data);
-
-    // Info
-    this.channelName = data.name;
-    this.channelLat = data.latitude;
-    this.channelLng = data.longitude;
-    this.channelLanguage = data.language;
-
+    console.log('Set Channel', data);
     // Branding
     this.brand.logoUrl = data.logo;
     this.brand.primaryBgdColor = data.primaryBgColor;
@@ -56,4 +47,5 @@ export class AppConfig {
     this.configLoaded = true;
     return true;
   }
+
 }

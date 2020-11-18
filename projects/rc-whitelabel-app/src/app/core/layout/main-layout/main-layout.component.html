@@ -1,7 +1,8 @@
+
 <header
   *ngIf="config.configLoaded"
   [class.rd-hideHeader]="hideHeader"
-  [ngStyle]="{'background-color': config.brand.primaryBgdColor, 'color': config.brand.primaryFgdColor }">
+  [ngStyle]="{'background-color': config.brand?.primaryBgdColor, 'color': config.brand?.primaryFgdColor }">
   <rd-header></rd-header>
 </header>
 <main>

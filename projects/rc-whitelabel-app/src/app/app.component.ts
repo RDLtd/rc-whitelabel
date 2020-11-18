@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AppConfig } from './app.config';
 import { ApiService } from './core/api.service';
 import { ActivatedRoute } from '@angular/router';
+import { DataService } from './core/data.service';
 
 @Component({
   selector: 'rd-root',
@@ -10,39 +11,30 @@ import { ActivatedRoute } from '@angular/router';
 
 export class AppComponent implements OnInit {
   title = 'rc-whitelabel-app';
+  p: any;
 
   constructor(
     private api: ApiService,
     public config: AppConfig,
-    private route: ActivatedRoute
-  ) { }
+    private activatedRoute: ActivatedRoute,
+    private data: DataService
+  ) {
+  }
 
   ngOnInit(): void {
     // Grab Query parameters
-    this.route.queryParams.subscribe((params: any) => {
-      this.config.channelAccessCode = params.code || 'EN0100';
-      this.config.channelAPIKey = params.key || 'Hy56eD9h@*hhbqijsG$D19Bsshy$)ss3';
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      if (!!params.code) { this.config.channelAccessCode = params.code; }
+      if (!!params.key) {this.config.channelAPIKey = params.key; }
       if (!!params.lang) { this.config.language = params.lang; }
       if (!!params.t) { this.config.testMode = params.t; }
       if (!!params.d) { this.config.maxDistance = params.d; }
-      console.log(this.config);
     });
-
-    // Load config
-    // Would like to move this to data service
-    this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
-      .toPromise()
-      .then((data: any) => {
-        this.config.setChannel(data.channel_info);
-        this.api.getChannelLanguage(this.config.channelAccessCode, this.config.channelAPIKey, this.config.language)
-          .toPromise()
-          .then((language: any) => {
-            this.config.setLanguage( language.language[0]);
-          })
-          .catch((error: any) => console.log('Unable to read Language information!', error)
-          );
-      })
-      .catch((error: any) => console.log('Unable to read Channel information!', error)
-      );
+    // Delay setting channel as activatedRoute
+    // emits first value before component is ready
+    // otherwise it init twice
+    setTimeout(() => {
+      this.data.setChannelInfo();
+    }, 100);
   }
 }

@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 
+
 export class LocationService {
   currentLocation: any;
   currentDistance: BehaviorSubject<any> = new BehaviorSubject<any>(0);
