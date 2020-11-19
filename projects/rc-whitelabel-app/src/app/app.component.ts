@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfig } from './app.config';
 import { ApiService } from './core/api.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DataService } from './core/data.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'rd-root',
@@ -17,24 +18,41 @@ export class AppComponent implements OnInit {
     private api: ApiService,
     public config: AppConfig,
     private activatedRoute: ActivatedRoute,
-    private data: DataService
+    private data: DataService,
+    private route: Router
   ) {
   }
 
   ngOnInit(): void {
-    // Grab Query parameters
-    this.activatedRoute.queryParams.subscribe((params: any) => {
-      if (!!params.code) { this.config.channelAccessCode = params.code; }
-      if (!!params.key) {this.config.channelAPIKey = params.key; }
-      if (!!params.lang) { this.config.language = params.lang; }
-      if (!!params.t) { this.config.testMode = params.t; }
-      if (!!params.d) { this.config.maxDistance = params.d; }
-    });
-    // Delay setting channel as activatedRoute
-    // emits first value before component is ready
-    // otherwise it init twice
-    setTimeout(() => {
-      this.data.setChannelInfo();
-    }, 100);
-  }
+    // Wait for router event
+    this.route.events
+      .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
+      .subscribe(event => {
+        console.log(event.id, event.url);
+        this.activatedRoute.queryParamMap.subscribe((d: any) => {
+            const p = d.params;
+            if (Object.keys(p).length) {
+              if (!!p.code) {
+                this.config.channelAccessCode = p.code;
+              }
+              if (!!p.key) {
+                this.config.channelAPIKey = p.key;
+              }
+              if (!!p.lang) {
+                this.config.language = p.lang;
+              }
+              if (!!p.t) {
+                this.config.testMode = p.t;
+              }
+              if (!!p.d) {
+                this.config.maxDistance = p.d;
+              }
+              this.data.setChannelInfo();
+            } else
+              if (window.location.hostname === 'localhost' || window.location.hostname === 'search') {
+              this.data.setChannelInfo();
+            }
+          });
+        });
+    }
 }

@@ -1,7 +1,8 @@
-<rd-loader [class.rd-hide]="isLoaded">{{ config.i18n.Loading }}</rd-loader>
+<rd-loader [class.rd-hide]="isLoaded && config.channelLoaded">
+  {{ config.i18n?.Loading }}
+</rd-loader>
 <!-- RESTAURANT RESULTS -->
-<div class="rd-results-container">
-
+<div class="rd-results-container" *ngIf="isLoaded && config.channelLoaded">
   <div
     *ngFor="let restaurant of restaurants"
     class="rd-restaurant" (click)="openSPW(restaurant)">

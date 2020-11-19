@@ -1,5 +1,5 @@
-<rd-loader [class.rd-hide]="isLoaded">{{ config.i18n.Loading }}</rd-loader>
-<div class="rd-search-content" [class.rd-show]="isLoaded">
+<rd-loader [class.rd-hide]="isLoaded && config.channelLoaded">{{ config.i18n.Loading }}</rd-loader>
+<div class="rd-search-content" [class.rd-show]="isLoaded && config.channelLoaded">
   <!-- SEARCH FORM -->
   <form #rdSearchForm="ngForm" (ngSubmit)="doSearch(rdSearchInput.value)">
     <mat-form-field floatLabel="never">
