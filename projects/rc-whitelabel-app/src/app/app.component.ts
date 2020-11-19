@@ -24,13 +24,15 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Wait for router event
+    // Wait for router event to fire before
+    // checking params
     this.route.events
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
-      .subscribe(event => {
-        console.log(event.id, event.url);
-        this.activatedRoute.queryParamMap.subscribe((d: any) => {
+      .subscribe(() => {
+        this.activatedRoute.queryParamMap
+          .subscribe((d: any) => {
             const p = d.params;
+            // Apply config
             if (Object.keys(p).length) {
               if (!!p.code) {
                 this.config.channelAccessCode = p.code;
@@ -48,8 +50,7 @@ export class AppComponent implements OnInit {
                 this.config.maxDistance = p.d;
               }
               this.data.setChannelInfo();
-            } else
-              if (window.location.hostname === 'localhost' || window.location.hostname === 'search') {
+            } else {
               this.data.setChannelInfo();
             }
           });
