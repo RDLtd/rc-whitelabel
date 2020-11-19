@@ -74,7 +74,7 @@ export class SearchComponent implements OnInit {
       this.currentLocation = pos;
       // If we have the channel centre geo
       // see how far away the user is
-      if (this.config.configLoaded) {
+      if (this.config.channelLoaded) {
         this.currentDistance = this.location.getDistance(
           this.config.channelLat,
           this.config.channelLng,

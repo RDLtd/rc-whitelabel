@@ -10,7 +10,8 @@ export class AppConfig {
   public channelAccessCode = 'RC0100';
   public channelAPIKey = 'Hy56eD9h@*hhbqijsG$D19Bsshy$)fff';
   public language = 'en';
-  public configLoaded = false;
+  public restaurantsLoaded = false;
+  public channelLoaded = false;
   public maxDistance = 25;
   public brand = {
     logoUrl: 'assets/images/rc-logo-white-white.png',
@@ -44,8 +45,7 @@ export class AppConfig {
     if (!this.language) {
       this.language = this.channelLanguage;
     }
-    this.configLoaded = true;
+    this.channelLoaded = true;
     return true;
   }
-
 }

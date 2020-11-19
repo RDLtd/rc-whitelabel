@@ -42,6 +42,7 @@ export class RestaurantsComponent implements OnInit {
 
     // Check for sort/filtering
     this.route.paramMap.subscribe((params: ParamMap) => {
+      this.isLoaded = false;
       // console.log('Param changed', params);
       this.routeFilter = params.get('filter');
       this.routeSort = params.get('sort');
@@ -77,6 +78,8 @@ export class RestaurantsComponent implements OnInit {
   // Check for route params
   updateRestaurantResults(sort?: string, filter?: string): void {
 
+    this.isLoaded = false;
+
     if (this.routeSort || sort) {
       const coords = this.routeSort.split(':');
       console.log('Sort distance:', coords);
@@ -92,7 +95,6 @@ export class RestaurantsComponent implements OnInit {
       this.restaurants = this.cachedRestaurants;
       this.restaurants = this.sortByDistance(this.config.channelLat, this.config.channelLng);
     }
-    this.isLoaded = true;
   }
 
   filterByCuisine(cuisine: string): any {
@@ -105,6 +107,7 @@ export class RestaurantsComponent implements OnInit {
       }
     }
     this.restaurants = filteredRests;
+    this.isLoaded = true;
     return filteredRests;
   }
 
@@ -118,7 +121,8 @@ export class RestaurantsComponent implements OnInit {
     sortedRestaurants.sort((a, b) => {
       return a.distance - b.distance;
     });
-    // console.log('Dist:', sortedRestaurants);
+    console.log('Dist:', sortedRestaurants);
+    this.isLoaded = true;
     return sortedRestaurants;
   }
 
@@ -132,6 +136,7 @@ export class RestaurantsComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
+      this.isLoaded = false;
       // console.log('Result', result);
       if (!!result) {
         if (result.type === 'filter') {
@@ -141,7 +146,9 @@ export class RestaurantsComponent implements OnInit {
           this.routeSort = `${result.lat}:${result.lng}`;
           this.router.navigate(['/restaurants/nearest', this.routeSort]);
         }
-        this.filtersOn = true;
+        // this.filtersOn = true;
+      } else {
+        this.isLoaded = true;
       }
     });
   }

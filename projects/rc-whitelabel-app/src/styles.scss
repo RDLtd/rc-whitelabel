@@ -56,7 +56,7 @@ a, a:active, a:focus {
 
 // UTILS
 .rd-flex-spacer { flex: 1 0 auto; }
-.rd-hide { display: none; }
+.rd-hide { display: none !important; }
 .rd-show { opacity: 1!important;}
 .rd-highlight { color: $col-accent}
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
