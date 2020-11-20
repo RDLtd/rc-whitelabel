@@ -32,13 +32,13 @@ export class AppComponent implements OnInit {
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(() => {
         console.log('Route event fired');
+        // Check for on-going session
+        const inSession = this.local.get('rdSessionExpiry') > new Date().getTime();
+        console.log('Live Session?', inSession);
         this.activatedRoute.queryParamMap
           .subscribe((d: any) => {
             const p = d.params;
             console.log('Query Params', p);
-            // Check for on-going session
-            const inSession = this.local.get('rdSessionExpiry') > new Date().getTime();
-            console.log('Live Session?', inSession);
             // Are there any query params?
             if (Object.keys(p).length) {
               // Is there an APIKey?
@@ -57,6 +57,7 @@ export class AppComponent implements OnInit {
                   console.log('No valid API key in parameters and no valid session!');
                 }
               }
+              // Apply any additional params
               if (!!p.lang) {
                 this.config.language = p.lang;
               }
