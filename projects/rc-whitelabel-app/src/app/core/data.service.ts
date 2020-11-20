@@ -184,6 +184,12 @@ export class DataService {
   }
 
   setChannelInfo(): void {
+    // Create new session
+    if (this.config.channelAPIKey !== this.config.defaultApiKey) {
+      this.local.set('rdSessionExpiry', new Date().getTime() + (5 * 60000));
+      this.local.set('rdChannelAccessCode', this.config.channelAccessCode);
+      this.local.set('rdChannelApiKey', this.config.channelAPIKey);
+    }
     // Load config
     // Would like to move this to data service
     this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)

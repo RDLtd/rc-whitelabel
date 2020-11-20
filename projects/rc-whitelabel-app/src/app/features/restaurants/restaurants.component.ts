@@ -48,7 +48,7 @@ export class RestaurantsComponent implements OnInit {
       this.routeSort = params.get('sort');
       // load restaurants
       this.data.loadRestaurants().then((res: any) => {
-        console.log(res);
+        // console.log(res);
         this.cachedRestaurants = res;
         // Apply sort/filter
         this.updateRestaurantResults();
@@ -121,7 +121,7 @@ export class RestaurantsComponent implements OnInit {
     sortedRestaurants.sort((a, b) => {
       return a.distance - b.distance;
     });
-    console.log('Dist:', sortedRestaurants);
+    // console.log('Dist:', sortedRestaurants);
     this.isLoaded = true;
     return sortedRestaurants;
   }

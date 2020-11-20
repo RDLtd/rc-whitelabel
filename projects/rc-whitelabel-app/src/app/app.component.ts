@@ -4,6 +4,7 @@ import { ApiService } from './core/api.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DataService } from './core/data.service';
 import { filter } from 'rxjs/operators';
+import { LocalStorageService } from './core/local-storage.service';
 
 @Component({
   selector: 'rd-root',
@@ -19,7 +20,8 @@ export class AppComponent implements OnInit {
     public config: AppConfig,
     private activatedRoute: ActivatedRoute,
     private data: DataService,
-    private route: Router
+    private route: Router,
+    private local: LocalStorageService
   ) {
   }
 
@@ -29,16 +31,31 @@ export class AppComponent implements OnInit {
     this.route.events
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(() => {
+        console.log('Route event fired');
         this.activatedRoute.queryParamMap
           .subscribe((d: any) => {
             const p = d.params;
-            // Apply config
+            console.log('Query Params', p);
+            // Check for on-going session
+            const inSession = this.local.get('rdSessionExpiry') > new Date().getTime();
+            console.log('Live Session?', inSession);
+            // Are there any query params?
             if (Object.keys(p).length) {
-              if (!!p.code) {
-                this.config.channelAccessCode = p.code;
-              }
+              // Is there an APIKey?
+              console.log('Query param API key present?', !!p.key);
               if (!!p.key) {
+                console.log('Use API key from query param');
                 this.config.channelAPIKey = p.key;
+                this.config.channelAccessCode = p.code;
+              } else {
+                if (inSession) {
+                  console.log('Use session Channel data');
+                  this.config.channelAPIKey = this.local.get('rdChannelApiKey');
+                  this.config.channelAccessCode = this.local.get('rdChannelAccessCode');
+                } else {
+                  // We can abort here and show a 404
+                  console.log('No valid API key in parameters and no valid session!');
+                }
               }
               if (!!p.lang) {
                 this.config.language = p.lang;
@@ -50,8 +67,19 @@ export class AppComponent implements OnInit {
                 this.config.maxDistance = p.d;
               }
               this.data.setChannelInfo();
-            } else {
-              this.data.setChannelInfo();
+            }
+            else {
+              console.log('No query params');
+              if (inSession) {
+                this.config.channelAPIKey = this.local.get('rdChannelApiKey');
+                this.config.channelAccessCode = this.local.get('rdChannelAccessCode');
+                console.log('Load cached Channel');
+                this.data.setChannelInfo();
+              }
+              else {
+                console.log('Load RC default channel');
+                this.data.setChannelInfo();
+              }
             }
           });
         });
