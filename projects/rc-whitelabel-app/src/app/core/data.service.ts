@@ -184,9 +184,10 @@ export class DataService {
   }
 
   setChannelInfo(): void {
+    const maxSessMinutes = 5;
     // Create new session
     if (this.config.channelAPIKey !== this.config.defaultApiKey) {
-      this.local.set('rdSessionExpiry', new Date().getTime() + (5 * 60000));
+      this.local.set('rdSessionExpiry', new Date().getTime() + (maxSessMinutes * 60000));
       this.local.set('rdChannelAccessCode', this.config.channelAccessCode);
       this.local.set('rdChannelApiKey', this.config.channelAPIKey);
     }
