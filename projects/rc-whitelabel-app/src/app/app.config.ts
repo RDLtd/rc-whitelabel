@@ -15,7 +15,7 @@ export class AppConfig {
   public channelLoaded = false;
   public maxDistance = 25;
   public brand = {
-    logoUrl: 'assets/images/rc-logo-white-white.png',
+    logoUrl: 'assets/images/rc-logo-final.svg',
     primaryBgdColor: '#FF3D00',
     primaryFgdColor: '#fff',
     secondaryColor: '#f66e06',

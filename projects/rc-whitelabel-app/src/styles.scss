@@ -90,7 +90,7 @@ rd-header {
     display: flex;
     align-items: center;
   }
-  .rd-logo { height: 40px; }
+  .rd-logo { height: 50px; }
   h1 {
     font-size: 16px;
     font-weight: $font-weight-heavy;
@@ -503,7 +503,7 @@ ul.rd-search-autofill {
   }
   header {
     &.rd-hideHeader {
-      transform: translateY(-56px);
+      transform: translateY(-66px);
     }
   }
 }
