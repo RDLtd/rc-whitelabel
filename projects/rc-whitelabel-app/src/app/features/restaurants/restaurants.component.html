@@ -19,6 +19,7 @@
         </ng-container>
       </h3>
       <p>{{ restaurant?.strap_line }}</p>
+      <span class="rd-flex-spacer"></span>
       <mat-chip-list>
         <mat-chip
           *ngFor="let feature of restaurant['attributes']">
@@ -26,7 +27,9 @@
         </mat-chip>
       </mat-chip-list>
     </div>
-    <img [src]="restaurant?.image" loading="lazy" [alt]="restaurant?.restaurant_name">
+    <div class="rd-restaurant-img">
+      <img [src]="restaurant?.image" loading="lazy" [alt]="restaurant?.restaurant_name">
+    </div>
   </div>
 
   <div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
