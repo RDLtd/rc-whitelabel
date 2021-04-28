@@ -170,6 +170,7 @@ export class RestaurantsComponent implements OnInit {
 
   openSPW(restaurant: any): void {
     // Add to recents
+    console.log(restaurant);
     this.data.setRecentlyViewed(restaurant);
     window.open(restaurant.restaurant_spw_url, '_target');
   }

@@ -15,7 +15,6 @@ $rc-whitelabel-app-theme: mat-light-theme((
     warn: $rc-whitelabel-app-warn,
   )
 ));
-
 @include angular-material-theme($rc-whitelabel-app-theme);
 
 // Default branding
@@ -24,7 +23,6 @@ $col-page-bgd: white;
 $col-timer-outer: #454540;
 $col-timer-inner: #bbb;
 $col-accent: #ff3d00;
-
 
 // Fonts
 $font-family-default: Roboto, "Helvetica Neue", sans-serif;
@@ -66,10 +64,10 @@ a, a:active, a:focus {
 
 // LAYOUT
 main {
-  max-width: $layout-max-width;
+  // max-width: $layout-max-width;
   margin: 0 auto;
   min-height: calc(99.9vh - 64px);
-  padding: $layout-header-height 0 0;
+  padding: $layout-header-height + 8px 12px 12px;
 }
 header {
   width: 100vw;
@@ -256,6 +254,7 @@ ul.rd-search-autofill {
   }
 }
 .rd-search-content {
+  max-width: 960px;
   opacity: 0;
   display: flex;
   flex-direction: column;
@@ -528,6 +527,7 @@ ul.rd-search-autofill {
     }
   }
 }
+
 @media screen and ( min-width: 800px ) {
   .rd-results-container {
     padding: 1rem 0;
@@ -535,8 +535,8 @@ ul.rd-search-autofill {
     overflow: hidden;
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 1fr;
-    grid-column-gap: 8px;
-    grid-row-gap: 8px;
+    grid-column-gap: 12px;
+    grid-row-gap: 12px;
     .rd-restaurant {
       padding: 8px;
       border: 2px solid #eee;
@@ -567,8 +567,31 @@ ul.rd-search-autofill {
     padding: 0 24px;
   }
   .rd-search-content {
-    margin-top: 24px;
+    margin: 24px auto 0;
   }
 }
-@media screen and ( min-width: 1200px ) {}
+@media screen and ( min-width: 1200px ) {
+
+  .rd-results-container {
+
+
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media screen and ( min-width: 1600px ) {
+
+  .rd-results-container {
+
+
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media screen and ( min-width: 2000px ) {
+
+  .rd-results-container {
+
+
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
 
