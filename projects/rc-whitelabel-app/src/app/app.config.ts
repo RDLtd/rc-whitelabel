@@ -5,20 +5,20 @@ export class AppConfig {
   // get the API base url from the environment...
   public readonly apiUrl = environment.API_URL;
   public testMode = environment.testMode;
-  public defaultApiKey = 'Hy56eD9h@*hhbqijsG$D19Bsshy$)fff';
+  public defaultApiKey = 'Hy56eD9h@*hhbqijsG$D19Bsshy$)jjj';
 
   // These read from URL parameters
-  public channelAccessCode = 'RC0100';
+  public channelAccessCode = 'RC0101';
   public channelAPIKey = this.defaultApiKey;
-  public language = 'en';
+  public language = localStorage.getItem('rd_language') || 'en';
   public restaurantsLoaded = false;
   public channelLoaded = false;
   public maxDistance = 25;
   public brand = {
     logoUrl: 'assets/images/rc-logo-final.svg',
-    primaryBgdColor: '#FF3D00',
+    primaryBgdColor: '#00a69b',
     primaryFgdColor: '#fff',
-    secondaryColor: '#f66e06',
+    secondaryColor: '#ff5720',
     accentColor: '#ade3e3'
   };
   public channelName = '';

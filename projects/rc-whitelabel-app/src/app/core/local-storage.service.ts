@@ -6,9 +6,11 @@ import { Injectable } from '@angular/core';
 export class LocalStorageService {
 
   localStorage: Storage;
+  sessionStorage: Storage;
 
   constructor() {
     this.localStorage = window.localStorage;
+    this.sessionStorage = window.sessionStorage;
   }
 
   get(key: string): any {
