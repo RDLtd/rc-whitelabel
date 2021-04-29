@@ -176,8 +176,7 @@ export class RestaurantsComponent implements OnInit {
   }
 
   // Todo: we need to store on the Cloudinary ids so that
-  //  we con apply whatever responsive formatting is needed
-  //  then we won't need to do this
+  //  we an appropriately sized & formatted image
   getFormattedImage(url: string): string {
     const format = 'w_900,h_600,c_fill,q_auto,dpr_auto,f_auto';
     return url.replace('upload/', `upload/${format}/`);
