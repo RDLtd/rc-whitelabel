@@ -19,7 +19,7 @@ $rc-whitelabel-app-theme: mat-light-theme((
 
 // Default branding
 $col-text: rgb(74, 74, 74);
-$col-page-bgd: white;
+$col-page-bgd: #eee;
 $col-timer-outer: #454540;
 $col-timer-inner: #bbb;
 $col-accent: #ff3d00;
@@ -45,6 +45,7 @@ html, body { height: 100%; }
 body {
   height: 100%;
   margin: 0;
+  background: $col-page-bgd;
   font-family: $font-family-default;
   color: $col-text;
 }
@@ -308,6 +309,7 @@ ul.rd-search-autofill {
     width: 100%;
     cursor: pointer;
     transition: all 500ms ease-out;
+    background: #fff;
     .rd-restaurant-detail {
       position: relative;
       padding: 12px 16px 10px;
@@ -529,6 +531,9 @@ ul.rd-search-autofill {
 }
 
 @media screen and ( min-width: 800px ) {
+  main {
+    background: #eee;
+  }
   .rd-results-container {
     padding: 1rem 0;
     display: grid;
@@ -538,16 +543,15 @@ ul.rd-search-autofill {
     grid-column-gap: 12px;
     grid-row-gap: 12px;
     .rd-restaurant {
-      padding: 8px;
+      padding: 8px 12px 12px;
       border: 2px solid #eee;
-      border-radius: 5px;
+      border-radius: 10px;
       &:hover {
-        border-color: black;
-        @include mat-elevation(2);
+        border-color: $col-text;
+        @include mat-elevation(6);
       }
       .rd-restaurant-detail {
         padding: 8px 0;
-
         p {
           margin: 4px 0 12px;
         }
@@ -571,26 +575,17 @@ ul.rd-search-autofill {
   }
 }
 @media screen and ( min-width: 1200px ) {
-
   .rd-results-container {
-
-
     grid-template-columns: repeat(3, 1fr);
   }
 }
 @media screen and ( min-width: 1600px ) {
-
   .rd-results-container {
-
-
     grid-template-columns: repeat(4, 1fr);
   }
 }
 @media screen and ( min-width: 2000px ) {
-
   .rd-results-container {
-
-
     grid-template-columns: repeat(5, 1fr);
   }
 }
