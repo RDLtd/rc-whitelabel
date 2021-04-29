@@ -65,10 +65,9 @@ a, a:active, a:focus {
 
 // LAYOUT
 main {
-  // max-width: $layout-max-width;
   margin: 0 auto;
   min-height: calc(99.9vh - 64px);
-  padding: $layout-header-height + 8px 12px 12px;
+  padding: $layout-header-height + 8px 0 0;
 }
 header {
   width: 100vw;
@@ -533,6 +532,7 @@ ul.rd-search-autofill {
 @media screen and ( min-width: 800px ) {
   main {
     background: #eee;
+    padding: $layout-header-height + 8px 12px 12px;
   }
   .rd-results-container {
     padding: 1rem 0;
