@@ -28,7 +28,8 @@
       </mat-chip-list>
     </div>
     <div class="rd-restaurant-img">
-      <img [src]="restaurant?.image" loading="lazy" [alt]="restaurant?.restaurant_name">
+<!--      <img [src]="restaurant?.image" loading="lazy" [alt]="restaurant?.restaurant_name">-->
+      <img [src]="getFormattedImage(restaurant.image)" loading="lazy" [alt]="restaurant?.restaurant_name">
     </div>
   </div>
 
