@@ -25,6 +25,7 @@
             "aot": true,
             "assets": [
               "projects/rc-whitelabel-app/src/favicon.ico",
+              "projects/rc-whitelabel-app/src/favicon.svg",
               "projects/rc-whitelabel-app/src/favicon-16x16.png",
               "projects/rc-whitelabel-app/src/favicon-32x32.png",
               "projects/rc-whitelabel-app/src/apple-touch-icon.png",
