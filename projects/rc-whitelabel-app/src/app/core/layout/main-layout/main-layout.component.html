@@ -1,10 +1,14 @@
 
 <header
   *ngIf="config.channelLoaded"
+  [class.rc-default]="config.isDefaultChannel"
   [class.rd-hideHeader]="hideHeader"
   [ngStyle]="{'background-color': config.brand?.primaryBgdColor, 'color': config.brand?.primaryFgdColor }">
   <rd-header></rd-header>
 </header>
+
+
+
 <main>
   <router-outlet></router-outlet>
 </main>

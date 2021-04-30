@@ -10,11 +10,13 @@ export class AppConfig {
   // These read from URL parameters
   public channelAccessCode = 'RC0101';
   public channelAPIKey = this.defaultApiKey;
+  public isDefaultChannel = false;
   public language = localStorage.getItem('rd_language') || 'en';
   public restaurantsLoaded = false;
   public channelLoaded = false;
   public maxDistance = 25;
   public brand = {
+    name: '',
     logoUrl: 'assets/images/rc-logo-final.svg',
     primaryBgdColor: '#00a69b',
     primaryFgdColor: '#fff',
@@ -42,6 +44,9 @@ export class AppConfig {
     this.brand.primaryBgdColor = data.primaryBgColor;
     this.brand.primaryFgdColor = data.primaryFgColor;
     this.brand.secondaryColor = data.secondaryColor;
+    this.brand.name = data.name;
+    this.isDefaultChannel = (this.brand.name === 'Member Restaurant Directory');
+    console.log(this.brand);
 
     if (!this.language) {
       this.language = this.channelLanguage;
