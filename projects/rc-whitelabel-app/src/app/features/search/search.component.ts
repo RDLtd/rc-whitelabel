@@ -103,7 +103,7 @@ export class SearchComponent implements OnInit {
     // So that we can focus the input field
     setTimeout( () => {
       this.rdSearchInput.nativeElement.focus();
-    }, 500);
+    }, 0);
 
     // Grab recents from local storage
     this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
