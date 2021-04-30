@@ -24,6 +24,7 @@
             "tsConfig": "projects/rc-whitelabel-app/tsconfig.app.json",
             "aot": true,
             "assets": [
+              "projects/rc-whitelabel-app/src/assets",
               "projects/rc-whitelabel-app/src/favicon.ico",
               "projects/rc-whitelabel-app/src/favicon.svg",
               "projects/rc-whitelabel-app/src/favicon-16x16.png",
@@ -31,8 +32,7 @@
               "projects/rc-whitelabel-app/src/apple-touch-icon.png",
               "projects/rc-whitelabel-app/src/android-chrome-512x512.png",
               "projects/rc-whitelabel-app/src/android-chrome-192x192.png",
-              "projects/rc-whitelabel-app/src/site.webmanifest",
-              "projects/rc-whitelabel-app/src/assets"
+              "projects/rc-whitelabel-app/src/site.webmanifest"
             ],
             "styles": [
               "projects/rc-whitelabel-app/src/styles.scss"
