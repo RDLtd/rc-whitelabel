@@ -344,12 +344,11 @@ ul.rd-search-autofill {
 
 }
 
-
 // -------------------------------------------------------------------
 // RESULTS
 .rd-results-container {
   @include mq(med) {
-    padding:  12px;
+    padding:  16px 12px 12px;
     display: grid;
     overflow: hidden;
     grid-template-columns: repeat(2, 1fr);
@@ -360,7 +359,6 @@ ul.rd-search-autofill {
   @include mq(large) { grid-template-columns: repeat(3, 1fr);}
   @include mq(xlarge) { grid-template-columns: repeat(4, 1fr);}
   .rd-restaurant {
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
