@@ -35,7 +35,7 @@
               "projects/rc-whitelabel-app/src/site.webmanifest"
             ],
             "styles": [
-              "projects/rc-whitelabel-app/src/styles.scss"
+              "projects/rc-whitelabel-app/src/styles/styles.scss"
             ],
             "scripts": []
           },

@@ -6,7 +6,7 @@ import { AppConfig } from '../../../app.config';
   templateUrl: './main-layout.component.html'
 })
 export class MainLayoutComponent implements OnInit {
-
+  scrolling = false;
   lastScrollTop = 0;
   hideHeader = false;
 
@@ -22,5 +22,4 @@ export class MainLayoutComponent implements OnInit {
     };
   }
   ngOnInit(): void { }
-
 }

@@ -10,11 +10,9 @@ export class HeaderComponent implements OnInit {
 
   @Input() direction = '';
 
-  constructor(public config: AppConfig) {
-  }
+  constructor(public config: AppConfig) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }
 

@@ -1,5 +1,5 @@
 @use "sass:map";
-@import '~@angular/material/theming';
+@import '../../../../node_modules/@angular/material/theming';
 @include mat-core();
 
 // Custom theme
@@ -81,10 +81,11 @@ a, a:active, a:focus {
 main {
   margin: 0 auto;
   min-height: calc(99.9vh - 64px);
-  padding: $layout-header-height + 8px 0 0;
+  //padding: $layout-header-height + 8px 0 0;
+  padding-top: $layout-header-height;
   @include mq(med) {
     background: #eee;
-    padding: $layout-header-height + 8px 12px 12px;
+    //padding: $layout-header-height + 8px 12px 12px;
   }
 }
 header {
@@ -98,12 +99,12 @@ header {
   &.rd-hideHeader {
     //transform: translateY(-56px);
     @include mq(small) {
-      transform: translateY(-($layout-header-height - 10));
+      transform: translateY(-($layout-header-height - 8));
     }
   }
   &.rc-default {
-    padding-bottom: 16px;
-    clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+    // padding-bottom: 16px;
+    // clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
   }
 
 }
@@ -335,11 +336,20 @@ ul.rd-search-autofill {
     }
   }
 }
+/* --------------------------
+** Panels */
+.rd-panel {
+  padding: 12px;
+  background: #0bb0d9;
+
+}
+
+
 // -------------------------------------------------------------------
 // RESULTS
 .rd-results-container {
   @include mq(med) {
-    padding: 1rem 0;
+    padding:  12px;
     display: grid;
     overflow: hidden;
     grid-template-columns: repeat(2, 1fr);
@@ -356,15 +366,15 @@ ul.rd-search-autofill {
     justify-content: space-between;
     width: 100%;
     cursor: pointer;
-    transition: all 500ms ease-out;
+    transition: all .3s ease-out;
     background: #fff;
 
     @include mq(med) {
       padding: 8px 12px 12px;
-      border: 2px solid #eee;
+      border: 1px solid #eee;
       border-radius: 10px;
       &:hover {
-        border-color: $col-text;
+        border-color: #bbb;
         @include mat-elevation(6);
       }
       img { vertical-align: baseline; }
