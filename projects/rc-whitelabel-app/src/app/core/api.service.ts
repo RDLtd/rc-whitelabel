@@ -2,7 +2,9 @@
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app.config';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 
 export class ApiService {
 

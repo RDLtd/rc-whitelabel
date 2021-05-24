@@ -5,6 +5,8 @@ import { RestaurantsComponent } from './restaurants.component';
 import { SharedModule } from '../../shared/shared.module';
 import { MatChipsModule } from '@angular/material/chips';
 import { FilterOptionsDialogComponent } from './filter-options-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -12,7 +14,9 @@ import { FilterOptionsDialogComponent } from './filter-options-dialog.component'
   imports: [
     SharedModule,
     RestaurantsRoutingModule,
-    MatChipsModule
+    MatChipsModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class RestaurantsModule { }
