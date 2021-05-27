@@ -34,8 +34,10 @@ interface Cuisine {
 
 export class SearchComponent implements OnInit {
   isLoaded = false;
+
   // Reference to search element
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
+
   // Config
   minSearchChars = 1;
   noSuggestions = false;
@@ -58,6 +60,7 @@ export class SearchComponent implements OnInit {
   // User location
   currentLocation: any | undefined;
   currentDistance = 1000;
+  inRange = false;
 
   constructor(
     private api: ApiService,
@@ -84,6 +87,7 @@ export class SearchComponent implements OnInit {
         console.log('d=', this.currentDistance);
       }
       console.log('My location = ', this.currentLocation);
+      this.inRange = this.currentDistance < this.config.maxDistance;
     });
 
     // Restaurants

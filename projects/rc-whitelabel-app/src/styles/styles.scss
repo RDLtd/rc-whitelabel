@@ -157,39 +157,40 @@ rd-loader {
     width: 100%;
   }
 }
-.hourglass{
-  display:block;
-  background: $col-page-bgd;
-  margin:1em auto;
-  width:2em;
-  height:4em;
-  animation: hourglass 1s linear infinite;
-}
-.outer{ fill: $col-timer-outer }
-.middle{ fill: $col-page-bgd; }
-@keyframes hourglass{
-  0%{
-    transform:rotate(0deg);
-    box-shadow:
-            inset $col-timer-inner 0 -0em 0 0,
-            inset white 0 -2em 0 0,
-            inset $col-timer-inner 0 -4em 0 0;
-  }
-  80%{
-    transform:rotate(0deg);
-    box-shadow:
-            inset $col-timer-inner 0 -2em 0 0,
-            inset white 0 -2em 0 0,
-            inset $col-timer-inner 0 -2em 0 0;
-  }
-  100%{
-    transform:rotate(180deg);
-    box-shadow:
-            inset $col-timer-inner 0 -2em 0 0,
-            inset white 0 -2em 0 0,
-            inset $col-timer-inner 0 -2em 0 0;
-  }
-}
+
+//.hourglass{
+//  display:block;
+//  background: $col-page-bgd;
+//  margin:1em auto;
+//  width:2em;
+//  height:4em;
+//  animation: hourglass 1s linear infinite;
+//}
+//.outer{ fill: $col-timer-outer }
+//.middle{ fill: $col-page-bgd; }
+//@keyframes hourglass{
+//  0%{
+//    transform:rotate(0deg);
+//    box-shadow:
+//            inset $col-timer-inner 0 -0em 0 0,
+//            inset white 0 -2em 0 0,
+//            inset $col-timer-inner 0 -4em 0 0;
+//  }
+//  80%{
+//    transform:rotate(0deg);
+//    box-shadow:
+//            inset $col-timer-inner 0 -2em 0 0,
+//            inset white 0 -2em 0 0,
+//            inset $col-timer-inner 0 -2em 0 0;
+//  }
+//  100%{
+//    transform:rotate(180deg);
+//    box-shadow:
+//            inset $col-timer-inner 0 -2em 0 0,
+//            inset white 0 -2em 0 0,
+//            inset $col-timer-inner 0 -2em 0 0;
+//  }
+//}
 
 // SEARCH
 .rd-quick-links-container {
@@ -491,6 +492,28 @@ ul.rd-search-autofill {
     .mat-icon { margin-left: 8px; }
   }
 }
+.rd-load-more {
+  cursor: pointer;
+  padding: 12px;
+  width: 100%;
+  margin: 0 auto;
+  @include mq(med) { padding-top: 0; }
+  .rd-btn-more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    border-radius: 8px;
+    background: #fff;
+    color:#bbb;
+    font-size: 18px;
+    transition: .3s all ease-out;
+    &:hover {
+      color: #000;
+    }
+  }
+}
+
 .rd-filter-list-container {
   display: flex;
   flex-direction: column;
@@ -569,6 +592,3 @@ ul.rd-search-autofill {
     opacity: 1;
   }
 }
-
-
-

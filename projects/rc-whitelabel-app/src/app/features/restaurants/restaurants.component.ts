@@ -6,10 +6,22 @@ import { DataService } from '../../core/data.service';
 import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 import { LocationService } from '../../core/location.service';
+import { trigger, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'rd-restaurants',
-  templateUrl: './restaurants.component.html'
+  templateUrl: './restaurants.component.html',
+  animations: [
+    trigger('fadeSlideInOut', [
+      transition(':enter', [
+        style({opacity: 0, transform: 'translateY(12px)'}),
+        animate('500ms', style({opacity: 1, transform: 'translateY(0)'})),
+      ]),
+      transition(':leave', [
+        animate('500ms', style({opacity: 0, transform: 'translateY(12px)'})),
+      ]),
+    ])
+  ]
 })
 export class RestaurantsComponent implements OnInit {
 
@@ -26,7 +38,9 @@ export class RestaurantsComponent implements OnInit {
   features: any[] = [];
   // Results
   restaurants: any[] = [];
+  nextRestaurants: any[] = [];
   cachedRestaurants: any[] = [];
+  batchTotal = 8;
 
   constructor(
     public dialog: MatDialog,
@@ -36,25 +50,21 @@ export class RestaurantsComponent implements OnInit {
     public data: DataService,
     public config: AppConfig,
     private location: LocationService
-  ) { }
+  ) {
+
+  }
 
   ngOnInit(): void {
 
-    // Check for sort/filtering
+    // Extract url params
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.isLoaded = false;
       // console.log('Param changed', params);
       this.routeFilter = params.get('filter');
       this.routeSort = params.get('sort');
-      // load restaurants
-      this.data.loadRestaurants().then((res: any) => {
-        // console.log(res);
-        this.cachedRestaurants = res;
-        // Apply sort/filter
-        this.updateRestaurantResults();
-      });
+      // get results
+      this.loadRestaurants();
     });
-
     // load summary for filter/sort options
     this.data.loadSummarisedData().then((res: any) => {
       // console.log('Summary loaded', res);
@@ -75,6 +85,56 @@ export class RestaurantsComponent implements OnInit {
       );
     });
   }
+
+  // Load restaurants based on search params
+  loadRestaurants(prefetch: boolean = false): void {
+    const params = this.getSearchParams();
+    this.data.loadRestaurantsByParams(params)
+      .then((res: any) => {
+        if (prefetch) {
+          this.nextRestaurants = res;
+        } else {
+          this.restaurants = res;
+          this.isLoaded = true;
+          // If the last batch of results was our max limit
+          // prefetch the next batch
+          if (res.length === this.batchTotal) {
+           this.loadMoreRestaurants();
+          }
+        }
+      });
+  }
+  // Prefetch the next batch
+  loadMoreRestaurants(): void {
+    if (this.nextRestaurants.length) {
+      this.restaurants.push(...this.nextRestaurants);
+      this.nextRestaurants = [];
+    }
+    this.loadRestaurants(true);
+  }
+
+  getSearchParams(sort?: string, cuisine?: string): any {
+    // Create params
+    const options: {[key: string]: any } = {
+      offset: this.restaurants.length,
+      limit: this.batchTotal
+    };
+    // Add geolocation
+    if (this.routeSort || sort) {
+      const coords = this.routeSort.split(':');
+      options.lng = coords[0];
+      options.lat = coords[1];
+      this.filtersOn = true;
+    }
+    // Add filters
+    if ( this.routeFilter || cuisine ) {
+      options.filter = 'cuisine';
+      options.filterText = this.routeFilter || cuisine;
+      this.filtersOn = true;
+    }
+    return options;
+  }
+
   // Check for route params
   updateRestaurantResults(sort?: string, filter?: string): void {
 
@@ -181,5 +241,4 @@ export class RestaurantsComponent implements OnInit {
     const format = 'w_900,h_600,c_fill,q_auto,dpr_auto,f_auto';
     return url.replace('upload/', `upload/${format}/`);
   }
-
 }

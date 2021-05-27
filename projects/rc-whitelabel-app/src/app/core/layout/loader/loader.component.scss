@@ -1,0 +1,20 @@
+@keyframes spin {
+  to {
+    transform: scale(1) rotateZ(60deg);
+  }
+}
+
+$loaderSize: 48px;
+.rdl-loader {
+  width: $loaderSize;
+  height: $loaderSize;
+  animation: spin .75s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite both;
+  animation-delay: .75s;
+  img {
+    width: 100%;
+  }
+}
+.rdl-loader-txt {
+  font-weight: bold;
+  color: #adadad;
+}

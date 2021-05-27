@@ -36,17 +36,17 @@ export class DataService {
   async getGeoLocation(): Promise<any> {
     return new Promise(resolve => {
       // Testing
-      // if (this.config.testMode) {
-      //   const geo = {
-      //     timestamp: new Date().getTime(),
-      //     coords: {
-      //       latitude: this.config.channelLat,
-      //       longitude: this.config.channelLng
-      //     }
-      //   };
-      //   console.log('Geo test', geo);
-      //   resolve(geo);
-      // } else
+      if (this.config.testMode) {
+        const geo = {
+          timestamp: new Date().getTime(),
+          coords: {
+            latitude: this.config.channelLat,
+            longitude: this.config.channelLng
+          }
+        };
+        console.log('Geo test', geo);
+        resolve(geo);
+      } else
       // check cache
       if (!!this.userLocation) {
         console.log('Geo local');
@@ -67,6 +67,39 @@ export class DataService {
   }
   async getUserLocation(): Promise<any> {
     return await this.getGeoLocation();
+  }
+
+  // Get restaurants
+  loadRestaurantsByParams(options: any): Promise<any> {
+
+    const params = {
+      filter: options.filter,
+      filterText: options.filterText,
+      offset: options.offset || 0,
+      limit: options.limit,
+      lat: options.lat,
+      lng: options.lng,
+      testing: this.config.testMode
+    };
+
+    console.log('Params', params);
+
+    return new Promise(async resolve => {
+      await this.api.getRestaurantsByParams(this.config.channelAccessCode, this.config.channelAPIKey, params)
+        .toPromise()
+        .then((res: any) => {
+          console.log(res);
+          if (!!res) {
+            resolve(res.restaurants);
+          } else {
+            resolve([]);
+          }
+        })
+        .catch((error: any) => {
+          console.log('ERROR', error);
+          this.router.navigate(['/error']);
+        });
+    });
   }
 
   // Restaurants

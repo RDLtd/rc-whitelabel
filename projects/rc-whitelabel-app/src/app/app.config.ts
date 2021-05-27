@@ -12,9 +12,8 @@ export class AppConfig {
   public channelAPIKey = this.defaultApiKey;
   public isDefaultChannel = false;
   public language = localStorage.getItem('rd_language') || 'en';
-  public restaurantsLoaded = false;
   public channelLoaded = false;
-  public maxDistance = 25;
+  public maxDistance = 25000;
   public brand = {
     name: '',
     logoUrl: 'assets/images/rc-logo-final.svg',
