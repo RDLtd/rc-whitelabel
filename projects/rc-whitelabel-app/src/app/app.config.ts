@@ -33,7 +33,8 @@ export class AppConfig {
   setLanguage( obj: any): void {
     for (const objKey in obj) {
       if (obj.hasOwnProperty(objKey)) {
-        // remove 'channel_language' (17 chars) and just leave string label
+        // remove prefix 'channel_language_' (17 chars)
+        // and just leave string label
         this.i18n[objKey.substr(17)] = obj[objKey];
       }
     }
@@ -47,7 +48,7 @@ export class AppConfig {
     this.brand.secondaryColor = data.secondaryColor;
     this.brand.name = data.name;
     this.isDefaultChannel = (this.brand.name === 'Member Restaurant Directory');
-    console.log(this.brand);
+    console.log('Default Channel', this.brand);
 
     if (!this.language) {
       this.language = this.channelLanguage;

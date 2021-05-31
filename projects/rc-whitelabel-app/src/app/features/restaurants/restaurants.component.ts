@@ -64,7 +64,7 @@ export class RestaurantsComponent implements OnInit {
     // Set user geo
     this.location.getUserGeoLocation().subscribe(pos => {
       this.currentLocation = pos;
-      console.log(this.currentLocation);
+      console.log('User geo', this.currentLocation);
       this.currentDistance = this.location.getDistance(
         this.config.channelLat,
         this.config.channelLng,
@@ -77,6 +77,7 @@ export class RestaurantsComponent implements OnInit {
   // Load restaurants based on search params
   loadRestaurants(prefetch: boolean = false): void {
     const params = this.getSearchParams();
+    console.log('Search Params', params);
     this.data.loadRestaurantsByParams(params)
       .then((res: any) => {
         if (prefetch) {
