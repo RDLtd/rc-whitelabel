@@ -26,7 +26,9 @@ export class AppConfig {
   public channelLat = 0;
   public channelLng = 0;
   public channelLanguage = 'en';
-  public i18n: any = {};
+  public i18n: any = {
+    Loading: 'LOADING'
+  };
 
   setLanguage( obj: any): void {
     for (const objKey in obj) {

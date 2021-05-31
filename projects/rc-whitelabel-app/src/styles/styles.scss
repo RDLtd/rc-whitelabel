@@ -66,6 +66,9 @@ body {
 a, a:active, a:focus {
   outline: none;
 }
+*:focus {
+  outline: 0 !important;
+}
 
 // UTILS
 .rd-flex-spacer { flex: 1 0 auto; }
@@ -73,9 +76,10 @@ a, a:active, a:focus {
 .rd-show { opacity: 1!important;}
 .rd-highlight { color: $col-accent}
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
-.rd-icon-restaurant { color: #484747 !important;}
-.rd-icon-cuisine { color: #0bb0d9 !important;}
-.rd-icon-location, .rd-icon-my-location { color: #ee4b08 !important; fill: #ee4b08}
+.rd-icon-restaurant { color: #23b6e0 !important;}
+.rd-icon-cuisine { color: #2eb871 !important;}
+.rd-icon-location, .rd-icon-my-location { color: $col-accent !important; fill: $col-accent
+}
 
 // LAYOUT
 main {
@@ -132,12 +136,15 @@ rd-header {
 
 }
 rd-footer {
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  height: 10vh;
+  background: #454540;
   padding: 12px 0;
-  color: $col-text;
+  color: white;
   font-size: 9px;
   text-transform: uppercase;
 }
@@ -146,8 +153,17 @@ rd-loader {
   position: absolute;
   top:0;
   left: 0;
-  height: calc(100vh - 64px);
+  height: 100%; //calc(100vh - 64px);
   width: 100%;
+  .rdl-loader-txt {
+    font-size: 12px;
+    color: white;
+  }
+  &.fill-accent {
+    fill: $col-accent;
+    .rdl-loader-txt { color: #ff5720; }
+  }
+  &.fill-white { fill: white; }
   div {
     display: flex;
     flex-direction: column;
@@ -158,114 +174,57 @@ rd-loader {
   }
 }
 
-//.hourglass{
-//  display:block;
-//  background: $col-page-bgd;
-//  margin:1em auto;
-//  width:2em;
-//  height:4em;
-//  animation: hourglass 1s linear infinite;
-//}
-//.outer{ fill: $col-timer-outer }
-//.middle{ fill: $col-page-bgd; }
-//@keyframes hourglass{
-//  0%{
-//    transform:rotate(0deg);
-//    box-shadow:
-//            inset $col-timer-inner 0 -0em 0 0,
-//            inset white 0 -2em 0 0,
-//            inset $col-timer-inner 0 -4em 0 0;
-//  }
-//  80%{
-//    transform:rotate(0deg);
-//    box-shadow:
-//            inset $col-timer-inner 0 -2em 0 0,
-//            inset white 0 -2em 0 0,
-//            inset $col-timer-inner 0 -2em 0 0;
-//  }
-//  100%{
-//    transform:rotate(180deg);
-//    box-shadow:
-//            inset $col-timer-inner 0 -2em 0 0,
-//            inset white 0 -2em 0 0,
-//            inset $col-timer-inner 0 -2em 0 0;
-//  }
-//}
-
-// SEARCH
-.rd-quick-links-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  @include mq(small) {
-    flex-direction: row;
-    align-items: stretch;
-    justify-content: space-between;
+.rd-cover {
+  position: fixed;
+  top:0; left: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  @include mq(med){
+    background-image: url("../assets/images/bgd1.jpg");
+    background-size: cover;
   }
 }
-.rd-quick-links {
-  @include mq(small) {
-    width: 33%;
+.blur {
+  @include mq(med) {
+    position: fixed;
+    top: 0;
+    background: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
+    backdrop-filter: blur(8px); // This be the blur
+    height: 100%;
+    width: 100vw;
   }
-  > div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    h2 {
-      display: inline-block;
-      margin: 0;
-      padding: 0;
-      font-family: $font-family-heading;
-    }
-    > .mat-icon {
-      font-size: 24px;
-      height: 24px;
-      width: 24px;
-      margin-right: 4px;
-      color: #666;
-    }
-  }
-  ul {
-    margin: 0 24px 12px 28px;
-    li {
-      > a {
-        display: flex;
-        align-items: center;
-        padding: 6px 0;
-        font-size: 16px;
-        color: $col-text;
-        font-weight: $font-weight-lite;
-        &.rd-my-location {
-          svg {
-            margin: 0 7px 0 -25px;
-          }
-          //&:before {
-          //  content: "";
-          //  display: block;
-          //  background: url('assets/images/my_location-black-18dp.svg') no-repeat;
-          //  width: 20px;
-          //  height: 20px;
-          //  float: left;
-          //  margin: 2px 4px 0 -25px;
-          //}
-        }
-        span:last-child {
-          font-size: 11px;
-        }
-      }
-    }
+}
+
+// SEARCH
+// ----------------------------
+.rd-search-container {
+  position: relative;
+  z-index: 5;
+  height: 90vh;
+  //margin-top: $layout-header-height;
+  transition: all .2s ease-out;
+
+  @include mq(med) {
+    @include mat-elevation(5);
+    border-radius: 12px;
+    max-width: 800px;
+    background: rgba(white, .95);
+    min-height: 0;
+    height: auto;
+    margin: 0 auto 0;
   }
 }
 ul.rd-search-autofill {
   display: block;
-  height: 0;
   max-height: 0;
-  overflow: hidden;
+  transition:max-height 0.3s ease-out;
+  overflow: auto;
   width: 100%;
-  transition: all .3s ease-out;
-  li {
-    border-bottom: 1px solid #eee;
-    > a {
+  margin: -16px 0 8px;
+  padding: 0;
+  li ~ li { border-top: 1px solid #eee; }
+  li  > a {
       transition: all .3s ease-out;
       background-color: transparent;
       outline: none;
@@ -277,27 +236,30 @@ ul.rd-search-autofill {
       font-weight: $font-weight-regular;
       color: black;
       .mat-icon {
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         font-size: 20px;
         margin-right: 4px;
         color: lightgray;
       }
       span:last-child { font-size: 11px; }
-    }
+      &:hover,
+      &:focus {
+        background: #eee;
+      }
+
+
   }
   &.open {
-    height: auto;
-    max-height: 600px;
+    max-height: 400px;
   }
 }
 .rd-search-content {
-  max-width: 960px;
   opacity: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 12px 18px;
+  padding: 8px 24px;
   transition: all .3s ease-out;
   @include mq(med) { margin: 24px auto 0;}
   h3 {
@@ -307,7 +269,7 @@ ul.rd-search-autofill {
   }
   .rd-full-width {}
   .mat-form-field {
-    font-size: 18px;
+    font-size: 20px;
     line-height: 24px;
     width: 100%;
   }
@@ -337,17 +299,75 @@ ul.rd-search-autofill {
     }
   }
 }
-/* --------------------------
-** Panels */
-.rd-panel {
-  padding: 12px;
-  background: #0bb0d9;
+.rd-quick-links-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  @include mq(small) {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+}
+.rd-quick-links {
+  @include mq(small) {
+    width: 33%;
+    flex-grow: 1;
+  }
+  > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    h2 {
+      display: inline-block;
+      margin: 0;
+      padding: 0;
+      font-family: $font-family-heading;
+      font-size: 18px;
+    }
+    > .mat-icon {
+      font-size: 20px;
+      height: 20px;
+      width: 20px;
+      margin-right: 4px;
+      color: #666;
+    }
+  }
+  ul {
+    margin: 0;
+    padding: 0 24px 24px;
+    li {
+      > a {
+        display: flex;
+        align-items: center;
+        padding: 6px 0;
+        font-size: 16px;
+        color: $col-text;
+        font-weight: $font-weight-lite;
+        transition: transform 200ms ease-out;
+        &.rd-my-location {
+          svg {
+            margin: 0 5px 0 -23px;
+          }
 
+        }
+        span:last-child {
+          font-size: 11px;
+        }
+        &:hover {
+          transform: translateX(4px);
+        }
+      }
+    }
+  }
 }
 
-// -------------------------------------------------------------------
+// ----------------------------------------
 // RESULTS
+// ----------------------------------------
+
 .rd-results-container {
+  position: relative;
   @include mq(med) {
     padding:  16px 12px 12px;
     display: grid;
@@ -355,7 +375,7 @@ ul.rd-search-autofill {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 1fr;
     grid-column-gap: 12px;
-    grid-row-gap: 12px;
+    grid-row-gap: 16px;
   }
   @include mq(large) { grid-template-columns: repeat(3, 1fr);}
   @include mq(xlarge) { grid-template-columns: repeat(4, 1fr);}
@@ -367,14 +387,16 @@ ul.rd-search-autofill {
     cursor: pointer;
     transition: all .3s ease-out;
     background: #fff;
-
     @include mq(med) {
       padding: 8px 12px 12px;
-      border: 1px solid #eee;
       border-radius: 10px;
+      transform: scale(1);
+      @include mat-elevation(5);
       &:hover {
-        border-color: #bbb;
-        @include mat-elevation(6);
+        //.rd-restaurant-detail h2 {
+        //  color: $col-accent;
+        //}
+       transform: scale(1.01);
       }
       img { vertical-align: baseline; }
     }
@@ -393,6 +415,7 @@ ul.rd-search-autofill {
         margin: 0;
         display: flex;
         width: 100%;
+        transition: color 300ms ease-out;
       }
       h3 {
         display: flex;
@@ -462,15 +485,13 @@ ul.rd-search-autofill {
       overflow: hidden;
     }
   }
-
   .rd-filter-btn {
     position: fixed;
     z-index: 20;
-    display: flex;
-    justify-content: center;
     bottom: 5vh;
-    left: 0;
-    width: 100%;
+    right: 48px;
+    width: auto;
+    margin: 0 0 0 50%;
     transform: scale(0);
     .mat-raised-button {
       padding: 8px 20px;
@@ -493,6 +514,7 @@ ul.rd-search-autofill {
   }
 }
 .rd-load-more {
+  position: relative;
   cursor: pointer;
   padding: 12px;
   width: 100%;
@@ -504,16 +526,18 @@ ul.rd-search-autofill {
     align-items: center;
     padding: 24px;
     border-radius: 8px;
-    background: #fff;
-    color:#bbb;
+    background-color: rgba(#fff, 0.5);
+    color:#222;
     font-size: 18px;
-    transition: .3s all ease-out;
+    transition: 300ms all ease-out;
     &:hover {
       color: #000;
+      background-color: rgba(#fff, .9);
     }
   }
 }
 
+// Filters
 .rd-filter-list-container {
   display: flex;
   flex-direction: column;
@@ -525,7 +549,7 @@ ul.rd-search-autofill {
   position: relative;
   margin-bottom: 24px;
   @include mq(med) {
-    width: 50%;
+    //width: 50%;
     padding: 0 24px;
   }
   h1 {
@@ -559,35 +583,19 @@ ul.rd-search-autofill {
 }
 
 
-/**
- * ----------------------------------------
- * Animations
- * ----------------------------------------
- */
+// ----------------------------------------
+// ANIMATIONS
+// ----------------------------------------
 .scale-in-center {
   -webkit-animation: scale-in-center 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
   animation: scale-in-center 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
 }
-@-webkit-keyframes scale-in-center {
-  0% {
-    -webkit-transform: scale(0);
-    transform: scale(0);
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-    opacity: 1;
-  }
-}
 @keyframes scale-in-center {
   0% {
-    -webkit-transform: scale(0);
     transform: scale(0);
     opacity: 1;
   }
   100% {
-    -webkit-transform: scale(1);
     transform: scale(1);
     opacity: 1;
   }

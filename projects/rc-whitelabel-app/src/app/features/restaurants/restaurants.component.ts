@@ -6,22 +6,12 @@ import { DataService } from '../../core/data.service';
 import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 import { LocationService } from '../../core/location.service';
-import { trigger, style, animate, transition } from '@angular/animations';
+import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
 
 @Component({
   selector: 'rd-restaurants',
   templateUrl: './restaurants.component.html',
-  animations: [
-    trigger('fadeSlideInOut', [
-      transition(':enter', [
-        style({opacity: 0, transform: 'translateY(12px)'}),
-        animate('500ms', style({opacity: 1, transform: 'translateY(0)'})),
-      ]),
-      transition(':leave', [
-        animate('500ms', style({opacity: 0, transform: 'translateY(12px)'})),
-      ]),
-    ])
-  ]
+  animations: [fadeInSlideUp, fadeInStagger]
 })
 export class RestaurantsComponent implements OnInit {
 
@@ -50,9 +40,7 @@ export class RestaurantsComponent implements OnInit {
     public data: DataService,
     public config: AppConfig,
     private location: LocationService
-  ) {
-
-  }
+  ) {  }
 
   ngOnInit(): void {
 

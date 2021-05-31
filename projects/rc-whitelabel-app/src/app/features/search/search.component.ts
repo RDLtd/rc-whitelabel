@@ -5,6 +5,7 @@ import { DataService } from '../../core/data.service';
 import { AppConfig } from '../../app.config';
 import { Router } from '@angular/router';
 import { LocationService } from '../../core/location.service';
+import { fadeIn, fadeInSlideUp } from '../../shared/animations';
 
 interface SearchSuggestion {
   cat: string;
@@ -29,7 +30,8 @@ interface Cuisine {
 
 @Component({
   selector: 'rd-search',
-  templateUrl: './search.component.html'
+  templateUrl: './search.component.html',
+  animations: [fadeIn, fadeInSlideUp]
 })
 
 export class SearchComponent implements OnInit {
@@ -224,16 +226,19 @@ export class SearchComponent implements OnInit {
     this.rdSearchInput.nativeElement.value = '';
     this.searchSuggestions = [];
     this.noSuggestions = false;
+    this.rdSearchInput.nativeElement.focus();
   }
 
-  addRecent(restaurant: any): void {
+  viewRestaurantSpw(restaurant: any): void {
     console.log(restaurant);
     this.data.setRecentlyViewed({
       restaurant_name: restaurant.name,
       restaurant_spw_url: restaurant.spw || restaurant.restaurant_spw_url,
       restaurant_number: restaurant.number
     });
-    this.searchSuggestions = [];
+    this.searchReset();
     window.open(restaurant.spw, '_blank');
   }
+
+
 }
