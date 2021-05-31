@@ -21,6 +21,6 @@ export const fadeInStagger = trigger('fadeInStagger', [
       stagger(100, [
         animate('300ms', style({opacity: 1, transform: 'translateY(0)'}))
       ])
-    ])
+    ], {optional: true })
   ])
 ]);
