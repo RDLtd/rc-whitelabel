@@ -23,7 +23,7 @@ $col-page-bgd: #cdcdcd;
 $col-timer-outer: #454540;
 $col-timer-inner: #bbb;
 $col-accent: #ff3d00;
-$col-dark: #454540;
+$col-dark: #252525;
 
 // For media queries
 $breakpoints: (
@@ -83,14 +83,34 @@ a, a:active, a:focus {
 }
 
 // LAYOUT
+// ----------------
 main {
   margin: 0 auto;
-  min-height: calc(99.9vh - 64px);
-  //padding: $layout-header-height + 8px 0 0;
+  min-height: calc(99.9vh - #{$layout-header-height});
   padding-top: $layout-header-height;
   @include mq(med) {
     background: #eee;
-    //padding: $layout-header-height + 8px 12px 12px;
+  }
+}
+.rd-cover {
+  position: fixed;
+  top:0; left: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  @include mq(med){
+    background-image: url("../assets/images/bgd1.jpg");
+    background-size: cover;
+  }
+}
+.blur {
+  @include mq(med) {
+    position: fixed;
+    top: 0;
+    background: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
+    backdrop-filter: blur(8px); // This be the blur
+    height: 100%;
+    width: 100vw;
   }
 }
 header {
@@ -100,18 +120,11 @@ header {
   transition: all .6s cubic-bezier(0.16, 1, 0.3, 1);
   background: $col-page-bgd;
   color: $col-text;
-
   &.rd-hideHeader {
-    //transform: translateY(-56px);
     @include mq(small) {
       transform: translateY(-($layout-header-height - 8));
     }
   }
-  &.rc-default {
-    // padding-bottom: 16px;
-    // clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
-  }
-
 }
 rd-header {
   display: flex;
@@ -134,7 +147,6 @@ rd-header {
     font-size: 14px;
     letter-spacing: 1px;
   }
-
 }
 rd-footer {
   position: relative;
@@ -143,21 +155,20 @@ rd-footer {
   justify-content: center;
   align-items: center;
   min-height: 150px;
-  background: #252525;
+  background: $col-dark;
   padding: 12px 0;
   color: white;
   font-size: 9px;
   text-transform: uppercase;
 }
-.rd-tooltip {
-  background-color: $col-accent;
-}
+
 // Loader
+// -----------------
 rd-loader {
   position: absolute;
   top:0;
   left: 0;
-  height: 100%; //calc(100vh - 64px);
+  height: 100%;
   width: 100%;
   .rdl-loader-txt {
     font-size: 12px;
@@ -179,28 +190,6 @@ rd-loader {
   }
 }
 
-.rd-cover {
-  position: fixed;
-  top:0; left: 0;
-  z-index: 0;
-  width: 100vw;
-  height: 100vh;
-  @include mq(med){
-    background-image: url("../assets/images/bgd1.jpg");
-    background-size: cover;
-  }
-}
-.blur {
-  @include mq(med) {
-    position: fixed;
-    top: 0;
-    background: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
-    backdrop-filter: blur(8px); // This be the blur
-    height: 100%;
-    width: 100vw;
-  }
-}
-
 // SEARCH
 // ----------------------------
 .rd-search-container {
@@ -209,8 +198,6 @@ rd-loader {
   height: 90vh;
   background: white;
   transition: all .2s ease-out;
-
-
 
   @include mq(med) {
     @include mat-elevation(5);
@@ -222,7 +209,7 @@ rd-loader {
     margin: 0 auto 0;
   }
 }
-ul.rd-search-autofill {
+.rd-search-autofill {
   display: block;
   height: auto;
   max-height: 0;
@@ -233,30 +220,26 @@ ul.rd-search-autofill {
   padding: 0;
   li ~ li { border-top: 1px solid #eee; }
   li  > a {
-      transition: all .3s ease-out;
-      background-color: transparent;
-      outline: none;
-      display: flex;
-      align-items: center;
-      width: 100%;
-      padding: 16px 0;
-      font-size: 16px;
-      font-weight: $font-weight-regular;
-      color: black;
-      .mat-icon {
-        width: 22px;
-        height: 22px;
-        font-size: 20px;
-        margin-right: 4px;
-        color: lightgray;
-      }
-      span:last-child { font-size: 11px; }
-      &:hover,
-      &:focus {
-        background: #eee;
-      }
-
-
+    transition: all .3s ease-out;
+    background-color: transparent;
+    outline: none;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 16px 0;
+    font-size: 16px;
+    font-weight: $font-weight-regular;
+    color: black;
+    .mat-icon {
+      width: 22px;
+      height: 22px;
+      font-size: 20px;
+      margin-right: 4px;
+      color: lightgray;
+    }
+    span:last-child { font-size: 11px; }
+    &:hover,
+    &:focus { background: #eee; }
   }
   &.open {
     max-height: 400px;
@@ -355,27 +338,16 @@ ul.rd-search-autofill {
         color: $col-text;
         font-weight: $font-weight-lite;
         transition: transform 200ms ease-out;
-        &.rd-my-location {
-          svg {
-            margin: 0 5px 0 -23px;
-          }
-
-        }
-        span:last-child {
-          font-size: 11px;
-        }
-        &:hover {
-          transform: translateX(4px);
-        }
+        &.rd-my-location svg { margin: 0 5px 0 -23px; }
+        span:last-child { font-size: 11px; }
+        &:hover { transform: translateX(4px); }
       }
     }
   }
 }
 
-// ----------------------------------------
 // RESULTS
 // ----------------------------------------
-
 .rd-results-container {
   position: relative;
   @include mq(med) {
@@ -400,14 +372,8 @@ ul.rd-search-autofill {
     @include mq(med) {
       padding: 8px 12px 12px;
       border-radius: 10px;
-      //transform: scale(1);
       @include mat-elevation(5);
-      &:hover {
-       //transform: scale(1.01);
-        h2 {
-          color: black !important;
-        }
-      }
+      &:hover h2 { color: black !important; }
       img { vertical-align: baseline; }
     }
     .rd-restaurant-detail {
@@ -433,9 +399,7 @@ ul.rd-search-autofill {
         text-transform: uppercase;
         margin: 0;
         padding: 0;
-        span:last-child {
-          text-transform: lowercase;
-        }
+        span:last-child { text-transform: lowercase; }
         .mat-icon {
           font-size: 12px;
           height: 12px;
@@ -449,9 +413,7 @@ ul.rd-search-autofill {
         margin: 0 0 12px;
         padding: 0;
       }
-      .mat-chip-list-wrapper {
-        margin: 0;
-      }
+      .mat-chip-list-wrapper { margin: 0; }
       .mat-chip {
         font-size: 10px;
         text-transform: uppercase;
@@ -543,14 +505,12 @@ ul.rd-search-autofill {
 }
 
 // Filters
+// ------------------------
 .rd-filter-list-container {
   display: flex;
   flex-direction: column;
-  @include mq(med) {
-    flex-direction: row;
-  }
+  @include mq(med) { flex-direction: row; }
 }
-
 .rd-filter-dialog {
   .mat-dialog-container {
     position: relative;
@@ -596,12 +556,9 @@ ul.rd-search-autofill {
       }
     }
   }
-
-
 }
 
 
-// ----------------------------------------
 // ANIMATIONS
 // ----------------------------------------
 .scale-in-center {
