@@ -19,10 +19,11 @@ $rc-whitelabel-app-theme: mat-light-theme((
 
 // Default branding
 $col-text: rgb(74, 74, 74);
-$col-page-bgd: #eee;
+$col-page-bgd: #cdcdcd;
 $col-timer-outer: #454540;
 $col-timer-inner: #bbb;
 $col-accent: #ff3d00;
+$col-dark: #454540;
 
 // For media queries
 $breakpoints: (
@@ -141,12 +142,15 @@ rd-footer {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 10vh;
-  background: #454540;
+  min-height: 150px;
+  background: #252525;
   padding: 12px 0;
   color: white;
   font-size: 9px;
   text-transform: uppercase;
+}
+.rd-tooltip {
+  background-color: $col-accent;
 }
 // Loader
 rd-loader {
@@ -157,6 +161,7 @@ rd-loader {
   width: 100%;
   .rdl-loader-txt {
     font-size: 12px;
+    letter-spacing: 1px;
     color: white;
   }
   &.fill-accent {
@@ -202,8 +207,10 @@ rd-loader {
   position: relative;
   z-index: 5;
   height: 90vh;
-  //margin-top: $layout-header-height;
+  background: white;
   transition: all .2s ease-out;
+
+
 
   @include mq(med) {
     @include mat-elevation(5);
@@ -393,26 +400,23 @@ ul.rd-search-autofill {
     @include mq(med) {
       padding: 8px 12px 12px;
       border-radius: 10px;
-      transform: scale(1);
+      //transform: scale(1);
       @include mat-elevation(5);
       &:hover {
-        //.rd-restaurant-detail h2 {
-        //  color: $col-accent;
-        //}
-       transform: scale(1.01);
+       //transform: scale(1.01);
+        h2 {
+          color: black !important;
+        }
       }
       img { vertical-align: baseline; }
     }
-
     .rd-restaurant-detail {
       position: relative;
       padding: 12px 16px 10px;
-
       @include mq(med) {
         padding: 8px 0;
         p { margin: 4px 0 12px; }
       }
-
       h2 {
         font: $font-weight-heavy 24px/28px $font-family-heading;
         margin: 0;
@@ -505,9 +509,7 @@ ul.rd-search-autofill {
       background: black;
       color: white;
       @include mat-elevation(10);
-      &.rd-btn-clear {
-        background-color: #ff2600;
-      }
+      &.rd-btn-clear { background-color: #ff2600; }
     }
     .mat-button-wrapper {
       display: flex;
@@ -548,25 +550,38 @@ ul.rd-search-autofill {
     flex-direction: row;
   }
 }
+
+.rd-filter-dialog {
+  .mat-dialog-container {
+    position: relative;
+    border-radius: 12px;
+  }
+  .rd-dialog-close {
+    position: absolute !important;
+    top: 4px; right: 4px;
+    z-index: 100;
+    color: gray;
+  }
+}
 .rd-filter-list {
   position: relative;
   margin-bottom: 24px;
   @include mq(med) {
     //width: 50%;
-    padding: 0 24px;
+    //padding: 0 24px;
   }
   h1 {
-    margin: 0 0 4px;
+    margin: 16px 0 4px;
     padding: 0;
     display: flex;
     align-items: center;
-    font: $font-weight-heavy 12px/16px $font-family-default;
+    font: $font-weight-heavy 14px/16px $font-family-default;
     text-transform: uppercase;
   }
   li {
-    border-bottom: 1px solid #eee;
     > a {
       display: flex;
+      align-items: center;
       width: 100%;
       cursor: pointer;
       font-size: 16px;

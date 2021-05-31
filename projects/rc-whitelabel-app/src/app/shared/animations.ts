@@ -3,7 +3,7 @@ import { animate, query, stagger, style, transition, trigger } from '@angular/an
 export const fadeIn = trigger('fadeIn', [
   transition(':enter', [
     style({opacity: 0}),
-    animate('500ms', style({opacity: 1})),
+    animate('300ms ease-out', style({opacity: 1})),
   ])
 ]);
 

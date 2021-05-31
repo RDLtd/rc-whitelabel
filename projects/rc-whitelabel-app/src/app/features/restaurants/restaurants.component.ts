@@ -182,7 +182,9 @@ export class RestaurantsComponent implements OnInit {
         landmarks: this.data.getLandmarks(),
         currentLocation: this?.currentLocation,
         currentDistance: this?.currentDistance
-      }
+      },
+      minWidth: '320px',
+      panelClass: 'rd-filter-dialog'
     });
     dialogRef.afterClosed().subscribe(result => {
       this.isLoaded = false;

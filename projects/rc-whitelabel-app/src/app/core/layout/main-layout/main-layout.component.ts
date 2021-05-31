@@ -1,9 +1,11 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { AppConfig } from '../../../app.config';
+import { fadeIn } from '../../../shared/animations';
 
 @Component({
   selector: 'rd-main-layout',
-  templateUrl: './main-layout.component.html'
+  templateUrl: './main-layout.component.html',
+  animations: [fadeIn]
 })
 export class MainLayoutComponent implements OnInit {
   scrolling = false;

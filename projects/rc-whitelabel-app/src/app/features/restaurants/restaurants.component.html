@@ -8,7 +8,8 @@
 <div class="rd-results-container" *ngIf="isLoaded && config.channelLoaded" [@fadeInStagger]="restaurants.length">
   <div
     *ngFor="let restaurant of restaurants"
-    class="rd-restaurant" (click)="openSPW(restaurant)">
+    class="rd-restaurant"
+    (click)="openSPW(restaurant)">
     <div class="rd-restaurant-detail">
       <h2>{{ restaurant?.restaurant_name }}</h2>
       <h3>
