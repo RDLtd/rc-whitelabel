@@ -217,11 +217,12 @@ rd-loader {
 }
 ul.rd-search-autofill {
   display: block;
+  height: auto;
   max-height: 0;
   transition:max-height 0.3s ease-out;
   overflow: auto;
   width: 100%;
-  margin: -16px 0 8px;
+  margin: -16px 0 0;
   padding: 0;
   li ~ li { border-top: 1px solid #eee; }
   li  > a {
@@ -303,6 +304,7 @@ ul.rd-search-autofill {
   width: 100%;
   display: flex;
   flex-direction: column;
+  margin: 0;
   @include mq(small) {
     flex-direction: row;
     align-items: stretch;
@@ -310,6 +312,7 @@ ul.rd-search-autofill {
   }
 }
 .rd-quick-links {
+  margin-top: 10px;
   @include mq(small) {
     width: 33%;
     flex-grow: 1;
