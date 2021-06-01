@@ -24,6 +24,9 @@ $col-timer-outer: #454540;
 $col-timer-inner: #bbb;
 $col-accent: #ff3d00;
 $col-dark: #252525;
+$col-icon-cuisine: #2eb871;
+$col-icon-restaurant: #23b6e0;
+$col-icon-location: #ff3d00;
 
 // For media queries
 $breakpoints: (
@@ -79,9 +82,12 @@ a, a:active, a:focus {
 .rd-show { opacity: 1 !important;}
 .rd-highlight { color: $col-accent}
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
-.rd-icon-restaurant { color: #23b6e0 !important;}
-.rd-icon-cuisine { color: #2eb871 !important;}
-.rd-icon-location, .rd-icon-my-location { color: $col-accent !important; fill: $col-accent
+.rd-icon-restaurant { color: $col-icon-restaurant !important;}
+.rd-icon-cuisine { color: $col-icon-cuisine !important;}
+.rd-icon-location,
+.rd-icon-my-location {
+  color: $col-icon-location !important;
+  fill: $col-icon-location
 }
 
 // LOAD COMPONENT
@@ -244,7 +250,18 @@ rd-footer {
       margin-right: 4px;
       color: lightgray;
     }
-    span:last-child { font-size: 11px; }
+    span.rd-count {
+      display: inline-block;
+      height: 20px;
+      width: 20px;
+      line-height: 20px;
+      border-radius: 10px;
+      text-align: center;
+      background-color: $col-icon-cuisine;
+      color: white;
+      margin-right: 8px;
+      font-size: 9px;
+    }
     &:hover,
     &:focus { background: #eee; }
   }

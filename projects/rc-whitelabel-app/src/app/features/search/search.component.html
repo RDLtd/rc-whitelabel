@@ -60,7 +60,7 @@
         <mat-icon class="rd-icon-cuisine">{{ icons['cuisine'] }}</mat-icon>
         {{ displayItem?.name }}
         <span class="rd-flex-spacer"></span>
-        <span>{{ displayItem.misc }}</span>
+        <span class="rd-count" *ngIf="!!displayItem.misc">{{ displayItem.misc }}</span>
       </a>
     </li>
   </ul>
