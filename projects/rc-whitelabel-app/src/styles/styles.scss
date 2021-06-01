@@ -226,7 +226,7 @@ rd-footer {
   @include mq(med) {
     @include mat-elevation(5);
     position: absolute;
-    top: 12vh;
+    top: 15vh;
     left: calc(50% - 400px);
     border-radius: 12px;
     width: 800px;
@@ -342,10 +342,6 @@ rd-footer {
 }
 .rd-quick-links {
   margin-top: 10px;
-  @include mq(small) {
-    //width: 33%;
-    //flex-grow: 1;
-  }
   > div {
     display: flex;
     flex-direction: row;
@@ -377,7 +373,7 @@ rd-footer {
         color: $col-text;
         font-weight: $font-weight-lite;
         transition: transform 200ms ease-out;
-        &.rd-my-location svg { margin: 0 5px 0 -23px; }
+        &.rd-my-location svg { margin: 0 5px 0 -23px; height: 12px;}
         span:last-child { font-size: 11px; }
         &:hover { transform: translateX(4px); }
       }

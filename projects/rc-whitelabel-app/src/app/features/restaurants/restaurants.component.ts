@@ -30,7 +30,7 @@ export class RestaurantsComponent implements OnInit {
   restaurants: any[] = [];
   nextRestaurants: any[] = [];
   cachedRestaurants: any[] = [];
-  batchTotal = 8;
+  batchTotal = 6;
 
   constructor(
     public dialog: MatDialog,
