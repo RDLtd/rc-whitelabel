@@ -126,9 +126,13 @@ rd-loader {
 // LAYOUT
 // ------------------------
 main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin: 0 auto;
-  min-height: calc(99.9vh - #{$layout-header-height});
+  height: 100vh;
   padding-top: $layout-header-height;
+  background: #fff;
   @include mq(med) {
     background: #eee;
   }
@@ -212,16 +216,20 @@ rd-footer {
 // SEARCH
 // ------------------------
 .rd-search-container {
-  position: relative;
+  position: relative ;
   z-index: 5;
-  height: 90vh;
+  width: 100vw;
+  height: 100vh;
   background: white;
   transition: all .2s ease-out;
 
   @include mq(med) {
     @include mat-elevation(5);
+    position: absolute;
+    top: 12vh;
+    left: calc(50% - 400px);
     border-radius: 12px;
-    max-width: 800px;
+    width: 800px;
     background: rgba(white, .95);
     min-height: 0;
     height: auto;
@@ -539,11 +547,17 @@ rd-footer {
 .rd-filter-list-container {
   display: flex;
   flex-direction: column;
-  @include mq(med) { flex-direction: row; }
+  width: 100%;
+  @include mq(med) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 .rd-filter-dialog {
+  @include mq(med) { min-width: 480px;}
   .mat-dialog-container {
     position: relative;
+    width: 100%;
     border-radius: 12px;
   }
   .rd-dialog-close {
@@ -557,16 +571,13 @@ rd-footer {
   position: relative;
   margin-bottom: 24px;
   @include mq(med) {
-    //width: 50%;
-    //padding: 0 24px;
+    margin-bottom: 0;
+    width: 45%;
   }
   h1 {
-    margin: 16px 0 4px;
+    margin: 0 0 8px;
     padding: 0;
-    display: flex;
-    align-items: center;
     font: $font-weight-heavy 14px/16px $font-family-default;
-    text-transform: uppercase;
   }
   li {
     > a {
@@ -579,10 +590,14 @@ rd-footer {
       font-weight: $font-weight-lite;
       .rd-count {
         font-weight: $font-weight-heavy;
+        font-size: 14px;
       }
       .mat-icon {
         color: lightgray;
-        margin-right: 4px;
+        height: 14px;
+        width: 14px;
+        font-size: 14px;
+        margin-right: 2px;
       }
     }
   }

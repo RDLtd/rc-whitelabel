@@ -229,6 +229,7 @@ export class DataService {
     this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
       .toPromise()
       .then((data: any) => {
+        console.log('load channel', data.channel_info);
         this.config.setChannel(data.channel_info);
         this.api.getChannelLanguage(this.config.channelAccessCode, this.config.channelAPIKey, this.config.language)
           .toPromise()

@@ -13,7 +13,9 @@ export class AppConfig {
   public isDefaultChannel = false;
   public language = localStorage.getItem('rd_language') || 'en';
   public channelLoaded = false;
-  public maxDistance = 25000;
+  public maxDistance = 1000;
+
+  // Default branding
   public brand = {
     name: '',
     logoUrl: 'assets/images/rc-logo-final.svg',
@@ -38,7 +40,11 @@ export class AppConfig {
     }
   }
   setChannel( data: any ): boolean {
-    console.log('Set Channel', data);
+    // console.log('Set Channel', data);
+    this.channelLat = data.latitude;
+    this.channelLng = data.longitude;
+    this.channelName = data.name;
+    this.channelLanguage = data.language;
     // Branding
     this.brand.logoUrl = data.logo;
     this.brand.primaryBgdColor = data.primaryBgColor;

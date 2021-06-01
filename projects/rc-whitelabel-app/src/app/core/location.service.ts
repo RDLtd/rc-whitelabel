@@ -37,6 +37,7 @@ export class LocationService {
     return deg * (Math.PI / 180);
   }
   getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    console.log(lat1, lng1, lat2, lng2);
     const R = 6371; // Radius of the earth in km
     const dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
     const dLon = this.deg2rad(lng2 - lng1);

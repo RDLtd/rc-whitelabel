@@ -79,7 +79,7 @@ export class RestaurantsComponent implements OnInit {
     console.log('Search Params', params);
     this.data.loadRestaurantsByParams(params)
       .then((res: any) => {
-        setTimeout(() => { this.showFilterOptions = true; }, 2000);
+        setTimeout(() => { this.showFilterOptions = true; }, 1500);
         if (prefetch) {
           this.nextRestaurants = res;
         } else {
@@ -111,8 +111,8 @@ export class RestaurantsComponent implements OnInit {
     // Add geolocation
     if (this.routeSort || sort) {
       const coords = this.routeSort.split(':');
-      options.lng = coords[0];
-      options.lat = coords[1];
+      options.lat = coords[0];
+      options.lng = coords[1];
       this.filtersOn = true;
     }
     // Add filters
@@ -183,7 +183,6 @@ export class RestaurantsComponent implements OnInit {
         currentLocation: this?.currentLocation,
         currentDistance: this?.currentDistance
       },
-      minWidth: '320px',
       panelClass: 'rd-filter-dialog'
     });
     dialogRef.afterClosed().subscribe(result => {

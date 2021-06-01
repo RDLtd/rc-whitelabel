@@ -61,7 +61,7 @@ export class SearchComponent implements OnInit {
   recentlyViewed: any[] = [];
   // User location
   currentLocation: any | undefined;
-  currentDistance = 1000;
+  currentDistance = 25;
   inRange = false;
 
   constructor(
