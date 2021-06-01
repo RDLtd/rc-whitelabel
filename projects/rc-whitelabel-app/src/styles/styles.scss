@@ -47,6 +47,7 @@ $font-weight-regular: 400;
 $font-weight-heavy: 500;
 $layout-header-height: 80px;
 $layout-max-width: 960px;
+$loaderSize: 48px;
 
 // Global resets
 * { box-sizing: border-box; }
@@ -72,9 +73,10 @@ a, a:active, a:focus {
 }
 
 // UTILS
+// ------------------------
 .rd-flex-spacer { flex: 1 0 auto; }
 .rd-hide { display: none !important; }
-.rd-show { opacity: 1!important;}
+.rd-show { opacity: 1 !important;}
 .rd-highlight { color: $col-accent}
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
 .rd-icon-restaurant { color: #23b6e0 !important;}
@@ -82,8 +84,41 @@ a, a:active, a:focus {
 .rd-icon-location, .rd-icon-my-location { color: $col-accent !important; fill: $col-accent
 }
 
+// LOAD COMPONENT
+// ------------------------
+rd-loader {
+  .rd-loader-container {
+    position: absolute;
+    top:0; left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .rd-loader-svg {
+    width: $loaderSize;
+    height: $loaderSize;
+    animation: spin .5s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite both;
+    //animation-delay: .5s;
+  }
+  .rd-loader-txt {
+    margin-top: 4px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: white;
+  }
+  // color variations
+  &.fill-accent {
+    fill: $col-accent;
+    .rd-loader-txt { color: $col-accent; }
+  }
+  &.fill-white { fill: white; }
+}
+
 // LAYOUT
-// ----------------
+// ------------------------
 main {
   margin: 0 auto;
   min-height: calc(99.9vh - #{$layout-header-height});
@@ -162,36 +197,8 @@ rd-footer {
   text-transform: uppercase;
 }
 
-// Loader
-// -----------------
-rd-loader {
-  position: absolute;
-  top:0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  .rdl-loader-txt {
-    font-size: 12px;
-    letter-spacing: 1px;
-    color: white;
-  }
-  &.fill-accent {
-    fill: $col-accent;
-    .rdl-loader-txt { color: #ff5720; }
-  }
-  &.fill-white { fill: white; }
-  div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-  }
-}
-
 // SEARCH
-// ----------------------------
+// ------------------------
 .rd-search-container {
   position: relative;
   z-index: 5;
@@ -347,7 +354,7 @@ rd-loader {
 }
 
 // RESULTS
-// ----------------------------------------
+// ------------------------
 .rd-results-container {
   position: relative;
   @include mq(med) {
@@ -454,31 +461,7 @@ rd-loader {
       overflow: hidden;
     }
   }
-  .rd-filter-btn {
-    position: fixed;
-    z-index: 20;
-    bottom: 5vh;
-    right: 48px;
-    width: auto;
-    margin: 0 0 0 50%;
-    transform: scale(0);
-    .mat-raised-button {
-      padding: 8px 20px;
-      border-radius: 32px;
-      line-height: 40px;
-      text-transform: uppercase;
-      font-weight: $font-weight-regular;
-      background: black;
-      color: white;
-      @include mat-elevation(10);
-      &.rd-btn-clear { background-color: #ff2600; }
-    }
-    .mat-button-wrapper {
-      display: flex;
-      align-items: center;
-    }
-    .mat-icon { margin-left: 8px; }
-  }
+
 }
 .rd-load-more {
   position: relative;
@@ -504,8 +487,32 @@ rd-loader {
   }
 }
 
-// Filters
+// FILTERS
 // ------------------------
+.rd-filter-btn {
+  z-index: 20;
+  position: fixed;
+  bottom: 0; right: 0;
+  transform: scale(0);
+  @include mq(med){}
+  .mat-raised-button {
+    margin: 0 48px 48px;
+    padding: 8px 20px;
+    border-radius: 32px;
+    line-height: 40px;
+    text-transform: uppercase;
+    font-weight: $font-weight-regular;
+    background: black;
+    color: white;
+    @include mat-elevation(10);
+    &.rd-btn-clear { background-color: #ff2600; }
+  }
+  .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .mat-icon { margin-left: 8px; }
+}
 .rd-filter-list-container {
   display: flex;
   flex-direction: column;
@@ -558,11 +565,9 @@ rd-loader {
   }
 }
 
-
 // ANIMATIONS
-// ----------------------------------------
+// ------------------------
 .scale-in-center {
-  -webkit-animation: scale-in-center 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
   animation: scale-in-center 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
 }
 @keyframes scale-in-center {
@@ -574,4 +579,7 @@ rd-loader {
     transform: scale(1);
     opacity: 1;
   }
+}
+@keyframes spin {
+  to { transform: scale(1) rotateZ(60deg); }
 }

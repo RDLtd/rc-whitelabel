@@ -1,7 +1,9 @@
 
 
-<rd-loader class="fill-white" [class.rd-hide]="isLoaded && config.channelLoaded">
-  {{ config.i18n?.Loading }}
+<rd-loader
+  class="fill-white"
+  [class.rd-hide]="isLoaded && config.channelLoaded"
+  [loadText]="config.i18n.Loading_data">
 </rd-loader>
 
 <!-- RESTAURANT RESULTS -->
@@ -35,23 +37,25 @@
       <img [src]="getFormattedImage(restaurant.image)" loading="lazy" [alt]="restaurant?.restaurant_name">
     </div>
   </div>
-  <div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
-    <button
-      *ngIf="!filtersOn && isLoaded"
-      mat-raised-button
-      (click)="openFilterOptions()">
-      {{ config.i18n.Sort_filter }}
-      <mat-icon>filter_list</mat-icon>
-    </button>
-    <button
-      class="rd-btn-clear"
-      *ngIf="filtersOn && isLoaded"
-      mat-raised-button
-      (click)="clearFilters()">
-      {{ config.i18n.Clear_filters }}: {{ routeFilter || 'distance' }}
-      <mat-icon>cancel</mat-icon>
-    </button>
-  </div>
+
+</div>
+
+<div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
+  <button
+    *ngIf="!filtersOn && isLoaded"
+    mat-raised-button
+    (click)="openFilterOptions()">
+    {{ config.i18n.Sort_filter }}
+    <mat-icon>filter_list</mat-icon>
+  </button>
+  <button
+    class="rd-btn-clear"
+    *ngIf="filtersOn && isLoaded"
+    mat-raised-button
+    (click)="clearFilters()">
+    {{ config.i18n.Clear_filters }}: {{ routeFilter || 'distance' }}
+    <mat-icon>cancel</mat-icon>
+  </button>
 </div>
 
 <div class="rd-load-more" *ngIf="nextRestaurants.length" @fadeInSlideUp>

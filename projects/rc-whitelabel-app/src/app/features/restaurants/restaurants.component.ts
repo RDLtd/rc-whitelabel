@@ -59,7 +59,6 @@ export class RestaurantsComponent implements OnInit {
       this.landmarks = res.landmarks;
       this.cuisines = res.cuisines;
       this.features = res.features;
-      this.showFilterBtn();
     });
     // Set user geo
     this.location.getUserGeoLocation().subscribe(pos => {
@@ -80,6 +79,7 @@ export class RestaurantsComponent implements OnInit {
     console.log('Search Params', params);
     this.data.loadRestaurantsByParams(params)
       .then((res: any) => {
+        setTimeout(() => { this.showFilterOptions = true; }, 2000);
         if (prefetch) {
           this.nextRestaurants = res;
         } else {
