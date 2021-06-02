@@ -408,7 +408,7 @@ rd-footer {
     justify-content: space-between;
     width: 100%;
     cursor: pointer;
-    transition: all .3s ease-out;
+    //transition: all .3s ease-out;
     background: #fff;
     @include mq(med) {
       padding: 8px 12px 12px;
