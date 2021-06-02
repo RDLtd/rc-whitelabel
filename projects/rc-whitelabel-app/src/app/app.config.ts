@@ -13,7 +13,8 @@ export class AppConfig {
   public isDefaultChannel = false;
   public language = localStorage.getItem('rd_language') || 'en';
   public channelLoaded = false;
-  public maxDistance = 1000;
+  public maxDistance = 25;
+  public resultsBatchTotal = 8;
 
   // Default branding
   public brand = {

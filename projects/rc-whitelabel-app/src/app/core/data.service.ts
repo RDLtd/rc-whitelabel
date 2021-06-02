@@ -102,6 +102,35 @@ export class DataService {
     });
   }
 
+  // Get distance to closest restaurant
+  getDistanceToNearestRestaurant(lat: number, lng: number): Promise<any> {
+    const params = {
+      offset: 0,
+      limit: 1,
+      lat,
+      lng,
+      testing: this.config.testMode
+    };
+    console.log('Nearest params', params);
+
+    return new Promise(async resolve => {
+      await this.api.getRestaurantsByParams(this.config.channelAccessCode, this.config.channelAPIKey, params)
+        .toPromise()
+        .then((res: any) => {
+          console.log(`User to nearest restaurant = ${res.restaurants[0].distance} km`);
+          if (!!res) {
+            resolve(res.restaurants[0].distance);
+          } else {
+            resolve(null);
+          }
+        })
+        .catch((error: any) => {
+          console.log('ERROR', error);
+        });
+    });
+
+  }
+
   // Restaurants
   loadRestaurants(): Promise <any> {
     return new Promise(async resolve => {

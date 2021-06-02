@@ -61,7 +61,6 @@ export class SearchComponent implements OnInit {
   recentlyViewed: any[] = [];
   // User location
   currentLocation: any | undefined;
-  currentDistance = 25;
   inRange = false;
 
   constructor(
@@ -77,19 +76,14 @@ export class SearchComponent implements OnInit {
 
     this.location.getUserGeoLocation().subscribe(pos => {
       this.currentLocation = pos;
-      // If we have the channel centre geo
-      // see how far away the user is
-      if (this.config.channelLoaded) {
-        this.currentDistance = this.location.getDistance(
-          this.config.channelLat,
-          this.config.channelLng,
-          this.currentLocation.coords.latitude,
-          this.currentLocation.coords.longitude
-        );
-        console.log('Users distance from channel centre', this.currentDistance.toFixed(2));
-      }
-      console.log('User location:', this.currentLocation);
-      this.inRange = this.currentDistance < this.config.maxDistance;
+      // console.log('Pos', pos);
+      // Find the nearest res
+      // How far away is the nearest restaurant to our user?
+      this.data.getDistanceToNearestRestaurant(pos.coords.latitude, pos.coords.longitude)
+        .then(d => {
+          this.inRange = d < this.config.maxDistance;
+          console.log(this.inRange);
+        });
     });
 
     // Restaurants

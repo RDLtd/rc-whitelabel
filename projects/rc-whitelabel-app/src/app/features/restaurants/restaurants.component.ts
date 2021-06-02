@@ -30,7 +30,6 @@ export class RestaurantsComponent implements OnInit {
   restaurants: any[] = [];
   nextRestaurants: any[] = [];
   cachedRestaurants: any[] = [];
-  batchTotal = 6;
 
   constructor(
     public dialog: MatDialog,
@@ -87,7 +86,7 @@ export class RestaurantsComponent implements OnInit {
           this.isLoaded = true;
           // If the last batch of results was our max limit
           // prefetch the next batch
-          if (res.length === this.batchTotal) {
+          if (res.length === this.config.resultsBatchTotal) {
            this.loadMoreRestaurants();
           }
         }
@@ -106,7 +105,7 @@ export class RestaurantsComponent implements OnInit {
     // Create params
     const options: {[key: string]: any } = {
       offset: this.restaurants.length,
-      limit: this.batchTotal
+      limit: this.config.resultsBatchTotal
     };
     // Add geolocation
     if (this.routeSort || sort) {
