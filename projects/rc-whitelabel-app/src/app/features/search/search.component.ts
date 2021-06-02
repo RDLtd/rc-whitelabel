@@ -86,9 +86,9 @@ export class SearchComponent implements OnInit {
           this.currentLocation.coords.latitude,
           this.currentLocation.coords.longitude
         );
-        console.log('d=', this.currentDistance);
+        console.log('Users distance from channel centre', this.currentDistance.toFixed(2));
       }
-      console.log('My location = ', this.currentLocation);
+      console.log('User location:', this.currentLocation);
       this.inRange = this.currentDistance < this.config.maxDistance;
     });
 
@@ -239,6 +239,4 @@ export class SearchComponent implements OnInit {
     this.searchReset();
     window.open(restaurant.spw, '_blank');
   }
-
-
 }

@@ -36,20 +36,19 @@ export class AppComponent implements OnInit {
         const inSession = this.local.get('rdSessionExpiry') > new Date().getTime();
         console.log('Live Session?', inSession);
         this.activatedRoute.queryParamMap
-          .subscribe((d: any) => {
-            const p = d.params;
-            console.log('Query Params', p);
+          .subscribe((data: any) => {
+            const params = data.params;
+            console.log('Url Params', params);
             // Are there any query params?
-            if (Object.keys(p).length) {
+            if (Object.keys(params).length) {
               // Is there an APIKey?
-              console.log('Query param API key present?', !!p.key);
-              if (!!p.key) {
+              if (!!params.key) {
                 console.log('Use API key from query param');
-                this.config.channelAPIKey = p.key;
-                this.config.channelAccessCode = p.code;
+                this.config.channelAPIKey = params.key;
+                this.config.channelAccessCode = params.code;
               } else {
                 if (inSession) {
-                  console.log('Use session Channel data');
+                  console.log('In session Channel data');
                   this.config.channelAPIKey = this.local.get('rdChannelApiKey');
                   this.config.channelAccessCode = this.local.get('rdChannelAccessCode');
                 } else {
@@ -58,14 +57,17 @@ export class AppComponent implements OnInit {
                 }
               }
               // Apply any additional params
-              if (!!p.lang) {
-                this.config.language = p.lang;
+              if (!!params.lang) {
+                this.config.language = params.lang;
               }
-              if (!!p.t) {
-                this.config.testMode = p.t;
+              // Testmode
+              if (!!params.t) {
+                this.config.testMode = params.t;
               }
-              if (!!p.d) {
-                this.config.maxDistance = p.d;
+              // Defines the max range (from channel centre)
+              // for a 'near me' option?
+              if (!!params.d) {
+                this.config.maxDistance = params.d;
               }
               this.data.setChannelInfo();
             }

@@ -221,7 +221,7 @@ rd-footer {
   width: 100vw;
   height: 100vh;
   background: white;
-  transition: all .2s ease-out;
+  transition: min-height 2s ease-out;
 
   @include mq(med) {
     @include mat-elevation(5);
@@ -230,10 +230,12 @@ rd-footer {
     left: calc(50% - 400px);
     border-radius: 12px;
     width: 800px;
-    background: rgba(white, .90);
-    min-height: 0;
+    min-height: 50vh;
     height: auto;
     margin: 0 auto 0;
+    &.loaded {
+      min-height: 0;
+    }
   }
 }
 .rd-search-autofill {
@@ -248,7 +250,7 @@ rd-footer {
   li ~ li { border-top: 1px solid #eee; }
   li  > a {
     transition: all .3s ease-out;
-    background-color: transparent;
+    background-color: white;
     outline: none;
     display: flex;
     align-items: center;
@@ -334,10 +336,7 @@ rd-footer {
   margin: 0;
   @include mq(small) {
     flex-direction: row;
-    align-items: stretch;
-    justify-content: stretch;
     > * { width: 100%; }
-
   }
 }
 .rd-quick-links {
@@ -370,12 +369,13 @@ rd-footer {
         align-items: center;
         padding: 6px 0;
         font-size: 16px;
-        color: $col-text;
+        color: #000;
         font-weight: $font-weight-lite;
-        transition: transform 200ms ease-out;
+        opacity: .6;
+        transition: opacity 200ms ease-out;
         &.rd-my-location svg { margin: 0 5px 0 -23px; height: 12px;}
         span:last-child { font-size: 11px; }
-        &:hover { transform: translateX(4px); }
+        &:hover { opacity: 1; }
       }
     }
   }
@@ -522,7 +522,11 @@ rd-footer {
   position: fixed;
   bottom: 0; right: 0;
   transform: scale(0);
-  @include mq(med){}
+  width: 100%;
+  text-align: center;
+  @include mq(med){
+    width: auto;
+  }
   .mat-raised-button {
     margin: 0 48px 48px;
     padding: 8px 20px;
