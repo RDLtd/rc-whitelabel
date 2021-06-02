@@ -106,6 +106,7 @@ rd-loader {
   .rd-loader-svg {
     width: $loaderSize;
     height: $loaderSize;
+    fill: $col-accent;
     animation: spin .5s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite both;
     //animation-delay: .5s;
   }
@@ -113,14 +114,19 @@ rd-loader {
     margin-top: 4px;
     font-size: 12px;
     letter-spacing: 1px;
-    color: white;
+    color: $col-accent;
   }
   // color variations
   &.fill-accent {
     fill: $col-accent;
     .rd-loader-txt { color: $col-accent; }
   }
-  &.fill-white { fill: white; }
+  &.fill-white {
+    @include mq(small) {
+      .rd-loader-svg {fill: white;}
+      .rd-loader-txt { color: white; }
+    }
+  }
 }
 
 // LAYOUT
