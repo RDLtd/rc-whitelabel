@@ -61,11 +61,12 @@ export class SearchComponent implements OnInit {
   recentlyViewed: any[] = [];
   // User location
   currentLocation: any | undefined;
+  currentDistance: any | undefined;
   inRange = false;
 
   constructor(
     private api: ApiService,
-    private localStorageService: LocalStorageService,
+    private storageService: LocalStorageService,
     private data: DataService,
     public config: AppConfig,
     public router: Router,
@@ -76,14 +77,15 @@ export class SearchComponent implements OnInit {
 
     this.location.getUserGeoLocation().subscribe(pos => {
       this.currentLocation = pos;
-      // console.log('Pos', pos);
-      // Find the nearest res
-      // How far away is the nearest restaurant to our user?
-      this.data.getDistanceToNearestRestaurant(pos.coords.latitude, pos.coords.longitude)
-        .then(d => {
-          this.inRange = d < this.config.maxDistance;
-          console.log(this.inRange);
-        });
+      if (!!this.storageService.getSession('userDistance')) {
+        this.inRange = this.storageService.getSession('userDistance') < this.config.maxDistance;
+      } else {
+        this.data.getDistanceToNearestRestaurant(pos.coords.latitude, pos.coords.longitude)
+          .then(d => {
+            this.storageService.setSession('userDistance', d);
+            this.inRange = this.currentDistance < this.config.maxDistance;
+          });
+      }
     });
 
     // Restaurants
@@ -106,7 +108,7 @@ export class SearchComponent implements OnInit {
     }, 0);
 
     // Grab recents from local storage
-    this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
+    this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
   }
 
   public async loadSummary(): Promise<any> {
@@ -131,7 +133,7 @@ export class SearchComponent implements OnInit {
   }
 
   getRecentlyViewed(): void {
-    this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
+    this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
   }
 
   doSearch(str: string): void {

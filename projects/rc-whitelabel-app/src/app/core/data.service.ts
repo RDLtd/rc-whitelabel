@@ -32,6 +32,7 @@ export class DataService {
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
 
+
   // Get user location
   async getGeoLocation(): Promise<any> {
     return new Promise(resolve => {
@@ -117,7 +118,7 @@ export class DataService {
       await this.api.getRestaurantsByParams(this.config.channelAccessCode, this.config.channelAPIKey, params)
         .toPromise()
         .then((res: any) => {
-          console.log(`User to nearest restaurant = ${res.restaurants[0].distance} km`);
+          console.log(`Nearest restaurant is ${res.restaurants[0].distance.toFixed(2)} km away`);
           if (!!res) {
             resolve(res.restaurants[0].distance);
           } else {

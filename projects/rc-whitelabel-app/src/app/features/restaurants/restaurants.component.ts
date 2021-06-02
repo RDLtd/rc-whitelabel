@@ -7,6 +7,7 @@ import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 import { LocationService } from '../../core/location.service';
 import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
+import { LocalStorageService } from '../../core/local-storage.service';
 
 @Component({
   selector: 'rd-restaurants',
@@ -30,6 +31,7 @@ export class RestaurantsComponent implements OnInit {
   restaurants: any[] = [];
   nextRestaurants: any[] = [];
   cachedRestaurants: any[] = [];
+  inRange = false;
 
   constructor(
     public dialog: MatDialog,
@@ -38,7 +40,8 @@ export class RestaurantsComponent implements OnInit {
     private api: ApiService,
     public data: DataService,
     public config: AppConfig,
-    private location: LocationService
+    private location: LocationService,
+    private storageService: LocalStorageService
   ) {  }
 
   ngOnInit(): void {
@@ -51,6 +54,7 @@ export class RestaurantsComponent implements OnInit {
       this.routeSort = params.get('sort');
       // get results
       this.loadRestaurants();
+      this.setUserDistance();
     });
     // load summary for filter/sort options
     this.data.loadSummarisedData().then((res: any) => {
@@ -59,16 +63,23 @@ export class RestaurantsComponent implements OnInit {
       this.cuisines = res.cuisines;
       this.features = res.features;
     });
-    // Set user geo
+  }
+
+  setUserDistance(): void {
     this.location.getUserGeoLocation().subscribe(pos => {
-      this.currentLocation = pos;
-      console.log('User geo', this.currentLocation);
-      this.currentDistance = this.location.getDistance(
-        this.config.channelLat,
-        this.config.channelLng,
-        this.currentLocation.coords.latitude,
-        this.currentLocation.coords.longitude
-      );
+      this.currentLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      // How far away is the nearest restaurant to our user?
+      if (!!this.storageService.getSession('userDistance')) {
+        this.inRange = this.storageService.getSession('userDistance') < this.config.maxDistance;
+      } else {
+        this.data.getDistanceToNearestRestaurant(this.currentLocation.lat, this.currentLocation.lng)
+          .then(d => {
+            this.currentDistance = d;
+            this.storageService.setSession('userDistance', d);
+            this.inRange = d < this.config.maxDistance;
+            console.log('New Distance: ' + d.toFixed(2));
+          });
+      }
     });
   }
 
@@ -180,7 +191,8 @@ export class RestaurantsComponent implements OnInit {
         cuisines: this.data.getCuisines(),
         landmarks: this.data.getLandmarks(),
         currentLocation: this?.currentLocation,
-        currentDistance: this?.currentDistance
+        currentDistance: this?.currentDistance,
+        inRange: this.inRange
       },
       panelClass: 'rd-filter-dialog'
     });

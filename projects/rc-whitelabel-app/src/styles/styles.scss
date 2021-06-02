@@ -438,9 +438,12 @@ rd-footer {
         font-weight: $font-weight-regular;
         text-transform: uppercase;
         margin: 0;
-        padding: 0;
+        padding: 8px 0;
         .rd-cuisine-location {
           line-height: 1.2;
+          > em {
+            font-style: normal;
+          }
         }
         .rd-distance {
           text-transform: lowercase;

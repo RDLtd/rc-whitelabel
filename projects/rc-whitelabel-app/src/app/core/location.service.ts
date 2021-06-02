@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,14 +10,17 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class LocationService {
   currentLocation: any;
   currentDistance: BehaviorSubject<any> = new BehaviorSubject<any>(0);
-  constructor() {  }
+  userDistance = this.currentDistance.asObservable();
+  constructor() { }
 
   getUserGeoLocation(): Observable<any> {
     return new Observable((observer) => {
       // Cached
       if (!!this.currentLocation) {
+        console.log('Cached location');
         observer.next(this.currentLocation);
       } else {
+        console.log('New location');
         // From browser
         if ('geolocation' in navigator) {
           navigator.geolocation.watchPosition((position: Position) => {

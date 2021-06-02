@@ -20,13 +20,27 @@ export class LocalStorageService {
     }
     return null;
   }
-
   set(key: string, value: any): boolean {
     if (this.isLocalStorageSupported) {
       this.localStorage.setItem(key, JSON.stringify(value));
       return true;
     }
     return false;
+  }
+  setSession(key: string, value: any): boolean {
+    console.log('Set session', value);
+    if (this.isLocalStorageSupported) {
+      this.sessionStorage.setItem(key, JSON.stringify(value));
+      return true;
+    }
+    return false;
+  }
+  getSession(key: string): any {
+    if (this.isLocalStorageSupported) {
+      // @ts-ignore
+      return JSON.parse(this.sessionStorage.getItem(key));
+    }
+    return null;
   }
 
   remove(key: string): boolean {

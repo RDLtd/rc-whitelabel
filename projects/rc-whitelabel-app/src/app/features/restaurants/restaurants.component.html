@@ -15,8 +15,8 @@
     <div class="rd-restaurant-detail">
       <h2>{{ restaurant?.restaurant_name }}</h2>
       <h3>
-        <span class="rd-cuisine-location"
-          [class.rd-highlight]="!!routeFilter">{{ restaurant?.restaurant_cuisine_1 | uppercase }}&nbsp;&nbsp;|&nbsp;&nbsp;{{
+        <span class="rd-cuisine-location"><em [class.rd-highlight]="!!routeFilter">
+          {{ restaurant?.restaurant_cuisine_1 | uppercase }}</em>&nbsp;&nbsp;|&nbsp;&nbsp;{{
           restaurant?.restaurant_address_2 | uppercase }}</span>
         <span class="rd-flex-spacer"></span>
         <ng-container *ngIf="restaurant?.distance && !!routeSort">
