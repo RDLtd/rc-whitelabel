@@ -40,8 +40,8 @@ export class DataService {
         const geo = {
           timestamp: new Date().getTime(),
           coords: {
-            latitude: this.config.channelLat,
-            longitude: this.config.channelLng
+            latitude: this.config.channel.latitude,
+            longitude: this.config.channel.longitude
           }
         };
         console.log('Geo test', geo);
@@ -108,7 +108,7 @@ export class DataService {
     console.log('Params', params);
 
     return new Promise(async resolve => {
-      await this.api.getRestaurantsByParams(this.config.channelAccessCode, this.config.channelAPIKey, params)
+      await this.api.getRestaurantsByParams(this.config.channel.accessCode, this.config.channel.apiKey, params)
         .toPromise()
         .then((res: any) => {
           console.log(res);
@@ -137,7 +137,7 @@ export class DataService {
     console.log('Nearest params', params);
 
     return new Promise(async resolve => {
-      await this.api.getRestaurantsByParams(this.config.channelAccessCode, this.config.channelAPIKey, params)
+      await this.api.getRestaurantsByParams(this.config.channel.accessCode, this.config.channel.apiKey, params)
         .toPromise()
         .then((res: any) => {
           console.log(`Nearest restaurant is ${res.restaurants[0].distance.toFixed(2)} km away`);
@@ -161,7 +161,7 @@ export class DataService {
         console.log(`${this.restaurants.length} restaurants loaded from CACHE`);
         resolve(this.restaurants);
       } else {
-        await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey,
+        await this.api.getRestaurantsFilter(this.config.channel.accessCode, this.config.channel.apiKey,
           {testing: this.config.testMode})
           .toPromise()
           .then((res: any) => {
@@ -189,8 +189,8 @@ export class DataService {
           cuisines: this.cuisines
         });
       } else {
-        await this.api.getRestaurantsSummary(this.config.channelAccessCode, this.config.channelAPIKey,
-          this.config.channelLat, this.config.channelLng)
+        await this.api.getRestaurantsSummary(this.config.channel.accessCode, this.config.channel.apiKey,
+          this.config.channel.latitude, this.config.channel.longitude)
           .toPromise()
           .then((res: any) => {
             console.log('Summary loaded from API');
@@ -267,33 +267,4 @@ export class DataService {
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
     // console.log(this.recentlyViewed);
   }
-
-
-
-  // setChannelInfo(): void {
-  //   const maxSessMinutes = 5;
-  //
-  //   // Create new session
-  //   if (this.config.channelAPIKey !== this.config.defaultApiKey) {
-  //     this.local.set('rdSessionExpiry', new Date().getTime() + (maxSessMinutes * 60000));
-  //     this.local.set('rdChannelAccessCode', this.config.channelAccessCode);
-  //     this.local.set('rdChannelApiKey', this.config.channelAPIKey);
-  //   }
-  //   // Load config
-  //   this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
-  //     .toPromise()
-  //     .then((data: any) => {
-  //       console.log('load channel', data.channel_info);
-  //       this.config.setChannel(data.channel_info);
-  //       this.api.getChannelLanguage(this.config.channelAccessCode, this.config.channelAPIKey, this.config.language)
-  //         .toPromise()
-  //         .then((language: any) => {
-  //           this.config.setLanguage( language.language[0]);
-  //         })
-  //         .catch((error: any) => console.log('Unable to read Language information!', error)
-  //         );
-  //     })
-  //     .catch((error: any) => console.log('Unable to read Channel information!', error)
-  //     );
-  // }
 }

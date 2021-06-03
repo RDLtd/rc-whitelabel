@@ -1,21 +1,36 @@
 ﻿import { environment } from '../environments/environment';
-
+export interface Brand {
+  logoPath: string;
+  colorBgdPrimary: string;
+  colorFgdPrimary: string;
+  colorSecondary: string;
+  colorAccent: string;
+}
+export interface Channel {
+  name: string;
+  domain: string;
+  accessCode: string;
+  apiKey: string;
+  latitude: number;
+  longitude: number;
+  language?: string;
+  brand?: Brand;
+}
 
 export class AppConfig {
-
-  // get the API base url from the environment...
+  // Api
   public readonly apiUrl = environment.API_URL;
   public testMode = environment.testMode;
-  public defaultApiKey = 'Hy56eD9h@*hhbqijsG$D19Bsshy$)jjj';
-
-  // These read from URL parameters
-  public channelAccessCode = 'RC0101';
-  public channelAPIKey = this.defaultApiKey;
-  public isDefaultChannel = false;
-  public language = localStorage.getItem('rd_language') || 'en';
-  public channelLoaded = false;
+  // Only show 'near me' search option if
+  // user is within maxDistance km range
   public maxDistance = 25;
+  // Number of restaurant returned in each batch
   public resultsBatchTotal = 8;
+  // Use browser settings
+  public language = window.navigator.language.substr(0, 2) || 'en';
+  public channel!: Channel;
+  public channelLoaded = false;
+  public i18n: any = {};
 
   // Default branding
   public brand = {
@@ -26,11 +41,6 @@ export class AppConfig {
     secondaryColor: '#ff5720',
     accentColor: '#ade3e3'
   };
-  public channelName = '';
-  public channelLat = 0;
-  public channelLng = 0;
-  public channelLanguage = 'en';
-  public i18n: any = {};
 
   setLanguage( obj: any): void {
     for (const objKey in obj) {
@@ -41,20 +51,24 @@ export class AppConfig {
       }
     }
   }
+
   setChannelConfig(data: any): void {
-    console.log('Set config');
-    this.channelAccessCode = data.access_code;
-    this.channelAPIKey = data.api_key;
-    this.channelLat = data.latitude;
-    this.channelLng = data.longitude;
-    this.channelName = data.name;
-    this.channelLanguage = data.language;
-    // Channel branding
-    this.brand.logoUrl = data.logo;
-    this.brand.primaryBgdColor = data.primaryBgColor;
-    this.brand.primaryFgdColor = data.primaryFgColor;
-    this.brand.secondaryColor = data.secondaryColor;
-    this.brand.name = data.name;
+    this.channel = {
+      domain: data.domain,
+      name: data.name,
+      accessCode: data.access_code,
+      apiKey: data.api_key,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      language: data.language,
+      brand: {
+        logoPath: data.logo,
+        colorBgdPrimary: data.primaryBgColor,
+        colorFgdPrimary: data.primaryFgColor,
+        colorSecondary: data.secondaryColor,
+        colorAccent: data.accentColor
+      }
+    };
     console.log('Channel Loaded!!!');
     this.channelLoaded = true;
   }

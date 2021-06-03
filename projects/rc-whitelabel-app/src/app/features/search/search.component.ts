@@ -115,8 +115,8 @@ export class SearchComponent implements OnInit {
 
   public async loadSummary(): Promise<any> {
     if (!this.data.getCuisines().length) {
-      const promise = await this.api.getRestaurantsSummary(this.config.channelAccessCode, this.config.channelAPIKey,
-        this.config.channelLat, this.config.channelLng)
+      const promise = await this.api.getRestaurantsSummary(this.config.channel.accessCode, this.config.channel.apiKey,
+        this.config.channel.latitude, this.config.channel.longitude)
         .toPromise()
         .then((res: any) => {
           console.log('S', res);

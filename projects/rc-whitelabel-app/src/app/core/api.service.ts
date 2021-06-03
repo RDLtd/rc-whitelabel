@@ -18,37 +18,6 @@ export class ApiService {
       {channel_domain});
   }
 
-  // Administration
-  // tslint:disable-next-line:variable-name
-  getChannelInfo(channel_access_code: string, channel_access_api_key: string): any {
-    return this.http.post(this.config.apiUrl + '/channel/info',
-      {channel_access_code, channel_access_api_key});
-  }
-
-  // tslint:disable-next-line:variable-name
-  getChannelData(channel_access_code: string, channel_access_api_key: string): any {
-    return this.http.post(this.config.apiUrl + '/channel/data',
-      {channel_access_code, channel_access_api_key});
-  }
-
-  // tslint:disable-next-line:variable-name
-  getChannelLogs(channel_access_code: string, channel_access_api_key: string, log_records: string): any {
-    return this.http.post(this.config.apiUrl + '/channel/logs',
-      {channel_access_code, channel_access_api_key, log_records});
-  }
-
-  // tslint:disable-next-line:variable-name
-  getChannelUsage(channel_access_code: string, channel_access_api_key: string, start: string, stop: string): any {
-    return this.http.post(this.config.apiUrl + '/channel/usage',
-      {channel_access_code, channel_access_api_key, start, stop});
-  }
-
-  // tslint:disable-next-line:variable-name
-  getChannelLandmarks(channel_access_code: string, channel_access_api_key: string): any {
-    return this.http.post(this.config.apiUrl + '/channel/landmarks',
-      {channel_access_code, channel_access_api_key});
-  }
-
   // tslint:disable-next-line:variable-name
   getChannelLanguage(channel_access_code: string, channel_access_api_key: string, language: string): any {
     return this.http.post(this.config.apiUrl + '/channel/language',
@@ -73,15 +42,6 @@ export class ApiService {
         channel_access_api_key,
         params
       });
-  }
-
-
-
-  // tslint:disable-next-line:variable-name
-  getRestaurants(channel_access_code: string, channel_access_api_key: string, params: string,
-                 lat: number, lng: number): any {
-    return this.http.post(this.config.apiUrl + '/channel/restaurants',
-      {channel_access_code, channel_access_api_key, params, lat, lng, testing: this.config.testMode});
   }
 
   // tslint:disable-next-line:variable-name

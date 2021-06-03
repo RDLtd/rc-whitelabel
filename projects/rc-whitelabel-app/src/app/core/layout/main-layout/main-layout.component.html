@@ -1,9 +1,8 @@
 
 <header
   *ngIf="config.channelLoaded"
-  [class.rc-default]="config.isDefaultChannel"
   [class.rd-hideHeader]="hideHeader"
-  [ngStyle]="{'background-color': config.brand?.primaryBgdColor, 'color': config.brand?.primaryFgdColor }">
+  [ngStyle]="{'background-color': config.channel.brand?.colorBgdPrimary, 'color': config.brand?.primaryFgdColor }">
   <rd-header></rd-header>
 </header>
 
