@@ -152,7 +152,7 @@ export class RestaurantsComponent implements OnInit {
 
     } else {
       this.restaurants = this.cachedRestaurants;
-      this.restaurants = this.sortByDistance(this.config.channelLat, this.config.channelLng);
+      this.restaurants = this.sortByDistance(this.config.channel.latitude, this.config.channel.longitude);
     }
   }
 
