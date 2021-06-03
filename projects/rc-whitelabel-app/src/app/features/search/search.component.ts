@@ -75,15 +75,17 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // Observe user location
     this.location.getUserGeoLocation().subscribe(pos => {
       this.currentLocation = pos;
       if (!!this.storageService.getSession('userDistance')) {
+        // console.log('POS', this.storageService.getSession('userDistance') < this.config.maxDistance);
         this.inRange = this.storageService.getSession('userDistance') < this.config.maxDistance;
       } else {
         this.data.getDistanceToNearestRestaurant(pos.coords.latitude, pos.coords.longitude)
           .then(d => {
             this.storageService.setSession('userDistance', d);
-            this.inRange = this.currentDistance < this.config.maxDistance;
+            this.inRange = d < this.config.maxDistance;
           });
       }
     });

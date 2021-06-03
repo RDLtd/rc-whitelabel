@@ -12,6 +12,12 @@ export class ApiService {
               private config: AppConfig) {
   }
 
+  // tslint:disable-next-line:variable-name
+  getChannelByDomain(channel_domain: string): any {
+    return this.http.post(this.config.apiUrl + '/channel/domain',
+      {channel_domain});
+  }
+
   // Administration
   // tslint:disable-next-line:variable-name
   getChannelInfo(channel_access_code: string, channel_access_api_key: string): any {

@@ -1,5 +1,6 @@
 ﻿import { environment } from '../environments/environment';
 
+
 export class AppConfig {
 
   // get the API base url from the environment...
@@ -40,25 +41,21 @@ export class AppConfig {
       }
     }
   }
-  setChannel( data: any ): boolean {
-    // console.log('Set Channel', data);
+  setChannelConfig(data: any): void {
+    console.log('Set config');
+    this.channelAccessCode = data.access_code;
+    this.channelAPIKey = data.api_key;
     this.channelLat = data.latitude;
     this.channelLng = data.longitude;
     this.channelName = data.name;
     this.channelLanguage = data.language;
-    // Branding
+    // Channel branding
     this.brand.logoUrl = data.logo;
     this.brand.primaryBgdColor = data.primaryBgColor;
     this.brand.primaryFgdColor = data.primaryFgColor;
     this.brand.secondaryColor = data.secondaryColor;
     this.brand.name = data.name;
-    this.isDefaultChannel = (this.brand.name === 'Member Restaurant Directory');
-    console.log('Default Channel', this.brand);
-
-    if (!this.language) {
-      this.language = this.channelLanguage;
-    }
+    console.log('Channel Loaded!!!');
     this.channelLoaded = true;
-    return true;
   }
 }

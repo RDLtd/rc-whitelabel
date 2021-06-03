@@ -4,7 +4,6 @@ import { ApiService } from './core/api.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DataService } from './core/data.service';
 import { filter } from 'rxjs/operators';
-import { LocalStorageService } from './core/local-storage.service';
 
 @Component({
   selector: 'rd-root',
@@ -12,6 +11,9 @@ import { LocalStorageService } from './core/local-storage.service';
 })
 
 export class AppComponent implements OnInit {
+  location: Location | undefined;
+  channelData: any | undefined;
+  inSession = false;
   title = 'rc-whitelabel-app';
   p: any;
 
@@ -20,9 +22,10 @@ export class AppComponent implements OnInit {
     public config: AppConfig,
     private activatedRoute: ActivatedRoute,
     private data: DataService,
-    private route: Router,
-    private local: LocalStorageService
-  ) {
+    private route: Router) {
+
+    this.location = window.location;
+
   }
 
   ngOnInit(): void {
@@ -31,60 +34,42 @@ export class AppComponent implements OnInit {
     this.route.events
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(() => {
-        console.log('Route event fired');
-        // Check for on-going session
-        const inSession = this.local.get('rdSessionExpiry') > new Date().getTime();
-        console.log('Live Session?', inSession);
         this.activatedRoute.queryParamMap
           .subscribe((data: any) => {
             const params = data.params;
-            console.log('Url Params', params);
             // Are there any query params?
             if (Object.keys(params).length) {
-              // Is there an APIKey?
-              if (!!params.key) {
-                console.log('Use API key from query param');
-                this.config.channelAPIKey = params.key;
-                this.config.channelAccessCode = params.code;
-              } else {
-                if (inSession) {
-                  console.log('In session Channel data');
-                  this.config.channelAPIKey = this.local.get('rdChannelApiKey');
-                  this.config.channelAccessCode = this.local.get('rdChannelAccessCode');
-                } else {
-                  // We can abort here and show a 404
-                  console.log('No valid API key in parameters and no valid session!');
-                }
-              }
-              // Apply any additional params
-              if (!!params.lang) {
-                this.config.language = params.lang;
-              }
-              // Testmode
-              if (!!params.t) {
-                this.config.testMode = params.t;
-              }
-              // Defines the max range (from channel centre)
-              // for a 'near me' option?
-              if (!!params.d) {
-                this.config.maxDistance = params.d;
-              }
-              this.data.setChannelInfo();
+              console.log('URL PARAMS:', params);
+              // Override default language
+              if (!!params.lang) { this.config.language = params.lang; }
+              // Trigger testmode
+              if (!!params.t) { this.config.testMode = params.t; }
+              // Override the user distance ot
+              // range in which to offer a 'near me' search option
+              if (!!params.d) { this.config.maxDistance = params.d; }
+            } else {
+              console.log('No URL params supplied!');
             }
-            else {
-              console.log('No query params');
-              if (inSession) {
-                this.config.channelAPIKey = this.local.get('rdChannelApiKey');
-                this.config.channelAccessCode = this.local.get('rdChannelAccessCode');
-                console.log('Load cached Channel');
-                this.data.setChannelInfo();
-              }
-              else {
-                console.log('Load RC default channel');
-                this.data.setChannelInfo();
-              }
+            // If it's a new session
+            if (!this.inSession) {
+              this.data.loadChannelConfig('directory.restaurantcollective.org.uk')
+                .then((res: any) => {
+                  this.channelData = res.channel_info;
+                  console.log(this.channelData);
+                  this.config.setChannelConfig(this.channelData);
+                  this.data.loadTranslations(
+                    this.channelData.access_code,
+                    this.channelData.api_key,
+                    this.config.language || this.channelData.language)
+                    .then((obj: any) => {
+                      this.config.setLanguage(obj);
+                    });
+                });
+              this.inSession = true;
+            } else {
+              console.log('In session!!!');
             }
           });
-        });
-    }
+    });
+  }
 }

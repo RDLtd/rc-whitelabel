@@ -32,7 +32,6 @@ export class DataService {
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
 
-
   // Get user location
   async getGeoLocation(): Promise<any> {
     return new Promise(resolve => {
@@ -68,6 +67,29 @@ export class DataService {
   }
   async getUserLocation(): Promise<any> {
     return await this.getGeoLocation();
+  }
+
+  loadChannelConfig(domain: string): Promise<any> {
+    return new Promise(async resolve => {
+      await this.api.getChannelByDomain(domain)
+        .toPromise()
+        .then((res: any) => {
+          resolve(res);
+        });
+    });
+  }
+
+  // Translations
+  loadTranslations(code: string, key: string, lang: string): Promise<any> {
+    return new Promise( async resolve => {
+      await this.api.getChannelLanguage(code, key, lang)
+        .toPromise()
+        .then((res: any) => {
+          resolve(res.language[0]);
+        })
+        .catch((error: any) => console.log('Unable to read Language information!', error)
+        );
+    });
   }
 
   // Get restaurants
@@ -219,7 +241,7 @@ export class DataService {
     this.cuisines.sort((a, b) => {
       return b.total - a.total;
     });
-    console.log(this.cuisines);
+    // console.log(this.cuisines);
   }
   // recently viewed
   getRecentlyViewed(): any[] {
@@ -246,30 +268,32 @@ export class DataService {
     // console.log(this.recentlyViewed);
   }
 
-  setChannelInfo(): void {
-    const maxSessMinutes = 5;
-    // Create new session
-    if (this.config.channelAPIKey !== this.config.defaultApiKey) {
-      this.local.set('rdSessionExpiry', new Date().getTime() + (maxSessMinutes * 60000));
-      this.local.set('rdChannelAccessCode', this.config.channelAccessCode);
-      this.local.set('rdChannelApiKey', this.config.channelAPIKey);
-    }
-    // Load config
-    // Would like to move this to data service
-    this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
-      .toPromise()
-      .then((data: any) => {
-        console.log('load channel', data.channel_info);
-        this.config.setChannel(data.channel_info);
-        this.api.getChannelLanguage(this.config.channelAccessCode, this.config.channelAPIKey, this.config.language)
-          .toPromise()
-          .then((language: any) => {
-            this.config.setLanguage( language.language[0]);
-          })
-          .catch((error: any) => console.log('Unable to read Language information!', error)
-          );
-      })
-      .catch((error: any) => console.log('Unable to read Channel information!', error)
-      );
-  }
+
+
+  // setChannelInfo(): void {
+  //   const maxSessMinutes = 5;
+  //
+  //   // Create new session
+  //   if (this.config.channelAPIKey !== this.config.defaultApiKey) {
+  //     this.local.set('rdSessionExpiry', new Date().getTime() + (maxSessMinutes * 60000));
+  //     this.local.set('rdChannelAccessCode', this.config.channelAccessCode);
+  //     this.local.set('rdChannelApiKey', this.config.channelAPIKey);
+  //   }
+  //   // Load config
+  //   this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
+  //     .toPromise()
+  //     .then((data: any) => {
+  //       console.log('load channel', data.channel_info);
+  //       this.config.setChannel(data.channel_info);
+  //       this.api.getChannelLanguage(this.config.channelAccessCode, this.config.channelAPIKey, this.config.language)
+  //         .toPromise()
+  //         .then((language: any) => {
+  //           this.config.setLanguage( language.language[0]);
+  //         })
+  //         .catch((error: any) => console.log('Unable to read Language information!', error)
+  //         );
+  //     })
+  //     .catch((error: any) => console.log('Unable to read Channel information!', error)
+  //     );
+  // }
 }
