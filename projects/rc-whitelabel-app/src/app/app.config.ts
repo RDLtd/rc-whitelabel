@@ -1,6 +1,7 @@
 ﻿import { environment } from '../environments/environment';
 export interface Brand {
-  logoPath: string;
+  logo: string;
+  bgdImage: string;
   colorBgdPrimary: string;
   colorFgdPrimary: string;
   colorSecondary: string;
@@ -32,16 +33,6 @@ export class AppConfig {
   public channelLoaded = false;
   public i18n: any = {};
 
-  // Default branding
-  public brand = {
-    name: '',
-    logoUrl: 'assets/images/rc-logo-final.svg',
-    primaryBgdColor: '#00a69b',
-    primaryFgdColor: '#fff',
-    secondaryColor: '#ff5720',
-    accentColor: '#ade3e3'
-  };
-
   setLanguage( obj: any): void {
     for (const objKey in obj) {
       if (obj.hasOwnProperty(objKey)) {
@@ -62,7 +53,8 @@ export class AppConfig {
       longitude: data.longitude,
       language: data.language,
       brand: {
-        logoPath: data.logo,
+        logo: data.logo,
+        bgdImage: data.bgd || '../assets/images/bgd1.jpg',
         colorBgdPrimary: data.primaryBgColor,
         colorFgdPrimary: data.primaryFgColor,
         colorSecondary: data.secondaryColor,
