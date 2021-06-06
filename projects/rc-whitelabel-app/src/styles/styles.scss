@@ -144,12 +144,14 @@ main {
   }
 }
 .rd-cover {
-  position: fixed;
-  top:0; left: 0;
-  z-index: 0;
-  width: 100vw;
-  height: 100vh;
+  display: none;
   @include mq(med){
+    display: block;
+    position: fixed;
+    top:0; left: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
     background-image: url("../assets/images/bgd1.jpg");
     background-size: cover;
   }
@@ -223,15 +225,17 @@ rd-footer {
 // ------------------------
 .rd-search-container {
   position: relative ;
-  z-index: 5;
+  z-index: 0;
   width: 100vw;
-  height: 100vh;
+  height: auto;
+  overflow: auto;
   background: white;
   transition: min-height 1s ease-out;
 
   @include mq(med) {
     @include mat-elevation(5);
     position: absolute;
+    z-index: 5;
     top: 15vh;
     left: calc(50% - 400px);
     border-radius: 12px;

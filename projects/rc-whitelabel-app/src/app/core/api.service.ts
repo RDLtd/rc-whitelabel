@@ -23,7 +23,12 @@ export class ApiService {
     return this.http.post(this.config.apiUrl + '/channel/language',
       {channel_access_code, channel_access_api_key, language});
   }
-
+  // tslint:disable-next-line:variable-name
+  getRestaurantsNear(channel_access_code: string, channel_access_api_key: string,
+                     lat: number, lng: number, distance: number): any {
+    return this.http.post(this.config.apiUrl + '/channel/restaurants/near',
+      {channel_access_code, channel_access_api_key, lat, lng, distance, testing: this.config.testMode});
+  }
 
   // Restaurant Detail
   // tslint:disable-next-line:variable-name

@@ -19,9 +19,6 @@ export class DataService {
   private landmarks: any[] = [];
   private features: any[] = [];
 
-  // User
-  private userLocation: any;
-
   constructor(
     private api: ApiService,
     private local: LocalStorageService,
@@ -29,44 +26,8 @@ export class DataService {
     private config: AppConfig,
     private router: Router
   ) {
-    this.recentlyViewed = this.local.get('rdRecentlyViewed');
-  }
 
-  // Get user location
-  async getGeoLocation(): Promise<any> {
-    return new Promise(resolve => {
-      // Testing
-      if (this.config.testMode) {
-        const geo = {
-          timestamp: new Date().getTime(),
-          coords: {
-            latitude: this.config.channel.latitude,
-            longitude: this.config.channel.longitude
-          }
-        };
-        console.log('Geo test', geo);
-        resolve(geo);
-      } else
-      // check cache
-      if (!!this.userLocation) {
-        console.log('Geo local');
-        resolve(this.userLocation);
-      } else {
-        // Fetch from browser
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(position => {
-            console.log('Geo remote', position);
-            this.userLocation = position;
-            resolve(this.userLocation);
-          });
-        } else {
-          console.log('Geolocation is not supported by this browser, setting channel default location');
-        }
-      }
-    });
-  }
-  async getUserLocation(): Promise<any> {
-    return await this.getGeoLocation();
+    this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
 
   loadChannelConfig(domain: string): Promise<any> {
@@ -105,13 +66,13 @@ export class DataService {
       testing: this.config.testMode
     };
 
-    console.log('Params', params);
+    // console.log('Params', params);
 
     return new Promise(async resolve => {
       await this.api.getRestaurantsByParams(this.config.channel.accessCode, this.config.channel.apiKey, params)
         .toPromise()
         .then((res: any) => {
-          console.log(res);
+          // console.log(res);
           if (!!res) {
             resolve(res.restaurants);
           } else {
@@ -122,58 +83,6 @@ export class DataService {
           console.log('ERROR', error);
           this.router.navigate(['/error']);
         });
-    });
-  }
-
-  // Get distance to closest restaurant
-  getDistanceToNearestRestaurant(lat: number, lng: number): Promise<any> {
-    const params = {
-      offset: 0,
-      limit: 1,
-      lat,
-      lng,
-      testing: this.config.testMode
-    };
-    console.log('Nearest params', params);
-
-    return new Promise(async resolve => {
-      await this.api.getRestaurantsByParams(this.config.channel.accessCode, this.config.channel.apiKey, params)
-        .toPromise()
-        .then((res: any) => {
-          console.log(`Nearest restaurant is ${res.restaurants[0].distance.toFixed(2)} km away`);
-          if (!!res) {
-            resolve(res.restaurants[0].distance);
-          } else {
-            resolve(null);
-          }
-        })
-        .catch((error: any) => {
-          console.log('ERROR', error);
-        });
-    });
-
-  }
-
-  // Restaurants
-  loadRestaurants(): Promise <any> {
-    return new Promise(async resolve => {
-      if (this.restaurants.length) {
-        console.log(`${this.restaurants.length} restaurants loaded from CACHE`);
-        resolve(this.restaurants);
-      } else {
-        await this.api.getRestaurantsFilter(this.config.channel.accessCode, this.config.channel.apiKey,
-          {testing: this.config.testMode})
-          .toPromise()
-          .then((res: any) => {
-            this.restaurants = res.restaurants;
-            console.log(`${this.restaurants.length} restaurants loaded from API`);
-            resolve(this.restaurants);
-          })
-          .catch((error: any) => {
-            console.log('ERROR', error);
-            this.router.navigate(['/error']);
-          });
-      }
     });
   }
 
@@ -219,12 +128,12 @@ export class DataService {
   getLandmarks(): any[] {
     return this.landmarks;
   }
-  getFeatures(): any[] {
-    return this.features;
-  }
-  getSearchRests(): any[] {
-    return this.searchRests;
-  }
+  // getFeatures(): any[] {
+  //   return this.features;
+  // }
+  // getSearchRests(): any[] {
+  //   return this.searchRests;
+  // }
   setCuisines(arr: any): void {
     let i = arr.length;
     let c;

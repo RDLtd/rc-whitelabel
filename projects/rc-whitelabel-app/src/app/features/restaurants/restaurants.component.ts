@@ -7,7 +7,6 @@ import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 import { LocationService } from '../../core/location.service';
 import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
-import { LocalStorageService } from '../../core/local-storage.service';
 
 @Component({
   selector: 'rd-restaurants',
@@ -17,9 +16,6 @@ import { LocalStorageService } from '../../core/local-storage.service';
 export class RestaurantsComponent implements OnInit {
 
   isLoaded = false;
-  currentLocation: any | undefined;
-  currentDistance: number | undefined;
-  // filters
   showFilterOptions = false;
   filtersOn = false;
   routeFilter: any;
@@ -27,11 +23,10 @@ export class RestaurantsComponent implements OnInit {
   landmarks: any[] = [];
   cuisines: any[] = [];
   features: any[] = [];
-  // Results
   restaurants: any[] = [];
   nextRestaurants: any[] = [];
-  cachedRestaurants: any[] = [];
-  inRange = false;
+  userPosition: any | undefined;
+  loadText: string;
 
   constructor(
     public dialog: MatDialog,
@@ -40,22 +35,23 @@ export class RestaurantsComponent implements OnInit {
     private api: ApiService,
     public data: DataService,
     public config: AppConfig,
-    private location: LocationService,
-    private storageService: LocalStorageService
-  ) {  }
+    private location: LocationService
+  ) {
+    this.loadText = this.config.i18n.Loading_data;
+  }
 
   ngOnInit(): void {
 
-    // Extract url params
+    // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.isLoaded = false;
       // console.log('Param changed', params);
       this.routeFilter = params.get('filter');
       this.routeSort = params.get('sort');
-      // get results
+      // Get restaurants
       this.loadRestaurants();
-      this.setUserDistance();
     });
+
     // load summary for filter/sort options
     this.data.loadSummarisedData().then((res: any) => {
       // console.log('Summary loaded', res);
@@ -63,30 +59,18 @@ export class RestaurantsComponent implements OnInit {
       this.cuisines = res.cuisines;
       this.features = res.features;
     });
-  }
 
-  setUserDistance(): void {
-    this.location.getUserGeoLocation().subscribe(pos => {
-      this.currentLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      // How far away is the nearest restaurant to our user?
-      if (!!this.storageService.getSession('userDistance')) {
-        this.inRange = this.storageService.getSession('userDistance') < this.config.maxDistance;
-      } else {
-        this.data.getDistanceToNearestRestaurant(this.currentLocation.lat, this.currentLocation.lng)
-          .then(d => {
-            this.currentDistance = d;
-            this.storageService.setSession('userDistance', d);
-            this.inRange = d < this.config.maxDistance;
-            console.log('New Distance: ' + d.toFixed(2));
-          });
-      }
+    // Observe user position
+    this.location.userLocationObs.subscribe((userPos) => {
+      // console.log('Rest UserPos', userPos);
+      this.userPosition = userPos;
     });
   }
 
   // Load restaurants based on search params
   loadRestaurants(prefetch: boolean = false): void {
     const params = this.getSearchParams();
-    console.log('Search Params', params);
+    // console.log('Search Params', params);
     this.data.loadRestaurantsByParams(params)
       .then((res: any) => {
         setTimeout(() => { this.showFilterOptions = true; }, 1500);
@@ -103,96 +87,56 @@ export class RestaurantsComponent implements OnInit {
         }
       });
   }
-  // Prefetch the next batch
+
+  // Prefetch the next batch of restaurants
   loadMoreRestaurants(): void {
     if (this.nextRestaurants.length) {
+      // Extend the array
       this.restaurants.push(...this.nextRestaurants);
+      // Reset
       this.nextRestaurants = [];
     }
     this.loadRestaurants(true);
   }
 
+  // Return a search parameter object
   getSearchParams(sort?: string, cuisine?: string): any {
-    // Create params
+    this.loadText = this.config.i18n.Loading_data;
+    // Initialise object
     const options: {[key: string]: any } = {
       offset: this.restaurants.length,
       limit: this.config.resultsBatchTotal
     };
-    // Add geolocation
+    // Add geo coords
     if (this.routeSort || sort) {
       const coords = this.routeSort.split(':');
       options.lat = coords[0];
       options.lng = coords[1];
+      this.loadText = this.config.i18n.Sort_by_location;
       this.filtersOn = true;
     }
-    // Add filters
+    // Add filter
     if ( this.routeFilter || cuisine ) {
       options.filter = 'cuisine';
       options.filterText = this.routeFilter || cuisine;
+      // Set text for loader
+      // Refreshing the page has issues loading
+      // the i18n so make sure we have it first
+      if (!!this.config.i18n.Filtered_by) {
+        this.loadText = this.config.i18n.Filtered_by + ': ' + options.filterText;
+      }
       this.filtersOn = true;
     }
     return options;
   }
 
-  // Check for route params
-  updateRestaurantResults(sort?: string, filter?: string): void {
-
-    this.isLoaded = false;
-
-    if (this.routeSort || sort) {
-      const coords = this.routeSort.split(':');
-      console.log('Sort distance:', coords);
-      this.restaurants = this.sortByDistance(coords[0], coords[1]);
-      this.filtersOn = true;
-
-    } else if ( this.routeFilter || filter ) {
-      this.restaurants = this.cachedRestaurants;
-      this.restaurants = this.filterByCuisine(this.routeFilter);
-      this.filtersOn = true;
-
-    } else {
-      this.restaurants = this.cachedRestaurants;
-      this.restaurants = this.sortByDistance(this.config.channel.latitude, this.config.channel.longitude);
-    }
-  }
-
-  filterByCuisine(cuisine: string): any {
-    let i = this.restaurants.length; let r;
-    const filteredRests = [];
-    while (i--) {
-      r = this.restaurants[i];
-      if (r.restaurant_cuisine_1.toUpperCase().includes(cuisine.toUpperCase())) {
-        filteredRests.push(r);
-      }
-    }
-    this.restaurants = filteredRests;
-    this.isLoaded = true;
-    return filteredRests;
-  }
-
-  sortByDistance(lat: number, lng: number): any[] {
-    const sortedRestaurants = this.cachedRestaurants;
-    let i = sortedRestaurants.length; let s;
-    while (i--) {
-      s = sortedRestaurants[i];
-      s.distance = this.location.getDistance(s.restaurant_lat, s.restaurant_lng, lat, lng);
-    }
-    sortedRestaurants.sort((a, b) => {
-      return a.distance - b.distance;
-    });
-    // console.log('Dist:', sortedRestaurants);
-    this.isLoaded = true;
-    return sortedRestaurants;
-  }
-
+  // Sort and filter dialog
   openFilterOptions(): void {
     const dialogRef = this.dialog.open(FilterOptionsDialogComponent, {
       data: {
         cuisines: this.data.getCuisines(),
         landmarks: this.data.getLandmarks(),
-        currentLocation: this?.currentLocation,
-        currentDistance: this?.currentDistance,
-        inRange: this.inRange
+        userPosition: this.userPosition
       },
       panelClass: 'rd-filter-dialog'
     });
@@ -202,18 +146,19 @@ export class RestaurantsComponent implements OnInit {
       if (!!result) {
         if (result.type === 'filter') {
           this.routeFilter = result.value;
-          this.router.navigate(['/restaurants', result.value]);
+          this.router.navigate(['/restaurants', result.value]).then();
         } else if (result.type === 'sort') {
           this.routeSort = `${result.lat}:${result.lng}`;
-          this.router.navigate(['/restaurants/nearest', this.routeSort]);
+          this.router.navigate(['/restaurants/nearest', this.routeSort]).then();
         }
-        // this.filtersOn = true;
       } else {
         this.isLoaded = true;
       }
     });
   }
 
+  // If we have multiple cuisine types
+  // or multiple POIs show filter options
   showFilterBtn(): void {
     if (this.cuisines.length > 1 || this.landmarks.length) {
       this.showFilterOptions = true;
@@ -221,17 +166,16 @@ export class RestaurantsComponent implements OnInit {
       console.log('No filters available');
     }
   }
-
   clearFilters(): void {
-    this.router.navigate(['/restaurants']);
+    this.router.navigate(['/restaurants']).then();
     this.filtersOn = false;
     this.showFilterOptions = false;
     this.showFilterBtn();
   }
-
+  // Launch SPW in new window/tab
+  // and and add to recently viewed
   openSPW(restaurant: any): void {
-    // Add to recents
-    console.log(restaurant);
+    // console.log(restaurant);
     this.data.setRecentlyViewed(restaurant);
     window.open(restaurant.restaurant_spw_url, '_target');
   }

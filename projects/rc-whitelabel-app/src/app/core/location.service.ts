@@ -1,54 +1,45 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ApiService } from './api.service';
+import { AppConfig } from '../app.config';
 
 @Injectable({
   providedIn: 'root'
 })
 
-
 export class LocationService {
-  currentLocation: any;
-  currentDistance: BehaviorSubject<any> = new BehaviorSubject<any>(0);
-  userDistance = this.currentDistance.asObservable();
-  constructor() { }
 
-  getUserGeoLocation(): Observable<any> {
-    return new Observable((observer) => {
-      // Cached
-      if (!!this.currentLocation) {
-        console.log('Cached location');
-        observer.next(this.currentLocation);
-      } else {
-        console.log('New location');
-        // From browser
-        if ('geolocation' in navigator) {
-          navigator.geolocation.watchPosition((position: Position) => {
-            this.currentLocation = position;
-            observer.next(position);
-          }, (error: PositionError) => {
-            observer.error(error);
+  private userLocationSubject = new BehaviorSubject<any>({});
+
+  constructor(
+    private config: AppConfig,
+    private api: ApiService
+  ) {
+
+    if ('geolocation' in navigator) {
+      navigator.geolocation.watchPosition((geo: Position) => {
+        this.api.getRestaurantsNear(this.config.channel.accessCode, this.config.channel.apiKey,
+          geo.coords.latitude, geo.coords.longitude, this.config.maxDistance)
+          .toPromise()
+          .then((res: any) => {
+            this.userLocationSubject.next({
+              lat: geo.coords.latitude,
+              lng: geo.coords.longitude,
+              distance: res !== null ? res.distance : 'Not in range',
+              inRange: res !== null ? res.near : false
+            });
+          })
+          .catch((error: any) => {
+            console.log('ERROR', error);
           });
-        } else {
-          observer.error('Geolocation not available');
-        }
-      }
-    });
+      }, (error: PositionError) => {
+        console.log(error);
+      });
+    }
   }
 
-  // Calculate distance
-  deg2rad(deg: number): number {
-    return deg * (Math.PI / 180);
+  get userLocationObs(): Observable<any> {
+    return this.userLocationSubject.asObservable();
   }
-  getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-    // console.log(lat1, lng1, lat2, lng2);
-    const R = 6371; // Radius of the earth in km
-    const dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
-    const dLon = this.deg2rad(lng2 - lng1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in km
-  }
+
 }

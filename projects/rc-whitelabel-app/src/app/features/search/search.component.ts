@@ -60,6 +60,7 @@ export class SearchComponent implements OnInit {
   cuisines: Cuisine[] = [];
   recentlyViewed: any[] = [];
   // User location
+  userPosition: any | undefined;
   currentLocation: any | undefined;
   currentDistance: any | undefined;
   inRange = false;
@@ -75,24 +76,9 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // Observe user location
-    this.location.getUserGeoLocation().subscribe(pos => {
-      this.currentLocation = pos;
-      if (!!this.storageService.getSession('userDistance')) {
-        // console.log('POS', this.storageService.getSession('userDistance') < this.config.maxDistance);
-        this.inRange = this.storageService.getSession('userDistance') < this.config.maxDistance;
-      } else {
-        this.data.getDistanceToNearestRestaurant(pos.coords.latitude, pos.coords.longitude)
-          .then(d => {
-            this.storageService.setSession('userDistance', d);
-            this.inRange = d < this.config.maxDistance;
-          });
-      }
-    });
-
-    // Restaurants
-    this.data.loadRestaurants().then((res: any) => {
-      // console.log(res);
+    this.location.userLocationObs.subscribe((userPos) => {
+      console.log('Search UserPos', userPos);
+      this.userPosition = userPos;
     });
 
     // Summarised data
@@ -109,29 +95,8 @@ export class SearchComponent implements OnInit {
       this.rdSearchInput.nativeElement.focus();
     }, 0);
 
-    // Grab recents from local storage
+    // rab recents from local storageG
     this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
-  }
-
-  public async loadSummary(): Promise<any> {
-    if (!this.data.getCuisines().length) {
-      const promise = await this.api.getRestaurantsSummary(this.config.channel.accessCode, this.config.channel.apiKey,
-        this.config.channel.latitude, this.config.channel.longitude)
-        .toPromise()
-        .then((res: any) => {
-          console.log('S', res);
-          this.data.setSummary(res);
-          this.searchRestaurants = res.restaurants;
-          this.landmarks = res.landmarks;
-          this.features = res.attributes;
-          this.cuisines = this.data.getCuisines();
-        });
-    } else {
-      this.searchRestaurants = this.data.getSearchRests();
-      this.cuisines = this.data.getCuisines();
-      this.landmarks = this.data.getLandmarks();
-      this.features = this.data.getFeatures();
-    }
   }
 
   getRecentlyViewed(): void {
