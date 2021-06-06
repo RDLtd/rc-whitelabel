@@ -38,6 +38,7 @@ export class SearchComponent implements OnInit {
   isLoaded = false;
 
   // Reference to search element
+  // so that we can set focus
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
 
   // Config
@@ -51,7 +52,7 @@ export class SearchComponent implements OnInit {
     takeaway: 'fast_food',
     recent: 'watch_later'
   };
-
+  // Results
   restaurants: any[] = [];
   searchRestaurants: any[] = [];
   landmarks: Landmark[] = [];
@@ -61,9 +62,6 @@ export class SearchComponent implements OnInit {
   recentlyViewed: any[] = [];
   // User location
   userPosition: any | undefined;
-  currentLocation: any | undefined;
-  currentDistance: any | undefined;
-  inRange = false;
 
   constructor(
     private api: ApiService,
@@ -75,7 +73,7 @@ export class SearchComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
+    // Observe user's position
     this.location.userLocationObs.subscribe((userPos) => {
       console.log('Search UserPos', userPos);
       this.userPosition = userPos;
@@ -90,12 +88,13 @@ export class SearchComponent implements OnInit {
       this.isLoaded = true;
     });
 
-    // So that we can focus the input field
+    // Focus the search input
+    // Need to use a timeout to force a different thread
     setTimeout( () => {
       this.rdSearchInput.nativeElement.focus();
     }, 0);
 
-    // rab recents from local storageG
+    // Get recent restaurants
     this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
   }
 

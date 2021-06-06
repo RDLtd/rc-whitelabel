@@ -16,17 +16,21 @@ import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
 export class RestaurantsComponent implements OnInit {
 
   isLoaded = false;
+  loadText: string;
   showFilterOptions = false;
   filtersOn = false;
+  // url params
   routeFilter: any;
   routeSort: any;
+  // filters
   landmarks: any[] = [];
   cuisines: any[] = [];
   features: any[] = [];
+  // restaurant results
   restaurants: any[] = [];
   nextRestaurants: any[] = [];
+  // User location
   userPosition: any | undefined;
-  loadText: string;
 
   constructor(
     public dialog: MatDialog,
@@ -73,6 +77,7 @@ export class RestaurantsComponent implements OnInit {
     // console.log('Search Params', params);
     this.data.loadRestaurantsByParams(params)
       .then((res: any) => {
+        // Delay the filter options until results have loaded
         setTimeout(() => { this.showFilterOptions = true; }, 1500);
         if (prefetch) {
           this.nextRestaurants = res;
@@ -80,7 +85,7 @@ export class RestaurantsComponent implements OnInit {
           this.restaurants = res;
           this.isLoaded = true;
           // If the last batch of results was our max limit
-          // prefetch the next batch
+          // assume there are more, so prefetch the next batch
           if (res.length === this.config.resultsBatchTotal) {
            this.loadMoreRestaurants();
           }

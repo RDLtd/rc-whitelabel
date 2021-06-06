@@ -128,12 +128,6 @@ export class DataService {
   getLandmarks(): any[] {
     return this.landmarks;
   }
-  // getFeatures(): any[] {
-  //   return this.features;
-  // }
-  // getSearchRests(): any[] {
-  //   return this.searchRests;
-  // }
   setCuisines(arr: any): void {
     let i = arr.length;
     let c;
