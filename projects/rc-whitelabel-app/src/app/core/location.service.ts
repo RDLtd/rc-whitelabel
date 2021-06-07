@@ -25,7 +25,7 @@ export class LocationService {
             this.userLocationSubject.next({
               lat: geo.coords.latitude,
               lng: geo.coords.longitude,
-              distance: res !== null ? res.distance : 'Not in range',
+              distance: res !== null ? res.distance : `More than ${this.config.maxDistance}km`,
               inRange: res !== null ? res.near : false
             });
           })
