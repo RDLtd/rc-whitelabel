@@ -54,7 +54,7 @@ export class AppConfig {
       language: data.language,
       brand: {
         logo: data.logo,
-        bgdImage: data.bgd || '../assets/images/bgd1.jpg',
+        bgdImage: data.bgdImage,
         colorBgdPrimary: data.primaryBgColor,
         colorFgdPrimary: data.primaryFgColor,
         colorSecondary: data.secondaryColor,

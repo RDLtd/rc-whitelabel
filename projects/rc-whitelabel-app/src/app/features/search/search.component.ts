@@ -75,7 +75,7 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
     // Observe user's position
     this.location.userLocationObs.subscribe((userPos) => {
-      console.log('Search UserPos', userPos);
+      console.log(userPos);
       this.userPosition = userPos;
     });
 

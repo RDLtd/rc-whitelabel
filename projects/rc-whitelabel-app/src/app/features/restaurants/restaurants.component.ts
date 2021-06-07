@@ -66,7 +66,7 @@ export class RestaurantsComponent implements OnInit {
 
     // Observe user position
     this.location.userLocationObs.subscribe((userPos) => {
-      // console.log('Rest UserPos', userPos);
+      console.log(userPos);
       this.userPosition = userPos;
     });
   }
