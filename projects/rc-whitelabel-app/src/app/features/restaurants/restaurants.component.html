@@ -1,22 +1,30 @@
-<rd-loader [class.rd-hide]="isLoaded && config.channelLoaded">
-  {{ config.i18n?.Loading }}
+
+
+<rd-loader
+  class="fill-white"
+  [class.rd-hide]="isLoaded && config.channelLoaded"
+  [loadText]="loadText">
 </rd-loader>
 
 <!-- RESTAURANT RESULTS -->
-<div class="rd-results-container" *ngIf="isLoaded && config.channelLoaded">
+<div class="rd-results-container" *ngIf="isLoaded && config.channelLoaded" [@fadeInStagger]="restaurants.length">
   <div
     *ngFor="let restaurant of restaurants"
-    class="rd-restaurant" (click)="openSPW(restaurant)">
+    class="rd-restaurant"
+    (click)="openSPW(restaurant)">
     <div class="rd-restaurant-detail">
       <h2>{{ restaurant?.restaurant_name }}</h2>
       <h3>
-        <span [class.rd-highlight]="!!routeFilter">{{ restaurant?.restaurant_cuisine_1 }}</span>&nbsp;&nbsp;|&nbsp;&nbsp;{{
-        restaurant?.restaurant_address_2 }}
+        <span class="rd-cuisine-location"><em [class.rd-highlight]="!!routeFilter">
+          {{ restaurant?.restaurant_cuisine_1 | uppercase }}</em>&nbsp;&nbsp;|&nbsp;&nbsp;{{
+          restaurant?.restaurant_address_2 | uppercase }}</span>
         <span class="rd-flex-spacer"></span>
         <ng-container *ngIf="restaurant?.distance && !!routeSort">
           <mat-icon class="rd-icon-my-location">my_location</mat-icon>&nbsp;
-          <span *ngIf="restaurant?.distance <= 0.5">{{ restaurant?.distance * 1000 | number: '1.0-0' }} m</span>
-          <span *ngIf="restaurant?.distance > 0.5">{{ restaurant?.distance | number: '1.0-1' }} Km</span>
+          <span *ngIf="restaurant?.distance <= 0.5" class="rd-distance">{{ restaurant?.distance * 1000 | number: '1.0-0'
+            }} m</span>
+          <span *ngIf="restaurant?.distance > 0.5" class="rd-distance">{{ restaurant?.distance | number: '1.0-1' }} Km
+          </span>
         </ng-container>
       </h3>
       <p>{{ restaurant?.strap_line }}</p>
@@ -33,21 +41,26 @@
     </div>
   </div>
 
-  <div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
-    <button
-      *ngIf="!filtersOn && isLoaded"
-      mat-raised-button
-      (click)="openFilterOptions()">
-      {{ config.i18n.Sort_filter }}
-      <mat-icon>filter_list</mat-icon>
-    </button>
-    <button
-      class="rd-btn-clear"
-      *ngIf="filtersOn && isLoaded"
-      mat-raised-button
-      (click)="clearFilters()">
-      {{ config.i18n.Clear_filters }}: {{ routeFilter || 'distance' }}
-      <mat-icon>cancel</mat-icon>
-    </button>
-  </div>
+</div>
+
+<div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
+  <button
+    *ngIf="!filtersOn && isLoaded"
+    mat-raised-button
+    (click)="openFilterOptions()">
+    {{ config.i18n.Sort_filter }}
+    <mat-icon>filter_list</mat-icon>
+  </button>
+  <button
+    class="rd-btn-clear"
+    *ngIf="filtersOn && isLoaded"
+    mat-raised-button
+    (click)="clearFilters()">
+    {{ config.i18n.Clear_filters }}: {{ routeFilter || 'distance' }}
+    <mat-icon>cancel</mat-icon>
+  </button>
+</div>
+
+<div class="rd-load-more" *ngIf="nextRestaurants.length" @fadeInSlideUp>
+  <div class="rd-btn-more" (click)="loadMoreRestaurants()"><span>LOAD MORE RESULTS</span></div>
 </div>

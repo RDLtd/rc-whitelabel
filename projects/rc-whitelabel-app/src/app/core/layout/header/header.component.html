@@ -1,10 +1,9 @@
 <!-- HEADER CONTENT -->
 <a routerLink="search">
   <img
-    *ngIf="!!config.brand.logoUrl"
     class="rd-logo"
-    [src]="config?.brand?.logoUrl"
-    [alt]="config?.channelName">
+    [src]="config.channel.brand?.logo"
+    alt="Logo">
 </a>
 <span class="rd-flex-spacer"></span>
 <button

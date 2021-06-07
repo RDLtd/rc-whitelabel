@@ -1,10 +1,10 @@
-<h1 mat-dialog-title>{{ config.i18n.Sort_filter }} </h1>
+<h1 mat-dialog-title>{{ config.i18n["Sort_filter"] }} </h1>
 <div mat-dialog-content>
   <div class="rd-filter-list-container">
-  <section class="rd-filter-list" *ngIf="data.cuisines.length > 1">
-    <h1>{{ config.i18n.Filter_by_cuisine }}</h1>
+  <section class="rd-filter-list" *ngIf="data['cuisines'].length > 1">
+    <h1>{{ config.i18n["Filter_by_cuisine"] }}</h1>
     <ul>
-      <li *ngFor="let cuisine of data.cuisines">
+      <li *ngFor="let cuisine of data['cuisines']">
         <a [mat-dialog-close]="{type: 'filter', value: cuisine.label}">
           <mat-icon class="rd-icon-cuisine">restaurant</mat-icon>
           {{ cuisine.label }}
@@ -14,15 +14,15 @@
       </li>
     </ul>
   </section>
-  <section class="rd-filter-list" *ngIf="data?.landmarks.length || !!data?.currentLocation">
-    <h1>{{ config.i18n.Sort_by_location }}</h1>
+  <section class="rd-filter-list" *ngIf="data?.landmarks.length || !!data?.userPosition.inRange">
+    <h1>{{ config.i18n["Sort_by_location"] }}</h1>
     <ul>
-      <li *ngIf="!!data?.currentLocation?.coords && data?.currentDistance < config.maxDistance">
+      <li *ngIf="data?.userPosition.inRange">
         <a
-          [mat-dialog-close]="{ type: 'sort', lat: data?.currentLocation?.coords.latitude, lng:
-          data?.currentLocation?.coords.longitude}">
+          [mat-dialog-close]="{ type: 'sort', lat: data?.userPosition?.lat, lng:
+          data?.userPosition?.lng}">
           <mat-icon class="rd-icon-my-location">my_location</mat-icon>
-          {{ config.i18n.My_current_location }}
+          {{ config.i18n["My_current_location"] }}
           <span class="rd-flex-spacer"></span>
           <span class="rd-count"></span>
         </a>
@@ -31,7 +31,7 @@
         <a
           [mat-dialog-close]="{type: 'sort', lat: landmark?.channel_landmark_lat, lng: landmark?.channel_landmark_lng}">
           <mat-icon class="rd-icon-location">location_on</mat-icon>
-          {{ landmark.channel_landmark_name }}
+          {{ landmark["channel_landmark_name"] }}
           <span class="rd-flex-spacer"></span>
           <span class="rd-count"></span>
         </a>
@@ -40,6 +40,5 @@
   </section>
   </div>
 </div>
-<div mat-dialog-actions align="end">
-  <button mat-flat-button [mat-dialog-close]="null">{{ config.i18n.Close }}</button>
-</div>
+
+<button mat-icon-button class="rd-dialog-close" mat-dialog-close tabindex="-1"><mat-icon>close</mat-icon></button>

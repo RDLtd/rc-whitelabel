@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { AppConfig } from '../../../app.config';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'rd-loader',
@@ -7,7 +6,9 @@ import { AppConfig } from '../../../app.config';
 })
 export class LoaderComponent implements OnInit {
 
-  constructor(public config: AppConfig) { }
+  @Input() loadText = '';
+
+  constructor() { }
 
   ngOnInit(): void {
   }

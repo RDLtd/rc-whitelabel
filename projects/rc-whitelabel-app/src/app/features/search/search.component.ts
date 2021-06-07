@@ -5,6 +5,7 @@ import { DataService } from '../../core/data.service';
 import { AppConfig } from '../../app.config';
 import { Router } from '@angular/router';
 import { LocationService } from '../../core/location.service';
+import { fadeIn, fadeInSlideUp } from '../../shared/animations';
 
 interface SearchSuggestion {
   cat: string;
@@ -29,13 +30,17 @@ interface Cuisine {
 
 @Component({
   selector: 'rd-search',
-  templateUrl: './search.component.html'
+  templateUrl: './search.component.html',
+  animations: [fadeIn, fadeInSlideUp]
 })
 
 export class SearchComponent implements OnInit {
   isLoaded = false;
+
   // Reference to search element
+  // so that we can set focus
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
+
   // Config
   minSearchChars = 1;
   noSuggestions = false;
@@ -47,7 +52,7 @@ export class SearchComponent implements OnInit {
     takeaway: 'fast_food',
     recent: 'watch_later'
   };
-
+  // Results
   restaurants: any[] = [];
   searchRestaurants: any[] = [];
   landmarks: Landmark[] = [];
@@ -56,12 +61,11 @@ export class SearchComponent implements OnInit {
   cuisines: Cuisine[] = [];
   recentlyViewed: any[] = [];
   // User location
-  currentLocation: any | undefined;
-  currentDistance = 1000;
+  userPosition: any | undefined;
 
   constructor(
     private api: ApiService,
-    private localStorageService: LocalStorageService,
+    private storageService: LocalStorageService,
     private data: DataService,
     public config: AppConfig,
     public router: Router,
@@ -69,26 +73,10 @@ export class SearchComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-    this.location.getUserGeoLocation().subscribe(pos => {
-      this.currentLocation = pos;
-      // If we have the channel centre geo
-      // see how far away the user is
-      if (this.config.channelLoaded) {
-        this.currentDistance = this.location.getDistance(
-          this.config.channelLat,
-          this.config.channelLng,
-          this.currentLocation.coords.latitude,
-          this.currentLocation.coords.longitude
-        );
-        console.log('d=', this.currentDistance);
-      }
-      console.log('My location = ', this.currentLocation);
-    });
-
-    // Restaurants
-    this.data.loadRestaurants().then((res: any) => {
-      // console.log(res);
+    // Observe user's position
+    this.location.userLocationObs.subscribe((userPos) => {
+      console.log(userPos);
+      this.userPosition = userPos;
     });
 
     // Summarised data
@@ -100,38 +88,18 @@ export class SearchComponent implements OnInit {
       this.isLoaded = true;
     });
 
-    // So that we can focus the input field
+    // Focus the search input
+    // Need to use a timeout to force a different thread
     setTimeout( () => {
       this.rdSearchInput.nativeElement.focus();
     }, 0);
 
-    // Grab recents from local storage
-    this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
-  }
-
-  public async loadSummary(): Promise<any> {
-    if (!this.data.getCuisines().length) {
-      const promise = await this.api.getRestaurantsSummary(this.config.channelAccessCode, this.config.channelAPIKey,
-        this.config.channelLat, this.config.channelLng)
-        .toPromise()
-        .then((res: any) => {
-          console.log('S', res);
-          this.data.setSummary(res);
-          this.searchRestaurants = res.restaurants;
-          this.landmarks = res.landmarks;
-          this.features = res.attributes;
-          this.cuisines = this.data.getCuisines();
-        });
-    } else {
-      this.searchRestaurants = this.data.getSearchRests();
-      this.cuisines = this.data.getCuisines();
-      this.landmarks = this.data.getLandmarks();
-      this.features = this.data.getFeatures();
-    }
+    // Get recent restaurants
+    this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
   }
 
   getRecentlyViewed(): void {
-    this.recentlyViewed = this.localStorageService.get('rdRecentlyViewed');
+    this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
   }
 
   doSearch(str: string): void {
@@ -220,16 +188,17 @@ export class SearchComponent implements OnInit {
     this.rdSearchInput.nativeElement.value = '';
     this.searchSuggestions = [];
     this.noSuggestions = false;
+    this.rdSearchInput.nativeElement.focus();
   }
 
-  addRecent(restaurant: any): void {
+  viewRestaurantSpw(restaurant: any): void {
     console.log(restaurant);
     this.data.setRecentlyViewed({
       restaurant_name: restaurant.name,
       restaurant_spw_url: restaurant.spw || restaurant.restaurant_spw_url,
       restaurant_number: restaurant.number
     });
-    this.searchSuggestions = [];
+    this.searchReset();
     window.open(restaurant.spw, '_blank');
   }
 }

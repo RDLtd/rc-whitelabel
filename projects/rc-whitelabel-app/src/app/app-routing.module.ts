@@ -9,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: 'search',
-    loadChildren: () => import('./features/search/search.module').then(m => m.SearchModule)
+    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
   },
   {
     path: 'restaurants',

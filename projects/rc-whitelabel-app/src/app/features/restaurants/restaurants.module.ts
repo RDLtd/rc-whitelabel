@@ -8,7 +8,6 @@ import { FilterOptionsDialogComponent } from './filter-options-dialog.component'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-
 @NgModule({
   declarations: [RestaurantsComponent, FilterOptionsDialogComponent],
   imports: [

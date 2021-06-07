@@ -19,9 +19,6 @@ export class DataService {
   private landmarks: any[] = [];
   private features: any[] = [];
 
-  // User
-  private userLocation: any;
-
   constructor(
     private api: ApiService,
     private local: LocalStorageService,
@@ -29,66 +26,63 @@ export class DataService {
     private config: AppConfig,
     private router: Router
   ) {
+
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
 
-  // Get user location
-  async getGeoLocation(): Promise<any> {
-    return new Promise(resolve => {
-      // Testing
-      // if (this.config.testMode) {
-      //   const geo = {
-      //     timestamp: new Date().getTime(),
-      //     coords: {
-      //       latitude: this.config.channelLat,
-      //       longitude: this.config.channelLng
-      //     }
-      //   };
-      //   console.log('Geo test', geo);
-      //   resolve(geo);
-      // } else
-      // check cache
-      if (!!this.userLocation) {
-        console.log('Geo local');
-        resolve(this.userLocation);
-      } else {
-        // Fetch from browser
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(position => {
-            console.log('Geo remote', position);
-            this.userLocation = position;
-            resolve(this.userLocation);
-          });
-        } else {
-          console.log('Geolocation is not supported by this browser, setting channel default location');
-        }
-      }
+  loadChannelConfig(domain: string): Promise<any> {
+    return new Promise(async resolve => {
+      await this.api.getChannelByDomain(domain)
+        .toPromise()
+        .then((res: any) => {
+          resolve(res);
+        });
     });
   }
-  async getUserLocation(): Promise<any> {
-    return await this.getGeoLocation();
+
+  // Translations
+  loadTranslations(code: string, key: string, lang: string): Promise<any> {
+    return new Promise( async resolve => {
+      await this.api.getChannelLanguage(code, key, lang)
+        .toPromise()
+        .then((res: any) => {
+          resolve(res.language[0]);
+        })
+        .catch((error: any) => console.log('Unable to read Language information!', error)
+        );
+    });
   }
 
-  // Restaurants
-  loadRestaurants(): Promise <any> {
+  // Get restaurants
+  loadRestaurantsByParams(options: any): Promise<any> {
+
+    const params = {
+      filter: options.filter,
+      filterText: options.filterText,
+      offset: options.offset || 0,
+      limit: options.limit,
+      lat: options.lat,
+      lng: options.lng,
+      testing: this.config.testMode
+    };
+
+    // console.log('Params', params);
+
     return new Promise(async resolve => {
-      if (this.restaurants.length) {
-        console.log(`${this.restaurants.length} restaurants loaded from CACHE`);
-        resolve(this.restaurants);
-      } else {
-        await this.api.getRestaurantsFilter(this.config.channelAccessCode, this.config.channelAPIKey,
-          {testing: this.config.testMode})
-          .toPromise()
-          .then((res: any) => {
-            this.restaurants = res.restaurants;
-            console.log(`${this.restaurants.length} restaurants loaded from API`);
-            resolve(this.restaurants);
-          })
-          .catch((error: any) => {
-            console.log('ERROR', error);
-            this.router.navigate(['/error']);
-          });
-      }
+      await this.api.getRestaurantsByParams(this.config.channel.accessCode, this.config.channel.apiKey, params)
+        .toPromise()
+        .then((res: any) => {
+          // console.log(res);
+          if (!!res) {
+            resolve(res.restaurants);
+          } else {
+            resolve([]);
+          }
+        })
+        .catch((error: any) => {
+          console.log('ERROR', error);
+          this.router.navigate(['/error']);
+        });
     });
   }
 
@@ -104,8 +98,8 @@ export class DataService {
           cuisines: this.cuisines
         });
       } else {
-        await this.api.getRestaurantsSummary(this.config.channelAccessCode, this.config.channelAPIKey,
-          this.config.channelLat, this.config.channelLng)
+        await this.api.getRestaurantsSummary(this.config.channel.accessCode, this.config.channel.apiKey,
+          this.config.channel.latitude, this.config.channel.longitude)
           .toPromise()
           .then((res: any) => {
             console.log('Summary loaded from API');
@@ -134,12 +128,6 @@ export class DataService {
   getLandmarks(): any[] {
     return this.landmarks;
   }
-  getFeatures(): any[] {
-    return this.features;
-  }
-  getSearchRests(): any[] {
-    return this.searchRests;
-  }
   setCuisines(arr: any): void {
     let i = arr.length;
     let c;
@@ -156,7 +144,7 @@ export class DataService {
     this.cuisines.sort((a, b) => {
       return b.total - a.total;
     });
-    console.log(this.cuisines);
+    // console.log(this.cuisines);
   }
   // recently viewed
   getRecentlyViewed(): any[] {
@@ -181,31 +169,5 @@ export class DataService {
     // Update localStorage
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
     // console.log(this.recentlyViewed);
-  }
-
-  setChannelInfo(): void {
-    const maxSessMinutes = 5;
-    // Create new session
-    if (this.config.channelAPIKey !== this.config.defaultApiKey) {
-      this.local.set('rdSessionExpiry', new Date().getTime() + (maxSessMinutes * 60000));
-      this.local.set('rdChannelAccessCode', this.config.channelAccessCode);
-      this.local.set('rdChannelApiKey', this.config.channelAPIKey);
-    }
-    // Load config
-    // Would like to move this to data service
-    this.api.getChannelInfo(this.config.channelAccessCode, this.config.channelAPIKey)
-      .toPromise()
-      .then((data: any) => {
-        this.config.setChannel(data.channel_info);
-        this.api.getChannelLanguage(this.config.channelAccessCode, this.config.channelAPIKey, this.config.language)
-          .toPromise()
-          .then((language: any) => {
-            this.config.setLanguage( language.language[0]);
-          })
-          .catch((error: any) => console.log('Unable to read Language information!', error)
-          );
-      })
-      .catch((error: any) => console.log('Unable to read Channel information!', error)
-      );
   }
 }
