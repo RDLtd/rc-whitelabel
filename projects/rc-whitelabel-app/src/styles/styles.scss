@@ -43,7 +43,7 @@ $breakpoints: (
 };
 
 // Fonts
-$font-family-default: Roboto, "Helvetica Neue", sans-serif;
+$font-family-default: 'Roboto', sans-serif;
 $font-family-heading: 'Roboto Slab', 'Georgia', serif;
 $font-weight-lite: 300;
 $font-weight-regular: 400;
@@ -77,7 +77,7 @@ a, a:active, a:focus {
 
 // UTILS
 // ------------------------
-.rd-flex-spacer { flex: 1 0 auto; }
+.rd-flex-spacer { flex: 1 0 auto; text-align: center;}
 .rd-hide { display: none !important; }
 .rd-show { opacity: 1 !important;}
 .rd-highlight { color: $col-accent}
@@ -187,6 +187,17 @@ rd-header {
     display: flex;
     align-items: center;
   }
+  .rd-title {
+    position: absolute;
+    width: 100vw;
+    text-align: center;
+    font-size: 11px;
+    font-weight: $font-weight-lite;
+    letter-spacing: 1px;
+    @include mq(med) {
+      font-size: 14px;
+    }
+  }
   .rd-logo { height: 60px;}
   h1 {
     font-size: 16px;
@@ -195,6 +206,13 @@ rd-header {
     margin: 0;
     text-align: center;
   }
+  .hide-small {
+    display: none;
+    @include mq(small) {
+      display: inline-block;
+    }
+  }
+
   .mat-button {
     font-weight: $font-weight-regular;
     font-size: 14px;

@@ -1,7 +1,7 @@
 ﻿import { environment } from '../environments/environment';
 export interface Brand {
   logo: string;
-  bgdImage: string;
+  bgImage: string;
   colorBgdPrimary: string;
   colorFgdPrimary: string;
   colorSecondary: string;
@@ -54,7 +54,7 @@ export class AppConfig {
       language: data.language,
       brand: {
         logo: data.logo,
-        bgdImage: data.bgdImage,
+        bgImage: data.bgImage,
         colorBgdPrimary: data.primaryBgColor,
         colorFgdPrimary: data.primaryFgColor,
         colorSecondary: data.secondaryColor,
