@@ -59,7 +59,6 @@ export class SearchComponent implements OnInit {
   features: any[] = [];
   searchSuggestions: SearchSuggestion[] = [];
   cuisines: Cuisine[] = [];
-  topCuisines: Cuisine[] = [];
   recentlyViewed: any[] = [];
   // User location
   userPosition: any | undefined;
@@ -87,7 +86,6 @@ export class SearchComponent implements OnInit {
       this.landmarks = data.landmarks;
       this.features = data.attributes;
       this.cuisines = data.cuisines;
-      this.topCuisines = data.topCuisines;
       this.isLoaded = true;
     });
 

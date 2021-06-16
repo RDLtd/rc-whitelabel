@@ -16,8 +16,6 @@ export class DataService {
   private searchRests: any[] = [];
   recentlyViewed: any = [];
   private cuisines: any[] = [];
-  private topCuisines: any[] = [];
-  private maxCuisines = 10;
   private landmarks: any[] = [];
   private features: any[] = [];
 
@@ -97,8 +95,7 @@ export class DataService {
           restaurants: this.searchRests,
           landmarks: this.landmarks,
           features: this.features,
-          cuisines: this.cuisines,
-          topCuisines: this.topCuisines
+          cuisines: this.cuisines
         });
       } else {
         await this.api.getRestaurantsSummary(this.config.channel.accessCode, this.config.channel.apiKey,
@@ -111,8 +108,7 @@ export class DataService {
               restaurants: this.searchRests,
               landmarks: this.landmarks,
               features: this.features,
-              cuisines: this.cuisines,
-              topCuisines: this.topCuisines
+              cuisines: this.cuisines
             });
           })
           .catch((error: any) => console.log('ERROR', error));
@@ -128,9 +124,6 @@ export class DataService {
   }
   getCuisines(): any[] {
     return this.cuisines;
-  }
-  getTopCuisines(): any[] {
-    return this.topCuisines;
   }
   getLandmarks(): any[] {
     return this.landmarks;
@@ -150,7 +143,6 @@ export class DataService {
     this.cuisines.sort((a, b) => {
       return b.total - a.total;
     });
-    this.topCuisines = this.cuisines.splice(0, this.maxCuisines);
     // console.log(this.cuisines);
   }
   // recently viewed
