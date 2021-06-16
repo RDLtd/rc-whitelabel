@@ -36,6 +36,7 @@ interface Cuisine {
 
 export class SearchComponent implements OnInit {
   isLoaded = false;
+  maxCuisines = 5;
 
   // Reference to search element
   // so that we can set focus
@@ -183,6 +184,9 @@ export class SearchComponent implements OnInit {
       // clear current suggestions
       this.searchSuggestions = [];
     }
+  }
+  getTopCuisines(): Array<Cuisine> {
+    return this.cuisines.slice(0, this.config.maxTopCuisines);
   }
 
   searchReset(): void {

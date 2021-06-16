@@ -118,7 +118,7 @@
         <h2>{{ config.i18n["Cuisines"] }}</h2>
       </div>
       <ul>
-        <li *ngFor="let cuisine of cuisines">
+        <li *ngFor="let cuisine of getTopCuisines()">
           <a [routerLink]="['/restaurants', cuisine.label]">
             {{ cuisine?.label }}
             <span class="rd-flex-spacer"></span>

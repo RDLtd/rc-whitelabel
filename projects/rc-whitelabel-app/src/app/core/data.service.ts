@@ -90,7 +90,7 @@ export class DataService {
   loadSummarisedData(): Promise <any> {
     return new Promise(async resolve => {
       if (this.cuisines.length) {
-        console.log('Summary loaded from CACHE');
+        console.log('Summary loaded from CACHE', this);
         resolve({
           restaurants: this.searchRests,
           landmarks: this.landmarks,
@@ -143,7 +143,7 @@ export class DataService {
     this.cuisines.sort((a, b) => {
       return b.total - a.total;
     });
-    // console.log(this.cuisines);
+    console.log(this.cuisines);
   }
   // recently viewed
   getRecentlyViewed(): any[] {
