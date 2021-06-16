@@ -84,6 +84,10 @@ export class RestaurantsComponent implements OnInit {
         } else {
           this.restaurants = res;
           this.isLoaded = true;
+          if (!this.restaurants.length) {
+            this.router.navigate(['/']).then();
+            return;
+          }
           // If the last batch of results was our max limit
           // assume there are more, so prefetch the next batch
           if (res.length === this.config.resultsBatchTotal) {
