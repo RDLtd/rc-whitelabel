@@ -71,7 +71,7 @@ export class SearchComponent implements OnInit {
     public config: AppConfig,
     public router: Router,
     private location: LocationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Observe user's position

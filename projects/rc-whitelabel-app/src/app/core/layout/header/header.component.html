@@ -10,8 +10,10 @@
 </a>
 <span class="rd-flex-spacer"></span>
 <button
+  *ngIf="showSearchOption"
   mat-button
-  routerLink="search">
+  routerLink="search"
+  @fadeIn>
   <mat-icon>search</mat-icon>
   <span class="hide-small">{{ config.i18n.Search }}</span>
 </button>
