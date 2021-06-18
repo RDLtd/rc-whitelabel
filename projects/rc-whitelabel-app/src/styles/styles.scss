@@ -76,6 +76,10 @@ a, a:active, a:focus {
 *:focus {
   outline: 0 !important;
 }
+::selection {
+  background-color: black;
+  color: white;
+}
 
 // UTILS
 // ------------------------
