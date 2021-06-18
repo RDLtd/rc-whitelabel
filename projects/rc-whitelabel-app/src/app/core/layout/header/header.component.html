@@ -1,5 +1,5 @@
 <!-- HEADER CONTENT -->
-<div class="rd-title">
+<div class="rd-title" *ngIf="!showSearchOption">
   {{ config.channel.name | uppercase }}
 </div>
 <a routerLink="search">
