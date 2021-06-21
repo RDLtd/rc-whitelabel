@@ -62,5 +62,5 @@
 </div>
 
 <div class="rd-load-more" *ngIf="nextRestaurants.length" @fadeInSlideUp>
-  <div class="rd-btn-more" (click)="loadMoreRestaurants()"><span>LOAD MORE RESULTS</span></div>
+  <div class="rd-btn-more" (click)="loadMoreRestaurants()"><span>{{ config.i18n['Load_more'] }}</span></div>
 </div>
