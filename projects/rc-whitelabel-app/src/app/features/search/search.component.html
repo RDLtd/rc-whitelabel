@@ -13,7 +13,8 @@
     <!-- SEARCH FORM -->
     <form #rdSearchForm="ngForm" (ngSubmit)="doSearch(rdSearchInput.value)">
       <mat-form-field floatLabel="never" appearance="standard">
-        <mat-label><mat-icon>search</mat-icon> SEARCH</mat-label>
+        <mat-label><mat-icon>search</mat-icon>
+          {{ config.i18n['Search'] }}</mat-label>
         <input
           #rdSearchInput
           name="searchString"
