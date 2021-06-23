@@ -12,8 +12,11 @@ import { DataService } from './core/data.service';
 
 // Make App initialisation dependant on channel config
 export function appStartUpFactory(data: DataService, config: AppConfig): any {
+  // Use subdomain to get channel config
+  // Remove 'staging' prefix so that we can access the channel config
+  // for testing
+  const host = window.location.host.replace('staging.', '');
 
-  const host = window.location.host;
   console.log(`Load channel (${host})`);
 
   return () => {
