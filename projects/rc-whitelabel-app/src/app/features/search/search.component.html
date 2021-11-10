@@ -53,7 +53,7 @@
           <span></span>
         </a>
         <!-- Restaurants -->
-        <a *ngSwitchCase="'restaurant'" [routerLink]="" (click)="viewRestaurantSpw(displayItem)">
+        <a *ngSwitchCase="'restaurant'" [routerLink]="[]" (click)="viewRestaurantSpw(displayItem)">
           <mat-icon class="rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
           {{ displayItem?.name }}
           <span class="rd-flex-spacer"></span>
