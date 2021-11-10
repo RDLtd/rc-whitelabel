@@ -23,7 +23,7 @@ export class LocationService {
   ) {
 
     if ('geolocation' in navigator) {
-      navigator.geolocation.watchPosition((geo: Position) => {
+      navigator.geolocation.watchPosition((geo: any) => {
         this.api.getRestaurantsNear(this.config.channel.accessCode, this.config.channel.apiKey,
           geo.coords.latitude, geo.coords.longitude, this.config.maxDistance)
           .toPromise()
@@ -39,7 +39,7 @@ export class LocationService {
           .catch((error: any) => {
             console.log('ERROR', error);
           });
-      }, (error: PositionError) => {
+      }, (error: any) => {
         console.log('ERROR', error);
       });
     } else {
