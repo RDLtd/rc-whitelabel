@@ -1,4 +1,6 @@
-@use '@angular/material' as mat;
+// Having to use a relative ref. for scss @use @angular as linting doesn't like
+// the recommended '@angular' ref
+@use '/node_modules/@angular/material' as mat;
 @use 'sass:map';
 
 @include mat.core();
