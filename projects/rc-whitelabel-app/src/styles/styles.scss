@@ -1,21 +1,27 @@
-@use "sass:map";
-@import '../../../../node_modules/@angular/material/theming';
-@include mat-core();
+// Having to use a relative ref. for scss @use @angular as linting doesn't like
+// the recommended '@angular' ref
+@use 'node_modules/@angular/material' as mat;
+@use 'sass:map';
+
+@include mat.core();
 
 // Custom theme
-$rc-whitelabel-app-primary: mat-palette($mat-deep-orange, A200);
-$rc-whitelabel-app-accent: mat-palette($mat-orange, A200, A100, A400);
+$rc-whitelabel-app-primary: mat.define-palette(mat.$deep-orange-palette, A200);
+$rc-whitelabel-app-accent: mat.define-palette(mat.$orange-palette, A200, A100, A400);
+
 // The warn palette is optional (defaults to red).
-$rc-whitelabel-app-warn: mat-palette($mat-deep-orange);
+$rc-whitelabel-app-warn: mat.define-palette(mat.$deep-orange-palette);
+
 // Create the theme object
-$rc-whitelabel-app-theme: mat-light-theme((
+$rc-whitelabel-app-theme: mat.define-light-theme((
   color: (
     primary: $rc-whitelabel-app-primary,
     accent: $rc-whitelabel-app-accent,
     warn: $rc-whitelabel-app-warn,
   )
 ));
-@include angular-material-theme($rc-whitelabel-app-theme);
+
+@include mat.all-component-themes($rc-whitelabel-app-theme);
 
 // Default branding
 $col-text: rgb(74, 74, 74);
@@ -259,7 +265,7 @@ rd-footer {
   transition: min-height 1s ease-out;
 
   @include mq(med) {
-    @include mat-elevation(5);
+    @include mat.elevation(5);
     position: absolute;
     z-index: 5;
     top: 15vh;
@@ -452,7 +458,7 @@ rd-footer {
     @include mq(med) {
       padding: 8px 12px 12px;
       border-radius: 10px;
-      @include mat-elevation(5);
+      @include mat.elevation(5);
       &:hover h2 { color: black !important; }
       img { vertical-align: baseline; }
     }
@@ -542,6 +548,18 @@ rd-footer {
       object-fit: cover;
       overflow: hidden;
     }
+    .img-credit {
+      position: absolute;
+      right: 8px; bottom: 8px;
+      display: block;
+      background-color: rgba(0,0,0,.5);
+      color: white;
+      font-size: 10px;
+      line-height: 1;
+      text-transform: uppercase;
+      padding: 4px;
+      border-radius: 2px;
+    }
   }
 
 }
@@ -590,7 +608,7 @@ rd-footer {
     font-weight: $font-weight-regular;
     background: black;
     color: white;
-    @include mat-elevation(10);
+    @include mat.elevation(10);
     &.rd-btn-clear { background-color: #ff2600; }
   }
   .mat-button-wrapper {

@@ -82,7 +82,7 @@ export class SearchComponent implements OnInit {
 
     // Summarised data
     this.data.loadSummarisedData().then((data: any) => {
-      console.log(data);
+      console.log('LoadSummary', data);
       this.searchRestaurants = data.restaurants;
       this.landmarks = data.landmarks;
       this.features = data.attributes;

@@ -22,7 +22,6 @@
             "main": "projects/rc-whitelabel-app/src/main.ts",
             "polyfills": "projects/rc-whitelabel-app/src/polyfills.ts",
             "tsConfig": "projects/rc-whitelabel-app/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "projects/rc-whitelabel-app/src/assets",
               "projects/rc-whitelabel-app/src/favicon.ico",
@@ -37,7 +36,13 @@
             "styles": [
               "projects/rc-whitelabel-app/src/styles/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -94,7 +99,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -128,19 +134,6 @@
               "projects/rc-whitelabel-app/src/styles.scss"
             ],
             "scripts": []
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/rc-whitelabel-app/tsconfig.app.json",
-              "projects/rc-whitelabel-app/tsconfig.spec.json",
-              "projects/rc-whitelabel-app/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         },
         "e2e": {
