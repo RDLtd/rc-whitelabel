@@ -548,6 +548,18 @@ rd-footer {
       object-fit: cover;
       overflow: hidden;
     }
+    .img-credit {
+      position: absolute;
+      right: 8px; bottom: 8px;
+      display: block;
+      background-color: rgba(0,0,0,.5);
+      color: white;
+      font-size: 10px;
+      line-height: 1;
+      text-transform: uppercase;
+      padding: 4px;
+      border-radius: 2px;
+    }
   }
 
 }
