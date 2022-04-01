@@ -71,7 +71,10 @@ export class RestaurantsComponent implements OnInit {
     });
   }
 
-  // Load restaurants based on search params
+  /**
+   *
+   * @param prefetch - are we preloading
+   */
   loadRestaurants(prefetch: boolean = false): void {
     const params = this.getSearchParams();
     // console.log('Search Params', params);

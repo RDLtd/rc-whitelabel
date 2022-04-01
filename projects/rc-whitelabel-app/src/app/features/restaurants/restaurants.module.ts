@@ -7,15 +7,24 @@ import { MatChipsModule } from '@angular/material/chips';
 import { FilterOptionsDialogComponent } from './filter-options-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { RestaurantsMapComponent } from './restaurants-map.component';
+import { GoogleMapsModule } from '@angular/google-maps';
+import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 
 @NgModule({
-  declarations: [RestaurantsComponent, FilterOptionsDialogComponent],
+  declarations: [
+    RestaurantsComponent,
+    FilterOptionsDialogComponent,
+    RestaurantsMapComponent],
   imports: [
     SharedModule,
     RestaurantsRoutingModule,
     MatChipsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    GoogleMapsModule,
+    HttpClientModule,
+    HttpClientJsonpModule
   ]
 })
 export class RestaurantsModule { }

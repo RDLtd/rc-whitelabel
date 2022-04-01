@@ -40,9 +40,12 @@ export class ApiService {
       });
   }
 
+
+
   // Restaurants
   // tslint:disable-next-line:variable-name
   getRestaurantsByParams(channel_access_code: string, channel_access_api_key: string, params: any): any {
+    console.log(channel_access_code, channel_access_api_key, params);
     return this.http.post(this.config.apiUrl + '/channel/restaurants/parameters',
       {
         channel_access_code,

@@ -587,6 +587,28 @@ rd-footer {
   }
 }
 
+// MAP RESULTS
+.rd-component {
+  background-color: white;
+  border-radius: 10px;
+  padding: 12px;
+  @include mat.elevation(5);
+}
+.rd-map-list {}
+.rd-map-container {
+  position: relative;
+  padding:  16px 12px 12px;
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: 1fr 2fr;
+  grid-auto-rows: 1fr;
+  grid-column-gap: 12px;
+  grid-row-gap: 16px;
+  width: 100%;
+  min-height: 80vh;
+}
+
+
 // FILTERS
 // ------------------------
 .rd-filter-btn {
