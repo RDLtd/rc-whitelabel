@@ -4,6 +4,7 @@ import {ResultsService} from './results.service';
 import {Observable, of} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {catchError, finalize, map} from 'rxjs/operators';
+import {AppConfig} from '../../app.config';
 
 @Component({
   selector: 'rd-restaurants-map',
@@ -26,6 +27,7 @@ export class RestaurantsMapComponent implements OnInit, AfterViewInit {
 
 
   constructor(
+    private config: AppConfig,
     private results: ResultsService,
     private http: HttpClient
   ) {
@@ -44,7 +46,7 @@ export class RestaurantsMapComponent implements OnInit, AfterViewInit {
       this.initMap();
       console.log(res);
     });
-    this.apiLoaded = http.jsonp('https://maps.googleapis.com/maps/api/js?key=AIzaSyBD2S6quV-RF8Ckz_18Xrxqw_blnzlLl_I', 'callback')
+    this.apiLoaded = http.jsonp(`https://maps.googleapis.com/maps/api/js?key=${this.config.geoApiKey}`, 'callback')
       .pipe(
         map(() => true),
         catchError(() => of(false)),

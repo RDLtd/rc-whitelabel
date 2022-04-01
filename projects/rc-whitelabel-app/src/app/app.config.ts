@@ -21,6 +21,7 @@ export interface Channel {
 export class AppConfig {
   // Api
   public readonly apiUrl = environment.API_URL;
+  public readonly geoApiKey = environment.GOOGLE_MAP_API_KEY;
   public testMode = environment.testMode;
   // Only show 'near me' search option if
   // user is within maxDistance km range
