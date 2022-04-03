@@ -121,8 +121,8 @@ export class RestaurantsMapComponent {
         },
         info:
           `<h3>${r.restaurant_name}</h3>` +
-          `<div>${r.restaurant_lat},${r.restaurant_lng}</div>` +
-          `<a href="${r.restaurant_spw_url}" target="_blank">${!!r.restaurant_spw_url ? 'View SPW' : ''}</a>`
+          `<div>${r.restaurant_cuisine_1}</div>` +
+          `<a href="${r.restaurant_spw_url}" target="_blank">${!!r.restaurant_spw_url ? 'SEE FULL DETAILS' : ''}</a>`
       };
       // Bound map
       this.bounds.extend(marker.position);

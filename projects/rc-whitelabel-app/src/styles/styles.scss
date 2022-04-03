@@ -622,6 +622,25 @@ rd-footer {
     span { text-transform: uppercase }
   }
 }
+.rd-map-info {
+  padding: 12px 0 6px 6px;
+  h3 {
+    margin: 0 0 4px;
+    line-height: 1;
+    font-weight: bold;
+  }
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #eee;
+    padding: 1em;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: .75rem;
+    color: black;
+  }
+}
 .rd-map {
   position: relative;
   padding:  16px 12px 12px;
