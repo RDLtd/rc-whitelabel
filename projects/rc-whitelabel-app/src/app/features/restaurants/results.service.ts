@@ -10,13 +10,13 @@ export class ResultsService {
 
   restaurants = new BehaviorSubject<any[]>([]);
   params = {
-    filter: null,
-    filterText: null,
-    lat: '51.34782520416091',
-    limit: 12,
-    lng: '-0.173759097850969',
+    filter: '',
+    filterText: '',
+    lat: '51.7521849865759',
+    limit: 8,
+    lng: '-1.2579775767154544',
     offset: 0,
-    testing: true
+    testing: false
   };
 
   constructor(
@@ -33,6 +33,8 @@ export class ResultsService {
     if (this.restaurants.getValue().length === 0) {
       console.log('Loading restaurants from api');
       this.loadRestaurants();
+    } else {
+      console.log('Loading from cache');
     }
     return this.restaurants.asObservable();
   }

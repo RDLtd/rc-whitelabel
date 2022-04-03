@@ -1,21 +1,30 @@
-<div class="rd-map-container" >
-  <div class="rd-map-list rd-component">
-    <ul>
-      <li *ngFor="let r of rest$ | async"><h2>{{ r.restaurant_name }}</h2></li>
-    </ul>
+<div class="rd-map" >
+  <div class="rd-component">
+    <div class="rd-map-nav">
+      Navigation
+    </div>
+    <div class="rd-map-list">
+      <div class="rd-map-list-item" *ngFor="let r of rest$ | async">
+        <img [src]="r.image" loading="lazy">
+        <div>
+          <h3>{{ r.restaurant_name }}</h3>
+          <p>{{ r.restaurant_address_1 }} • {{ r.restaurant_address_2 }}</p>
+          <span>{{ r.restaurant_cuisine_2 }}</span>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="rd-component">
-
-    <ng-container *ngIf="apiLoaded | async">
+    <ng-container *ngIf="mapApiLoaded | async">
     <google-map width="100%"
                 height="100%"
                 [options]="mapOptions">
       <map-marker #markerElem = "mapMarker"
                   *ngFor="let m of markers"
                   [options]="m.options"
+                  (mapClick)="openInfo(markerElem, m.info)"
                   [title]="m.title"
-                  [position]="m?.position"
-                  (mapClick)="moveMap($event)">
+                  [position]="m?.position">
       </map-marker>
       <map-info-window>
         <div [innerHTML]="infoContent"></div>
@@ -23,7 +32,6 @@
     </google-map>
     </ng-container>
   </div>
-
 </div>
 
 

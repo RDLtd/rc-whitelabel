@@ -594,8 +594,35 @@ rd-footer {
   padding: 12px;
   @include mat.elevation(5);
 }
-.rd-map-list {}
-.rd-map-container {
+.rd-map-list {
+  height: 70vh;
+  overflow-y: auto;
+  .rd-map-list-item {
+    display: flex;
+    margin-bottom: 6px;
+    transition: all .25s ease-in-out;
+    &:hover {
+      background-color: #eee;
+    }
+    div { padding: 8px; }
+    img {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+    }
+    h3 {
+      font-size: 1.125rem;
+      font-weight: $font-weight-heavy;
+      margin: 0;
+      line-height: 1.1;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    p { margin: 0; }
+    span { text-transform: uppercase }
+  }
+}
+.rd-map {
   position: relative;
   padding:  16px 12px 12px;
   display: grid;
@@ -605,7 +632,7 @@ rd-footer {
   grid-column-gap: 12px;
   grid-row-gap: 16px;
   width: 100%;
-  min-height: 80vh;
+  height: inherit;
 }
 
 
