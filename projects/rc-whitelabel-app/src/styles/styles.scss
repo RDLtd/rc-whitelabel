@@ -622,6 +622,13 @@ rd-footer {
     span { text-transform: uppercase }
   }
 }
+.rd-map-nav {
+  display: flex;
+  align-items: center;
+  padding-block: 12px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid $col-icon-restaurant;
+}
 .rd-map-info {
   padding: 12px 0 6px 6px;
   h3 {

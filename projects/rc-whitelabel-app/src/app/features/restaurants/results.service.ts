@@ -13,7 +13,7 @@ export class ResultsService {
     filter: '',
     filterText: '',
     lat: '51.7521849865759',
-    limit: 8,
+    limit: 24,
     lng: '-1.2579775767154544',
     offset: 0,
     testing: false

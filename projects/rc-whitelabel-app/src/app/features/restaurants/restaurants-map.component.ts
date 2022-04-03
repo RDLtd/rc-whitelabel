@@ -5,6 +5,7 @@ import { Observable, of} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, map } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
+import {LocationService, UserPosition} from '../../core/location.service';
 
 @Component({
   selector: 'rd-restaurants-map',
@@ -24,6 +25,7 @@ export class RestaurantsMapComponent {
   bounds: any;
   center: google.maps.LatLngLiteral = { lat: 50, lng: -1 };
   display?: google.maps.LatLngLiteral;
+  userPosition?: UserPosition;
 
 
   restaurants: any;
@@ -32,25 +34,14 @@ export class RestaurantsMapComponent {
   constructor(
     private config: AppConfig,
     private results: ResultsService,
-    private http: HttpClient
+    private http: HttpClient,
+    private location: LocationService
   ) {
 
-    // forkJoin(
-    //   this.results.getRestaurants(),
-    //   http.jsonp(
-    //     `https://maps.googleapis.com/maps/api/js?key=${this.config.geoApiKey}`,
-    //     'callback')
-    // ).subscribe(res => {
-    //   console.log('fork', res);
-    // }, err => {
-    //   console.log('error', err);
-    // });
-
-    this.results.getRestaurants().subscribe(res => {
-      this.restaurants = res;
-      this.rest$ = of(res);
-      this.addMapMarkers();
-      // console.log(res);
+    // Observe user position
+    this.location.userLocationObs.subscribe((userPos) => {
+      console.log(userPos);
+      this.userPosition = userPos;
     });
 
     this.mapApiLoaded = http.jsonp(
@@ -60,10 +51,19 @@ export class RestaurantsMapComponent {
         map(() => true),
         catchError(() => of(false)),
         finalize(() => {
-          console.log('Sequence complete');
+          console.log('Map Api Loaded');
+          this.loadRestaurants();
           this.initMap();
         })
       );
+  }
+
+  loadRestaurants(): void {
+    this.results.getRestaurants().subscribe(res => {
+      this.restaurants = res;
+      this.rest$ = of(res);
+      this.addMapMarkers();
+    });
   }
 
   initMap(): void {
@@ -71,8 +71,8 @@ export class RestaurantsMapComponent {
       scrollwheel: false,
       streetViewControl: false,
       center: {
-        lat: 51.34,
-        lng: -0.17,
+        lat: this.userPosition?.lat,
+        lng: this.userPosition?.lng,
       },
       zoom: 14,
       mapId: 'f547725f57ef2ea8',
@@ -117,7 +117,7 @@ export class RestaurantsMapComponent {
         title: r.restaurant_name,
         options: {
           // animation: google.maps.Animation.DROP,
-          icon: this.svgMarker,
+          icon: '/assets/images/map-icon.png' // this.svgMarker,
         },
         info:
           `<h3>${r.restaurant_name}</h3>` +
