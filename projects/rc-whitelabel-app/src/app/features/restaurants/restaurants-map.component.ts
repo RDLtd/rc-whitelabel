@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { ResultsService } from './results.service';
 import { Observable, of} from 'rxjs';
@@ -11,7 +11,7 @@ import {LocationService, UserPosition} from '../../core/location.service';
   selector: 'rd-restaurants-map',
   templateUrl: './restaurants-map.component.html'
 })
-export class RestaurantsMapComponent {
+export class RestaurantsMapComponent implements OnInit {
 
   @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
   @ViewChild(MapInfoWindow, { static: false }) infoWindow!: MapInfoWindow;
@@ -58,6 +58,8 @@ export class RestaurantsMapComponent {
       );
   }
 
+  ngOnInit(): void {}
+
   loadRestaurants(): void {
     this.results.getRestaurants().subscribe(res => {
       this.restaurants = res;
@@ -78,22 +80,17 @@ export class RestaurantsMapComponent {
       mapId: 'f547725f57ef2ea8',
       mapTypeControl: false,
     } as google.maps.MapOptions;
-    // this.icon = {
-    //   url: '/assets/images/map-icon.svg',
-    //   scaledSize: new google.maps.Size(36, 36)
-    // };
     this.bounds = new google.maps.LatLngBounds();
     this.svgMarker = {
       path:
-        'M12 8.34c-.98 0-1.9.38-2.59 1.07-.69.69-1.07 1.61-1.07 2.59s.38 1.9 1.07 2.59c.69.69 1.61 1.07 2.59 1.07s1.9-.38 2.59-1.07c.69-.69 1.07-1.61 1.07-2.59s-.38-1.9-1.07-2.59A3.638 3.638 0 0 0 12 8.34Z' +
-        'M12 5.39c-1.77 0-3.43.69-4.67 1.94C6.08 8.58 5.39 10.24 5.39 12s.69 3.43 1.94 4.67c1.25 1.25 2.91 1.94 4.67 1.94s3.43-.69 4.67-1.94 1.94-2.91 1.94-4.67-.69-3.43-1.94-4.67S13.76 5.39 12 5.39Zm0 11.77a5.16 5.16 0 1 1 0-10.32 5.16 5.16 0 0 1 0 10.32Z' +
-        'M24 12c0-6.63-5.37-12-12-12S0 5.37 0 12c0 5.69 3.97 10.46 9.29 11.69l2.71 4.7 2.71-4.7C20.03 22.46 24 17.7 24 12Zm-12 8.11c-4.48 0-8.11-3.63-8.11-8.11S7.52 3.89 12 3.89s8.11 3.63 8.11 8.11-3.63 8.11-8.11 8.11Z',
+        'M36,17.65c.15,8.15-5.11,15.08-12.42,17.47-1.03,.33-1.88,1.06-2.42,1.99l-3.16,5.48-3.16-5.48c-.54-.94-1.41-1.66-2.45-2C5.2,32.75,0,25.98,0,18,0,7.82,8.44-.38,18.71,.01c9.39,.36,17.11,8.24,17.29,17.64Z',
       fillColor: '#ff5720',
-      fillOpacity: 1,
-      strokeWeight: 0,
+      fillOpacity: .9,
+      strokeWeight: 1,
+      strokeColor: '#bb3613',
       rotation: 0,
       scale: 1,
-      anchor: new google.maps.Point(0, 30),
+      anchor: new google.maps.Point(18, 40),
     };
   }
 
@@ -117,18 +114,22 @@ export class RestaurantsMapComponent {
         title: r.restaurant_name,
         options: {
           // animation: google.maps.Animation.DROP,
-          icon: '/assets/images/map-icon.png' // this.svgMarker,
+          icon: this.svgMarker // '/assets/images/map-icon.png'
         },
         info:
           `<h3>${r.restaurant_name}</h3>` +
           `<div>${r.restaurant_cuisine_1}</div>` +
           `<a href="${r.restaurant_spw_url}" target="_blank">${!!r.restaurant_spw_url ? 'SEE FULL DETAILS' : ''}</a>`
       };
+
       // Bound map
       this.bounds.extend(marker.position);
       this.markers.push(marker);
     }
     this.map?.fitBounds(this.bounds);
+
+
+
   }
 
   moveMap(event: google.maps.MapMouseEvent): void {
@@ -146,5 +147,7 @@ export class RestaurantsMapComponent {
     this.infoContent = content;
     this.infoWindow.open(marker);
   }
+
+
 
 }
