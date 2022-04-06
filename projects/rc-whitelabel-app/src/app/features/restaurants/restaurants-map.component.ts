@@ -63,7 +63,7 @@ export class RestaurantsMapComponent implements OnInit {
   loadRestaurants(): void {
     this.results.getRestaurants().subscribe(res => {
       this.restaurants = res;
-      this.rest$ = of(res);
+      this.rest$ = of(this.restaurants);
       this.addMapMarkers();
     });
   }
@@ -83,19 +83,21 @@ export class RestaurantsMapComponent implements OnInit {
     this.bounds = new google.maps.LatLngBounds();
     this.svgMarker = {
       path:
-        'M36,17.65c.15,8.15-5.11,15.08-12.42,17.47-1.03,.33-1.88,1.06-2.42,1.99l-3.16,5.48-3.16-5.48c-.54-.94-1.41-1.66-2.45-2C5.2,32.75,0,25.98,0,18,0,7.82,8.44-.38,18.71,.01c9.39,.36,17.11,8.24,17.29,17.64Z',
-      fillColor: '#ff5720',
-      fillOpacity: .9,
+        'M11.9858571,34.9707603 C5.00209157,32.495753 0,25.8320271 0,18 C0,8.0588745 8.0588745,0 18,0 C27.9411255,0 36,8.0588745 36,18 C36,25.8320271 30.9979084,32.495753 24.0141429,34.9707603 C24.0096032,34.980475 24.0048892,34.9902215 24,35 C20,37 18,40.6666667 18,46 C18,40.6666667 16,37 12,35 C11.9951108,34.9902215 11.9903968,34.980475 11.9858571,34.9707603 Z',
+      fillColor: '#00A69B',
+      fillOpacity: .75,
       strokeWeight: 1,
-      strokeColor: '#bb3613',
+      strokeColor: '#fff',
       rotation: 0,
       scale: 1,
-      anchor: new google.maps.Point(18, 40),
+      labelOrigin: { x: 18, y: 18 },
+      anchor: new google.maps.Point(18, 40)
     };
   }
 
   addMapMarkers(): void {
     let i = this.restaurants.length;
+    let counter = 1;
     let r;
     let marker;
     console.log(i);
@@ -114,7 +116,13 @@ export class RestaurantsMapComponent implements OnInit {
         title: r.restaurant_name,
         options: {
           // animation: google.maps.Animation.DROP,
-          icon: this.svgMarker // '/assets/images/map-icon.png'
+          icon: this.svgMarker, // '/assets/images/map-icon.png',
+          label: {
+            text: `${counter++}`,
+            color: '#fff',
+            fontSize: '14px',
+            fontWeight: 'bold',
+          }
         },
         info:
           `<h3>${r.restaurant_name}</h3>` +

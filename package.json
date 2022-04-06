@@ -3,13 +3,13 @@
   "version": "13.3.0",
   "scripts": {
     "ng": "ng",
+    "rdl": "ng serve --port 54747",
     "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "heroku-postbuild": "ng build --configuration production --aot",
-    "rdl": "ng serve --port 54747"
+    "heroku-postbuild": "ng build --configuration production --aot"
   },
   "engines": {
     "node": "16.14.2",

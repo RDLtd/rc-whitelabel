@@ -18,7 +18,7 @@
       <span>NEAREST ME</span>
     </div>
     <div class="rd-map-list">
-      <div class="rd-map-list-item" *ngFor="let r of rest$ | async">
+      <div class="rd-map-list-item" *ngFor="let r of rest$ | async; let i = index">
         <img [src]="r.image" loading="lazy" alt="Image of {{ r.restaurant_name }}">
         <div>
           <h3>{{ r.restaurant_name }}</h3>
