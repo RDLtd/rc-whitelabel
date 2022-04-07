@@ -601,6 +601,7 @@ rd-footer {
     display: flex;
     margin-bottom: 6px;
     transition: all .25s ease-in-out;
+    cursor: pointer;
     &:hover {
       background-color: #eee;
     }

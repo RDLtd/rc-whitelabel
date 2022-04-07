@@ -20,8 +20,8 @@
     <div class="rd-map-list">
       <div class="rd-map-list-item" *ngFor="let r of rest$ | async; let i = index">
         <img [src]="r.image" loading="lazy" alt="Image of {{ r.restaurant_name }}">
-        <div>
-          <h3>{{ r.restaurant_name }}</h3>
+        <div (click)="listClick(i)">
+          <h3>{{ i + 1 }}.&nbsp;{{ r.restaurant_name }}</h3>
           <p>{{ r.restaurant_address_1 }} • {{ r.restaurant_address_2 }}</p>
           <span>{{ r.restaurant_cuisine_2 }}</span>
         </div>
@@ -32,13 +32,13 @@
     <ng-container *ngIf="mapApiLoaded | async">
     <google-map width="100%"
                 height="100%"
-                [options]="mapOptions">
+                [options]="options">
       <map-marker #markerElem = "mapMarker"
-                  *ngFor="let m of markers"
-                  [options]="m.options"
-                  (mapClick)="openInfo(markerElem, m.info)"
-                  [title]="m.title"
-                  [position]="m?.position">
+                  *ngFor="let marker of markers; let i = index"
+                  [options]="marker.options"
+                  (mapClick)="markerClick($event, i, marker)"
+                  [title]="marker.title"
+                  [position]="marker?.position">
       </map-marker>
       <map-info-window>
         <div class="rd-map-info" [innerHTML]="infoContent"></div>
