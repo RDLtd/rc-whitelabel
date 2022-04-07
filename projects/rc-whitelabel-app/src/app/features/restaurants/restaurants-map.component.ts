@@ -25,6 +25,8 @@ export class RestaurantsMapComponent implements OnInit {
   bounds: any;
   center?: google.maps.LatLngLiteral;
   display?: google.maps.LatLngLiteral;
+  zoom = 12;
+  lastZoom?: number;
   userPosition?: UserPosition;
   options: google.maps.MapOptions = {
     scrollwheel: false,
@@ -81,17 +83,6 @@ export class RestaurantsMapComponent implements OnInit {
   }
 
   initMap(): void {
-    // this.mapOptions = {
-    //   scrollwheel: false,
-    //   streetViewControl: false,
-    //   center: {
-    //     lat: this.userPosition?.lat,
-    //     lng: this.userPosition?.lng,
-    //   },
-    //   zoom: 14,
-    //   mapId: 'f547725f57ef2ea8',
-    //   mapTypeControl: false,
-    // } as google.maps.MapOptions;
     this.bounds = new google.maps.LatLngBounds();
     this.svgMarker = {
       path:
@@ -122,12 +113,12 @@ export class RestaurantsMapComponent implements OnInit {
       marker = {
         map: this.map,
         position: {
-          lat: Number(r.restaurant_lat),
-          lng: Number(r.restaurant_lng)
+          lat: r.restaurant_lat as number,
+          lng: r.restaurant_lng as number
         },
         options: {
           // animation: google.maps.Animation.DROP,
-          icon: this.svgMarker, // '/assets/images/map-icon.png',
+          icon: this.svgMarker,
           label: {
             text: `${i + 1}`,
             color: '#fff',
@@ -147,31 +138,22 @@ export class RestaurantsMapComponent implements OnInit {
       this.markers.push(marker);
     }
     this.map?.fitBounds(this.bounds);
+    this.lastZoom = this.zoom;
   }
 
   markerClick(event: google.maps.MapMouseEvent, index: number, m: MapMarker): void {
-    console.log(event.latLng?.toJSON());
-    console.log(m);
-    console.log(this.restaurants[index]);
+    this.lastZoom = this.map.getZoom();
+    console.log(m.position);
+    this.map.panTo(m.position);
   }
 
   listClick(index: number): void {
     const marker = this.markers[index];
-    console.log(marker);
+    this.map?.fitBounds(this.bounds);
     this.map.panTo({
       lat: this.restaurants[index].restaurant_lat,
       lng: this.restaurants[index].restaurant_lng
     });
-  }
-
-  moveMap(event: google.maps.MapMouseEvent): void {
-    // @ts-ignore
-    this.center = (event.latLng.toJSON());
-  }
-
-  move(event: google.maps.MapMouseEvent): void {
-    // @ts-ignore
-    this.display = event.latLng.toJSON();
   }
 
   openInfo(marker: MapMarker, content: string): void {
