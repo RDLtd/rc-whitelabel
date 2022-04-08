@@ -34,15 +34,20 @@
                 height="100%"
                 [zoom]="zoom"
                 [options]="options">
-      <map-marker
+      <map-marker #mapMarker="mapMarker"
                   *ngFor="let marker of markers; let i = index"
+                  id="{{ 'mm' + i }}"
                   [options]="marker.options"
-                  (mapClick)="markerClick($event, i, marker)"
+                  (mapClick)="markerClick($event, i, mapMarker)"
                   [title]="marker.title"
                   [position]="marker?.position">
       </map-marker>
       <map-info-window>
-        <div class="rd-map-info" [innerHTML]="infoContent"></div>
+        <div class="rd-map-info">
+          <h3>{{ infoWindowContent.name }}</h3>
+          <div>{{ infoWindowContent.cuisine }}</div>
+          <a *ngIf="!!infoWindowContent.spw" href="{{ infoWindowContent.spw }}" target="_blank">SEE FULL DETAILS</a>
+        </div>
       </map-info-window>
     </google-map>
     </ng-container>

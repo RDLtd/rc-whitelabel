@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { GoogleMap, MapDirectionsService, MapInfoWindow, MapMarker } from '@angular/google-maps';
+import {GoogleMap, MapAnchorPoint, MapDirectionsService, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { ResultsService } from './results.service';
 import { Observable, of} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -21,7 +21,11 @@ export class RestaurantsMapComponent implements OnInit {
   // icon!: google.maps.Icon;
   svgMarker: any;
   markers: any[] = [];
-  infoContent = '';
+  infoWindowContent = {
+    name: null,
+    cuisine: null,
+    spw: null
+  };
   bounds: any;
   center?: google.maps.LatLngLiteral;
   display?: google.maps.LatLngLiteral;
@@ -43,6 +47,7 @@ export class RestaurantsMapComponent implements OnInit {
 
   restaurants: any;
   rest$?: Observable<any>;
+  selected?: any;
 
   constructor(
     private config: AppConfig,
@@ -106,7 +111,7 @@ export class RestaurantsMapComponent implements OnInit {
     for (i; i < totalRestaurants; i++) {
       r = this.restaurants[i];
       // Skip the loop if no valid latitude
-      if (!r.restaurant_lat || Number(r.restaurant_lat) === -999) {
+      if (!r.restaurant_lat || r.restaurant_lat as number === -999) {
         console.log(`${i} Null record`);
         continue;
       }
@@ -126,11 +131,7 @@ export class RestaurantsMapComponent implements OnInit {
             fontWeight: 'bold',
           }
         },
-        title: r.restaurant_name,
-        info:
-          `<h3>${r.restaurant_name}</h3>` +
-          `<div>${r.restaurant_cuisine_1}</div>` +
-          `<a href="${r.restaurant_spw_url}" target="_blank">${!!r.restaurant_spw_url ? 'SEE FULL DETAILS' : ''}</a>`
+        title: r.restaurant_name
       };
 
       // Bound map
@@ -142,26 +143,34 @@ export class RestaurantsMapComponent implements OnInit {
   }
 
   markerClick(event: google.maps.MapMouseEvent, index: number, m: MapMarker): void {
-    this.lastZoom = this.map.getZoom();
-    console.log(m.position);
-    this.map.panTo(m.position);
+    console.log(m);
+    const latLng = m.getPosition();
+    // @ts-ignore
+    this.map.panTo(m.getPosition());
+    // @ts-ignore
+    this.openInfoWindow(m, this.restaurants[index]);
   }
 
   listClick(index: number): void {
-    const marker = this.markers[index];
-    this.map?.fitBounds(this.bounds);
+    this.infoWindow.close();
+    const marker = this.markers[index] as MapMarker;
+    const restaurant = this.restaurants[index];
+    this.selected = restaurant;
     this.map.panTo({
-      lat: this.restaurants[index].restaurant_lat,
-      lng: this.restaurants[index].restaurant_lng
+      lat: restaurant.restaurant_lat,
+      lng: restaurant.restaurant_lng
     });
+    this.openInfoWindow(marker, restaurant);
   }
 
-  openInfo(marker: MapMarker, content: string): void {
-    // console.log(marker);
-    this.infoContent = content;
-    this.infoWindow.open(marker);
+  openInfoWindow(m: MapMarker, restaurant: any): void {
+    console.log('openInfoWindow', m);
+
+    this.infoWindowContent = {
+      name: restaurant.restaurant_name,
+      cuisine: restaurant.restaurant_cuisine_1,
+      spw: restaurant.restaurant_spw_url
+    };
+    this.infoWindow.open(m);
   }
-
-
-
 }
