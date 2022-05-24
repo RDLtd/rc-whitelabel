@@ -115,6 +115,9 @@ export class DataService {
       }
     });
   }
+
+
+
   // Summary data
   setSummary(s: any): void {
     this.setCuisines(s.cuisines);
@@ -145,6 +148,7 @@ export class DataService {
     });
     console.log(this.cuisines);
   }
+
   // recently viewed
   getRecentlyViewed(): any[] {
     return this.recentlyViewed;
@@ -169,4 +173,5 @@ export class DataService {
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
     // console.log(this.recentlyViewed);
   }
+
 }

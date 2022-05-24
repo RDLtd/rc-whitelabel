@@ -55,8 +55,7 @@ export class ApiService {
   }
 
   // tslint:disable-next-line:variable-name
-  getRestaurantsSummary(channel_access_code: string, channel_access_api_key: string,
-                        lat: number, lng: number): any {
+  getRestaurantsSummary(channel_access_code: string, channel_access_api_key: string, lat: number, lng: number): any {
     return this.http.post(this.config.apiUrl + '/channel/restaurants/summary',
       {
         channel_access_code,

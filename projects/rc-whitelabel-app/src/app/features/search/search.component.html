@@ -23,7 +23,7 @@
           autocomplete="off"
           type="text"
           ngModel
-          placeholder="{{ config.i18n['Search_by_name_or_location'] }}"
+          placeholder="{{ searchConfig.searchLabel }}"
           tabindex="0">
         <button
           mat-button
@@ -68,9 +68,10 @@
         </a>
       </li>
     </ul>
+
     <!-- Quick links -->
     <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
-      <section class="rd-quick-links">
+      <section *ngIf="searchConfig.showRecentlyViewed" class="rd-quick-links">
         <div>
           <mat-icon class="rd-icon-restaurant">{{ icons.restaurant }}</mat-icon>
           <h2>{{ config.i18n["Recently_viewed"] }}</h2>
@@ -86,7 +87,7 @@
           </li>
         </ul>
       </section>
-      <section class="rd-quick-links" *ngIf="landmarks?.length || userPosition?.inRange">
+      <section class="rd-quick-links" *ngIf="(landmarks?.length || userPosition?.inRange) && searchConfig.showRecentlyViewed">
         <div>
           <mat-icon class="rd-icon-location">{{ icons.location }}</mat-icon>
         <h2>{{ config.i18n["Nearest_to"] }}</h2>
@@ -114,7 +115,7 @@
           </li>
         </ul>
       </section>
-      <section class="rd-quick-links" *ngIf="cuisines.length">
+      <section *ngIf="searchConfig.showCuisines && cuisines.length" class="rd-quick-links">
       <div>
         <mat-icon class="rd-icon-cuisine">{{ icons.cuisine }}</mat-icon>
         <h2>{{ config.i18n["Cuisines"] }}</h2>

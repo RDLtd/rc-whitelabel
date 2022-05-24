@@ -6,6 +6,8 @@ import { AppConfig } from '../../app.config';
 import { Router } from '@angular/router';
 import { LocationService } from '../../core/location.service';
 import { fadeIn, fadeInSlideUp } from '../../shared/animations';
+import testData from './camc.json';
+
 
 interface SearchSuggestion {
   cat: string;
@@ -42,6 +44,7 @@ export class SearchComponent implements OnInit {
   // so that we can set focus
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
 
+
   // Config
   minSearchChars = 1;
   noSuggestions = false;
@@ -63,6 +66,14 @@ export class SearchComponent implements OnInit {
   recentlyViewed: any[] = [];
   // User location
   userPosition: any | undefined;
+  searchConfig = {
+    showRecentlyViewed: false,
+    showLandmarks: false,
+    showCuisines: false,
+    searchLabel: 'Begin typing a campsite or restaurant name'
+  };
+
+  extLandmarks: Landmark[] = [];
 
   constructor(
     private api: ApiService,
@@ -71,7 +82,20 @@ export class SearchComponent implements OnInit {
     public config: AppConfig,
     public router: Router,
     private location: LocationService
-  ) {}
+  ) {
+
+    testData.forEach((item, index) => {
+      this.extLandmarks.push({
+        channel_landmark_channel_id: item.camc_sites_postcode,
+        channel_landmark_id: index,
+        channel_landmark_lat: item.camc_sites_latitude,
+        channel_landmark_lng: item.camc_sites_longitude,
+        channel_landmark_name: item.camc_sites_name,
+        channel_landmark_number: index
+      });
+    });
+    console.log(this.extLandmarks.sort((a, b) => (a.channel_landmark_name < b.channel_landmark_name) ? -1 : 1 ));
+  }
 
   ngOnInit(): void {
     // Observe user's position
@@ -84,7 +108,7 @@ export class SearchComponent implements OnInit {
     this.data.loadSummarisedData().then((data: any) => {
       console.log('LoadSummary', data);
       this.searchRestaurants = data.restaurants;
-      this.landmarks = data.landmarks;
+      this.landmarks = this.extLandmarks ?? data.landmarks;
       this.features = data.attributes;
       this.cuisines = data.cuisines;
       this.isLoaded = true;
@@ -98,6 +122,7 @@ export class SearchComponent implements OnInit {
 
     // Get recent restaurants
     this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
+
   }
 
   getRecentlyViewed(): void {
@@ -124,6 +149,7 @@ export class SearchComponent implements OnInit {
       const regex =  new RegExp(`\\b${str}\\S*`, 'g');
       // Clear current suggestions
       this.searchSuggestions = [];
+
       // Check for matching landmarks
       if (!!this.landmarks) {
         let i = this.landmarks.length; let m; let idx;
@@ -141,6 +167,7 @@ export class SearchComponent implements OnInit {
           }
         }
       }
+
       // Check for matching restaurants
       if (!!this.searchRestaurants) {
         let i = this.searchRestaurants.length; let r; let idx;
@@ -157,6 +184,7 @@ export class SearchComponent implements OnInit {
           }
         }
       }
+
       // Check for matching cuisines
       if (!!this.cuisines) {
         let i = this.cuisines.length; let c; let idx;
