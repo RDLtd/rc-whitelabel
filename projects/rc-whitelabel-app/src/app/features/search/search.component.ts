@@ -94,6 +94,7 @@ export class SearchComponent implements OnInit {
         channel_landmark_number: index
       });
     });
+    // sort the list
     console.log(this.extLandmarks.sort((a, b) => (a.channel_landmark_name < b.channel_landmark_name) ? -1 : 1 ));
   }
 
