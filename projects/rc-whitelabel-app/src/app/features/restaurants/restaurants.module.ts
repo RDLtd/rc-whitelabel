@@ -10,12 +10,16 @@ import { MatInputModule } from '@angular/material/input';
 import { RestaurantsMapComponent } from './restaurants-map.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
+import { ListViewComponent } from './list-view.component';
+import { MapViewComponent } from './map-view.component';
 
 @NgModule({
   declarations: [
     RestaurantsComponent,
     FilterOptionsDialogComponent,
-    RestaurantsMapComponent],
+    RestaurantsMapComponent,
+    ListViewComponent,
+    MapViewComponent],
   imports: [
     SharedModule,
     RestaurantsRoutingModule,

@@ -3,10 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { RestaurantsComponent } from './restaurants.component';
 import { RestaurantsMapComponent } from './restaurants-map.component';
+import { ListViewComponent } from './list-view.component';
 
 const routes: Routes = [
   { path: '', component: RestaurantsComponent },
-  { path: 'map', component: RestaurantsMapComponent }
+  { path: 'map-view', component: RestaurantsMapComponent },
+  { path: 'list-view', component: ListViewComponent }
 ];
 
 @NgModule({
