@@ -8,11 +8,11 @@
     <div class="rd-restaurant-detail">
       <h2>{{ restaurant?.restaurant_name }}</h2>
       <h3>
-        <span class="rd-cuisine-location"><em [class.rd-highlight]="!!routeFilter">
+        <span class="rd-cuisine-location"><em [class.rd-highlight]="!!filterBy">
           {{ restaurant?.restaurant_cuisine_1 | uppercase }}</em>&nbsp;&nbsp;|&nbsp;&nbsp;{{
           restaurant?.restaurant_address_2 | uppercase }}</span>
         <span class="rd-flex-spacer"></span>
-        <ng-container *ngIf="restaurant?.distance && !!routeSort">
+        <ng-container *ngIf="restaurant?.distance && !!sortBy">
           <mat-icon class="rd-icon-my-location">my_location</mat-icon>&nbsp;
           <span *ngIf="restaurant?.distance <= 0.5" class="rd-distance">{{ restaurant?.distance * 1000 | number: '1.0-0'
             }} m</span>
@@ -36,4 +36,8 @@
   </div>
 
 </div>
+
+<!--<div class="rd-load-more" *ngIf="nextRestaurants.length" @fadeInSlideUp>-->
+<!--  <div class="rd-btn-more" (click)="loadMoreRestaurants()"><span>{{ config.i18n['Load_more'] }}</span></div>-->
+<!--</div>-->
 

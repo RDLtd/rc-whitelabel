@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { AppConfig } from '../app.config';
 
-export interface UserPosition {
+export interface UserGeoLocation {
   lat?: number;
   lng?: number;
   distance: string;
@@ -15,7 +15,7 @@ export interface UserPosition {
 })
 
 export class LocationService {
-  private userLocationSubject = new BehaviorSubject<UserPosition>({ inRange: false, distance: 'Unknown' });
+  private userLocationSubject = new BehaviorSubject<UserGeoLocation>({ inRange: false, distance: 'Unknown' });
 
   constructor(
     private config: AppConfig,
@@ -47,7 +47,7 @@ export class LocationService {
     }
   }
 
-  get userLocationObs(): Observable<UserPosition> {
+  get userLocationObs(): Observable<UserGeoLocation> {
     return this.userLocationSubject.asObservable();
   }
 

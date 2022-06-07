@@ -7,8 +7,9 @@ import { ListViewComponent } from './list-view.component';
 
 const routes: Routes = [
   { path: '', component: RestaurantsComponent },
-  { path: 'map-view', component: RestaurantsMapComponent },
-  { path: 'list-view', component: ListViewComponent }
+  { path: 'map/:geo', component: RestaurantsMapComponent },
+  { path: 'list/:geo', component: ListViewComponent },
+  { path: 'list/:geo/:sort', component: ListViewComponent }
 ];
 
 @NgModule({

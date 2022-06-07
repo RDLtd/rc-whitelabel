@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { RestaurantsSearchService } from './restaurants-search.service';
 import { Observable } from 'rxjs';
 import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {LocationService} from '../../core/location.service';
+
 
 @Component({
   selector: 'rd-list-view',
@@ -11,21 +14,35 @@ import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
 export class ListViewComponent implements OnInit {
 
   restaurants$: Observable<any[]>;
-  routeFilter = null;
-  routeSort = null;
+  filterBy?: string | null;
+  sortBy?: string | null;
+  isLoaded = false;
+  searchGeoCode!: string[];
+  userPosition: any;
 
   constructor(
+    private route: ActivatedRoute,
+    private location: LocationService,
     private restService: RestaurantsSearchService
   ) {
     this.restaurants$ = this.restService.restaurants;
   }
 
   ngOnInit(): void {
-    this.restService.searchRestaurants({
-      batchSize: 10,
-      offset: 0,
-      testing: false,
-      geoLocation: { lat: '51.7521849865759', lng: '-1.2579775767154544' }
+    // Observe user position
+    this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
+    // Check url params
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.isLoaded = false;
+      this.searchGeoCode = params.get('geo')?.split(',') ?? [];
+      this.filterBy = params.get('filter');
+      this.sortBy = params.get('sort');
+    });
+    // Load restaurant results
+    this.restService.loadRestaurants({
+      lat: this.searchGeoCode[0],
+      lng: this.searchGeoCode[1],
+      sortBy: this.sortBy
     });
   }
   openSpw(restaurant: any): void {}

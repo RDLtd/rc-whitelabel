@@ -5,7 +5,7 @@ import { Observable, of} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, map } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
-import { LocationService, UserPosition} from '../../core/location.service';
+import { LocationService, UserGeoLocation} from '../../core/location.service';
 
 @Component({
   selector: 'rd-restaurants-map',
@@ -31,7 +31,7 @@ export class RestaurantsMapComponent implements OnInit {
   display?: google.maps.LatLngLiteral;
   zoom = 12;
   lastZoom?: number;
-  userPosition?: UserPosition;
+  userPosition?: UserGeoLocation;
   options: google.maps.MapOptions = {
     scrollwheel: false,
     streetViewControl: false,

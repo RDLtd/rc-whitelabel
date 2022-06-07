@@ -22,15 +22,16 @@ export class RestaurantsSearchService {
     filter: '',
     filterText: '',
     lat: '51.7521849865759',
-    limit: 24,
     lng: '-1.2579775767154544',
+    limit: 9,
     offset: 0,
     testing: false
   };
-
-  private restaurantsSubject = new BehaviorSubject<any[]>([]);
-  apiKey: string;
-  accessCode: string;
+  private nextBatchOfRestaurants: Array<any> = [];
+  private restaurantsArray: Array<any> = [];
+  private restaurantsSubject = new BehaviorSubject<any[]>(this.restaurantsArray);
+  private apiKey: string;
+  private accessCode: string;
 
   constructor(
     private config: AppConfig,
@@ -39,20 +40,41 @@ export class RestaurantsSearchService {
     this.accessCode = this.config.channel.accessCode;
   }
 
-  // setRestaurants(restaurant: any[]) {
-  //   this.restaurants.next(restaurant);
-  // }
-
   get restaurants(): Observable<any[]> {
     return this.restaurantsSubject.asObservable();
   }
 
-  searchRestaurants(params: SearchParams): void {
+  loadRestaurants(params: any): void {
+    // if the params are all the same, there's no point in reloading
+    if (params === this.params) { return; }
+    // store the current params
+    this.params = Object.assign(this.params, params);
+    // load
     this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
-        console.log('Restaurant results updated', data);
-        this.restaurantsSubject.next(Object.assign([], data.restaurants));
-        console.log('Value', this.restaurantsSubject.getValue());
+        console.log(data);
+        this.restaurantsArray = data.restaurants;
+        // broadcast the changes
+        this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+        console.log('Restaurant results updated', this.restaurantsSubject.getValue());
+        // If the last batch of results was our max limit
+        // assume there are more, so prefetch the next batch
+        if (this.restaurantsArray.length % this.params.limit === 0) {
+          this.loadMoreRestaurants(true);
+        }
+      });
+  }
+
+  loadMoreRestaurants(preload = false): void {
+    this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
+      .subscribe((data: any) => {
+        if (preload) {
+          this.nextBatchOfRestaurants = data.restaurants;
+          return;
+        }
+        this.restaurantsArray.push(data.restaurants);
+        this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+        console.log('Restaurant results updated', this.restaurantsSubject.getValue());
       });
   }
 
