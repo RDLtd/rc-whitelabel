@@ -1,2 +1,39 @@
-<h1>LIST VIEW</h1>
+
+<!-- RESTAURANT RESULTS -->
+<div class="rd-results-container" [@fadeInStagger]="restaurants$ | async">
+  <div
+    *ngFor="let restaurant of restaurants$ | async"
+    class="rd-restaurant"
+    (click)="openSpw(restaurant)">
+    <div class="rd-restaurant-detail">
+      <h2>{{ restaurant?.restaurant_name }}</h2>
+      <h3>
+        <span class="rd-cuisine-location"><em [class.rd-highlight]="!!routeFilter">
+          {{ restaurant?.restaurant_cuisine_1 | uppercase }}</em>&nbsp;&nbsp;|&nbsp;&nbsp;{{
+          restaurant?.restaurant_address_2 | uppercase }}</span>
+        <span class="rd-flex-spacer"></span>
+        <ng-container *ngIf="restaurant?.distance && !!routeSort">
+          <mat-icon class="rd-icon-my-location">my_location</mat-icon>&nbsp;
+          <span *ngIf="restaurant?.distance <= 0.5" class="rd-distance">{{ restaurant?.distance * 1000 | number: '1.0-0'
+            }} m</span>
+          <span *ngIf="restaurant?.distance > 0.5" class="rd-distance">{{ restaurant?.distance | number: '1.0-1' }} Km
+          </span>
+        </ng-container>
+      </h3>
+      <p>{{ restaurant?.strap_line }}</p>
+      <span class="rd-flex-spacer"></span>
+      <mat-chip-list>
+        <mat-chip
+          *ngFor="let feature of restaurant['attributes']">
+          {{ feature }}
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+    <div class="rd-restaurant-img">
+      <img [src]="getFormattedImage(restaurant.image)" loading="lazy" [alt]="restaurant?.restaurant_name">
+      <span class="img-credit">LIBRARY IMAGE</span>
+    </div>
+  </div>
+
+</div>
 

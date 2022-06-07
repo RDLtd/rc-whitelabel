@@ -23,6 +23,10 @@ const routes: Routes = [
     path: 'restaurants/nearest/:sort',
     loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
   },
+  {
+    path: 'restaurants/map/',
+    loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
+  },
   { path: 'home',
     loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
   },

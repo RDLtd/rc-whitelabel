@@ -1,11 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {GoogleMap, MapAnchorPoint, MapDirectionsService, MapInfoWindow, MapMarker} from '@angular/google-maps';
-import { ResultsService } from './results.service';
+import { Component, OnInit, ViewChild} from '@angular/core';
+import { GoogleMap, MapAnchorPoint, MapDirectionsService, MapInfoWindow, MapMarker} from '@angular/google-maps';
+import { RestaurantsSearchService} from './restaurants-search.service';
 import { Observable, of} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, map } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
-import {LocationService, UserPosition} from '../../core/location.service';
+import { LocationService, UserPosition} from '../../core/location.service';
 
 @Component({
   selector: 'rd-restaurants-map',
@@ -51,7 +51,7 @@ export class RestaurantsMapComponent implements OnInit {
 
   constructor(
     private config: AppConfig,
-    private results: ResultsService,
+    private results: RestaurantsSearchService,
     private http: HttpClient,
     private location: LocationService,
     private mapDirectionsService: MapDirectionsService
@@ -77,14 +77,17 @@ export class RestaurantsMapComponent implements OnInit {
       );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+
+  }
 
   loadRestaurants(): void {
-    this.results.getRestaurants().subscribe(res => {
-      this.restaurants = res;
-      this.rest$ = of(this.restaurants);
-      this.addMapMarkers();
-    });
+    // this.results.getRestaurants().subscribe(res => {
+    //   this.restaurants = res;
+    //   this.rest$ = of(this.restaurants);
+    //   this.addMapMarkers();
+    // });
   }
 
   initMap(): void {
