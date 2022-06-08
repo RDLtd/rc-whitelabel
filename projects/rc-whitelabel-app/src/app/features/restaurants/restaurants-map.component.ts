@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { GoogleMap, MapAnchorPoint, MapDirectionsService, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { RestaurantsSearchService} from './restaurants-search.service';
-import { Observable, of} from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, map } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
 import { LocationService, UserGeoLocation} from '../../core/location.service';
+import { ActivatedRoute, ParamMap} from '@angular/router';
 
 @Component({
   selector: 'rd-restaurants-map',
@@ -46,22 +47,39 @@ export class RestaurantsMapComponent implements OnInit {
 
 
   restaurants: any;
-  rest$?: Observable<any>;
+  restaurants$!: Observable<any[]>;
+  resultsLoaded$: Observable<boolean>;
   selected?: any;
+  geoTarget!: string[];
+  filterBy?: string | null;
+
 
   constructor(
     private config: AppConfig,
     private results: RestaurantsSearchService,
+    private restService: RestaurantsSearchService,
     private http: HttpClient,
     private location: LocationService,
+    private route: ActivatedRoute,
     private mapDirectionsService: MapDirectionsService
   ) {
 
+    this.resultsLoaded$ = this.restService.resultsLoaded;
+    this.restaurants$ = this.restService.restaurants;
+
     // Observe user position
-    this.location.userLocationObs.subscribe((userPos) => {
-      console.log(userPos);
-      this.userPosition = userPos;
+    this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
+    // Check url params
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.geoTarget = params.get('geo')?.split(',') ?? [];
+      this.filterBy = params.get('filter');
+      this.loadRestaurants();
+      setTimeout(() => {
+        this.addMapMarkers();
+      }, 1000);
     });
+
+
 
     this.mapApiLoaded = http.jsonp(
       `https://maps.googleapis.com/maps/api/js?key=${this.config.geoApiKey}`,
@@ -71,7 +89,6 @@ export class RestaurantsMapComponent implements OnInit {
         catchError(() => of(false)),
         finalize(() => {
           console.log('Map Api Loaded');
-          this.loadRestaurants();
           this.initMap();
         })
       );
@@ -83,6 +100,18 @@ export class RestaurantsMapComponent implements OnInit {
   }
 
   loadRestaurants(): void {
+
+    this.restService.loadRestaurants({
+      lat: this.geoTarget[0],
+      lng: this.geoTarget[1]
+    });
+
+
+
+    // this.restaurants = this.restService.restArray;
+    // setTimeout(() => {
+    //   this.addMapMarkers();
+    // }, 2000);
     // this.results.getRestaurants().subscribe(res => {
     //   this.restaurants = res;
     //   this.rest$ = of(this.restaurants);
@@ -107,6 +136,7 @@ export class RestaurantsMapComponent implements OnInit {
   }
 
   addMapMarkers(): void {
+    console.log('add markers');
     const totalRestaurants = this.restaurants.length;
     let i = 0;
     let r;

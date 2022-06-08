@@ -17,17 +17,19 @@
       </svg>
       <span>NEAREST ME</span>
     </div>
+
     <div class="rd-map-list">
-      <div class="rd-map-list-item" *ngFor="let r of rest$ | async; let i = index">
-        <img [src]="r.image" loading="lazy" alt="Image of {{ r.restaurant_name }}">
+      <div class="rd-map-list-item" *ngFor="let restaurant of restaurants$ | async; let i = index">
+        <img [src]="restaurant?.image" loading="lazy" alt="Image of {{ restaurant?.restaurant_name }}">
         <div (click)="listClick(i)">
-          <h3>{{ i + 1 }}.&nbsp;{{ r.restaurant_name }}</h3>
-          <p>{{ r.restaurant_address_1 }} • {{ r.restaurant_address_2 }}</p>
-          <span>{{ r.restaurant_cuisine_2 }}</span>
+          <h3>{{ i + 1 }}.&nbsp;{{ restaurant.restaurant_name }}</h3>
+          <p>{{ restaurant?.restaurant_address_1 }} • {{ restaurant?.restaurant_address_2 }}</p>
+          <span>{{ restaurant?.restaurant_cuisine_2 }}</span>
         </div>
       </div>
     </div>
   </div>
+
   <div class="rd-component">
     <ng-container *ngIf="mapApiLoaded | async">
     <google-map width="100%"

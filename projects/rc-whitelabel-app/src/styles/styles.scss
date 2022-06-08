@@ -101,6 +101,13 @@ a, a:active, a:focus {
   color: $col-icon-location !important;
   fill: $col-icon-location
 }
+.rd-separator:after {
+  display: inline-block;
+  content: '|';
+  font-size: 1rem;
+  color: #bbb;
+  margin-inline: .25rem 0.1rem;
+}
 
 // LOAD COMPONENT
 // ------------------------
@@ -470,7 +477,7 @@ rd-footer {
         p { margin: 4px 0 12px; }
       }
       h2 {
-        font: $font-weight-heavy 24px/28px $font-family-heading;
+        font: $font-weight-heavy 24px/26px $font-family-heading;
         margin: 0;
         display: flex;
         width: 100%;

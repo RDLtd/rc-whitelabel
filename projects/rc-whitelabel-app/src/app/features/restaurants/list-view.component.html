@@ -1,5 +1,10 @@
+<rd-loader
+  class="fill-white"
+  [class.rd-hide]="resultsLoaded$ | async"
+  [loadText]="'Loading restaurants'">
+</rd-loader>
 
-<!-- RESTAURANT RESULTS -->
+<!-- Restaurants -->
 <div class="rd-results-container" [@fadeInStagger]="restaurants$ | async">
   <div
     *ngFor="let restaurant of restaurants$ | async"
@@ -8,15 +13,19 @@
     <div class="rd-restaurant-detail">
       <h2>{{ restaurant?.restaurant_name }}</h2>
       <h3>
-        <span class="rd-cuisine-location"><em [class.rd-highlight]="!!filterBy">
-          {{ restaurant?.restaurant_cuisine_1 | uppercase }}</em>&nbsp;&nbsp;|&nbsp;&nbsp;{{
-          restaurant?.restaurant_address_2 | uppercase }}</span>
+        <span class="rd-cuisine-location">
+          <em [class.rd-highlight]="true">{{ restaurant?.restaurant_cuisine_1 | uppercase }}</em>
+          <span class="rd-separator"></span>
+          {{ restaurant?.restaurant_address_2 | uppercase }}
+        </span>
         <span class="rd-flex-spacer"></span>
-        <ng-container *ngIf="restaurant?.distance && !!sortBy">
+        <ng-container *ngIf="restaurant?.distance">
           <mat-icon class="rd-icon-my-location">my_location</mat-icon>&nbsp;
-          <span *ngIf="restaurant?.distance <= 0.5" class="rd-distance">{{ restaurant?.distance * 1000 | number: '1.0-0'
-            }} m</span>
-          <span *ngIf="restaurant?.distance > 0.5" class="rd-distance">{{ restaurant?.distance | number: '1.0-1' }} Km
+          <span *ngIf="restaurant?.distance <= 0.5" class="rd-distance">
+            {{ restaurant?.distance * 1000 | number: '1.0-0' }} m
+          </span>
+          <span *ngIf="restaurant?.distance > 0.5" class="rd-distance">
+            {{ restaurant?.distance | number: '1.0-1' }} Km
           </span>
         </ng-container>
       </h3>
@@ -35,7 +44,7 @@
     </div>
   </div>
 </div>
-<!--<div class="rd-load-more" *ngIf="nextRestaurants.length" @fadeInSlideUp>-->
-<!--  <div class="rd-btn-more" (click)="loadMore()"><span>{{ config.i18n['Load_more'] }}</span></div>-->
-<!--</div>-->
 
+<div class="rd-load-more" *ngIf="moreRestaurantsPreloaded | async" @fadeInSlideUp>
+  <div class="rd-btn-more" (click)="loadMore()"><span>{{ config.i18n['Load_more'] }}</span></div>
+</div>

@@ -3,35 +3,30 @@ import { BehaviorSubject, Observable} from 'rxjs';
 import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 
-export interface SearchParams {
-  sortBy?: '';
-  filterBy?: '';
-  geoLocation: { lat: '51.7521849865759', lng: '-1.2579775767154544' };
-  batchSize?: 10;
-  offset?: 0;
-  testing?: false;
-}
-
 @Injectable({
   providedIn: 'root'
 })
 
 export class RestaurantsSearchService {
 
+  // default search params
   params = {
     filter: '',
     filterText: '',
     lat: '51.7521849865759',
     lng: '-1.2579775767154544',
-    limit: 9,
+    limit: 12,
     offset: 0,
     testing: false
   };
-  private nextBatchOfRestaurants: Array<any> = [];
+  private resultsLoadedSubject = new BehaviorSubject<boolean>(false);
+  private moreRestaurantsArray: Array<any> = [];
+  private moreRestaurantsSubject = new BehaviorSubject<boolean>(false);
   private restaurantsArray: Array<any> = [];
   private restaurantsSubject = new BehaviorSubject<any[]>(this.restaurantsArray);
   private apiKey: string;
   private accessCode: string;
+  private totalResults = 0;
 
   constructor(
     private config: AppConfig,
@@ -40,67 +35,98 @@ export class RestaurantsSearchService {
     this.accessCode = this.config.channel.accessCode;
   }
 
+  get resultsLoaded(): Observable<boolean> {
+    return this.resultsLoadedSubject.asObservable();
+  }
+
+  getRestaurantBatch(offset: number, limit: number = 1): Observable<any[]> {
+    return this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
+      .subscribe((data: any) => {
+
+      });
+  }
+
+  get moreRestaurantResults(): Observable<boolean> {
+    return this.moreRestaurantsSubject.asObservable();
+  }
+
   get restaurants(): Observable<any[]> {
     return this.restaurantsSubject.asObservable();
   }
 
+  get restArray(): Array<any> {
+    return this.restaurantsArray;
+  }
+
+  /**
+   * Updates the results observable
+   * @param params - an object containing the search query params
+   * @param preload - false if it's a new search, true if we're preloading
+   */
   loadRestaurants(params: any, preload = false): void {
+
+    // show loader if it's an initial load, but not on preload
+    this.resultsLoadedSubject.next(preload);
+
     // if the params are all the same, there's no point in reloading
     if (params === this.params) { return; }
-    // store the current params
+
+    // store the current params for comparison
     this.params = Object.assign(this.params, params);
-    // load
+
+    // call api
     this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
         console.log(data);
+
+        // store the total
+        this.totalResults = data.total_count;
+
+        // if wwe are only preloading results for our 'Load More' option
         if (preload) {
-          this.nextBatchOfRestaurants = data.restaurants;
-          console.log('Preloaded', this.nextBatchOfRestaurants);
-        } else {
-          this.restaurantsArray = data.restaurants;
-          // broadcast the changes
-          this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
-          console.log('Restaurant results updated', this.restaurantsSubject.getValue());
-          // preload next batch
-          if (this.restaurantsArray.length < data.total_count) {
-            this.loadMoreRestaurants();
-          }
+          this.moreRestaurantsArray = data.restaurants;
+          console.log('Next preloaded ready');
+          // update subject & notify observers
+          this.moreRestaurantsSubject.next(true);
+          this.resultsLoadedSubject.next(true);
+          return;
         }
+
+        this.restaurantsArray = data.restaurants;
+        // update subject
+        this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+        // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
+        // notify observers
+        this.resultsLoadedSubject.next(true);
+        // preload next batch of results
+        if (this.restaurantsArray.length < this.totalResults) { this.loadMoreRestaurants(); }
+
       });
+
   }
 
-  // Prefetch the next batch of restaurants
+  /**
+   *
+   * Preloads the next batch of results
+   */
   loadMoreRestaurants(): void {
     // have they already been preloaded?
-    if (this.nextBatchOfRestaurants.length) {
-      // Extend the array
-      this.restaurantsArray.push(...this.nextBatchOfRestaurants);
+    if (this.moreRestaurantsArray.length) {
+      // extend the array
+      this.restaurantsArray.push(...this.moreRestaurantsArray);
+      // notify observers
       this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
-      // Reset
-      this.nextBatchOfRestaurants = [];
+      // reset array
+      this.moreRestaurantsArray = [];
+      // are there more results?
+      this.moreRestaurantsSubject.next(this.restaurantsArray.length < this.totalResults);
     }
-    this.loadRestaurants({ offset: this.restaurantsArray.length }, true);
+    // are there more results to load?
+    if (this.restaurantsArray.length < this.totalResults) {
+      this.loadRestaurants({ offset: this.restaurantsArray.length }, true);
+    } else {
+      console.log(`All ${this.totalResults} results loaded`)
+    }
   }
-
-  // getRestaurants(): Observable<any[]> {
-  //   // only if length of array is 0, load from server
-  //   if (this.restaurantsSubject.getValue().length === 0) {
-  //     console.log('Loading restaurants from api');
-  //     this.loadRestaurants();
-  //   } else {
-  //     console.log('Loading from cache');
-  //   }
-  //   return this.restaurantsSubject.asObservable();
-  // }
-  // private loadRestaurants(): void {
-  //   this.api.getRestaurantsByParams(
-  //     this.config.channel.accessCode,
-  //     this.config.channel.apiKey,
-  //     this.params)
-  //     .subscribe((res: any) => {
-  //       console.log('Restaurants Loaded');
-  //       this.restaurantsSubject.next(Object.assign([], res.restaurants.sort()));
-  //     });
-  // }
 }
 

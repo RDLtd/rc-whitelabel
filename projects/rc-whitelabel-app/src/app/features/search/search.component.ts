@@ -163,7 +163,7 @@ export class SearchComponent implements OnInit {
               name: m.channel_landmark_name,
               cat: 'location',
               index: idx,
-              route: ['/restaurants/nearest/', `${m.channel_landmark_lat}:${m.channel_landmark_lng}`]
+              route: ['/restaurants/map/', `${m.channel_landmark_lat},${m.channel_landmark_lng}`]
             });
           }
         }
