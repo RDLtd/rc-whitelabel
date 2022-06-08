@@ -44,7 +44,7 @@ export class RestaurantsSearchService {
     return this.restaurantsSubject.asObservable();
   }
 
-  loadRestaurants(params: any): void {
+  loadRestaurants(params: any, preload = false): void {
     // if the params are all the same, there's no point in reloading
     if (params === this.params) { return; }
     // store the current params
@@ -53,29 +53,33 @@ export class RestaurantsSearchService {
     this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
         console.log(data);
-        this.restaurantsArray = data.restaurants;
-        // broadcast the changes
-        this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
-        console.log('Restaurant results updated', this.restaurantsSubject.getValue());
-        // If the last batch of results was our max limit
-        // assume there are more, so prefetch the next batch
-        if (this.restaurantsArray.length % this.params.limit === 0) {
-          this.loadMoreRestaurants(true);
+        if (preload) {
+          this.nextBatchOfRestaurants = data.restaurants;
+          console.log('Preloaded', this.nextBatchOfRestaurants);
+        } else {
+          this.restaurantsArray = data.restaurants;
+          // broadcast the changes
+          this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+          console.log('Restaurant results updated', this.restaurantsSubject.getValue());
+          // preload next batch
+          if (this.restaurantsArray.length < data.total_count) {
+            this.loadMoreRestaurants();
+          }
         }
       });
   }
 
-  loadMoreRestaurants(preload = false): void {
-    this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
-      .subscribe((data: any) => {
-        if (preload) {
-          this.nextBatchOfRestaurants = data.restaurants;
-          return;
-        }
-        this.restaurantsArray.push(data.restaurants);
-        this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
-        console.log('Restaurant results updated', this.restaurantsSubject.getValue());
-      });
+  // Prefetch the next batch of restaurants
+  loadMoreRestaurants(): void {
+    // have they already been preloaded?
+    if (this.nextBatchOfRestaurants.length) {
+      // Extend the array
+      this.restaurantsArray.push(...this.nextBatchOfRestaurants);
+      this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+      // Reset
+      this.nextBatchOfRestaurants = [];
+    }
+    this.loadRestaurants({ offset: this.restaurantsArray.length }, true);
   }
 
   // getRestaurants(): Observable<any[]> {

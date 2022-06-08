@@ -17,7 +17,7 @@ export class ListViewComponent implements OnInit {
   filterBy?: string | null;
   sortBy?: string | null;
   isLoaded = false;
-  searchGeoCode!: string[];
+  mapLatLng!: string[];
   userPosition: any;
 
   constructor(
@@ -34,16 +34,19 @@ export class ListViewComponent implements OnInit {
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.isLoaded = false;
-      this.searchGeoCode = params.get('geo')?.split(',') ?? [];
+      this.mapLatLng = params.get('geo')?.split(',') ?? [];
       this.filterBy = params.get('filter');
       this.sortBy = params.get('sort');
     });
     // Load restaurant results
     this.restService.loadRestaurants({
-      lat: this.searchGeoCode[0],
-      lng: this.searchGeoCode[1],
+      lat: this.mapLatLng[0],
+      lng: this.mapLatLng[1],
       sortBy: this.sortBy
     });
+  }
+  loadMore(): void {
+
   }
   openSpw(restaurant: any): void {}
   // Todo: we need to store on the Cloudinary ids so that
