@@ -58,6 +58,43 @@ export class RestaurantsSearchService {
     return this.restaurantsArray;
   }
 
+  get totalRestaurants(): number {
+    return this.totalResults;
+  }
+
+  resetRestaurantResults(): void {
+    this.restaurantsSubject.next([]);
+  }
+
+
+  loadRestaurantBatch(params: any ): void {
+    // show loader if it's an initial load, but not on preload
+    this.resultsLoadedSubject.next(false);
+
+    // if the params are all the same, there's no point in reloading
+    if (params === this.params) { return; }
+
+    console.log('before', this.params);
+
+    // store the current params for comparison
+    this.params = Object.assign(this.params, params);
+
+    console.log('after', this.params);
+
+    this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
+      .subscribe((data: any) => {
+        console.log(data);
+        // store the total
+        this.totalResults = data.total_count;
+        this.restaurantsArray = data.restaurants;
+        // update subject
+        this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+        // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
+        // notify observers
+        this.resultsLoadedSubject.next(true);
+      });
+  }
+
   /**
    * Updates the results observable
    * @param params - an object containing the search query params
