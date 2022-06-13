@@ -633,9 +633,18 @@ rd-footer {
 .rd-map-nav {
   display: flex;
   align-items: center;
-  padding-block: 12px;
+  justify-content: flex-end;
+  font-size: 1rem;
+  padding-block: 4px;
   margin-bottom: 6px;
   border-bottom: 1px solid $col-icon-restaurant;
+  span {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    align-items: center;
+    margin-right: 1rem;
+  }
 }
 .rd-map-info {
   padding: 12px 0 6px 6px;

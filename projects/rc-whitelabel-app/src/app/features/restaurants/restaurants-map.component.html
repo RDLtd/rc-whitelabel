@@ -17,8 +17,23 @@
 <!--      3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>-->
 <!--      </svg>-->
 <!--      <span>NEAREST ME</span>-->
-      <button (click)="prevBatch()">PREV {{ batchTotal }}</button>
-      <button (click)="nextBatch()">NEXT {{ batchTotal }} of {{ totalResults }}</button>
+
+
+      <span>{{ currentOffset + 1 }} to {{ currentOffset + batchTotal }} of {{ getTotal() }}</span>
+      <button [disabled]="currentOffset === 0"
+              mat-icon-button
+              (click)="prevBatch()"
+              title="Previous {{ currentOffset }} restaurants">
+        <mat-icon>arrow_back_ios</mat-icon>
+      </button>
+      <button
+        [disabled]="currentOffset + batchTotal >= getTotal()"
+        mat-icon-button
+              (click)="nextBatch()"
+              title="Next {{ batchTotal }} restaurants">
+        <mat-icon>arrow_forward_ios</mat-icon>
+      </button>
+
     </div>
 
     <div class="rd-map-list" [@fadeInStagger]="restaurants$ | async">
@@ -34,11 +49,14 @@
   </div>
 
   <div class="rd-component">
+
     <ng-container *ngIf="mapApiLoaded | async">
+
     <google-map width="100%"
                 height="100%"
                 [zoom]="zoom"
-                [options]="options">
+                [options]="mapOptions">
+
       <map-marker #mapMarker="mapMarker"
                   *ngFor="let marker of markers; let i = index"
                   id="{{ 'mm' + i }}"
@@ -47,6 +65,7 @@
                   [title]="marker.title"
                   [position]="marker?.position">
       </map-marker>
+
       <map-info-window>
         <div class="rd-map-info">
           <h3>{{ infoWindowContent.name }}</h3>
@@ -54,6 +73,7 @@
           <a *ngIf="!!infoWindowContent.spw" href="{{ infoWindowContent.spw }}" target="_blank">SEE FULL DETAILS</a>
         </div>
       </map-info-window>
+
     </google-map>
     </ng-container>
   </div>
