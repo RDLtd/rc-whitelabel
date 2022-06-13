@@ -39,13 +39,6 @@ export class RestaurantsSearchService {
     return this.resultsLoadedSubject.asObservable();
   }
 
-  getRestaurantBatch(offset: number, limit: number = 1): Observable<any[]> {
-    return this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
-      .subscribe((data: any) => {
-
-      });
-  }
-
   get moreRestaurantResults(): Observable<boolean> {
     return this.moreRestaurantsSubject.asObservable();
   }

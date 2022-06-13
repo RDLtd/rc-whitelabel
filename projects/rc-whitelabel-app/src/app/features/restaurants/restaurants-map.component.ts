@@ -51,8 +51,9 @@ export class RestaurantsMapComponent implements OnInit {
   selected?: any;
   geoTarget!: string[];
   filterBy?: string | null;
-  batchTotal = 12;
+  batchTotal = 10;
   currentOffset = 0;
+  totalResults?: number;
 
 
   constructor(
@@ -89,7 +90,6 @@ export class RestaurantsMapComponent implements OnInit {
           this.initMap();
           this.restService.restaurants.subscribe((data: any) => {
             this.restaurants = data;
-            this.currentOffset += this.batchTotal;
             console.log(data);
             if (data.length) {
               this.addMapMarkers();
@@ -105,13 +105,37 @@ export class RestaurantsMapComponent implements OnInit {
   }
 
   loadRestaurants(): void {
-
     this.restService.loadRestaurantBatch({
       lat: this.geoTarget[0],
       lng: this.geoTarget[1],
       offset: this.currentOffset,
       limit: this.batchTotal
     });
+  }
+
+  nextBatch(): void {
+    this.currentOffset += this.batchTotal;
+    this.loadRestaurants();
+  }
+
+  prevBatch(): void {
+    this.currentOffset -= this.batchTotal;
+    if (this.currentOffset < 0) {
+      this.currentOffset = 0;
+      return;
+    }
+    this.loadRestaurants();
+  }
+
+  loadRestaurantBatch(offset: number): void {
+    console.log(offset);
+    this.restService.loadRestaurantBatch({
+      lat: this.geoTarget[0],
+      lng: this.geoTarget[1],
+      offset,
+      limit: this.batchTotal
+    });
+
   }
 
   initMap(): void {
@@ -132,7 +156,7 @@ export class RestaurantsMapComponent implements OnInit {
 
   addMapMarkers(): void {
     console.log('add markers');
-    this.markers = [];
+    this.markers = [MapMarker];
     const totalRestaurants = this.restaurants.length;
     let i = 0;
     let r;
@@ -145,36 +169,44 @@ export class RestaurantsMapComponent implements OnInit {
         console.log(`${i} Null record`);
         continue;
       }
-      marker = {
-        //map: this.map,
+      marker = new google.maps.Marker({
         position: {
           lat: r.restaurant_lat as number,
           lng: r.restaurant_lng as number
         },
-        options: {
-          // animation: google.maps.Animation.DROP,
-          icon: this.svgMarker,
-          label: {
-            text: `${i}`,
-            color: '#fff',
-            fontSize: '12px',
-            fontWeight: 'normal',
-          }
-        },
+        icon: this.svgMarker,
         title: r.restaurant_name
-      };
+      });
+
+      // marker = {
+      //   //map: this.map,
+      //   position: {
+      //     lat: r.restaurant_lat as number,
+      //     lng: r.restaurant_lng as number
+      //   },
+      //   options: {
+      //     // animation: google.maps.Animation.DROP,
+      //     icon: this.svgMarker,
+      //     label: {
+      //       text: `${i}`,
+      //       color: '#fff',
+      //       fontSize: '12px',
+      //       fontWeight: 'normal',
+      //     }
+      //   },
+      //   title: r.restaurant_name
+      // };
       // Bound map
 
-      this.bounds.extend(marker.position);
+      this.bounds.extend(marker.getPosition());
       this.markers.push(marker);
 
     }
+    //this.map.panTo(this.markers[0].position);
+    this.map.fitBounds(this.bounds, 120);
 
-    this.map?.fitBounds(this.bounds, 120);
     this.lastZoom = this.zoom;
   }
-
-
 
   markerClick(event: google.maps.MapMouseEvent, index: number, m: MapMarker): void {
     console.log(m);
@@ -186,17 +218,18 @@ export class RestaurantsMapComponent implements OnInit {
 
   listClick(index: number): void {
     this.infoWindow.close();
-    const marker = this.markers[index] as MapMarker;
+    const marker = this.markers[index];
     const restaurant = this.restaurants[index];
     this.selected = restaurant;
     this.map.panTo({
       lat: restaurant.restaurant_lat,
       lng: restaurant.restaurant_lng
     });
-    //this.openInfoWindow(marker, restaurant);
+    console.log(typeof marker);
+    this.openInfoWindow(marker, restaurant);
   }
 
-  openInfoWindow(m: MapMarker, restaurant: any): void {
+  openInfoWindow(m: any, restaurant: any): void {
     console.log('openInfoWindow', m);
 
     this.infoWindowContent = {
@@ -204,6 +237,6 @@ export class RestaurantsMapComponent implements OnInit {
       cuisine: restaurant.restaurant_cuisine_1,
       spw: restaurant.restaurant_spw_url
     };
-    this.infoWindow.open(m);
+    this.infoWindow.open(m.getAnchor());
   }
 }
