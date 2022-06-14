@@ -191,6 +191,7 @@ header {
   position: fixed;
   transition: all .6s cubic-bezier(0.16, 1, 0.3, 1);
   background: $col-page-bgd;
+  box-shadow: 0 2px 4px 0 #00000026;
   color: $col-text;
   &.rd-hideHeader {
     @include mq(small) {
@@ -625,6 +626,7 @@ rd-footer {
       line-height: 1.1;
       white-space: nowrap;
       text-overflow: ellipsis;
+      overflow: hidden;
     }
     p { margin: 0; }
     span { text-transform: uppercase }
@@ -670,7 +672,7 @@ rd-footer {
   padding:  16px 12px 12px;
   display: grid;
   overflow: hidden;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 340px auto;
   grid-auto-rows: 1fr;
   grid-column-gap: 12px;
   grid-row-gap: 16px;
