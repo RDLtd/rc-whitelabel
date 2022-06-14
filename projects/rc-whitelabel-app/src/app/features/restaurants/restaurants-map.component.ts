@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import { GoogleMap, MapAnchorPoint, MapDirectionsService, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { RestaurantsSearchService} from './restaurants-search.service';
 import { Observable, of } from 'rxjs';
@@ -9,17 +9,18 @@ import { LocationService, UserGeoLocation} from '../../core/location.service';
 import { ActivatedRoute, ParamMap} from '@angular/router';
 import {fadeInSlideUp, fadeInStagger} from '../../shared/animations';
 
-
 @Component({
   selector: 'rd-restaurants-map',
   templateUrl: './restaurants-map.component.html',
   animations: [fadeInSlideUp, fadeInStagger]
 })
+
 export class RestaurantsMapComponent implements OnInit {
 
   @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
   @ViewChild(MapInfoWindow, { static: false }) infoWindow!: MapInfoWindow;
   @ViewChild(MapMarker, { static: false }) mapMarker!: MapMarker;
+  @ViewChildren('mapMarker') components!: QueryList<MapMarker>;
 
   mapApiLoaded: Observable<boolean>;
 
@@ -47,8 +48,6 @@ export class RestaurantsMapComponent implements OnInit {
   lastZoom?: number;
   userPosition?: UserGeoLocation;
 
-
-
   restaurants: any[] = [];
   restaurants$!: Observable<any[]>;
   resultsLoaded$: Observable<boolean>;
@@ -58,7 +57,7 @@ export class RestaurantsMapComponent implements OnInit {
   batchTotal = 6;
   currentOffset = 0;
   totalResults?: number;
-
+  mapMarkerArr: MapMarker[] = [];
 
   constructor(
     private config: AppConfig,
@@ -93,7 +92,7 @@ export class RestaurantsMapComponent implements OnInit {
           this.initMap();
           this.restService.restaurants.subscribe((data: any) => {
             this.restaurants = data;
-            console.log(data);
+            // console.log(data);
             if (data.length) {
               this.addMapMarkers();
             }
@@ -103,7 +102,9 @@ export class RestaurantsMapComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    setTimeout(() => {
+      console.log(this.components.toArray());
+    }, 1000)
 
   }
 
@@ -114,7 +115,6 @@ export class RestaurantsMapComponent implements OnInit {
       offset: this.currentOffset,
       limit: this.batchTotal
     });
-
   }
 
   getTotal(): number {
@@ -135,17 +135,6 @@ export class RestaurantsMapComponent implements OnInit {
     this.loadRestaurants();
   }
 
-  loadRestaurantBatch(offset: number): void {
-    console.log(offset);
-    this.restService.loadRestaurantBatch({
-      lat: this.geoTarget[0],
-      lng: this.geoTarget[1],
-      offset,
-      limit: this.batchTotal
-    });
-
-  }
-
   initMap(): void {
     this.bounds = new google.maps.LatLngBounds();
     this.svgMarker = {
@@ -164,9 +153,6 @@ export class RestaurantsMapComponent implements OnInit {
 
   addMapMarkers(): void {
     console.log(`Add ${this.restaurants.length} markers`);
-
-    // this.markers = [];
-
     const totalRestaurants = this.restaurants.length;
     let i = 0;
     let r;
@@ -180,7 +166,6 @@ export class RestaurantsMapComponent implements OnInit {
         console.log(`${i} Null record`);
         continue;
       }
-
 
       marker = {
         //map: this.map,
@@ -201,6 +186,7 @@ export class RestaurantsMapComponent implements OnInit {
       };
       // Bound map
 
+
       this.bounds.extend({
         lat: r.restaurant_lat as number,
         lng: r.restaurant_lng as number
@@ -208,10 +194,11 @@ export class RestaurantsMapComponent implements OnInit {
       this.markers.push(marker);
     }
     console.log('A', this.markers);
-    // this.map.panTo(this.markers[0].position);
+
     setTimeout(() => {
-      this?.map.fitBounds(this.bounds, 100);
-    }, 100);
+      this?.map.panTo(this.markers[0].position);
+      //this?.map.fitBounds(this.bounds, 100);
+    }, 0);
     this.lastZoom = this.zoom;
   }
 
@@ -223,19 +210,18 @@ export class RestaurantsMapComponent implements OnInit {
     this.openInfoWindow(m, this.restaurants[index]);
   }
 
-  listClick(index: number): void {
-    // @ts-ignore
-    let mm = document.getElementById(`mm${index}`);
-
-    google.maps.event.trigger(this.markers[index], 'mapClick');
+  listClick(mm: MapMarker, index: number): void {
 
     this.infoWindow.close();
     const marker = this.markers[index];
     const restaurant = this.restaurants[index];
     this.selected = restaurant;
     this.map.panTo(marker.position);
-    console.log(marker);
-    this.openInfoWindow(marker, restaurant);
+
+    console.log(this.components.toArray()[index]);
+
+    // @ts-ignore
+    this.openInfoWindow(this.components.toArray()[0], restaurant);
   }
 
   openInfoWindow(m: MapMarker, restaurant: any): void {

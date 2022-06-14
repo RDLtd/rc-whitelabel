@@ -66,7 +66,9 @@ export class SearchComponent implements OnInit {
   recentlyViewed: any[] = [];
   // User location
   userPosition: any | undefined;
+
   searchConfig = {
+    defaultView: 'map',
     showRecentlyViewed: false,
     showLandmarks: false,
     showCuisines: false,
@@ -163,7 +165,7 @@ export class SearchComponent implements OnInit {
               name: m.channel_landmark_name,
               cat: 'location',
               index: idx,
-              route: ['/restaurants/map/', `${m.channel_landmark_lat},${m.channel_landmark_lng}`]
+              route: ['/restaurants', `${m.channel_landmark_lat},${m.channel_landmark_lng}`, this.searchConfig.defaultView]
             });
           }
         }

@@ -43,6 +43,7 @@
     </form>
     <!--  Search Results -->
     <ul [class.open]="!!rdSearchInput.value && !!searchSuggestions" class="rd-search-autofill">
+
       <!-- Suggestions -->
       <li *ngFor="let displayItem of searchSuggestions; let i = index" [tabindex]="i + 1" [ngSwitch]="displayItem.cat">
         <!-- Landmarks -->
@@ -52,6 +53,7 @@
           <span class="rd-flex-spacer"></span>
           <span></span>
         </a>
+
         <!-- Restaurants -->
         <a *ngSwitchCase="'restaurant'" [routerLink]="[]" (click)="viewRestaurantSpw(displayItem)">
           <mat-icon class="rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
@@ -59,6 +61,7 @@
           <span class="rd-flex-spacer"></span>
           <span>{{ displayItem.misc }}</span>
         </a>
+
         <!-- Cuisines -->
         <a *ngSwitchCase="'cuisine'" [routerLink]="displayItem.route">
           <mat-icon class="rd-icon-cuisine">{{ icons['cuisine'] }}</mat-icon>

@@ -1,23 +1,23 @@
 
-<!--<rd-loader-->
-<!--  class="fill-white"-->
-<!--  [class.rd-hide]="isLoaded && config.channelLoaded"-->
-<!--  [loadText]="'LOADING MAP VIEW'">-->
-<!--</rd-loader>-->
+<rd-loader
+  class="fill-white"
+  [class.rd-hide]="resultsLoaded$ | async"
+  [loadText]="'Loading restaurants'">
+</rd-loader>
 
 <div class="rd-map" >
   <div class="rd-component">
     <div class="rd-map-nav">
-<!--      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">-->
+<!--      <a style="display: inline-flex" [routerLink]="getNearestMeLink()">-->
+<!--        NEAREST ME &nbsp;-->
+<!--        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">-->
 <!--        <path d="M0 0h24v24H0z" fill="none"/>-->
-
 <!--        <path-->
 <!--          class="rd-icon-my-location"-->
 <!--          d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94-->
 <!--      3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>-->
 <!--      </svg>-->
-<!--      <span>NEAREST ME</span>-->
-
+<!--      </a>-->
 
       <span>{{ currentOffset + 1 }} to {{ currentOffset + batchTotal }} of {{ getTotal() }}</span>
       <button [disabled]="currentOffset === 0"
@@ -39,7 +39,7 @@
     <div class="rd-map-list" [@fadeInStagger]="restaurants$ | async">
       <div class="rd-map-list-item" *ngFor="let restaurant of restaurants$ | async; let i = index">
         <img [src]="restaurant?.image" loading="lazy" alt="Image of {{ restaurant?.restaurant_name }}">
-        <div (click)="listClick(i)">
+        <div (click)="listClick(mapMarker, i)">
           <h3>{{ restaurant.restaurant_name }}</h3>
           <p>{{ restaurant?.restaurant_address_1 }}  {{ restaurant?.restaurant_address_3 }}</p>
           <span>{{ restaurant?.restaurant_cuisine_2 }}</span>
@@ -59,7 +59,7 @@
 
       <map-marker #mapMarker="mapMarker"
                   *ngFor="let marker of markers; let i = index"
-                  id="{{ 'mm' + i }}"
+                  id="{{ 'mapMarker' + i }}"
                   [options]="marker.options"
                   (mapClick)="markerClick($event, i, mapMarker)"
                   [title]="marker.title"
