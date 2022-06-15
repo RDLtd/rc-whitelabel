@@ -6,7 +6,7 @@
 </rd-loader>
 
 <div class="rd-map">
-  <div class="rd-component">
+  <div class="rd-component list">
     <div class="rd-map-nav">
 <!--      <a style="display: inline-flex" [routerLink]="getNearestMeLink()">-->
 <!--        NEAREST ME &nbsp;-->
@@ -38,7 +38,7 @@
       <div class="rd-map-list-item" *ngFor="let restaurant of restaurants$ | async; let i = index">
         <img [src]="restaurant?.image" loading="lazy" alt="Image of {{ restaurant?.restaurant_name }}">
         <div (click)="listClick(i)">
-          <h3>{{ restaurant.restaurant_name }}</h3>
+          <h3>{{ i + 1 }}: {{ restaurant.restaurant_name }}</h3>
           <p>{{ restaurant?.restaurant_address_1 }}  {{ restaurant?.restaurant_address_3 }}</p>
           <span>{{ restaurant?.restaurant_cuisine_2 }}</span>
         </div>
@@ -47,7 +47,7 @@
 
   </div>
 
-  <div class="rd-component">
+  <div class="rd-component map">
 
     <ng-container *ngIf="mapApiLoaded$ | async">
 

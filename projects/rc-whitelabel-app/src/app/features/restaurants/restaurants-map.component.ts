@@ -24,8 +24,6 @@ export class RestaurantsMapComponent implements OnInit {
 
   mapApiSubject = new BehaviorSubject<boolean>(false);
   mapApiLoaded$ = this.mapApiSubject.asObservable();
-  //mapApiLoaded$: Observable<boolean>;
-
   mapOptions: google.maps.MapOptions = {
     scrollwheel: false,
     streetViewControl: false,
@@ -34,12 +32,11 @@ export class RestaurantsMapComponent implements OnInit {
     mapId: 'f547725f57ef2ea8',
     mapTypeControl: false
   };
-
-  // icon!: google.maps.Icon;
   svgMarker: any;
   svgMarker2: any;
   markers!: any[];
   selectedMarker?: MapMarker;
+  mapMarkerArr: MapMarker[] = [];
   infoWindowContent = {
     name: null,
     cuisine: null,
@@ -52,16 +49,16 @@ export class RestaurantsMapComponent implements OnInit {
   lastZoom?: number;
   userPosition?: UserGeoLocation;
 
+  // Restaurants
   restaurants: any[] = [];
   restaurants$!: Observable<any[]>;
   resultsLoaded$: Observable<boolean>;
-  selected?: any;
   geoTarget!: string[];
   filterBy?: string | null;
-  batchTotal = 6;
+  batchTotal = 12;
   currentOffset = 0;
   totalResults?: number;
-  mapMarkerArr: MapMarker[] = [];
+
 
   constructor(
     private config: AppConfig,
@@ -72,11 +69,13 @@ export class RestaurantsMapComponent implements OnInit {
     private route: ActivatedRoute
   ) {
 
+    // search results
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
 
-    // Observe user position
+    // observe user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
+
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.geoTarget = params.get('geo')?.split(',') ?? [];
@@ -86,13 +85,14 @@ export class RestaurantsMapComponent implements OnInit {
     });
 
     // If we're switching between views, then the
-    // google api may already be available
+    // Google api script may already be available
+    // so don't load it again!
     if (window.hasOwnProperty('google')) {
       console.log('Google maps api already available');
       this.initMap();
       this.mapApiSubject.next(true);
     } else {
-      // otherwise, we need to load it
+    // otherwise, we need to load it
       console.log('Load Google maps api');
       this.mapApiLoaded$ = http.jsonp(
         `https://maps.googleapis.com/maps/api/js?key=${this.config.geoApiKey}`,
@@ -109,59 +109,27 @@ export class RestaurantsMapComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  loadRestaurants(): void {
-    this.restService.loadRestaurantBatch({
-      lat: this.geoTarget[0],
-      lng: this.geoTarget[1],
-      offset: this.currentOffset,
-      limit: this.batchTotal
-    });
-  }
-
-  getTotal(): number {
-    return this.restService.totalRestaurants;
-  }
-
-  nextBatch(): void {
-    this.currentOffset += this.batchTotal;
-    this.loadRestaurants();
-  }
-
-  prevBatch(): void {
-    this.currentOffset -= this.batchTotal;
-    if (this.currentOffset < 0) {
-      this.currentOffset = 0;
-      return;
-    }
-    this.loadRestaurants();
-  }
-
   initMap(): void {
     console.log('Initialise map');
+    // MapMarker icon svg
     this.svgMarker = {
       path:
         'M11.9858571,34.9707603 C5.00209157,32.495753 0,25.8320271 0,18 C0,8.0588745 8.0588745,0 18,0 C27.9411255,0 36,8.0588745 36,18 C36,25.8320271 30.9979084,32.495753 24.0141429,34.9707603 C24.0096032,34.980475 24.0048892,34.9902215 24,35 C20,37 18,40.6666667 18,46 C18,40.6666667 16,37 12,35 C11.9951108,34.9902215 11.9903968,34.980475 11.9858571,34.9707603 Z',
-      fillColor: '#ff5724',
-      fillOpacity: .75,
-      strokeWeight: 1,
-      strokeColor: '#fff',
-      rotation: 0,
-      scale: 1,
-      labelOrigin: { x: 18, y: 18 },
-      anchor: new google.maps.Point(18, 40)
-    };
-    this.svgMarker2 = {
-      path:
-        'M11.9858571,34.9707603 C5.00209157,32.495753 0,25.8320271 0,18 C0,8.0588745 8.0588745,0 18,0 C27.9411255,0 36,8.0588745 36,18 C36,25.8320271 30.9979084,32.495753 24.0141429,34.9707603 C24.0096032,34.980475 24.0048892,34.9902215 24,35 C20,37 18,40.6666667 18,46 C18,40.6666667 16,37 12,35 C11.9951108,34.9902215 11.9903968,34.980475 11.9858571,34.9707603 Z',
-      fillColor: '#ff5724',
+      fillColor: '#9a9a9a',
       fillOpacity: 1,
       strokeWeight: 1,
       strokeColor: '#fff',
       rotation: 0,
-      scale: 1.25,
-      labelOrigin: { x: 18, y: 18 },
+      scale: 1,
+      labelOrigin: { x: 17, y: 18 },
       anchor: new google.maps.Point(18, 40)
     };
+    // Duplicate and edit
+    this.svgMarker2  = Object.assign({}, this.svgMarker);
+    this.svgMarker2.scale = 1.5;
+    this.svgMarker2.fillOpacity = 1;
+    this.svgMarker2.fillColor = '#ff5720';
+
     this.bounds = new google.maps.LatLngBounds();
     this.restService.restaurants.subscribe((data: any) => {
       this.restaurants = data;
@@ -172,14 +140,41 @@ export class RestaurantsMapComponent implements OnInit {
     });
   }
 
-  addMapMarkers(): void {
-    console.log(`Add ${this.restaurants.length} markers`);
+  loadRestaurants(): void {
+    this.restService.loadRestaurantBatch({
+      lat: this.geoTarget[0],
+      lng: this.geoTarget[1],
+      offset: this.currentOffset,
+      limit: this.batchTotal
+    });
+  }
 
+  // returns the total number of results
+  getTotal(): number {
+    return this.restService.totalRestaurants;
+  }
+
+  // navigate through results
+  nextBatch(): void {
+    this.currentOffset += this.batchTotal;
+    this.loadRestaurants();
+  }
+  prevBatch(): void {
+    this.currentOffset -= this.batchTotal;
+    if (this.currentOffset < 0) {
+      this.currentOffset = 0;
+      return;
+    }
+    this.loadRestaurants();
+  }
+
+  addMapMarkers(): void {
     const totalRestaurants = this.restaurants.length;
     let i = 0;
     let r;
     let markerComp;
     this.markers = [];
+    this.bounds = new google.maps.LatLngBounds();
 
     for (i; i < totalRestaurants; i++) {
       r = this.restaurants[i];
@@ -193,17 +188,19 @@ export class RestaurantsMapComponent implements OnInit {
           lat: r.restaurant_lat as number,
           lng: r.restaurant_lng as number
         },
+        zIndex: i + 10,
         options: {
           icon: this.svgMarker,
           label: {
-            text: `${i}`,
+            text: `${i + 1}`,
             color: '#fff',
-            fontSize: '12px',
-            fontWeight: 'normal',
+            fontSize: '16px',
+            fontWeight: 'bold',
           }
         },
         title: r.restaurant_name
       };
+
       // Bound map
       this.bounds.extend({
         lat: r.restaurant_lat as number,
@@ -233,14 +230,28 @@ export class RestaurantsMapComponent implements OnInit {
   selectMapMarker(marker: MapMarker, restaurant: any): void {
     // reset current
     this.infoWindow.close();
-    this.selectedMarker?.marker?.setIcon(this.svgMarker);
-    this.selectedMarker?.marker?.setZIndex(1);
+    this.selectedMarker?.marker?.setOptions({
+      zIndex: 1,
+      icon: this.svgMarker
+    })
+
     // set new
     this.selectedMarker = marker;
-    this.selectedMarker.marker?.setIcon(this.svgMarker2);
-    this.selectedMarker.marker?.setZIndex(100);
+    this.selectedMarker.marker?.setOptions({
+      zIndex: 100,
+      icon: this.svgMarker2
+    });
     // @ts-ignore
     this.map.panTo(marker.getPosition());
+    // this.selectedMarker.marker?.setAnimation(google.maps.Animation.BOUNCE);
+    const latlngbounds = new google.maps.LatLngBounds();
+    // @ts-ignore
+    latlngbounds.extend(marker.getPosition());
+    //this.map.fitBounds(latlngbounds, 0);
+    // console.log(this.bounds);
+    // console.log(latlngbounds);
+
+
     // Open info window
     this.infoWindowContent = {
       name: restaurant.restaurant_name,
