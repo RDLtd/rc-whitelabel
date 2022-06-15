@@ -28,6 +28,12 @@ export class HeaderComponent implements OnInit {
         this.showSearchOption = this.router.url !== '/search';
     });
   }
+  switchView(view: string): void {
+    let path = this.router.url.split('/');
+    path[path.length - 1] = view;
+    console.log(path);
+    this.router.navigate(path);
+  }
 
 }
 

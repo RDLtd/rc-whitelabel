@@ -9,6 +9,8 @@
     alt="Logo">
 </a>
 <span class="rd-flex-spacer"></span>
+<a (click)="switchView('list')">LIST VIEW</a>&nbsp;|&nbsp;
+<a (click)="switchView('map')">MAP VIEW</a>
 <button
   *ngIf="showSearchOption"
   mat-button
