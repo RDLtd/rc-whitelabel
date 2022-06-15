@@ -39,6 +39,7 @@ export class RestaurantsMapComponent implements OnInit {
   svgMarker: any;
   svgMarker2: any;
   markers!: any[];
+  selectedMarker?: MapMarker;
   infoWindowContent = {
     name: null,
     cuisine: null,
@@ -219,27 +220,28 @@ export class RestaurantsMapComponent implements OnInit {
   }
 
   markerClick(marker: MapMarker, index: number): void {
-    console.log(marker);
+    this.selectMapMarker(marker, this.restaurants[index]);
+  }
+
+  listClick(index: number): void {
+    const mapMarkersArray = this.mapMarkerComponents.toArray();
+    const mapMarkerComponent = mapMarkersArray[index];
+    const restaurant = this.restaurants[index];
+    this.selectMapMarker(mapMarkerComponent, restaurant);
+  }
+
+  selectMapMarker(marker: MapMarker, restaurant: any): void {
+    // reset current
+    this.infoWindow.close();
+    this.selectedMarker?.marker?.setIcon(this.svgMarker);
+    this.selectedMarker?.marker?.setZIndex(1);
+    // set new
+    this.selectedMarker = marker;
+    this.selectedMarker.marker?.setIcon(this.svgMarker2);
+    this.selectedMarker.marker?.setZIndex(100);
     // @ts-ignore
     this.map.panTo(marker.getPosition());
-    this.openInfoWindow(marker, this.restaurants[index]);
-  }
-
-  listClick(mm: MapMarker, index: number): void {
-    this.infoWindow.close();
-    const mapMarkersArray = this.mapMarkerComponents.toArray();
-    const mapMarkerObject = this.markers[index];
-    const mapMarkerComponent = mapMarkersArray[index];
-    mapMarkerComponent.marker?.setIcon(this.svgMarker2);
-    const restaurant = this.restaurants[index];
-    this.selected = restaurant;
-    console.log(mapMarkerObject);
-    this.map.panTo(mapMarkerObject.position);
-    this.openInfoWindow(mapMarkerComponent, restaurant);
-  }
-
-  openInfoWindow(marker: MapMarker, restaurant: any): void {
-    // console.log('openInfoWindow', m);
+    // Open info window
     this.infoWindowContent = {
       name: restaurant.restaurant_name,
       cuisine: restaurant.restaurant_cuisine_1,
@@ -247,5 +249,4 @@ export class RestaurantsMapComponent implements OnInit {
     };
     this.infoWindow.open(marker);
   }
-
 }
