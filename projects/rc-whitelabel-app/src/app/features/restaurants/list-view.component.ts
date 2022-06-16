@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RestaurantsSearchService } from './restaurants-search.service';
+import { RestaurantsService } from './restaurants.service';
 import { Observable } from 'rxjs';
 import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
 import { ActivatedRoute, ParamMap} from '@angular/router';
@@ -26,7 +26,7 @@ export class ListViewComponent implements OnInit {
     public config: AppConfig,
     private route: ActivatedRoute,
     private location: LocationService,
-    private restService: RestaurantsSearchService
+    private restService: RestaurantsService
   ) {
       this.restaurants$ = this.restService.restaurants;
       this.resultsLoaded$ = this.restService.resultsLoaded;

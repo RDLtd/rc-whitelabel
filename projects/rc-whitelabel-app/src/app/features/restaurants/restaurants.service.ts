@@ -7,7 +7,7 @@ import { AppConfig } from '../../app.config';
   providedIn: 'root'
 })
 
-export class RestaurantsSearchService {
+export class RestaurantsService {
 
   // default search params
   params = {

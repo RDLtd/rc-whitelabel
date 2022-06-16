@@ -7,17 +7,16 @@ import { MatChipsModule } from '@angular/material/chips';
 import { FilterOptionsDialogComponent } from './filter-options-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { RestaurantsMapComponent } from './restaurants-map.component';
+import { MapViewComponent } from './map-view.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { ListViewComponent } from './list-view.component';
-import { MapViewComponent } from './map-view.component';
 
 @NgModule({
   declarations: [
     RestaurantsComponent,
     FilterOptionsDialogComponent,
-    RestaurantsMapComponent,
+    MapViewComponent,
     ListViewComponent,
     MapViewComponent],
   imports: [
