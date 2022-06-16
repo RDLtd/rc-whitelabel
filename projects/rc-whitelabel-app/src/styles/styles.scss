@@ -620,19 +620,19 @@ rd-footer {
   }
 }
 .rd-map-list {
-  height: 70vh;
+  height: 33vh;
   overflow-y: auto;
   .rd-map-list-item {
-    display: flex;
-    margin-bottom: 4px;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    margin-bottom: 3px;
     transition: all .25s ease-in-out;
     cursor: pointer;
-    &:hover {
-      background-color: #eee;
-    }
-    div {
+    &:hover { background-color: #eee; }
+    &.active { background-color: #ddd; }
+    > div {
       flex: 1 auto;
-      padding: 8px;
+      padding: 6px 8px;
     }
     img {
       width: 120px;
@@ -640,16 +640,36 @@ rd-footer {
       object-fit: cover;
     }
     h3 {
-      font-size: 1rem;
+      font-size: 1.125rem;
       font-weight: $font-weight-heavy;
       margin: 0;
-      line-height: 1.1;
+      line-height: 1.25;
       white-space: nowrap;
       text-overflow: ellipsis;
+      overflow: hidden;
     }
-    p { margin: 0; }
-    span { text-transform: uppercase }
+    p {
+      display: inline-block;
+      margin: 0 0 .5rem;
+      line-height: 1.25;
+      //overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    span {
+      font-size: .75rem;
+      line-height: 1;
+      text-transform: uppercase
+    }
   }
+  @include mq(med) {
+    height: 80vh;
+  }
+}
+.flex {
+  display: flex;
+  align-items: center;
+  padding: 0;
 }
 .rd-map-nav {
   display: flex;

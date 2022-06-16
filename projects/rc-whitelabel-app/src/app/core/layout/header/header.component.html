@@ -9,16 +9,17 @@
     alt="Logo">
 </a>
 <span class="rd-flex-spacer"></span>
-<a (click)="switchView('list')">LIST VIEW</a>&nbsp;|&nbsp;
-<a (click)="switchView('map')">MAP VIEW</a>
+<ng-container *ngIf="showSearchOption">
+<button mat-button (click)="switchView('list')">LIST VIEW</button>
+<button mat-button (click)="switchView('map')">MAP VIEW</button>
 <button
-  *ngIf="showSearchOption"
   mat-button
   routerLink="search"
   @fadeIn>
   <mat-icon>search</mat-icon>
   <span class="hide-small">{{ config.i18n.Search }}</span>
 </button>
+</ng-container>
 
 
 
