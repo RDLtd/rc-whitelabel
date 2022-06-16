@@ -3,6 +3,7 @@ import { AppConfig } from '../../../app.config';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { fadeIn } from '../../../shared/animations';
+import {RestaurantsService} from '../../../features/restaurants/restaurants.service';
 
 @Component({
   selector: 'rd-header',
@@ -17,7 +18,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     public config: AppConfig,
-    private router: Router
+    private router: Router,
+    private restService: RestaurantsService
   ) { }
 
   ngOnInit(): void {
@@ -31,8 +33,8 @@ export class HeaderComponent implements OnInit {
   switchView(view: string): void {
     let path = this.router.url.split('/');
     path[path.length - 1] = view;
-    console.log(path);
-    this.router.navigate(path);
+    this.restService.resetRestaurantsSubject();
+    this.router.navigate(path).then();
   }
 
 }

@@ -661,6 +661,9 @@ rd-footer {
       line-height: 1;
       text-transform: uppercase
     }
+    svg {
+      margin-left:4px;
+    }
   }
   @include mq(med) {
     height: 80vh;

@@ -59,6 +59,10 @@ export class RestaurantsService {
     this.restaurantsSubject.next([]);
   }
 
+  resetRestaurantsSubject(): void {
+    this.restaurantsSubject.next([]);
+  }
+
 
   loadRestaurantBatch(params: any ): void {
     // show loader if it's an initial load, but not on preload
@@ -97,6 +101,7 @@ export class RestaurantsService {
 
     // show loader if it's an initial load, but not on preload
     this.resultsLoadedSubject.next(preload);
+    this.moreRestaurantsSubject.next(false);
 
     // if the params are all the same, there's no point in reloading
     if (params === this.params) { return; }
