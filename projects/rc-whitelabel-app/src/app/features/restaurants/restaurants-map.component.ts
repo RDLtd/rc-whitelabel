@@ -55,7 +55,7 @@ export class RestaurantsMapComponent implements OnInit {
   resultsLoaded$: Observable<boolean>;
   geoTarget!: string[];
   filterBy?: string | null;
-  batchTotal = 12;
+  batchTotal = 4;
   currentOffset = 0;
   totalResults?: number;
 
@@ -150,7 +150,13 @@ export class RestaurantsMapComponent implements OnInit {
   }
 
   // returns the total number of results
-  getTotal(): number {
+  getBatchNavSummary(): string {
+    let lastBatchItem = this.currentOffset + this.batchTotal;
+    const totalResults = this.restService.totalRestaurants;
+    if (lastBatchItem > totalResults) { lastBatchItem = totalResults; }
+    return `${ this.currentOffset + 1 } to ${ lastBatchItem } of ${ totalResults }`;
+  }
+  getTotalResults(): number {
     return this.restService.totalRestaurants;
   }
 
@@ -192,7 +198,7 @@ export class RestaurantsMapComponent implements OnInit {
         options: {
           icon: this.svgMarker,
           label: {
-            text: `${i + 1}`,
+            text: `${i + this.currentOffset + 1}`,
             color: '#fff',
             fontSize: '16px',
             fontWeight: 'bold',

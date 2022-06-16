@@ -18,7 +18,7 @@
 <!--      3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>-->
 <!--      </svg>-->
 <!--      </a>-->
-      <span>{{ currentOffset + 1 }} to {{ currentOffset + batchTotal }} of {{ getTotal() }}</span>
+      <span>{{ getBatchNavSummary() }}</span>
       <button [disabled]="currentOffset === 0"
               mat-icon-button
               (click)="prevBatch()"
@@ -26,7 +26,7 @@
         <mat-icon>arrow_back_ios</mat-icon>
       </button>
       <button
-        [disabled]="currentOffset + batchTotal >= getTotal()"
+        [disabled]="currentOffset + batchTotal >= getTotalResults()"
         mat-icon-button
               (click)="nextBatch()"
               title="Next {{ batchTotal }} restaurants">
@@ -35,14 +35,17 @@
     </div>
 
     <div class="rd-map-list" [@fadeInStagger]="restaurants$ | async">
+      <ng-container *ngIf="resultsLoaded$ | async">
       <div class="rd-map-list-item" *ngFor="let restaurant of restaurants$ | async; let i = index">
         <img [src]="restaurant?.image" loading="lazy" alt="Image of {{ restaurant?.restaurant_name }}">
         <div (click)="listClick(i)">
-          <h3>{{ i + 1 }}: {{ restaurant.restaurant_name }}</h3>
-          <p>{{ restaurant?.restaurant_address_1 }}  {{ restaurant?.restaurant_address_3 }}</p>
+          <h3>{{ i + currentOffset + 1 }}. {{ restaurant.restaurant_name }}</h3>
+          <p style="white-space: nowrap; text-overflow: ellipsis;">{{ restaurant?.restaurant_address_1 }}  {{
+            restaurant?.restaurant_address_3 }}</p>
           <span>{{ restaurant?.restaurant_cuisine_2 }}</span>
         </div>
       </div>
+      </ng-container>
     </div>
 
   </div>
@@ -66,7 +69,7 @@
       </map-marker>
 
       <map-info-window>
-        <div class="rd-map-info">
+        <div class="rd-map-info-window">
           <h3>{{ infoWindowContent.name }}</h3>
           <div>{{ infoWindowContent.cuisine }}</div>
           <a *ngIf="!!infoWindowContent.spw" href="{{ infoWindowContent.spw }}" target="_blank">SEE FULL DETAILS</a>
