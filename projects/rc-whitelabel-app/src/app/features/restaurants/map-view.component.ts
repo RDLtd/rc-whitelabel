@@ -1,5 +1,5 @@
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import { GoogleMap, MapAnchorPoint, MapDirectionsService, MapInfoWindow, MapMarker} from '@angular/google-maps';
+import { GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { RestaurantsService} from './restaurants.service';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -8,7 +8,6 @@ import { AppConfig } from '../../app.config';
 import { LocationService, UserGeoLocation} from '../../core/location.service';
 import { ActivatedRoute, ParamMap} from '@angular/router';
 import {fadeInSlideUp, fadeInStagger} from '../../shared/animations';
-import {LIVE_ANNOUNCER_ELEMENT_TOKEN} from '@angular/cdk/a11y';
 
 @Component({
   selector: 'rd-restaurants-map',

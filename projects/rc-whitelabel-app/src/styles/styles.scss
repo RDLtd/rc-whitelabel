@@ -625,7 +625,7 @@ rd-footer {
   .rd-map-list-item {
     display: grid;
     grid-template-columns: 120px 1fr;
-    margin-bottom: 3px;
+    margin-bottom: 6px;
     transition: all .25s ease-in-out;
     cursor: pointer;
     &:hover { background-color: #eee; }
@@ -633,6 +633,7 @@ rd-footer {
     > div {
       flex: 1 auto;
       padding: 6px 8px;
+      overflow: hidden;
     }
     img {
       width: 120px;
@@ -649,10 +650,9 @@ rd-footer {
       overflow: hidden;
     }
     p {
-      display: inline-block;
       margin: 0 0 .5rem;
       line-height: 1.25;
-      //overflow: hidden;
+      overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -682,10 +682,8 @@ rd-footer {
   padding-block: 4px;
   margin-bottom: 6px;
   border-bottom: 1px solid $col-icon-restaurant;
-  span {
-    display: flex;
-    height: 40px;
-    align-items: center;
+  .rd-map-nav-summary {
+    flex: 1 auto;
     align-items: center;
     margin-right: 1rem;
   }
