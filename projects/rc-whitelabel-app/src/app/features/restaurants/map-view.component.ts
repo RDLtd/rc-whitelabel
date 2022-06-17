@@ -37,6 +37,7 @@ export class MapViewComponent implements OnInit {
   markers!: any[];
   selectedMarker?: MapMarker;
   mapMarkerArr: MapMarker[] = [];
+  markerListElements?: NodeList;
   infoWindowContent = {
     name: null,
     cuisine: null,
@@ -224,25 +225,24 @@ export class MapViewComponent implements OnInit {
     this.lastZoom = this.zoom;
   }
 
+
+
   /**
    * When a map marker is selected
    * @param marker MapMarker component
    * @param index restaurants array reference
    */
   markerClick(marker: MapMarker, index: number): void {
+    this.updateMarkerList(index);
     this.selectMapMarker(marker, this.restaurants[index]);
   }
 
   /**
    * When a list element is selected
-   * @param el a reference to the list element
    * @param index restaurants array reference
    */
-  listClick(el: any, index: number): void {
-    // const items = document.querySelectorAll('.rd-map-list-item');
-    // items.forEach(item => item.classList.remove('active'));
-    // el.classList.add('active');
-
+  listClick(index: number): void {
+    this.updateMarkerList(index);
     // All currently displayed MapMarkers
     const mapMarkersArray = this.mapMarkerComponents.toArray();
     // Reference the Angular MapMarker component
@@ -253,12 +253,20 @@ export class MapViewComponent implements OnInit {
     this.selectMapMarker(mapMarkerComponent, restaurant);
   }
 
+  updateMarkerList(index: number): void {
+    const currentMarkerList = document.querySelectorAll('.rd-map-list-item');
+    console.log( currentMarkerList);
+    currentMarkerList.forEach((item: any) => item.classList.remove('active'));
+    currentMarkerList[index].classList.add('active');
+  }
+
   /**
    * Activate the map marker
    * @param marker Angular MapMarker
    * @param restaurant Restaurant data
    */
   selectMapMarker(marker: MapMarker, restaurant: any): void {
+
     // reset current window & marker
     this.infoWindow.close();
     this.selectedMarker?.marker?.setOptions({

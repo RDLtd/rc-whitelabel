@@ -624,20 +624,20 @@ rd-footer {
   overflow-y: auto;
   .rd-map-list-item {
     display: grid;
-    grid-template-columns: 120px 1fr;
+    grid-template-columns: 150px 1fr;
     margin-bottom: 6px;
     transition: all .25s ease-in-out;
     cursor: pointer;
     &:hover { background-color: #eee; }
-    &.active { background-color: #ddd; }
+    &.active { background-color: #eee; }
     > div {
       flex: 1 auto;
       padding: 6px 8px;
       overflow: hidden;
     }
     img {
-      width: 120px;
-      height: 80px;
+      width: 150px;
+      height: 100px;
       object-fit: cover;
     }
     h3 {
@@ -722,7 +722,31 @@ rd-footer {
     grid-template-columns: 38% 1fr;
   }
 }
-
+.skeleton {
+  animation: skeleton-loading 1s linear infinite alternate;
+  &.thumb {
+    width: 120px;
+    height: 80px;
+  }
+  &.header {
+    width: 80%;
+    height: 1.5rem;
+  }
+  &.text, &.text-short {
+    width: 60%;
+    height: 1rem;
+    margin-top: 6px;
+  }
+  &.text-short { width: 10%; }
+}
+@keyframes skeleton-loading {
+  0% {
+    background-color: #eee;
+  }
+  100% {
+    background-color: #fff;
+  }
+}
 // FILTERS
 // ------------------------
 .rd-filter-btn {
