@@ -8,10 +8,6 @@
 <div class="rd-map">
   <div class="rd-component list">
     <div class="rd-map-nav">
-<!--      <a style="display: inline-flex" [routerLink]="getNearestMeLink()">-->
-<!--        NEAREST ME &nbsp;-->
-
-<!--      </a>-->
       <span class="rd-map-nav-summary">{{ getBatchNavSummary() }}</span>
       <button [disabled]="currentOffset === 0"
               mat-icon-button
@@ -28,15 +24,28 @@
       </button>
     </div>
 
-    <ul class="rd-map-list" [@fadeInStagger]="restaurants$ | async">
+    <ul class="rd-map-list" [@fadeIn]="restaurants$ | async">
+      <ng-container *ngIf="!(resultsLoaded$ | async)">
+        <div class="rd-map-list-item-skeleton" *ngFor="let n of numbers">
+          <div class="thumb"></div>
+          <div>
+            <span class="heading"></span>
+            <span class="text"></span>
+            <span class="text2"></span>
+          </div>
+        </div>
+      </ng-container>
+
+
       <ng-container *ngIf="resultsLoaded$ | async">
+
       <li class="rd-map-list-item"
           *ngFor="let restaurant of restaurants$ | async; let i = index">
         <img [src]="restaurant?.image" loading="lazy" alt="Image of {{ restaurant?.restaurant_name }}">
         <div (click)="listClick(i)">
           <h3>{{ i + currentOffset + 1 }}. {{ restaurant.restaurant_name }}</h3>
           <p>{{ restaurant?.restaurant_address_1 }} {{ restaurant?.restaurant_address_3 }}</p>
-          <div class="flex">
+          <div class="rd-flex">
             <span>{{ restaurant?.restaurant_cuisine_2 }}</span>
             <span class="rd-flex-spacer"></span>
             <span>{{ restaurant?.distance | number: '1.0-1' }} Km</span>

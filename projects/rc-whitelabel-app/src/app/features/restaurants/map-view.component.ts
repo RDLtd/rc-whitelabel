@@ -7,12 +7,12 @@ import { catchError, finalize, map } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
 import { LocationService, UserGeoLocation} from '../../core/location.service';
 import { ActivatedRoute, ParamMap} from '@angular/router';
-import {fadeInSlideUp, fadeInStagger} from '../../shared/animations';
+import {fadeIn, fadeInSlideUp, fadeInStaggerIn} from '../../shared/animations';
 
 @Component({
   selector: 'rd-restaurants-map',
   templateUrl: './map-view.component.html',
-  animations: [fadeInSlideUp, fadeInStagger]
+  animations: [fadeInSlideUp, fadeInStaggerIn, fadeIn]
 })
 
 export class MapViewComponent implements OnInit {
@@ -44,7 +44,7 @@ export class MapViewComponent implements OnInit {
     spw: null
   };
   bounds!: google.maps.LatLngBounds;
-  center?: google.maps.LatLngLiteral = { lat: -34.397, lng: 150.644 };
+  center?: google.maps.LatLngLiteral = { lat: 53.05387405694548, lng: -1.6693733574702645 };
   display?: google.maps.LatLngLiteral;
   zoom = 12;
   lastZoom?: number;
@@ -56,9 +56,11 @@ export class MapViewComponent implements OnInit {
   resultsLoaded$: Observable<boolean>;
   geoTarget!: string[];
   filterBy?: string | null;
-  batchTotal = 8;
+  batchTotal = 10;
   currentOffset = 0;
   totalResults?: number;
+  numbers: number[];
+
 
 
   constructor(
@@ -69,12 +71,15 @@ export class MapViewComponent implements OnInit {
     private location: LocationService,
     private route: ActivatedRoute
   ) {
+    // Dummy numbers array to use for
+    // skeleton results
+    this.numbers = Array(this.batchTotal).fill(1); // [4,4,4,4,4]
 
     // Results received
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
 
-    // observe user position
+    // Observe user's position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
 
     // Check url params
@@ -82,18 +87,17 @@ export class MapViewComponent implements OnInit {
       this.geoTarget = params.get('geo')?.split(',') ?? [];
       this.filterBy = params.get('filter');
       this.center = { lat: Number(this.geoTarget[0]), lng: Number(this.geoTarget[1])}
-      console.log('Got geo');
       this.loadRestaurants();
     });
 
-    // Check to see if we have the Google maps api script in the cache
-    // Don't load it again!
+    // Check to see if we already have the Google maps api
+    // script in the cache before we load it again!
     if (window.hasOwnProperty('google')) {
       console.log('Google maps api already available');
       this.initMap();
       this.mapApiSubject.next(true);
     } else {
-    // otherwise, we need to load it
+    // Load the maps api script
       console.log('Load Google maps api');
       this.mapApiLoaded$ = http.jsonp(
         `https://maps.googleapis.com/maps/api/js?key=${this.config.geoApiKey}`,
@@ -110,6 +114,7 @@ export class MapViewComponent implements OnInit {
 
   ngOnInit(): void {}
 
+
   loadRestaurants(): void {
     this.restService.loadRestaurantBatch({
       lat: this.geoTarget[0],
@@ -119,7 +124,8 @@ export class MapViewComponent implements OnInit {
     });
   }
 
-  // Text for list nav
+  // Construct the summary text for the
+  // list navigation
   getBatchNavSummary(): string {
     let lastBatchItem = this.currentOffset + this.batchTotal;
     const totalResults = this.restService.totalRestaurants;
@@ -144,14 +150,13 @@ export class MapViewComponent implements OnInit {
     this.loadRestaurants();
   }
 
-
   // Activate Google map
   initMap(): void {
     // Set MapMarker icon as an inline svg
     this.svgMarker = {
       path:
         'M11.9858571,34.9707603 C5.00209157,32.495753 0,25.8320271 0,18 C0,8.0588745 8.0588745,0 18,0 C27.9411255,0 36,8.0588745 36,18 C36,25.8320271 30.9979084,32.495753 24.0141429,34.9707603 C24.0096032,34.980475 24.0048892,34.9902215 24,35 C20,37 18,40.6666667 18,46 C18,40.6666667 16,37 12,35 C11.9951108,34.9902215 11.9903968,34.980475 11.9858571,34.9707603 Z',
-      fillColor: '#9a9a9a',
+      fillColor: '#8a8a8a',
       fillOpacity: 1,
       strokeWeight: 1,
       strokeColor: '#fff',
@@ -177,6 +182,8 @@ export class MapViewComponent implements OnInit {
     });
   }
 
+  // Use the restaurants array to create an
+  // array of MapMarker component data
   addMapMarkers(): void {
     const totalRestaurants = this.restaurants.length;
     let i = 0;
@@ -197,7 +204,7 @@ export class MapViewComponent implements OnInit {
           lat: r.restaurant_lat as number,
           lng: r.restaurant_lng as number
         },
-        zIndex: i + 10,
+        zIndex: i + 1,
         options: {
           icon: this.svgMarker,
           label: {
@@ -212,20 +219,18 @@ export class MapViewComponent implements OnInit {
 
       // Bound map
       this.bounds.extend({
-        lat: r.restaurant_lat as number,
-        lng: r.restaurant_lng as number
+        lat: Number(r.restaurant_lat),
+        lng: Number(r.restaurant_lng)
       });
       this.markers.push(markerComp);
     }
-
-    setTimeout(() => {
-      //this?.map.panTo(this.markers[0].position);
-      this?.map.fitBounds(this.bounds, 100);
-    }, 0);
+    this?.map.fitBounds(this.bounds, 100);
+    // setTimeout(() => {
+    //   //this?.map.panTo(this.markers[0].position);
+    //   this?.map.fitBounds(this.bounds, 100);
+    // }, 0);
     this.lastZoom = this.zoom;
   }
-
-
 
   /**
    * When a map marker is selected
@@ -253,6 +258,11 @@ export class MapViewComponent implements OnInit {
     this.selectMapMarker(mapMarkerComponent, restaurant);
   }
 
+  /**
+   * Reference all marker elements and highlight
+   * the currently selected option
+   * @param index
+   */
   updateMarkerList(index: number): void {
     const currentMarkerList = document.querySelectorAll('.rd-map-list-item');
     console.log( currentMarkerList);
@@ -266,7 +276,6 @@ export class MapViewComponent implements OnInit {
    * @param restaurant Restaurant data
    */
   selectMapMarker(marker: MapMarker, restaurant: any): void {
-
     // reset current window & marker
     this.infoWindow.close();
     this.selectedMarker?.marker?.setOptions({

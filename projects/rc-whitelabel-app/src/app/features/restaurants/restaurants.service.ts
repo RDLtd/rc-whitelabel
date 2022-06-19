@@ -71,12 +71,8 @@ export class RestaurantsService {
     // if the params are all the same, there's no point in reloading
     if (params === this.params) { return; }
 
-    console.log('before', this.params);
-
     // store the current params for comparison
     this.params = Object.assign(this.params, params);
-
-    console.log('after', this.params);
 
     this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
