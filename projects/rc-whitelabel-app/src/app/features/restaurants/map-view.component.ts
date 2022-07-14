@@ -1,13 +1,13 @@
-import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import { GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { RestaurantsService} from './restaurants.service';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import { BehaviorSubject, Observable, of} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, map } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
 import { LocationService, UserGeoLocation} from '../../core/location.service';
 import { ActivatedRoute, ParamMap} from '@angular/router';
-import {fadeIn, fadeInSlideUp, fadeInStaggerIn} from '../../shared/animations';
+import { fadeIn, fadeInSlideUp, fadeInStaggerIn} from '../../shared/animations';
 
 @Component({
   selector: 'rd-restaurants-map',
@@ -34,6 +34,7 @@ export class MapViewComponent implements OnInit {
   };
   svgMarker: any;
   svgMarkerActive: any;
+  svgMarkerCentre: any;
   markers!: any[];
   selectedMarker?: MapMarker;
   mapMarkerArr: MapMarker[] = [];
@@ -71,15 +72,15 @@ export class MapViewComponent implements OnInit {
     private location: LocationService,
     private route: ActivatedRoute
   ) {
-    // Dummy numbers array to use for
-    // skeleton results
+    // Dummy numbers array to use to
+    // create skeleton results
     this.numbers = Array(this.batchTotal).fill(1); // [4,4,4,4,4]
 
     // Results received
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
 
-    // Observe user's position
+    // Observe user's position in case...
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
 
     // Check url params
@@ -91,7 +92,7 @@ export class MapViewComponent implements OnInit {
     });
 
     // Check to see if we already have the Google maps api
-    // script in the cache before we load it again!
+    // script in the cache so we don't load it twice!
     if (window.hasOwnProperty('google')) {
       console.log('Google maps api already available');
       this.initMap();
@@ -169,7 +170,11 @@ export class MapViewComponent implements OnInit {
     this.svgMarkerActive = Object.assign({}, this.svgMarker);
     this.svgMarkerActive.scale = 1.5;
     this.svgMarkerActive.fillOpacity = 1;
-    this.svgMarkerActive.fillColor = '#ff5720';
+    this.svgMarkerActive.fillColor = '#00a69b';
+    // Centre point
+    this.svgMarkerCentre = Object.assign({}, this.svgMarker);
+    this.svgMarkerCentre.fillOpacity = 1;
+    this.svgMarkerCentre.fillColor = '#000';
     // initialise the map bounds
     this.bounds = new google.maps.LatLngBounds();
     // subscribe to restaurant results
@@ -208,10 +213,9 @@ export class MapViewComponent implements OnInit {
         options: {
           icon: this.svgMarker,
           label: {
-            text: `${i + this.currentOffset + 1}`,
+            text: `${ i + this.currentOffset + 1 }`,
             color: '#fff',
-            fontSize: '16px',
-            fontWeight: 'bold',
+            fontSize: '12px',
           }
         },
         title: r.restaurant_name
@@ -224,14 +228,17 @@ export class MapViewComponent implements OnInit {
       });
       this.markers.push(markerComp);
     }
+    // Add landmark marker
+    this.markers.push({
+      position: this.center,
+      title: 'LANDMARK'
+    });
+
+    // Fit around markers
     setTimeout(() => {
       this?.map.fitBounds(this.bounds, 100);
     }, 0);
 
-    // setTimeout(() => {
-    //   //this?.map.panTo(this.markers[0].position);
-    //   this?.map.fitBounds(this.bounds, 100);
-    // }, 0);
     this.lastZoom = this.zoom;
   }
 
@@ -268,7 +275,7 @@ export class MapViewComponent implements OnInit {
    */
   updateMarkerList(index: number): void {
     const currentMarkerList = document.querySelectorAll('.rd-map-list-item');
-    console.log( currentMarkerList);
+    // console.log( currentMarkerList);
     currentMarkerList.forEach((item: any) => item.classList.remove('active'));
     currentMarkerList[index].classList.add('active');
   }

@@ -635,6 +635,7 @@ rd-footer {
 .rd-map-list {
   height: 30vh;
   overflow-y: auto;
+  color: #666;
   .rd-map-list-item {
     display: grid;
     grid-template-columns: 150px 1fr;
@@ -642,7 +643,10 @@ rd-footer {
     transition: all .25s ease-in-out;
     cursor: pointer;
     &:hover { background-color: #eee; }
-    &.active { background-color: #eee; }
+    &.active {
+      background-color: #eee;
+      color: #000;
+    }
     > div {
       flex: 1 auto;
       padding: 6px 8px;
