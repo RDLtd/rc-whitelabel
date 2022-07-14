@@ -224,7 +224,10 @@ export class MapViewComponent implements OnInit {
       });
       this.markers.push(markerComp);
     }
-    this?.map.fitBounds(this.bounds, 100);
+    setTimeout(() => {
+      this?.map.fitBounds(this.bounds, 100);
+    }, 0);
+
     // setTimeout(() => {
     //   //this?.map.panTo(this.markers[0].position);
     //   this?.map.fitBounds(this.bounds, 100);
