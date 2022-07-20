@@ -179,6 +179,8 @@ main {
     height: 100vh;
     background-image: url("../assets/images/bgd1.jpg");
     background-size: cover;
+    background-color: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
+    filter: blur(8px); // This be the blur
   }
 }
 .blur {
@@ -187,8 +189,6 @@ main {
     top: 0;
     background: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
     backdrop-filter: blur(8px); // This be the blur
-    height: 100%;
-    width: 100vw;
   }
 }
 header {

@@ -70,8 +70,8 @@ export class SearchComponent implements OnInit {
   searchConfig = {
     defaultView: 'map',
     showRecentlyViewed: false,
-    showLandmarks: false,
-    showCuisines: false,
+    showLandmarks: true,
+    showCuisines: true,
     searchLabel: 'Begin typing a campsite or restaurant name'
   };
 

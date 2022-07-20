@@ -15,7 +15,7 @@ export class RestaurantsService {
     filterText: '',
     lat: '51.7521849865759',
     lng: '-1.2579775767154544',
-    limit: 12,
+    limit: 10,
     offset: 0,
     testing: false
   };
