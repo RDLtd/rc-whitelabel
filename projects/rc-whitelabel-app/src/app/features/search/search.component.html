@@ -23,7 +23,7 @@
           autocomplete="off"
           type="text"
           ngModel
-          placeholder="{{ searchConfig.searchLabel }}"
+          placeholder="{{ channelConfig.searchPlaceholderTxt }}"
           tabindex="0">
         <button
           mat-button
@@ -41,11 +41,21 @@
         {{ config.i18n["No_matching_search_results"] }}
       </mat-error>
     </form>
+
     <!--  Search Results -->
     <ul [class.open]="!!rdSearchInput.value && !!searchSuggestions" class="rd-search-autofill">
 
       <!-- Suggestions -->
       <li *ngFor="let displayItem of searchSuggestions; let i = index" [tabindex]="i + 1" [ngSwitch]="displayItem.cat">
+
+        <!-- Sites -->
+        <a *ngSwitchCase="'site'" [routerLink]="displayItem.route">
+          <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
+          {{ displayItem?.name }}
+          <span class="rd-flex-spacer"></span>
+          <span></span>
+        </a>
+
         <!-- Landmarks -->
         <a *ngSwitchCase="'location'" [routerLink]="displayItem.route">
           <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
@@ -74,7 +84,8 @@
 
     <!-- Quick links -->
     <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
-      <section *ngIf="searchConfig.showRecentlyViewed" class="rd-quick-links">
+
+      <section *ngIf="channelConfig.showRecentlyViewed" class="rd-quick-links">
         <div>
           <mat-icon class="rd-icon-restaurant">{{ icons.restaurant }}</mat-icon>
           <h2>{{ config.i18n["Recently_viewed"] }}</h2>
@@ -90,7 +101,8 @@
           </li>
         </ul>
       </section>
-      <section class="rd-quick-links" *ngIf="(landmarks?.length || userPosition?.inRange) && searchConfig.showRecentlyViewed">
+
+      <section class="rd-quick-links" *ngIf="(landmarks?.length || userPosition?.inRange) && channelConfig.showLandmarks">
         <div>
           <mat-icon class="rd-icon-location">{{ icons.location }}</mat-icon>
         <h2>{{ config.i18n["Nearest_to"] }}</h2>
@@ -112,20 +124,21 @@
             </a>
           </li>
           <li *ngFor="let landmark of landmarks">
-            <a [routerLink]="['/restaurants/nearest/', landmark?.channel_landmark_lat + ':' + landmark?.channel_landmark_lng]">
+            <a [routerLink]="['/restaurants/', landmark?.channel_landmark_lat + ',' + landmark?.channel_landmark_lng]">
               {{ landmark?.channel_landmark_name }}
             </a>
           </li>
         </ul>
       </section>
-      <section *ngIf="searchConfig.showCuisines && cuisines.length" class="rd-quick-links">
+
+      <section *ngIf="channelConfig.showCuisines && cuisines.length" class="rd-quick-links">
       <div>
         <mat-icon class="rd-icon-cuisine">{{ icons.cuisine }}</mat-icon>
         <h2>{{ config.i18n["Cuisines"] }}</h2>
       </div>
       <ul>
         <li *ngFor="let cuisine of getTopCuisines()">
-          <a [routerLink]="['/restaurants', cuisine.label]">
+          <a [routerLink]="['/restaurants/', cuisine.label, 'list']">
             {{ cuisine?.label }}
             <span class="rd-flex-spacer"></span>
             <span>{{ cuisine?.total }}</span>

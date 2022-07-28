@@ -5,12 +5,13 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'search'
-  },
-  {
-    path: 'search',
     loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
   },
+  // {
+  //   path: 'search',
+  //   loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
+  // },
+
   {
     path: 'restaurants',
     loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
@@ -36,7 +37,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'search'
+    redirectTo: ''
   }
 ];
 

@@ -18,6 +18,7 @@ export class DataService {
   private cuisines: any[] = [];
   private landmarks: any[] = [];
   private features: any[] = [];
+  private sites: any[] = [];
 
   constructor(
     private api: ApiService,
@@ -26,7 +27,6 @@ export class DataService {
     private config: AppConfig,
     private router: Router
   ) {
-
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
 
@@ -86,6 +86,74 @@ export class DataService {
     });
   }
 
+  // Get restaurants
+  loadRestaurantsBySite(id: number): Promise<any> {
+
+    // const params = {
+    //   filter: options.filter,
+    //   filterText: options.filterText,
+    //   offset: options.offset || 0,
+    //   limit: options.limit,
+    //   lat: options.lat,
+    //   lng: options.lng,
+    //   testing: this.config.testMode
+    // };
+
+    // console.log('Params', params);
+
+    return new Promise(async resolve => {
+      await this.api.getChannelRestaurants(id, this.config.channel.accessCode, this.config.channel.apiKey)
+        .toPromise()
+        .then((data: any) => {
+          console.log(data);
+          if (!!data) {
+            resolve(data.restaurants);
+          } else {
+            resolve([]);
+          }
+        })
+        .catch((error: any) => {
+          console.log('ERROR', error);
+          this.router.navigate(['/error']);
+        });
+    });
+  }
+
+  loadChannelSettings(id: number): Promise <any> {
+    return new Promise(async resolve => {
+      await this.api.getChannelSettings(id)
+        .toPromise()
+        .then((data: any) => {
+          console.log('Channel settings loaded', data);
+          this.sites = data.camc;
+          resolve(data);
+        })
+        .catch((error: any) => console.log('ERROR', error));
+    });
+  }
+
+  loadChannelSites(): Promise <any> {
+    return new Promise(async resolve => {
+      if (this.sites.length) {
+        console.log('Sites loaded from CACHE');
+        resolve({
+          sites: this.sites
+        });
+      } else {
+        await this.api.getChannelSites(this.config.channel.id,  this.config.channel.accessCode, this.config.channel.apiKey)
+          .toPromise()
+          .then((res: any) => {
+            console.log('Sites loaded from API');
+            this.sites = res.sites;
+            resolve({
+              sites: this.sites
+            });
+          })
+          .catch((error: any) => console.log('ERROR', error));
+      }
+    });
+  }
+
   // Summary
   loadSummarisedData(): Promise <any> {
     return new Promise(async resolve => {
@@ -115,8 +183,6 @@ export class DataService {
       }
     });
   }
-
-
 
   // Summary data
   setSummary(s: any): void {

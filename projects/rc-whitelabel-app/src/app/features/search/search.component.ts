@@ -6,8 +6,6 @@ import { AppConfig } from '../../app.config';
 import { Router } from '@angular/router';
 import { LocationService } from '../../core/location.service';
 import { fadeIn, fadeInSlideUp } from '../../shared/animations';
-import testData from './camc.json';
-
 
 interface SearchSuggestion {
   cat: string;
@@ -24,6 +22,13 @@ interface Landmark {
   channel_landmark_lng: string;
   channel_landmark_name: string;
   channel_landmark_number: number;
+}
+interface Site {
+  name: string;
+  id: number;
+  lat: string;
+  lng: string;
+  notes: string;
 }
 interface Cuisine {
   label: string;
@@ -67,15 +72,18 @@ export class SearchComponent implements OnInit {
   // User location
   userPosition: any | undefined;
 
-  searchConfig = {
+  // Channel search config
+  channelConfig = {
+    channelType: 3,
     defaultView: 'map',
-    showRecentlyViewed: false,
-    showLandmarks: true,
-    showCuisines: true,
-    searchLabel: 'Begin typing a campsite or restaurant name'
+    showRecentlyViewed: true,
+    showLandmarks: false,
+    showCuisines: false,
+    searchPlaceholderTxt: 'Begin typing a campsite or restaurant name',
+    noResultsTxt: 'No matching locations, restaurants or cuisines.'
   };
 
-  extLandmarks: Landmark[] = [];
+  channelSites: Site[] = [];
 
   constructor(
     private api: ApiService,
@@ -86,18 +94,26 @@ export class SearchComponent implements OnInit {
     private location: LocationService
   ) {
 
-    testData.forEach((item, index) => {
-      this.extLandmarks.push({
-        channel_landmark_channel_id: item.camc_sites_postcode,
-        channel_landmark_id: index,
-        channel_landmark_lat: item.camc_sites_latitude,
-        channel_landmark_lng: item.camc_sites_longitude,
-        channel_landmark_name: item.camc_sites_name,
-        channel_landmark_number: index
+    // Is this a type Site implementation?
+    if (this.config.channel.type === 'sites') {
+      this.data.loadChannelSites().then((data: any) => {
+        const sites = data.sites;
+        console.log(sites);
+        sites.forEach((item: any) => {
+          this.channelSites.push({
+            id: item.id,
+            lat: item.lat,
+            lng: item.lng,
+            name: item.name,
+            notes: item.notes
+          });
+        });
+        // sort the list
+        //this.channelSites.sort((a, b) => (a.name < b.name) ? -1 : 1 );
+        // console.log(this.channelSites);
       });
-    });
-    // sort the list
-    console.log(this.extLandmarks.sort((a, b) => (a.channel_landmark_name < b.channel_landmark_name) ? -1 : 1 ));
+    }
+
   }
 
   ngOnInit(): void {
@@ -111,7 +127,7 @@ export class SearchComponent implements OnInit {
     this.data.loadSummarisedData().then((data: any) => {
       console.log('LoadSummary', data);
       this.searchRestaurants = data.restaurants;
-      this.landmarks = this.extLandmarks ?? data.landmarks;
+      this.landmarks = data.landmarks;
       this.features = data.attributes;
       this.cuisines = data.cuisines;
       this.isLoaded = true;
@@ -165,7 +181,24 @@ export class SearchComponent implements OnInit {
               name: m.channel_landmark_name,
               cat: 'location',
               index: idx,
-              route: ['/restaurants', `${m.channel_landmark_lat},${m.channel_landmark_lng}`, this.searchConfig.defaultView]
+              route: ['/restaurants', this.channelConfig.defaultView, `${m.channel_landmark_lat},${m.channel_landmark_lng}`]
+            });
+          }
+        }
+      }
+      // Check for matching sites
+      if (!!this.channelSites) {
+        let i = this.channelSites.length; let s; let idx;
+        while (i--) {
+          s = this.channelSites[i];
+          idx = s.name.toUpperCase().search(regex);
+          if (idx > -1) {
+            // Add SearchSuggestion
+            this.searchSuggestions.push({
+              name: s.name,
+              cat: 'site',
+              index: idx,
+              route: ['/restaurants', this.channelConfig.defaultView, `${s.id}`, `${ s.name.replace(/\s/g , "-") }`]
             });
           }
         }
@@ -199,7 +232,7 @@ export class SearchComponent implements OnInit {
               cat: 'cuisine',
               name: c.label,
               index: idx,
-              route: ['/restaurants', `${c.label}`],
+              route: ['restaurants', 'list', `${this.config.channel.latitude},${this.config.channel.longitude}`, `${c.label}`],
               misc: c.total
             });
           }
@@ -216,6 +249,7 @@ export class SearchComponent implements OnInit {
       this.searchSuggestions = [];
     }
   }
+
   getTopCuisines(): Array<Cuisine> {
     return this.cuisines.slice(0, this.config.maxTopCuisines);
   }
@@ -225,6 +259,10 @@ export class SearchComponent implements OnInit {
     this.searchSuggestions = [];
     this.noSuggestions = false;
     this.rdSearchInput.nativeElement.focus();
+  }
+
+  setChannelSite(): void {
+
   }
 
   viewRestaurantSpw(restaurant: any): void {

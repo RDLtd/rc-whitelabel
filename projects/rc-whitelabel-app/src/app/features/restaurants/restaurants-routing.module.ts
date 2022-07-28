@@ -1,17 +1,21 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-import { RestaurantsComponent } from './restaurants.component';
 import { MapViewComponent } from './map-view.component';
 import { ListViewComponent } from './list-view.component';
 
+
+/**
+ * location = geocodes 'lat,lng' for channel type 'landmarks'
+ * or site_id for type 'sites'
+ */
 const routes: Routes = [
-  { path: '', component: RestaurantsComponent },
-  { path: ':geo/map', component: MapViewComponent },
-  { path: ':geo/list', component: ListViewComponent },
+  { path: 'map/:id', component: MapViewComponent },
+  { path: 'map/:id/:name', component: MapViewComponent },
+  { path: 'list/:id', component: ListViewComponent },
+  { path: 'list/:id/:filter', component: ListViewComponent },
   {
-    path: ':geo',
-    redirectTo: ':geo/map'
+    path: '*',
+    redirectTo: '/'
   }
 ];
 

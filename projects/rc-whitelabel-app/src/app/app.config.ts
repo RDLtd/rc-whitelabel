@@ -8,8 +8,10 @@ export interface Brand {
   colorAccent: string;
 }
 export interface Channel {
+  id: number;
   name: string;
   domain: string;
+  type: string;
   accessCode: string;
   apiKey: string;
   latitude: number;
@@ -29,7 +31,7 @@ export class AppConfig {
   // Number of restaurant returned in each batch
   public resultsBatchTotal = 8;
   // How many cuisines to display as quick links
-  public maxTopCuisines = 20;
+  public maxTopCuisines = 10;
   // Use browser settings
   public language = window.navigator.language.substr(0, 2) || 'en';
   public channel!: Channel;
@@ -48,10 +50,12 @@ export class AppConfig {
 
   setChannelConfig(data: any): void {
     this.channel = {
+      id: data.id,
       domain: data.domain,
       name: data.name,
       accessCode: data.access_code,
       apiKey: data.api_key,
+      type: data.type,
       latitude: data.latitude,
       longitude: data.longitude,
       language: data.language,
@@ -64,7 +68,7 @@ export class AppConfig {
         colorAccent: data.accentColor
       }
     };
-    console.log('Channel Loaded!!!');
+    console.log('Channel loaded!');
     this.channelLoaded = true;
   }
 }

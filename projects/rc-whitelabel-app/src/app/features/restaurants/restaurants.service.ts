@@ -24,6 +24,7 @@ export class RestaurantsService {
   private moreRestaurantsSubject = new BehaviorSubject<boolean>(false);
   private restaurantsArray: Array<any> = [];
   private restaurantsSubject = new BehaviorSubject<any[]>(this.restaurantsArray);
+  channelSite: any;
   private apiKey: string;
   private accessCode: string;
   private totalResults = 0;
@@ -31,8 +32,12 @@ export class RestaurantsService {
   constructor(
     private config: AppConfig,
     private api: ApiService) {
-    this.apiKey = this.config.channel.apiKey;
-    this.accessCode = this.config.channel.accessCode;
+      this.apiKey = this.config.channel.apiKey;
+      this.accessCode = this.config.channel.accessCode;
+  }
+
+  get site(): any {
+    return this.channelSite;
   }
 
   get resultsLoaded(): Observable<boolean> {
@@ -63,7 +68,6 @@ export class RestaurantsService {
     this.restaurantsSubject.next([]);
   }
 
-
   loadRestaurantBatch(params: any ): void {
     // show loader if it's an initial load, but not on preload
     this.resultsLoadedSubject.next(false);
@@ -76,10 +80,30 @@ export class RestaurantsService {
 
     this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
-        console.log(data);
+        console.log('Rests', data);
         // store the total
         this.totalResults = data.total_count;
         this.restaurantsArray = data.restaurants;
+        // update subject
+        this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+        // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
+        // notify observers
+        this.resultsLoadedSubject.next(true);
+      });
+  }
+
+  loadChannelRestaurants(id: number ): void {
+    console.log(id);
+    // show loader if it's an initial load, but not on preload
+    this.resultsLoadedSubject.next(false);
+
+    this.api.getChannelRestaurants(id, this.accessCode, this.apiKey)
+      .subscribe((data: any) => {
+        console.log(data.restaurants);
+        // store the total
+
+        this.restaurantsArray = data.restaurants;
+        this.totalResults = this.restaurantsArray.length;
         // update subject
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
         // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
@@ -158,6 +182,10 @@ export class RestaurantsService {
     } else {
       console.log(`All ${this.totalResults} results loaded`)
     }
+  }
+
+  loadChannelSite(id: number): Observable<any> {
+    return this.api.getChannelSite(id, this.accessCode, this.apiKey);
   }
 }
 

@@ -8,6 +8,16 @@ import { AppConfig } from '../app.config';
 
 export class ApiService {
 
+  params = {
+    filter: '',
+    filterText: '',
+    lat: '51.7521849865759',
+    lng: '-1.2579775767154544',
+    limit: 10,
+    offset: 0,
+    testing: false
+  };
+
   constructor(
     private http: HttpClient,
     private config: AppConfig) { }
@@ -15,7 +25,9 @@ export class ApiService {
   // tslint:disable-next-line:variable-name
   getChannelByDomain(channel_domain: string): any {
     return this.http.post(this.config.apiUrl + '/channel/domain',
-      {channel_domain});
+      {
+        channel_domain
+      });
   }
 
   // tslint:disable-next-line:variable-name
@@ -27,6 +39,39 @@ export class ApiService {
         language
       });
   }
+
+  getChannelSettings(channel_id: number): any {
+    return this.http.post(this.config.apiUrl + '/channels/getchannel',
+      {
+        channel_id
+      });
+  }
+
+  getChannelSites(channel_id: number, channel_access_code: string, channel_access_api_key: string,): any {
+    return this.http.post(this.config.apiUrl + '/channel/sites',
+      {
+        channel_id,
+        channel_access_code,
+        channel_access_api_key
+      });
+  }
+  getChannelSite(site_id: number, channel_access_code: string, channel_access_api_key: string,): any {
+    return this.http.post(this.config.apiUrl + '/channel/site',
+      {
+        site_id,
+        channel_access_code,
+        channel_access_api_key
+      });
+  }
+  getChannelRestaurants(site_id: number, channel_access_code: string, channel_access_api_key: string,): any {
+    return this.http.post(this.config.apiUrl + '/channel/siterestaurants',
+      {
+        site_id,
+        channel_access_code,
+        channel_access_api_key
+      });
+  }
+
   // tslint:disable-next-line:variable-name
   getRestaurantsNear(channel_access_code: string, channel_access_api_key: string,
                      lat: number, lng: number, distance: number): any {
@@ -45,7 +90,9 @@ export class ApiService {
   // Restaurants
   // tslint:disable-next-line:variable-name
   getRestaurantsByParams(channel_access_code: string, channel_access_api_key: string, params: any): any {
-    console.log(channel_access_code, channel_access_api_key, params);
+    console.log(channel_access_code);
+    console.log(channel_access_api_key);
+    console.log(params);
     return this.http.post(this.config.apiUrl + '/channel/restaurants/parameters',
       {
         channel_access_code,

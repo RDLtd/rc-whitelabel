@@ -39,6 +39,7 @@ export class MapViewComponent implements OnInit {
   selectedMarker?: MapMarker;
   mapMarkerArr: MapMarker[] = [];
   markerListElements?: NodeList;
+  markersAdded = false;
   infoWindowContent = {
     name: null,
     cuisine: null,
@@ -47,7 +48,7 @@ export class MapViewComponent implements OnInit {
   bounds!: google.maps.LatLngBounds;
   center?: google.maps.LatLngLiteral = { lat: 53.05387405694548, lng: -1.6693733574702645 };
   display?: google.maps.LatLngLiteral;
-  zoom = 12;
+  zoom = 14;
   lastZoom?: number;
   userPosition?: UserGeoLocation;
 
@@ -57,12 +58,13 @@ export class MapViewComponent implements OnInit {
   resultsLoaded$: Observable<boolean>;
   geoTarget!: string[];
   filterBy?: string | null;
-  batchTotal = 5;
+  batchTotal = 10;
   currentOffset = 0;
   totalResults?: number;
   numbers: number[];
-
-
+  siteId?: string | null;
+  site: any;
+  isChannelSite: boolean;
 
   constructor(
     private config: AppConfig,
@@ -72,6 +74,10 @@ export class MapViewComponent implements OnInit {
     private location: LocationService,
     private route: ActivatedRoute
   ) {
+
+    this.center = { lat: Number(this.config.channel.latitude), lng: Number(this.config.channel.longitude) };
+    this.isChannelSite = this.config.channel.type === 'sites';
+
     // Dummy numbers array to use to
     // create skeleton results
     this.numbers = Array(this.batchTotal).fill(1); // [4,4,4,4,4]
@@ -85,10 +91,20 @@ export class MapViewComponent implements OnInit {
 
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
-      this.geoTarget = params.get('geo')?.split(',') ?? [];
-      this.filterBy = params.get('filter');
-      this.center = { lat: Number(this.geoTarget[0]), lng: Number(this.geoTarget[1])}
-      this.loadRestaurants();
+
+      if (this.isChannelSite) {
+        console.log('SITE');
+        console.log(params);
+        this.setChannelSite(Number(params.get('id')));
+      } else {
+        console.log('LANDMARK');
+        this.geoTarget = params.get('id')?.split(',') ?? [];
+        console.log(params);
+        this.filterBy = params.get('filter');
+        this.center = { lat: Number(this.geoTarget[0]), lng: Number(this.geoTarget[1])}
+        this.loadRestaurants();
+      }
+
     });
 
     // Check to see if we already have the Google maps api
@@ -115,19 +131,34 @@ export class MapViewComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  setChannelSite(id: number) {
+    this.restService.loadChannelSite(id)
+      .subscribe((data: any) => {
+        this.site = data.sites[0];
+        this.site.id = id;
+        this.center = { lat: Number(this.site.lat), lng: Number(this.site.lng) }
+        this.loadRestaurants();
+    });
+  }
 
   loadRestaurants(): void {
-    this.restService.loadRestaurantBatch({
-      lat: this.geoTarget[0],
-      lng: this.geoTarget[1],
+    const params: any = {
+      lat: this.center?.lat,
+      lng: this.center?.lng,
       offset: this.currentOffset,
-      limit: this.batchTotal
-    });
+      limit: this.batchTotal,
+    }
+    if (this.isChannelSite) { params.site_id = this.site.id }
+    console.log('params', params)
+    this.restService.loadRestaurantBatch(params);
   }
 
   // Construct the summary text for the
   // list navigation
   getBatchNavSummary(): string {
+    if (this.isChannelSite) {
+      return `We recommended the following ${this.restService.totalRestaurants} restaurants around ${this.site?.name}`;
+    }
     let lastBatchItem = this.currentOffset + this.batchTotal;
     const totalResults = this.restService.totalRestaurants;
     if (lastBatchItem > totalResults) { lastBatchItem = totalResults; }
@@ -228,17 +259,21 @@ export class MapViewComponent implements OnInit {
       });
       this.markers.push(markerComp);
     }
-    // Add landmark marker
+    // Finally, add site marker and add to bounds
     this.markers.push({
       position: this.center,
-      title: 'LANDMARK'
+      options: { label: '*' }
     });
-
+    this.bounds.extend({
+      lat: Number(this.center?.lat),
+      lng: Number(this.center?.lng)
+    });
     // Fit around markers
+
     setTimeout(() => {
       this?.map.fitBounds(this.bounds, 100);
+      this.markersAdded = true;
     }, 0);
-
     this.lastZoom = this.zoom;
   }
 
@@ -248,8 +283,18 @@ export class MapViewComponent implements OnInit {
    * @param index restaurants array reference
    */
   markerClick(marker: MapMarker, index: number): void {
-    this.updateMarkerList(index);
-    this.selectMapMarker(marker, this.restaurants[index]);
+      if (this.restaurants.length === index) {
+        this.infoWindowContent = {
+          name: this.site.name,
+          cuisine: this.site.notes,
+          spw: null
+        }
+        this.infoWindow.open(marker);
+        return
+      }
+
+      this.updateMarkerList(index);
+      this.selectMapMarker(marker, this.restaurants[index]);
   }
 
   /**

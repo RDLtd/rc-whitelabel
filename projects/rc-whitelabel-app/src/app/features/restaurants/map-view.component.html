@@ -9,6 +9,7 @@
   <div class="rd-component list">
     <div class="rd-map-nav">
       <span class="rd-map-nav-summary">{{ getBatchNavSummary() }}</span>
+      <ng-container *ngIf="!isChannelSite">
       <button [disabled]="currentOffset === 0"
               mat-icon-button
               (click)="prevBatch()"
@@ -22,6 +23,7 @@
               title="Next {{ batchTotal }} restaurants">
         <mat-icon>arrow_forward</mat-icon>
       </button>
+      </ng-container>
     </div>
 
     <ul class="rd-map-list" [@fadeIn]="restaurants$ | async">
@@ -68,6 +70,7 @@
           </div>
         </div>
       </li>
+
       </ng-container>
     </ul>
 
@@ -77,10 +80,13 @@
 
     <ng-container *ngIf="mapApiLoaded$ | async">
 
-    <google-map width="100%"
-                height="100%"
-                [zoom]="zoom"
-                [options]="mapOptions">
+    <google-map
+      width="100%"
+      height="100%"
+      [zoom]="zoom"
+      [options]="mapOptions">
+
+
 
       <map-marker #mapMarker="mapMarker"
                   *ngFor="let marker of markers; let i = index"

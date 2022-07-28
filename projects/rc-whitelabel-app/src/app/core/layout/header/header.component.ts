@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AppConfig } from '../../../app.config';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit {
   }
   switchView(view: string): void {
     let path = this.router.url.split('/');
-    path[path.length - 1] = view;
+    path[2] = view;
     this.restService.resetRestaurantsSubject();
     this.router.navigate(path).then();
   }
