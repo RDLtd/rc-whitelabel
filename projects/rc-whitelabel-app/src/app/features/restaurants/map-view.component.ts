@@ -372,6 +372,6 @@ export class MapViewComponent implements OnInit {
   }
 
   getTravelDuration(origin: string, destination: string, mode: string = 'walking') {
-    const url = `https://maps.googleapis.com/maps/api/directions/json?destination=${destination}&mode=${mode}&origin=${origin}&key=AIzaSyCCUCV1ld3x-ROquqs3GpHyvMPpsbwVlbk`;
+    //const url = `https://maps.googleapis.com/maps/api/directions/json?destination=${destination}&mode=${mode}&origin=${origin}&key=AIzaSyCCUCV1ld3x-ROquqs3GpHyvMPpsbwVlbk`;
   }
 }
