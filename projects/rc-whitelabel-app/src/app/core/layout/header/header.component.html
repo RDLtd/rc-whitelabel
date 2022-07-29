@@ -1,6 +1,7 @@
 <!-- HEADER CONTENT -->
 <div class="rd-title" *ngIf="!showSearchOption">
-  {{ config.channel.name | uppercase }}
+<!--  {{ config.channel.name | uppercase }}-->
+  RECOMMENDED RESTAURANTS
 </div>
 <a routerLink="search">
   <img
@@ -10,15 +11,18 @@
 </a>
 <span class="rd-flex-spacer"></span>
 <ng-container *ngIf="showSearchOption">
-<button mat-button (click)="switchView('list')">LIST VIEW</button>
-<button mat-button (click)="switchView('map')">MAP VIEW</button>
-<button
-  mat-button
-  routerLink=""
-  @fadeIn>
-  <mat-icon>search</mat-icon>
-  <span class="hide-small">{{ config.i18n.Search }}</span>
-</button>
+  <ng-container *ngIf="showViews">
+    <button mat-button (click)="switchView('list')">LIST</button>
+    <button mat-button (click)="switchView('map')">MAP</button>
+  </ng-container>
+
+  <button
+    mat-button
+    routerLink=""
+    @fadeIn>
+    <mat-icon>search</mat-icon>
+    <span class="hide-small">{{ config.i18n.Search }}</span>
+  </button>
 </ng-container>
 
 

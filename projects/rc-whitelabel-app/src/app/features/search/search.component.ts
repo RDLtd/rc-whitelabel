@@ -49,7 +49,6 @@ export class SearchComponent implements OnInit {
   // so that we can set focus
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
 
-
   // Config
   minSearchChars = 1;
   noSuggestions = false;
@@ -79,8 +78,8 @@ export class SearchComponent implements OnInit {
     showRecentlyViewed: true,
     showLandmarks: false,
     showCuisines: false,
-    searchPlaceholderTxt: 'Begin typing a campsite or restaurant name',
-    noResultsTxt: 'No matching locations, restaurants or cuisines.'
+    searchPlaceholderTxt: 'Enter a site name or restaurant name',
+    noResultsTxt: 'No matches'
   };
 
   channelSites: Site[] = [];
@@ -117,6 +116,7 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     // Observe user's position
     this.location.userLocationObs.subscribe((userPos) => {
       console.log(userPos);
@@ -222,7 +222,7 @@ export class SearchComponent implements OnInit {
       }
 
       // Check for matching cuisines
-      if (!!this.cuisines) {
+      if (!!this.cuisines && this.channelConfig.showCuisines) {
         let i = this.cuisines.length; let c; let idx;
         while (i--) {
           c = this.cuisines[i];

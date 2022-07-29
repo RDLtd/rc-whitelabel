@@ -3,7 +3,7 @@ import { AppConfig } from '../../../app.config';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { fadeIn } from '../../../shared/animations';
-import {RestaurantsService} from '../../../features/restaurants/restaurants.service';
+import { RestaurantsService } from '../../../features/restaurants/restaurants.service';
 
 @Component({
   selector: 'rd-header',
@@ -15,6 +15,7 @@ export class HeaderComponent implements OnInit {
 
   // @Input() direction = '';
   showSearchOption = false;
+  showViews = false;
 
   constructor(
     public config: AppConfig,
@@ -23,11 +24,14 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Hide the search option when omn the search page
+    // Hide the search option when on the search page
     this.router.events.pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
         // console.log(this.router.url);
-        this.showSearchOption = this.router.url !== '/search';
+        this.showSearchOption = this.router.url !== '/';
+    });
+    this.restService.restaurants.subscribe(res => {
+      this.showViews = res.length > 0;
     });
   }
   switchView(view: string): void {

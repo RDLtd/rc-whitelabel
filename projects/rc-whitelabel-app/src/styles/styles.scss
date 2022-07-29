@@ -55,7 +55,7 @@ $font-family-heading: 'Roboto Slab', 'Georgia', serif;
 $font-weight-lite: 300;
 $font-weight-regular: 400;
 $font-weight-heavy: 500;
-$layout-header-height: 80px;
+$layout-header-height: 64px;
 $layout-max-width: 960px;
 $loaderSize: 48px;
 
@@ -162,8 +162,8 @@ main {
   justify-content: space-between;
   margin: 0 auto;
   min-height: 100vh;
-  padding-top: $layout-header-height;
   background: #fff;
+  padding-top: $layout-header-height;
   @include mq(med) {
     background: #eee;
   }
@@ -211,7 +211,7 @@ header {
 rd-header {
   display: flex;
   align-items: center;
-  padding: 12px;
+  padding: 16px;
   a {
     display: flex;
     align-items: center;
@@ -229,7 +229,7 @@ rd-header {
       font-size: 14px;
     }
   }
-  .rd-logo { height: 40px;}
+  .rd-logo { height: 24px; }
   h1 {
     font-size: 16px;
     font-weight: $font-weight-heavy;
@@ -250,7 +250,7 @@ rd-header {
     letter-spacing: 1px;
   }
   @include mq(med) {
-    .rd-logo { height: 60px;}
+    .rd-logo { height: 40px;}
   }
 }
 rd-footer {
@@ -259,16 +259,16 @@ rd-footer {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  min-height: 120px;
+  min-height: 80px;
   background-color: inherit;
-  padding: 12px 0;
+  padding: 0 0;
   color: white;
   font-size: 10px;
   font-weight: $font-weight-lite;
   .rd-label {
     width: 160px;
     padding: 0;
-    margin: 24px 48px;
+    margin: 16px;
     line-height: 1.2;
   }
 }
@@ -613,7 +613,10 @@ rd-footer {
   background-color: white;
   border-radius: 0;
   padding: 0;
-  @include mat.elevation(5);
+  @include mq(medium) {
+    @include mat.elevation(5);
+  }
+
   &.list {
     order: 2;
   }
@@ -634,7 +637,7 @@ rd-footer {
   }
 }
 .rd-map-list {
-  height: 30vh;
+  height: 32vh;
   overflow-y: auto;
   color: #666;
   .rd-map-list-item {
@@ -720,7 +723,7 @@ rd-footer {
   align-items: center;
   justify-content: flex-end;
   font-size: 1rem;
-  padding-block: 4px;
+  padding-block: 12px;
   padding-inline: 8px 0;
   margin-bottom: 6px;
   border-bottom: 1px solid $col-icon-restaurant;

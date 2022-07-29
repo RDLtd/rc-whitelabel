@@ -27,7 +27,10 @@ export class MapViewComponent implements OnInit {
   mapOptions: google.maps.MapOptions = {
     scrollwheel: false,
     streetViewControl: false,
-    center: null,
+    center: {
+      lat: Number(this.config.channel.latitude),
+      lng: Number(this.config.channel.longitude)
+    },
     zoom: 14,
     mapId: 'f547725f57ef2ea8',
     mapTypeControl: false
@@ -46,7 +49,7 @@ export class MapViewComponent implements OnInit {
     spw: null
   };
   bounds!: google.maps.LatLngBounds;
-  center?: google.maps.LatLngLiteral = { lat: 53.05387405694548, lng: -1.6693733574702645 };
+  center?: google.maps.LatLngLiteral;
   display?: google.maps.LatLngLiteral;
   zoom = 14;
   lastZoom?: number;
@@ -74,6 +77,8 @@ export class MapViewComponent implements OnInit {
     private location: LocationService,
     private route: ActivatedRoute
   ) {
+
+    this.restService.resetRestaurantsSubject();
 
     this.center = { lat: Number(this.config.channel.latitude), lng: Number(this.config.channel.longitude) };
     this.isChannelSite = this.config.channel.type === 'sites';
@@ -131,6 +136,10 @@ export class MapViewComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  /**
+   * Channel config
+   * @param id = channel_id
+   */
   setChannelSite(id: number) {
     this.restService.loadChannelSite(id)
       .subscribe((data: any) => {
@@ -149,7 +158,7 @@ export class MapViewComponent implements OnInit {
       limit: this.batchTotal,
     }
     if (this.isChannelSite) { params.site_id = this.site.id }
-    console.log('params', params)
+    // console.log('params', params)
     this.restService.loadRestaurantBatch(params);
   }
 
@@ -157,7 +166,7 @@ export class MapViewComponent implements OnInit {
   // list navigation
   getBatchNavSummary(): string {
     if (this.isChannelSite) {
-      return `We recommended the following ${this.restService.totalRestaurants} restaurants around ${this.site?.name}`;
+      return `${this.site?.name}: ${ this.restService.totalRestaurants } Restaurant recommendations`;
     }
     let lastBatchItem = this.currentOffset + this.batchTotal;
     const totalResults = this.restService.totalRestaurants;
@@ -228,6 +237,7 @@ export class MapViewComponent implements OnInit {
     this.markers = [];
     this.bounds = new google.maps.LatLngBounds();
 
+    // Create markers for all restaurants
     for (i; i < totalRestaurants; i++) {
       r = this.restaurants[i];
       // Skip the loop if no valid latitude
@@ -252,14 +262,16 @@ export class MapViewComponent implements OnInit {
         title: r.restaurant_name
       };
 
-      // Bound map
+      // Extend map to fit marker
       this.bounds.extend({
         lat: Number(r.restaurant_lat),
         lng: Number(r.restaurant_lng)
       });
+      // Store
       this.markers.push(markerComp);
     }
-    // Finally, add site marker and add to bounds
+    // Once all restaurants have been marked
+    // create our centre site/channel marker
     this.markers.push({
       position: this.center,
       options: { label: '*' }
@@ -269,7 +281,6 @@ export class MapViewComponent implements OnInit {
       lng: Number(this.center?.lng)
     });
     // Fit around markers
-
     setTimeout(() => {
       this?.map.fitBounds(this.bounds, 100);
       this.markersAdded = true;
@@ -358,5 +369,9 @@ export class MapViewComponent implements OnInit {
       spw: restaurant.restaurant_spw_url
     };
     this.infoWindow.open(marker);
+  }
+
+  getTravelDuration(origin: string, destination: string, mode: string = 'walking') {
+    const url = `https://maps.googleapis.com/maps/api/directions/json?destination=${destination}&mode=${mode}&origin=${origin}&key=AIzaSyCCUCV1ld3x-ROquqs3GpHyvMPpsbwVlbk`;
   }
 }

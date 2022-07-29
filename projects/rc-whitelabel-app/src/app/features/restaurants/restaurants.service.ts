@@ -13,8 +13,8 @@ export class RestaurantsService {
   params = {
     filter: '',
     filterText: '',
-    lat: '51.7521849865759',
-    lng: '-1.2579775767154544',
+    lat: '',
+    lng: '',
     limit: 10,
     offset: 0,
     testing: false
@@ -80,9 +80,16 @@ export class RestaurantsService {
 
     this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
-        console.log('Rests', data);
+        if (data === null || data === undefined) {
+          console.log('No data');
+          this.totalResults = 0;
+          this.restaurantsArray = [];
+          this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+          this.resultsLoadedSubject.next(true);
+          return;
+        }
         // store the total
-        this.totalResults = data.total_count;
+        this.totalResults = data?.total_count;
         this.restaurantsArray = data.restaurants;
         // update subject
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
