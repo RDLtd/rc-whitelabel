@@ -99,7 +99,8 @@
         <div class="rd-map-info-window">
           <h3>{{ infoWindowContent.name }}</h3>
           <div>{{ infoWindowContent.cuisine }}</div>
-          <a *ngIf="!!infoWindowContent.spw" href="{{ infoWindowContent.spw }}" target="_blank">SEE FULL DETAILS</a>
+          <a *ngIf="!!infoWindowContent.spw" (click)="openSpw(infoWindowContent.spw)" style="cursor: pointer;">SEE FULL
+                                                                                                        DETAILS</a>
         </div>
       </map-info-window>
 

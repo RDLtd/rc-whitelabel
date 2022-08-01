@@ -220,6 +220,7 @@ export class DataService {
     return this.recentlyViewed;
   }
   setRecentlyViewed(restaurant: any): void {
+    console.log('Recent', restaurant);
     // Check whether this restaurant is already in the array
     const maxNum = 5;
     if (this.recentlyViewed) {
@@ -237,7 +238,7 @@ export class DataService {
     }
     // Update localStorage
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
-    // console.log(this.recentlyViewed);
+    console.log(this.recentlyViewed);
   }
 
 }

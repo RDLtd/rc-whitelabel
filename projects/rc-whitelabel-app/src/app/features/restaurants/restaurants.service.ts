@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable} from 'rxjs';
 import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
+import {DataService} from '../../core/data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,8 @@ export class RestaurantsService {
 
   constructor(
     private config: AppConfig,
-    private api: ApiService) {
+    private api: ApiService,
+    private data: DataService) {
       this.apiKey = this.config.channel.apiKey;
       this.accessCode = this.config.channel.accessCode;
   }

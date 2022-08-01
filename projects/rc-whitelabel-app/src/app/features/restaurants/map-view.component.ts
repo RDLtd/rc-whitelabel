@@ -8,6 +8,7 @@ import { AppConfig } from '../../app.config';
 import { LocationService, UserGeoLocation} from '../../core/location.service';
 import { ActivatedRoute, ParamMap} from '@angular/router';
 import { fadeIn, fadeInSlideUp, fadeInStaggerIn} from '../../shared/animations';
+import {DataService} from '../../core/data.service';
 
 @Component({
   selector: 'rd-restaurants-map',
@@ -73,6 +74,7 @@ export class MapViewComponent implements OnInit {
     private config: AppConfig,
     private results: RestaurantsService,
     private restService: RestaurantsService,
+    private data: DataService,
     private http: HttpClient,
     private location: LocationService,
     private route: ActivatedRoute
@@ -221,9 +223,9 @@ export class MapViewComponent implements OnInit {
     this.restService.restaurants.subscribe((data: any) => {
       this.restaurants = data;
       // console.log(data);
-      if (data.length) {
+      //if (data.length) {
         this.addMapMarkers();
-      }
+      //}
     });
   }
 
@@ -366,9 +368,15 @@ export class MapViewComponent implements OnInit {
     this.infoWindowContent = {
       name: restaurant.restaurant_name,
       cuisine: restaurant.restaurant_cuisine_1,
-      spw: restaurant.restaurant_spw_url
+      spw: restaurant
     };
     this.infoWindow.open(marker);
+  }
+
+  openSpw(restaurant: any): void {
+    // console.log(restaurant);
+    this.data.setRecentlyViewed(restaurant);
+    window.open(restaurant.restaurant_spw_url, '_target');
   }
 
   getTravelDuration(origin: string, destination: string, mode: string = 'walking') {

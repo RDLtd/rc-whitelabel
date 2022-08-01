@@ -5,6 +5,7 @@ import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
 import { ActivatedRoute, ParamMap} from '@angular/router';
 import { LocationService } from '../../core/location.service';
 import { AppConfig } from '../../app.config';
+import {DataService} from '../../core/data.service';
 
 @Component({
   selector: 'rd-list-view',
@@ -26,7 +27,8 @@ export class ListViewComponent implements OnInit {
     public config: AppConfig,
     private route: ActivatedRoute,
     private location: LocationService,
-    private restService: RestaurantsService
+    private restService: RestaurantsService,
+    private data: DataService
   ) {
       this.restaurants$ = this.restService.restaurants;
       this.resultsLoaded$ = this.restService.resultsLoaded;
@@ -52,7 +54,13 @@ export class ListViewComponent implements OnInit {
   loadMore(): void {
     this.restService.loadMoreRestaurants();
   }
-  openSpw(restaurant: any): void {}
+
+  openSpw(restaurant: any): void {
+    // console.log(restaurant);
+    this.data.setRecentlyViewed(restaurant);
+    window.open(restaurant.restaurant_spw_url, '_target');
+  }
+
   // Todo: we need to store on the Cloudinary ids so that
   //  we an appropriately sized & formatted image
   getFormattedImage(url: string): string {
