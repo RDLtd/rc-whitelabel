@@ -4,6 +4,7 @@ import { ApiService } from './core/api.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DataService } from './core/data.service';
 import { filter } from 'rxjs/operators';
+
 declare const gtag: Function;
 
 @Component({
@@ -25,9 +26,8 @@ export class AppComponent implements OnInit {
     // checking for url params
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe(() => {
-        // @ts-ignore
-        gtag('config', 'G-LB1KHS83QH', { 'page_path': event?.urlAfterRedirects });
+      .subscribe((event: NavigationEnd) => {
+        gtag('config', 'G-LB1KHS83QH', { 'page_path': event.urlAfterRedirects });
         this.activatedRoute.queryParamMap
           .subscribe((data: any) => {
             const params = data.params;
