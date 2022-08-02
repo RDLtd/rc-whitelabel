@@ -4,6 +4,7 @@ import { ApiService } from './core/api.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DataService } from './core/data.service';
 import { filter } from 'rxjs/operators';
+declare const gtag: Function;
 
 @Component({
   selector: 'rd-root',
@@ -17,14 +18,16 @@ export class AppComponent implements OnInit {
     public config: AppConfig,
     private activatedRoute: ActivatedRoute,
     private data: DataService,
-    private route: Router) { }
+    private router: Router) { }
 
   ngOnInit(): void {
     // Wait for router event to fire before
     // checking for url params
-    this.route.events
-      .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe(() => {
+        // @ts-ignore
+        gtag('config', 'G-LB1KHS83QH', { 'page_path': event?.urlAfterRedirects });
         this.activatedRoute.queryParamMap
           .subscribe((data: any) => {
             const params = data.params;
