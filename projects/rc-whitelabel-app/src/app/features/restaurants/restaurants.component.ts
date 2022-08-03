@@ -194,7 +194,7 @@ export class RestaurantsComponent implements OnInit {
     this.ga.eventEmitter(
       'page_view_virtual',
       'results_list_card',
-      'open_spw', `virtual/${restaurant.restaurant_name.name.replace(/\s/g , "-")}`,
+      'open_spw', `virtual/${restaurant.restaurant_name.replace(/\s/g , "-")}`,
       0);
     window.open(restaurant.restaurant_spw_url, '_target');
   }
