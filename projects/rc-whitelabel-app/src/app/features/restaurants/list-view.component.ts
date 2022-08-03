@@ -60,8 +60,6 @@ export class ListViewComponent implements OnInit {
 
   openSpw(restaurant: any): void {
     // console.log(restaurant);
-    // this.data.setRecentlyViewed(restaurant);
-    // window.open(restaurant.restaurant_spw_url, '_target');
     this.restService.openSpw(restaurant, 'results_list_card');
   }
 

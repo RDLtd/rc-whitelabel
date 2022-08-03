@@ -7,9 +7,9 @@ import { catchError, finalize, map } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
 import { LocationService, UserGeoLocation} from '../../core/location.service';
 import { ActivatedRoute, ParamMap} from '@angular/router';
-import { fadeIn, fadeInSlideUp, fadeInStaggerIn} from '../../shared/animations';
-import {DataService} from '../../core/data.service';
-import {Title} from '@angular/platform-browser';
+import { fadeIn, fadeInSlideUp, fadeInStaggerIn } from '../../shared/animations';
+import { DataService } from '../../core/data.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'rd-restaurants-map',
@@ -82,11 +82,16 @@ export class MapViewComponent implements OnInit {
     private title: Title
   ) {
 
+    // update title for ga tracking
     title.setTitle('Restaurant Results Map');
 
     this.restService.resetRestaurantsSubject();
 
-    this.center = { lat: Number(this.config.channel.latitude), lng: Number(this.config.channel.longitude) };
+    this.center = {
+      lat: Number(this.config.channel.latitude),
+      lng: Number(this.config.channel.longitude)
+    };
+
     this.isChannelSite = this.config.channel.type === 'sites';
 
     // Dummy numbers array to use to
@@ -104,13 +109,13 @@ export class MapViewComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
 
       if (this.isChannelSite) {
-        console.log('SITE');
-        console.log(params);
+        // console.log('SITE');
+        // console.log(params);
         this.setChannelSite(Number(params.get('id')));
       } else {
-        console.log('LANDMARK');
+        //console.log('LANDMARK');
         this.geoTarget = params.get('id')?.split(',') ?? [];
-        console.log(params);
+        //console.log(params);
         this.filterBy = params.get('filter');
         this.center = { lat: Number(this.geoTarget[0]), lng: Number(this.geoTarget[1])}
         this.loadRestaurants();
@@ -379,8 +384,6 @@ export class MapViewComponent implements OnInit {
 
   openSpw(restaurant: any, cat: string): void {
     // console.log(restaurant);
-    // this.data.setRecentlyViewed(restaurant);
-    // window.open(restaurant.restaurant_spw_url, '_target');
     this.restService.openSpw(restaurant, cat);
   }
 
