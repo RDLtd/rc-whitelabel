@@ -6,6 +6,7 @@ import { ActivatedRoute, ParamMap} from '@angular/router';
 import { LocationService } from '../../core/location.service';
 import { AppConfig } from '../../app.config';
 import {DataService} from '../../core/data.service';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'rd-list-view',
@@ -28,11 +29,13 @@ export class ListViewComponent implements OnInit {
     private route: ActivatedRoute,
     private location: LocationService,
     private restService: RestaurantsService,
-    private data: DataService
+    private data: DataService,
+    private title: Title
   ) {
       this.restaurants$ = this.restService.restaurants;
       this.resultsLoaded$ = this.restService.resultsLoaded;
       this.moreRestaurantsPreloaded = this.restService.moreRestaurantResults;
+      title.setTitle('Restaurant Results List');
   }
 
   ngOnInit(): void {

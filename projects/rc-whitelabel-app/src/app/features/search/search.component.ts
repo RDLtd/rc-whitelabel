@@ -6,6 +6,7 @@ import { AppConfig } from '../../app.config';
 import { Router } from '@angular/router';
 import { LocationService } from '../../core/location.service';
 import { fadeIn, fadeInSlideUp } from '../../shared/animations';
+import { Title } from '@angular/platform-browser';
 
 interface SearchSuggestion {
   cat: string;
@@ -90,7 +91,8 @@ export class SearchComponent implements OnInit {
     private data: DataService,
     public config: AppConfig,
     public router: Router,
-    private location: LocationService
+    private location: LocationService,
+    private title: Title
   ) {
 
     // Is this a type Site implementation?
@@ -112,6 +114,8 @@ export class SearchComponent implements OnInit {
         // console.log(this.channelSites);
       });
     }
+
+    title.setTitle('Search');
 
   }
 

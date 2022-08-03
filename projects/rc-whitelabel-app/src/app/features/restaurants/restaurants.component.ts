@@ -7,6 +7,7 @@ import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 import { LocationService } from '../../core/location.service';
 import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
+import {AnalyticsService} from '../../core/analytics.service';
 
 @Component({
   selector: 'rd-restaurants',
@@ -39,7 +40,8 @@ export class RestaurantsComponent implements OnInit {
     private api: ApiService,
     public data: DataService,
     public config: AppConfig,
-    private location: LocationService
+    private location: LocationService,
+    private ga: AnalyticsService
   ) {
     this.loadText = this.config.i18n.Loading_data;
   }
@@ -189,6 +191,11 @@ export class RestaurantsComponent implements OnInit {
   openSPW(restaurant: any): void {
     // console.log(restaurant);
     this.data.setRecentlyViewed(restaurant);
+    this.ga.eventEmitter(
+      'pageview',
+      'Restaurant Card',
+      'SPW', `virtual/${restaurant.restaurant_name.name.replace(/\s/g , "-")}`,
+      0);
     window.open(restaurant.restaurant_spw_url, '_target');
   }
 

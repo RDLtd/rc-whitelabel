@@ -9,6 +9,7 @@ import { LocationService, UserGeoLocation} from '../../core/location.service';
 import { ActivatedRoute, ParamMap} from '@angular/router';
 import { fadeIn, fadeInSlideUp, fadeInStaggerIn} from '../../shared/animations';
 import {DataService} from '../../core/data.service';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'rd-restaurants-map',
@@ -77,8 +78,11 @@ export class MapViewComponent implements OnInit {
     private data: DataService,
     private http: HttpClient,
     private location: LocationService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private title: Title
   ) {
+
+    title.setTitle('Restaurant Results Map');
 
     this.restService.resetRestaurantsSubject();
 
