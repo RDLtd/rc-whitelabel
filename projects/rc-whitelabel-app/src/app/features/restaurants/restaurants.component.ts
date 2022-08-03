@@ -192,9 +192,10 @@ export class RestaurantsComponent implements OnInit {
     // console.log(restaurant);
     this.data.setRecentlyViewed(restaurant);
     this.ga.eventEmitter(
-      'page_view_virtual',
+      'page_view_spw',
       'results_list_card',
-      'open_spw', `virtual/${restaurant.restaurant_name.replace(/\s/g , "-")}`,
+      'open_spw',
+      `spw/${restaurant.restaurant_name.replace(/\s/g , "-")}`,
       0);
     window.open(restaurant.restaurant_spw_url, '_target');
   }

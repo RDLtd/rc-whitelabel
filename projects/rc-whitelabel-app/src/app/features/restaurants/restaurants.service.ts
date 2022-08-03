@@ -43,9 +43,9 @@ export class RestaurantsService {
   openSpw(restaurant: any, cat: string): void {
     this.data.setRecentlyViewed(restaurant);
     this.ga.eventEmitter(
-      'page_view_virtual',
+      'page_view_spw',
       cat,
-      'open_spw', `virtual/${restaurant.restaurant_name.replace(/\s/g , "-")}`,
+      'open_spw', `spw/${restaurant.restaurant_name.replace(/\s/g , "-")}`,
       0);
     window.open(restaurant.restaurant_spw_url, '_target');
   }
