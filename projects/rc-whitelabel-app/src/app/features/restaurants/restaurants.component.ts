@@ -188,16 +188,16 @@ export class RestaurantsComponent implements OnInit {
   }
   // Launch SPW in new window/tab
   // and and add to recently viewed
-  openSPW(restaurant: any): void {
-    // console.log(restaurant);
-    this.data.setRecentlyViewed(restaurant);
-    this.ga.eventEmitter(
-      'pageview',
-      'Restaurant Card',
-      'SPW', `virtual/${restaurant.restaurant_name.name.replace(/\s/g , "-")}`,
-      0);
-    window.open(restaurant.restaurant_spw_url, '_target');
-  }
+  // openSPW(restaurant: any): void {
+  //   // console.log(restaurant);
+  //   this.data.setRecentlyViewed(restaurant);
+  //   this.ga.eventEmitter(
+  //     'pageview',
+  //     'Restaurant Card',
+  //     'SPW', `virtual/${restaurant.restaurant_name.name.replace(/\s/g , "-")}`,
+  //     0);
+  //   window.open(restaurant.restaurant_spw_url, '_target');
+  // }
 
   // Todo: we need to store on the Cloudinary ids so that
   //  we an appropriately sized & formatted image

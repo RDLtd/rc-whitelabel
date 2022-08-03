@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable} from 'rxjs';
 import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 import { DataService } from '../../core/data.service';
+import {AnalyticsService} from '../../core/analytics.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,11 +32,22 @@ export class RestaurantsService {
   private totalResults = 0;
 
   constructor(
+    private ga: AnalyticsService,
     private config: AppConfig,
     private api: ApiService,
     private data: DataService) {
       this.apiKey = this.config.channel.apiKey;
       this.accessCode = this.config.channel.accessCode;
+  }
+
+  openSpw(restaurant: any, cat: string): void {
+    this.data.setRecentlyViewed(restaurant);
+    this.ga.eventEmitter(
+      'page_view_virtual',
+      cat,
+      'open_spw', `virtual/${restaurant.restaurant_name.name.replace(/\s/g , "-")}`,
+      0);
+    window.open(restaurant.restaurant_spw_url, '_target');
   }
 
   get site(): any {

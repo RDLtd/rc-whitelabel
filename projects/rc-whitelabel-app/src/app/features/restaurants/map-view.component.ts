@@ -377,10 +377,11 @@ export class MapViewComponent implements OnInit {
     this.infoWindow.open(marker);
   }
 
-  openSpw(restaurant: any): void {
+  openSpw(restaurant: any, cat: string): void {
     // console.log(restaurant);
-    this.data.setRecentlyViewed(restaurant);
-    window.open(restaurant.restaurant_spw_url, '_target');
+    // this.data.setRecentlyViewed(restaurant);
+    // window.open(restaurant.restaurant_spw_url, '_target');
+    this.restService.openSpw(restaurant, cat);
   }
 
   getTravelDuration(origin: string, destination: string, mode: string = 'walking') {
