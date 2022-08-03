@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { LocationService } from '../../core/location.service';
 import { fadeIn, fadeInSlideUp } from '../../shared/animations';
 import { Title } from '@angular/platform-browser';
-import {AnalyticsService} from '../../core/analytics.service';
 
 interface SearchSuggestion {
   cat: string;
@@ -93,8 +92,7 @@ export class SearchComponent implements OnInit {
     public config: AppConfig,
     public router: Router,
     private location: LocationService,
-    private title: Title,
-    private ga: AnalyticsService
+    private title: Title
   ) {
 
     // Is this a type Site implementation?
@@ -273,13 +271,7 @@ export class SearchComponent implements OnInit {
 
   viewRestaurantSpw(restaurant: any): void {
     console.log(restaurant);
-      this.data.setRecentlyViewed(restaurant);
-      this.ga.eventEmitter(
-        'page_view_spw',
-        'browse_recently_viewed',
-        'open_spw', `spw/${restaurant.restaurant_name.replace(/\s/g , "-")}`,
-        0);
-
+    this.data.setRecentlyViewed(restaurant);
     this.data.setRecentlyViewed({
       restaurant_name: restaurant.name,
       restaurant_spw_url: restaurant.spw || restaurant.restaurant_spw_url,

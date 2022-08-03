@@ -70,6 +70,7 @@ export class MapViewComponent implements OnInit {
   siteId?: string | null;
   site: any;
   isChannelSite: boolean;
+  travelData: any[] =[];
 
   constructor(
     private config: AppConfig,
@@ -123,8 +124,8 @@ export class MapViewComponent implements OnInit {
 
     });
 
-    // Check to see if we already have the Google maps api
-    // script in the cache so we don't load it twice!
+    // Check to see if we already have the Google Maps api
+    // script in the cache, so we don't load it twice!
     if (window.hasOwnProperty('google')) {
       console.log('Google maps api already available');
       this.initMap();
@@ -256,6 +257,7 @@ export class MapViewComponent implements OnInit {
         console.log(`${i} Null record`);
         continue;
       }
+      this.getTravelData({ lat: r.restaurant_lat, lng: r.restaurant_lng }, i);
       markerComp = {
         position: {
           lat: r.restaurant_lat as number,
@@ -314,7 +316,6 @@ export class MapViewComponent implements OnInit {
         this.infoWindow.open(marker);
         return
       }
-
       this.updateMarkerList(index);
       this.selectMapMarker(marker, this.restaurants[index]);
   }
@@ -368,9 +369,9 @@ export class MapViewComponent implements OnInit {
     // @ts-ignore
     this.map.panTo(marker.getPosition());
     // this.selectedMarker.marker?.setAnimation(google.maps.Animation.BOUNCE);
-    const latlngbounds = new google.maps.LatLngBounds();
+    const latLngBounds = new google.maps.LatLngBounds();
     // @ts-ignore
-    latlngbounds.extend(marker.getPosition());
+    latLngBounds.extend(marker.getPosition());
     // this.map.fitBounds(latlngbounds, 0);
 
     // Update content & open mapInfoWindow
@@ -387,7 +388,21 @@ export class MapViewComponent implements OnInit {
     this.restService.openSpw(restaurant, cat);
   }
 
-  getTravelDuration(origin: string, destination: string, mode: string = 'walking') {
-    //const url = `https://maps.googleapis.com/maps/api/directions/json?destination=${destination}&mode=${mode}&origin=${origin}&key=AIzaSyCCUCV1ld3x-ROquqs3GpHyvMPpsbwVlbk`;
+  async getTravelData(latLng: any, index: number) {
+
+    const service = new google.maps.DistanceMatrixService();
+    // build request
+    const request = {
+      origins: [this.center as object],
+      destinations: [latLng],
+      travelMode: google.maps.TravelMode.WALKING,
+      unitSystem: google.maps.UnitSystem.METRIC,
+      avoidHighways: false,
+      avoidTolls: false,
+    }
+    await service.getDistanceMatrix(request).then((data: any) => {
+      this.travelData[index] = data.rows[0].elements[0];
+      // console.log(this.travelData);
+    });
   }
 }
