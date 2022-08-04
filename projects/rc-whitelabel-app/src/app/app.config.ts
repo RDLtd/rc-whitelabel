@@ -18,6 +18,7 @@ export interface Channel {
   longitude: number;
   language?: string;
   brand?: Brand;
+  analyticsId?: string;
 }
 
 export class AppConfig {

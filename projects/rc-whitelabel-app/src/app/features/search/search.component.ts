@@ -267,21 +267,28 @@ export class SearchComponent implements OnInit {
     this.rdSearchInput.nativeElement.focus();
   }
 
+  viewRecentlyViewed(restaurant: any): void {
+    console.log('recent', restaurant);
+    this.viewRestaurantSpw(restaurant);
+    this.searchReset()
+  }
+
   viewRestaurantSpw(restaurant: any): void {
     console.log(restaurant);
     this.data.setRecentlyViewed(restaurant);
     this.data.setRecentlyViewed({
-      restaurant_name: restaurant.name,
+      restaurant_name: restaurant.name || restaurant.restaurant_name,
       restaurant_spw_url: restaurant.spw || restaurant.restaurant_spw_url,
-      restaurant_number: restaurant.number
+      restaurant_number: restaurant.number || restaurant.restaurant_number
     });
     this.searchReset();
     //
+    const restName = restaurant.name || restaurant.restaurant_name;
     this.ga.eventEmitter(
       'page_view_spw',
-      'Recently Viewed',
-      'open_spw', `spw/${restaurant.restaurant_name.replace(/\s/g , "-")}`,
+      'search_recently_viewed',
+      'open_spw', `spw/${restName.replace(/\s/g , "-")}`,
       0);
-    window.open(restaurant.spw, '_blank');
+    window.open(restaurant.spw || restaurant.restaurant_spw_url, '_blank');
   }
 }

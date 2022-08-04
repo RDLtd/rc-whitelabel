@@ -28,7 +28,7 @@ export class LocationService {
           geo.coords.latitude, geo.coords.longitude, this.config.maxDistance)
           .toPromise()
           .then((res: any) => {
-            console.log(res);
+            // console.log(res);
             this.userLocationSubject.next({
               lat: geo.coords.latitude,
               lng: geo.coords.longitude,

@@ -641,6 +641,7 @@ rd-footer {
   overflow-y: auto;
   color: #666;
   .rd-map-list-item {
+    position: relative;
     display: grid;
     grid-template-columns: 150px 1fr;
     margin-bottom: 6px;
@@ -652,9 +653,11 @@ rd-footer {
       color: #000;
     }
     > div {
+      position: relative;
       flex: 1 auto;
       padding: 6px 8px;
       overflow: hidden;
+
     }
     img {
       width: 150px;
@@ -685,12 +688,28 @@ rd-footer {
     svg {
       margin-left:4px;
     }
+    .rd-member-offer {
+      position: absolute;
+      z-index: 10;
+      width: 150px;
+      display: flex;
+      justify-content: center;
+      top: 0;
+      left: 0;
+      background-color: orange;
+      padding: 4px;
+      // border-radius: 4px;
+      color: black;
+      font-size: 0.625rem;
+    }
+
   }
 
   @include mq(med) {
     height: 80vh;
   }
 }
+
 
 .rd-map-list-item-skeleton {
   display: grid;

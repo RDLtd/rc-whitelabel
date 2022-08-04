@@ -96,7 +96,7 @@
             <a>{{ config.i18n["You_are_new"] }}</a>
           </li>
           <li *ngFor="let recent of recentlyViewed">
-            <a [href]="recent['restaurant_spw_url']" target="_blank" (click)="searchReset()">
+            <a target="_blank" (click)="viewRecentlyViewed(recent)">
               {{ recent['restaurant_name'] }}
             </a>
           </li>
