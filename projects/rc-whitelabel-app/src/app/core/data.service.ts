@@ -221,6 +221,7 @@ export class DataService {
   }
   setRecentlyViewed(restaurant: any): void {
     console.log('Recent', restaurant);
+
     // Check whether this restaurant is already in the array
     const maxNum = 5;
     if (this.recentlyViewed) {

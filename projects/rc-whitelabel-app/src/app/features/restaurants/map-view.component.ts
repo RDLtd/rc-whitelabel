@@ -396,7 +396,7 @@ export class MapViewComponent implements OnInit {
       origins: [this.center as object],
       destinations: [latLng],
       travelMode: google.maps.TravelMode.WALKING,
-      unitSystem: google.maps.UnitSystem.METRIC,
+      unitSystem: google.maps.UnitSystem.IMPERIAL,
       avoidHighways: false,
       avoidTolls: false,
     }

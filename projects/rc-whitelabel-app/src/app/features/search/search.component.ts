@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { LocationService } from '../../core/location.service';
 import { fadeIn, fadeInSlideUp } from '../../shared/animations';
 import { Title } from '@angular/platform-browser';
+import {AnalyticsService} from '../../core/analytics.service';
 
 interface SearchSuggestion {
   cat: string;
@@ -92,7 +93,8 @@ export class SearchComponent implements OnInit {
     public config: AppConfig,
     public router: Router,
     private location: LocationService,
-    private title: Title
+    private title: Title,
+    private ga: AnalyticsService
   ) {
 
     // Is this a type Site implementation?
@@ -265,10 +267,6 @@ export class SearchComponent implements OnInit {
     this.rdSearchInput.nativeElement.focus();
   }
 
-  setChannelSite(): void {
-
-  }
-
   viewRestaurantSpw(restaurant: any): void {
     console.log(restaurant);
     this.data.setRecentlyViewed(restaurant);
@@ -278,6 +276,12 @@ export class SearchComponent implements OnInit {
       restaurant_number: restaurant.number
     });
     this.searchReset();
+    //
+    this.ga.eventEmitter(
+      'page_view_spw',
+      'Recently Viewed',
+      'open_spw', `spw/${restaurant.restaurant_name.replace(/\s/g , "-")}`,
+      0);
     window.open(restaurant.spw, '_blank');
   }
 }
