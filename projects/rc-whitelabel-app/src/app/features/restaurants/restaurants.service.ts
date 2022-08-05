@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable} from 'rxjs';
 import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 import { DataService } from '../../core/data.service';
-import {AnalyticsService} from '../../core/analytics.service';
+import { AnalyticsService } from '../../core/analytics.service';
 
 @Injectable({
   providedIn: 'root'

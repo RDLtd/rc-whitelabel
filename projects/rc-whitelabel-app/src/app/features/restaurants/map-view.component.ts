@@ -38,8 +38,8 @@ export class MapViewComponent implements OnInit {
     mapTypeControl: false
   };
   svgMarker: any;
+  svgMarkerOffer: any
   svgMarkerActive: any;
-  svgMarkerOffer: any;
   svgMarkerCentre: any;
   markers!: any[];
   selectedMarker?: MapMarker;
@@ -72,6 +72,7 @@ export class MapViewComponent implements OnInit {
   site: any;
   isChannelSite: boolean;
   travelData: any[] =[];
+  distanceService: any;
 
   constructor(
     private config: AppConfig,
@@ -129,6 +130,7 @@ export class MapViewComponent implements OnInit {
     // script in the cache, so we don't load it twice!
     if (window.hasOwnProperty('google')) {
       console.log('Google maps api already available');
+      this.distanceService = new google.maps.DistanceMatrixService();
       this.initMap();
       this.mapApiSubject.next(true);
     } else {
@@ -141,6 +143,7 @@ export class MapViewComponent implements OnInit {
           map(() => true),
           catchError(() => of(false)),
           finalize(() => {
+            this.distanceService = new google.maps.DistanceMatrixService();
             this.initMap();
           })
         );
@@ -210,22 +213,23 @@ export class MapViewComponent implements OnInit {
     this.svgMarker = {
       path:
         'M11.9858571,34.9707603 C5.00209157,32.495753 0,25.8320271 0,18 C0,8.0588745 8.0588745,0 18,0 C27.9411255,0 36,8.0588745 36,18 C36,25.8320271 30.9979084,32.495753 24.0141429,34.9707603 C24.0096032,34.980475 24.0048892,34.9902215 24,35 C20,37 18,40.6666667 18,46 C18,40.6666667 16,37 12,35 C11.9951108,34.9902215 11.9903968,34.980475 11.9858571,34.9707603 Z',
-      fillColor: '#555',
+      fillColor: '#6e6e6e',
       fillOpacity: 1,
       strokeWeight: 1,
       strokeColor: '#fff',
       rotation: 0,
-      scale: 1,
+      scale: .9,
       labelOrigin: { x: 17, y: 18 },
       anchor: new google.maps.Point(18, 40)
     };
     // Duplicate and edit to use as the 'active' icon
     this.svgMarkerOffer = Object.assign({}, this.svgMarker);
+    this.svgMarkerOffer.fillOpacity = 1;
     this.svgMarkerOffer.fillColor = 'orange';
     this.svgMarkerActive = Object.assign({}, this.svgMarker);
-    this.svgMarkerActive.scale = 1.25;
-    this.svgMarkerActive.fillColor = 'black';
+    this.svgMarkerActive.scale = 1.5;
     this.svgMarkerActive.fillOpacity = 1;
+    //this.svgMarkerActive.fillColor = '#00a69b';
     // Centre point
     this.svgMarkerCentre = Object.assign({}, this.svgMarker);
     this.svgMarkerCentre.fillOpacity = 1;
@@ -255,9 +259,6 @@ export class MapViewComponent implements OnInit {
     // Create markers for all restaurants
     for (i; i < totalRestaurants; i++) {
       r = this.restaurants[i];
-      if ( r.offers.length ) {
-        console.log(r);
-      }
       // Skip the loop if no valid latitude
       if (!r.restaurant_lat || r.restaurant_lat === -999) {
         console.log(`${i} Null record`);
@@ -269,12 +270,12 @@ export class MapViewComponent implements OnInit {
           lat: r.restaurant_lat as number,
           lng: r.restaurant_lng as number
         },
-        zIndex: i + 1,
+        //zIndex: i + 1,
         options: {
           icon: r.offers.length ? this.svgMarkerOffer : this.svgMarker,
           label: {
             text: `${ i + this.currentOffset + 1 }`,
-            color: '#fff',
+            color: r.offers.length ? 'black' : 'white',
             fontSize: '12px',
           }
         },
@@ -362,16 +363,16 @@ export class MapViewComponent implements OnInit {
   selectMapMarker(marker: MapMarker, restaurant: any): void {
     // reset current window & marker
     this.infoWindow.close();
-    // this.selectedMarker?.marker?.setOptions({
-    //   zIndex: 1,
-    //   icon: restaurant.offers.length ? this.svgMarkerOffer : this.svgMarker,
-    // })
+    this.selectedMarker?.marker?.setOptions({
+      zIndex: 1,
+      //icon: restaurant.offers.length? this.svgMarkerOffer : this.svgMarker
+    });
     // Apply active icon and bring to front of any stack
     this.selectedMarker = marker;
-    // this.selectedMarker.marker?.setOptions({
-    //   zIndex: 100,
-    //   icon: this.svgMarkerActive
-    // });
+    this.selectedMarker.marker?.setOptions({
+      zIndex: 100,
+      //icon: this.svgMarkerActive
+    });
     // @ts-ignore
     this.map.panTo(marker.getPosition());
     // this.selectedMarker.marker?.setAnimation(google.maps.Animation.BOUNCE);
@@ -395,10 +396,17 @@ export class MapViewComponent implements OnInit {
   }
 
   async getTravelData(latLng: any, index: number) {
-
-    const service = new google.maps.DistanceMatrixService();
+    // const service = new google.maps.DistanceMatrixService();
     // build request
-    const request = {
+    const requestDriving = {
+      origins: [this.center as object],
+      destinations: [latLng],
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.IMPERIAL,
+      avoidHighways: false,
+      avoidTolls: false,
+    };
+    const requestWalking = {
       origins: [this.center as object],
       destinations: [latLng],
       travelMode: google.maps.TravelMode.WALKING,
@@ -406,9 +414,26 @@ export class MapViewComponent implements OnInit {
       avoidHighways: false,
       avoidTolls: false,
     }
-    await service.getDistanceMatrix(request).then((data: any) => {
-      this.travelData[index] = data.rows[0].elements[0];
-      // console.log(this.travelData);
-    });
+    // const w = await this.distanceService.getDistanceMatrix(requestWalking)
+    //   .then((data: any) => {
+    //     return data.rows[0].elements[0]
+    //   });
+    // const d = await this.distanceService.getDistanceMatrix(requestDriving)
+    //   .then((data: any) => {
+    //     return data.rows[0].elements[0];
+    //   });
+    this.travelData[index] = {
+      walking: await this.distanceService.getDistanceMatrix(requestWalking)
+        .then((data: any) => {
+          return data.rows[0].elements[0]
+        }),
+      driving: await this.distanceService.getDistanceMatrix(requestDriving)
+        .then((data: any) => {
+          return data.rows[0].elements[0];
+        })
+    }
+    //console.log(this.travelData);
   }
+
+
 }
