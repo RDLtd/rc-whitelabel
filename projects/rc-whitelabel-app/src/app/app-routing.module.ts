@@ -16,14 +16,14 @@ const routes: Routes = [
     path: 'restaurants',
     loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
   },
-  {
-    path: 'restaurants/:filter',
-    loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
-  },
-  {
-    path: 'restaurants/nearest/:sort',
-    loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
-  },
+  // {
+  //   path: 'restaurants/:filter',
+  //   loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
+  // },
+  // {
+  //   path: 'restaurants/nearest/:sort',
+  //   loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
+  // },
   // {
   //   path: 'restaurants/:geo/:sort',
   //   loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)

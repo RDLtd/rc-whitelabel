@@ -219,7 +219,7 @@ export class MapViewComponent implements OnInit {
       strokeColor: '#fff',
       rotation: 0,
       scale: .9,
-      labelOrigin: { x: 17, y: 18 },
+      labelOrigin: { x: 18, y: 18 },
       anchor: new google.maps.Point(18, 40)
     };
     // Duplicate and edit to use as the 'active' icon
@@ -390,15 +390,25 @@ export class MapViewComponent implements OnInit {
     this.infoWindow.open(marker);
   }
 
+  /**
+   * Open SPW in new tab
+   * @param restaurant Object
+   * @param cat where was the event generated
+   */
   openSpw(restaurant: any, cat: string): void {
     // console.log(restaurant);
     this.restService.openSpw(restaurant, cat);
   }
 
+  /**
+   * Query the Google Api to get actual
+   * travel times from map center (site or landmark)
+   * @param latLng site or landmark coords
+   * @param index position in restaurants array
+   */
   async getTravelData(latLng: any, index: number) {
-    // const service = new google.maps.DistanceMatrixService();
-    // build request
-    const requestDriving = {
+    // build requests
+    const drivingMode = {
       origins: [this.center as object],
       destinations: [latLng],
       travelMode: google.maps.TravelMode.DRIVING,
@@ -406,28 +416,15 @@ export class MapViewComponent implements OnInit {
       avoidHighways: false,
       avoidTolls: false,
     };
-    const requestWalking = {
-      origins: [this.center as object],
-      destinations: [latLng],
-      travelMode: google.maps.TravelMode.WALKING,
-      unitSystem: google.maps.UnitSystem.IMPERIAL,
-      avoidHighways: false,
-      avoidTolls: false,
-    }
-    // const w = await this.distanceService.getDistanceMatrix(requestWalking)
-    //   .then((data: any) => {
-    //     return data.rows[0].elements[0]
-    //   });
-    // const d = await this.distanceService.getDistanceMatrix(requestDriving)
-    //   .then((data: any) => {
-    //     return data.rows[0].elements[0];
-    //   });
+    const walkingMode = Object.assign({}, drivingMode);
+    walkingMode.travelMode = google.maps.TravelMode.WALKING;
+
     this.travelData[index] = {
-      walking: await this.distanceService.getDistanceMatrix(requestWalking)
+      walking: await this.distanceService.getDistanceMatrix(walkingMode)
         .then((data: any) => {
           return data.rows[0].elements[0]
         }),
-      driving: await this.distanceService.getDistanceMatrix(requestDriving)
+      driving: await this.distanceService.getDistanceMatrix(drivingMode)
         .then((data: any) => {
           return data.rows[0].elements[0];
         })

@@ -46,6 +46,7 @@ interface Cuisine {
 export class SearchComponent implements OnInit {
   isLoaded = false;
   maxCuisines = 5;
+  isChannelSite = false;
 
   // Reference to search element
   // so that we can set focus
@@ -78,11 +79,20 @@ export class SearchComponent implements OnInit {
     channelType: 3,
     defaultView: 'map',
     showRecentlyViewed: true,
+    showLandmarks: true,
+    showCuisines: true,
+    searchPlaceholderTxt: 'Type landmark, restaurant or cuisine',
+    noResultsTxt: 'No matches'
+  }
+  siteConfig = {
+    channelType: 3,
+    defaultView: 'map',
+    showRecentlyViewed: true,
     showLandmarks: false,
     showCuisines: false,
     searchPlaceholderTxt: 'Enter a site name or restaurant name',
     noResultsTxt: 'No matches'
-  };
+  }
 
   channelSites: Site[] = [];
 
@@ -99,6 +109,8 @@ export class SearchComponent implements OnInit {
 
     // Is this a type Site implementation?
     if (this.config.channel.type === 'sites') {
+      this.isChannelSite = true;
+      this.channelConfig = this.siteConfig;
       this.data.loadChannelSites().then((data: any) => {
         const sites = data.sites;
         console.log(sites);
@@ -116,7 +128,6 @@ export class SearchComponent implements OnInit {
         // console.log(this.channelSites);
       });
     }
-
     title.setTitle('Search');
 
   }
@@ -189,6 +200,8 @@ export class SearchComponent implements OnInit {
               index: idx,
               route: ['/restaurants', this.channelConfig.defaultView, `${m.channel_landmark_lat},${m.channel_landmark_lng}`]
             });
+            console.log('Route', `/restaurants/${this.channelConfig.defaultView}/${m.channel_landmark_lat},${m.channel_landmark_lng}`);
+
           }
         }
       }

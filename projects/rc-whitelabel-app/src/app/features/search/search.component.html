@@ -112,7 +112,7 @@
           <li *ngIf="userPosition?.inRange">
             <a
               class="rd-my-location"
-              [routerLink]="['/restaurants/nearest/',
+              [routerLink]="['/restaurants/map/',
               userPosition?.lat + ':' +  userPosition?.lng]">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
                 <path d="M0 0h24v24H0z" fill="none"/>
@@ -125,7 +125,8 @@
             </a>
           </li>
           <li *ngFor="let landmark of landmarks">
-            <a [routerLink]="['/restaurants/', landmark?.channel_landmark_lat + ',' + landmark?.channel_landmark_lng]">
+            <a [routerLink]="['/restaurants', channelConfig.defaultView, landmark?.channel_landmark_lat + ',' +
+            landmark?.channel_landmark_lng]">
               {{ landmark?.channel_landmark_name }}
             </a>
           </li>
@@ -139,7 +140,7 @@
       </div>
       <ul>
         <li *ngFor="let cuisine of getTopCuisines()">
-          <a [routerLink]="['/restaurants/', cuisine.label, 'list']">
+          <a [routerLink]="['/restaurants', 'list', cuisine.label]">
             {{ cuisine?.label }}
             <span class="rd-flex-spacer"></span>
             <span>{{ cuisine?.total }}</span>
