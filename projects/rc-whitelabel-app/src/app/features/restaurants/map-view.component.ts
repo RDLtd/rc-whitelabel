@@ -70,6 +70,7 @@ export class MapViewComponent implements OnInit {
   numbers: number[];
   siteId?: string | null;
   site: any;
+  landmark: any;
   isChannelSite: boolean;
   travelData: any[] =[];
   distanceService: any;
@@ -120,6 +121,7 @@ export class MapViewComponent implements OnInit {
         this.geoTarget = params.get('id')?.split(',') ?? [];
         //console.log(params);
         this.filterBy = params.get('filter');
+        this.landmark = params.get('name');
         this.center = { lat: Number(this.geoTarget[0]), lng: Number(this.geoTarget[1])}
         this.loadRestaurants();
       }
@@ -316,8 +318,8 @@ export class MapViewComponent implements OnInit {
   markerClick(marker: MapMarker, index: number): void {
       if (this.restaurants.length === index) {
         this.infoWindowContent = {
-          name: this.site.name,
-          cuisine: this.site.notes,
+          name: this.site?.name ?? this?.landmark ?? 'Landmark',
+          cuisine: this.site?.notes,
           spw: null
         }
         this.infoWindow.open(marker);
