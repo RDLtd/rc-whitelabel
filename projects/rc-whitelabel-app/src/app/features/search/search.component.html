@@ -140,7 +140,7 @@
       </div>
       <ul>
         <li *ngFor="let cuisine of getTopCuisines()">
-          <a [routerLink]="['/restaurants', 'list', cuisine.label]">
+          <a [routerLink]="['/restaurants', 'list', config.channel.latitude + ',' + config.channel.longitude, cuisine.label]">
             {{ cuisine?.label }}
             <span class="rd-flex-spacer"></span>
             <span>{{ cuisine?.total }}</span>

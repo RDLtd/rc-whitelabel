@@ -5,7 +5,7 @@
 </rd-loader>
 
 <!-- Restaurants -->
-<div class="rd-results-container" [@fadeInStagger]="restaurants$ | async">
+<div class="rd-results-container" [@fadeInStagger]="restaurants$ | async" *ngIf="resultsLoaded$ | async">
   <div
     *ngFor="let restaurant of restaurants$ | async"
     class="rd-restaurant"

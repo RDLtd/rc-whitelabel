@@ -86,39 +86,6 @@ export class DataService {
     });
   }
 
-  // Get restaurants
-  loadRestaurantsBySite(id: number): Promise<any> {
-
-    // const params = {
-    //   filter: options.filter,
-    //   filterText: options.filterText,
-    //   offset: options.offset || 0,
-    //   limit: options.limit,
-    //   lat: options.lat,
-    //   lng: options.lng,
-    //   testing: this.config.testMode
-    // };
-
-    // console.log('Params', params);
-
-    return new Promise(async resolve => {
-      await this.api.getChannelRestaurants(id, this.config.channel.accessCode, this.config.channel.apiKey)
-        .toPromise()
-        .then((data: any) => {
-          console.log(data);
-          if (!!data) {
-            resolve(data.restaurants);
-          } else {
-            resolve([]);
-          }
-        })
-        .catch((error: any) => {
-          console.log('ERROR', error);
-          this.router.navigate(['/error']);
-        });
-    });
-  }
-
   loadChannelSettings(id: number): Promise <any> {
     return new Promise(async resolve => {
       await this.api.getChannelSettings(id)

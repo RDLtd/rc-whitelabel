@@ -109,6 +109,7 @@ export class SearchComponent implements OnInit {
 
     // Is this a type Site implementation?
     if (this.config.channel.type === 'sites') {
+      console.log('Loading site config');
       this.isChannelSite = true;
       this.channelConfig = this.siteConfig;
       this.data.loadChannelSites().then((data: any) => {
