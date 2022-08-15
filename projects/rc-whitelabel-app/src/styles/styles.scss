@@ -715,11 +715,12 @@ rd-footer {
   display: grid;
   grid-template-columns: 150px 1fr;
   margin-bottom: 6px;
+  animation: pulse 2s infinite;
+  animation-delay: 0.5s;
   .thumb {
     width: 150px;
     height: 100px;
     background-color: $clr-grey-100;
-    //animation: skeleton-loading 1s linear infinite alternate;
   }
   .heading,
   .text,
@@ -729,13 +730,24 @@ rd-footer {
     width: 100%;
     height: 1.5rem;
     background-color: $clr-grey-100;
-    // animation: skeleton-loading 1s linear infinite alternate;
   }
   .text, .text2 {
     width: 40%;
     height: 1rem;
   }
   .text2 { width: 10%; }
+}
+@keyframes pulse {
+
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 .rd-map-nav {
   display: flex;
@@ -756,8 +768,9 @@ rd-footer {
   padding: 12px 0 6px 6px;
   h3 {
     margin: 0 0 4px;
+    font-size: 1.25rem;
     line-height: 1;
-    font-weight: bold;
+    font-weight: $font-weight-regular;
   }
   a {
     display: flex;
@@ -769,6 +782,25 @@ rd-footer {
     margin-top: 8px;
     font-size: .75rem;
     color: black;
+  }
+  .distances {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    .distance {
+      h4 {
+        color: red;
+        font-size: .625rem;
+        margin: 0;
+        line-height: 1.1;
+      }
+      span {
+        font-size: .875rem;
+        font-weight: $font-weight-regular;
+      }
+    }
+
   }
 }
 .rd-map {

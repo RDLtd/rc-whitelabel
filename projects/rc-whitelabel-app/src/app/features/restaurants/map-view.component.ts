@@ -74,6 +74,12 @@ export class MapViewComponent implements OnInit {
   isChannelSite: boolean;
   travelData: any[] =[];
   distanceService: any;
+  distanceData = {
+    distance: '',
+    walking: '',
+    driving: ''
+  };
+  showDistanceData = false;
 
   constructor(
     private config: AppConfig,
@@ -266,7 +272,7 @@ export class MapViewComponent implements OnInit {
         console.log(`${i} Null record`);
         continue;
       }
-      this.getTravelData({ lat: r.restaurant_lat, lng: r.restaurant_lng }, i);
+
       markerComp = {
         position: {
           lat: r.restaurant_lat as number,
@@ -317,6 +323,7 @@ export class MapViewComponent implements OnInit {
    */
   markerClick(marker: MapMarker, index: number): void {
       if (this.restaurants.length === index) {
+        this.showDistanceData = false;
         this.infoWindowContent = {
           name: this.site?.name ?? this?.landmark ?? 'Landmark',
           cuisine: this.site?.notes,
@@ -383,6 +390,9 @@ export class MapViewComponent implements OnInit {
     latLngBounds.extend(marker.getPosition());
     // this.map.fitBounds(latlngbounds, 0);
 
+    // Get distance data
+    this.getDistanceData({ lat: restaurant.restaurant_lat, lng: restaurant.restaurant_lng });
+
     // Update content & open mapInfoWindow
     this.infoWindowContent = {
       name: restaurant.restaurant_name,
@@ -390,6 +400,34 @@ export class MapViewComponent implements OnInit {
       spw: restaurant
     };
     this.infoWindow.open(marker);
+  }
+
+  getDistanceData(latLng: any): void {
+    this.showDistanceData = true;
+    // build requests
+    const drivingMode = {
+      origins: [this.center as object],
+      destinations: [latLng],
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.IMPERIAL,
+      avoidHighways: false,
+      avoidTolls: false,
+    };
+    const walkingMode = Object.assign({}, drivingMode);
+    walkingMode.travelMode = google.maps.TravelMode.WALKING;
+
+    this.distanceService.getDistanceMatrix(drivingMode)
+        .then((data: any) => {
+          const d = data.rows[0].elements[0];
+          this.distanceData.distance = d.distance.text;
+          this.distanceData.driving = d.duration.text;
+        });
+    this.distanceService.getDistanceMatrix(walkingMode)
+      .then((data: any) => {
+        const d = data.rows[0].elements[0];
+        this.distanceData.walking = d.duration.text;
+      });
+    console.log(this.distanceData.walking);
   }
 
   /**
