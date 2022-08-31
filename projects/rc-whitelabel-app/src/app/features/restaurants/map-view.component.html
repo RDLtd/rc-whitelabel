@@ -10,7 +10,7 @@
     <div class="rd-map-nav">
       <span class="rd-map-nav-summary">{{ getBatchNavSummary() }}</span>
       <ng-container *ngIf="!isChannelSite">
-      <button [disabled]="currentOffset === 0"
+      <button [disabled]="currentOffset === 0"§
               mat-icon-button
               (click)="prevBatch()"
               title="Previous {{ currentOffset }} restaurants">

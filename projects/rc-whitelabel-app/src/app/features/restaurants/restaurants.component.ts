@@ -100,6 +100,7 @@ export class RestaurantsComponent implements OnInit {
           }
         }
       });
+    console.log('RR', this.restaurants[0]);
   }
 
   // Prefetch the next batch of restaurants

@@ -28,12 +28,14 @@ $col-text: rgb(74, 74, 74);
 $col-page-bgd: #cdcdcd;
 $col-timer-outer: #454540;
 $col-timer-inner: #bbb;
-$col-accent: #ff3d00;
+$col-accent: #006f42;
 $col-dark: #252525;
 $col-icon-cuisine: #2eb871;
 $col-icon-restaurant: #23b6e0;
 $col-icon-location: #ff3d00;
 $clr-grey-100: #f1f3f4;
+$clr-offers: $col-accent;
+$clr-cta-primary: #B31F29;
 
 // For media queries
 $breakpoints: (
@@ -98,7 +100,7 @@ a, a:active, a:focus {
 .rd-flex-spacer { flex: 1 0 auto; text-align: center;}
 .rd-hide { display: none !important; }
 .rd-show { opacity: 1 !important;}
-.rd-highlight { color: $col-accent}
+.rd-highlight { color: $col-accent; }
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
 .rd-icon-restaurant { color: $col-icon-restaurant !important;}
 .rd-icon-cuisine { color: $col-icon-cuisine !important;}
@@ -179,6 +181,7 @@ rd-header {
   display: flex;
   align-items: center;
   padding: 16px;
+  column-gap: 8px;
   a {
     display: flex;
     align-items: center;
@@ -231,6 +234,7 @@ main {
   padding-top: $layout-header-height;
   @include mq(med) {
     background: #eee;
+    padding-top: $layout-header-height + 28px;
   }
 }
 .rd-cover {
@@ -699,10 +703,10 @@ rd-footer {
       justify-content: center;
       top: 0;
       left: 0;
-      background-color: hsla(50, 100%, 50%, 0.75);
+      background-color: rgba($col-accent, .75);
       padding: 10px 4px;
       // border-radius: 4px;
-      color: black;
+      color: white;
       font-size: 0.75rem;
     }
 
@@ -760,7 +764,7 @@ rd-footer {
   padding-block: 12px;
   padding-inline: 8px 0;
   margin-bottom: 6px;
-  border-bottom: 1px solid $col-icon-restaurant;
+  border-bottom: 1px solid $col-accent;
   .rd-map-nav-summary {
     flex: 1 auto;
     align-items: center;
@@ -779,12 +783,12 @@ rd-footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #eee;
+    background-color: $clr-offers;
     padding: 1em;
     border-radius: 4px;
     margin-top: 8px;
     font-size: .75rem;
-    color: black;
+    color: white;
   }
   .distances {
     margin-top: 1rem;

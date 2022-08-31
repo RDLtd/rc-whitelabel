@@ -233,7 +233,7 @@ export class MapViewComponent implements OnInit {
     // Duplicate and edit to use as the 'active' icon
     this.svgMarkerOffer = Object.assign({}, this.svgMarker);
     this.svgMarkerOffer.fillOpacity = 1;
-    this.svgMarkerOffer.fillColor = 'orange';
+    this.svgMarkerOffer.fillColor = this.config.channel.brand?.colorAccent;
     this.svgMarkerActive = Object.assign({}, this.svgMarker);
     this.svgMarkerActive.scale = 1.5;
     this.svgMarkerActive.fillOpacity = 1;
@@ -283,7 +283,7 @@ export class MapViewComponent implements OnInit {
           icon: r.offers.length ? this.svgMarkerOffer : this.svgMarker,
           label: {
             text: `${ i + this.currentOffset + 1 }`,
-            color: r.offers.length ? 'black' : 'white',
+            color: 'white',
             fontSize: '12px',
           }
         },
@@ -334,6 +334,7 @@ export class MapViewComponent implements OnInit {
       }
       this.updateMarkerList(index);
       this.selectMapMarker(marker, this.restaurants[index]);
+    console.log(this.restaurants[index]);
   }
 
   /**
@@ -350,6 +351,7 @@ export class MapViewComponent implements OnInit {
     const restaurant = this.restaurants[index];
     // Activate the marker
     this.selectMapMarker(mapMarkerComponent, restaurant);
+    console.log(this.restaurants[index]);
   }
 
   /**
@@ -402,6 +404,11 @@ export class MapViewComponent implements OnInit {
     this.infoWindow.open(marker);
   }
 
+  /**
+   * Query the google maps distance api for both
+   * driving & walking distance/times
+   * @param latLng
+   */
   getDistanceData(latLng: any): void {
     this.showDistanceData = true;
     // build requests
@@ -427,7 +434,6 @@ export class MapViewComponent implements OnInit {
         const d = data.rows[0].elements[0];
         this.distanceData.walking = d.duration.text;
       });
-    console.log(this.distanceData.walking);
   }
 
   /**
@@ -439,38 +445,5 @@ export class MapViewComponent implements OnInit {
     // console.log(restaurant);
     this.restService.openSpw(restaurant, cat);
   }
-
-  /**
-   * Query the Google Api to get actual
-   * travel times from map center (site or landmark)
-   * @param latLng site or landmark coords
-   * @param index position in restaurants array
-   */
-  async getTravelData(latLng: any, index: number) {
-    // build requests
-    const drivingMode = {
-      origins: [this.center as object],
-      destinations: [latLng],
-      travelMode: google.maps.TravelMode.DRIVING,
-      unitSystem: google.maps.UnitSystem.IMPERIAL,
-      avoidHighways: false,
-      avoidTolls: false,
-    };
-    const walkingMode = Object.assign({}, drivingMode);
-    walkingMode.travelMode = google.maps.TravelMode.WALKING;
-
-    this.travelData[index] = {
-      walking: await this.distanceService.getDistanceMatrix(walkingMode)
-        .then((data: any) => {
-          return data.rows[0].elements[0]
-        }),
-      driving: await this.distanceService.getDistanceMatrix(drivingMode)
-        .then((data: any) => {
-          return data.rows[0].elements[0];
-        })
-    }
-    //console.log(this.travelData);
-  }
-
 
 }
