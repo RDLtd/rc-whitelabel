@@ -156,41 +156,8 @@ rd-loader {
 
 // LAYOUT
 // ------------------------
-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 0 auto;
-  min-height: 100vh;
-  background: #fff;
-  padding-top: $layout-header-height;
-  @include mq(med) {
-    background: #eee;
-  }
-}
-.rd-cover {
-  display: none;
-  @include mq(med){
-    display: block;
-    position: fixed;
-    top:0; left: 0;
-    z-index: 0;
-    width: 100vw;
-    height: 100vh;
-    background-image: url("../assets/images/bgd1.jpg");
-    background-size: cover;
-    background-color: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
-    filter: blur(8px); // This be the blur
-  }
-}
-.blur {
-  @include mq(med) {
-    position: fixed;
-    top: 0;
-    background: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
-    backdrop-filter: blur(8px); // This be the blur
-  }
-}
+
+
 header {
   width: 100vw;
   z-index: 10;
@@ -250,7 +217,43 @@ rd-header {
     letter-spacing: 1px;
   }
   @include mq(med) {
-    .rd-logo { height: 40px;}
+    .rd-logo { height: $layout-header-height;}
+  }
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #fff;
+  padding-top: $layout-header-height;
+  @include mq(med) {
+    background: #eee;
+  }
+}
+.rd-cover {
+  display: none;
+  @include mq(med){
+    display: block;
+    position: fixed;
+    top:0; left: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("../assets/images/bgd1.jpg");
+    background-size: cover;
+    background-color: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
+    filter: blur(8px); // This be the blur
+  }
+}
+.blur {
+  @include mq(med) {
+    position: fixed;
+    top: 0;
+    background: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
+    backdrop-filter: blur(8px); // This be the blur
   }
 }
 rd-footer {

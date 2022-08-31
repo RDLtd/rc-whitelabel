@@ -6,6 +6,18 @@ export interface Brand {
   colorFgdPrimary: string;
   colorSecondary: string;
   colorAccent: string;
+  colorCta: string;
+}
+export interface Brand2 {
+  imgLogo: string;
+  imgBgd: string;
+  colHeaderBg: string;
+  colHeaderFg: string;
+  colFooterBg: string;
+  colFooterFg: string;
+  colTextAccent: string;
+  colBtnCta: string;
+  colOffers: string
 }
 export interface Channel {
   id: number;
@@ -66,7 +78,8 @@ export class AppConfig {
         colorBgdPrimary: data.primaryBgColor,
         colorFgdPrimary: data.primaryFgColor,
         colorSecondary: data.secondaryColor,
-        colorAccent: data.accentColor
+        colorAccent: data.accentColor,
+        colorCta: data.accentColor
       }
     };
     console.log('Channel loaded!');
