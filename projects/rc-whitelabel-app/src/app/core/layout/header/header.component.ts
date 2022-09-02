@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfig } from '../../../app.config';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, Event as NavigationEvent, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { fadeIn } from '../../../shared/animations';
 import { RestaurantsService } from '../../../features/restaurants/restaurants.service';
@@ -16,14 +16,20 @@ export class HeaderComponent implements OnInit {
   // @Input() direction = '';
   showSearchOption = false;
   showViews = false;
-  currentView: string | undefined;
+  isMapView = true;
 
   constructor(
     public config: AppConfig,
     private router: Router,
-    private restService: RestaurantsService
+    private restService: RestaurantsService,
   ) {
-    this.currentView = this.router.url.split('/')[2];
+    this.router.events
+      .subscribe(
+        (event: NavigationEvent) => {
+          if(event instanceof NavigationStart) {
+            this.isMapView = event.url.indexOf('map') > 0;
+          }
+        });
   }
 
   ngOnInit(): void {
@@ -38,9 +44,9 @@ export class HeaderComponent implements OnInit {
     });
   }
   switchView(view: string): void {
-    console.log(this.currentView);
     let path = this.router.url.split('/');
     path[2] = view;
+    console.log('V', view);
     this.restService.resetRestaurantsSubject();
     this.router.navigate(path).then();
   }

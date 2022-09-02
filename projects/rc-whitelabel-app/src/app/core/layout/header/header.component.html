@@ -13,8 +13,8 @@
 <ng-container *ngIf="showSearchOption">
 
   <ng-container *ngIf="showViews">
-    <button mat-button (click)="switchView('list')">LIST</button>
-    <button mat-button (click)="switchView('map')">MAP</button>
+    <button *ngIf="isMapView" mat-button (click)="switchView('list')">LIST VIEW</button>
+    <button *ngIf="!isMapView" mat-button (click)="switchView('map')">MAP VIEW</button>
   </ng-container>
 
   <button
