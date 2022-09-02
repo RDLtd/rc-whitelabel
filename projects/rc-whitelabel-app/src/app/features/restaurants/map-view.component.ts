@@ -190,7 +190,7 @@ export class MapViewComponent implements OnInit {
   // list navigation
   getBatchNavSummary(): string {
     if (this.isChannelSite) {
-      return `${this.site?.name}: ${ this.restService.totalRestaurants } Restaurant recommendations`;
+      return `${this.site?.name}`;
     }
     let lastBatchItem = this.currentOffset + this.batchTotal;
     const totalResults = this.restService.totalRestaurants;

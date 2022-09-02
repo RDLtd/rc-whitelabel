@@ -32,7 +32,6 @@ export interface Channel {
   brand?: Brand;
   analyticsId?: string;
 }
-
 export class AppConfig {
   // Api
   public readonly apiUrl = environment.API_URL;

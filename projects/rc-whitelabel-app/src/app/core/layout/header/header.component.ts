@@ -16,12 +16,15 @@ export class HeaderComponent implements OnInit {
   // @Input() direction = '';
   showSearchOption = false;
   showViews = false;
+  currentView: string | undefined;
 
   constructor(
     public config: AppConfig,
     private router: Router,
     private restService: RestaurantsService
-  ) { }
+  ) {
+    this.currentView = this.router.url.split('/')[2];
+  }
 
   ngOnInit(): void {
     // Hide the search option when on the search page
@@ -35,6 +38,7 @@ export class HeaderComponent implements OnInit {
     });
   }
   switchView(view: string): void {
+    console.log(this.currentView);
     let path = this.router.url.split('/');
     path[2] = view;
     this.restService.resetRestaurantsSubject();
