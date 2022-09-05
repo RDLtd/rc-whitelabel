@@ -49,7 +49,8 @@ export class MapViewComponent implements OnInit {
   infoWindowContent = {
     name: null,
     cuisine: null,
-    spw: null
+    spw: null,
+    offers: null
   };
   bounds!: google.maps.LatLngBounds;
   center?: google.maps.LatLngLiteral;
@@ -233,7 +234,7 @@ export class MapViewComponent implements OnInit {
     // Duplicate and edit to use as the 'active' icon
     this.svgMarkerOffer = Object.assign({}, this.svgMarker);
     this.svgMarkerOffer.fillOpacity = 1;
-    this.svgMarkerOffer.fillColor = this.config.channel.brand?.colorAccent;
+    this.svgMarkerOffer.fillColor = this.config.channel.brand?.clrAccent;
     this.svgMarkerActive = Object.assign({}, this.svgMarker);
     this.svgMarkerActive.scale = 1.5;
     this.svgMarkerActive.fillOpacity = 1;
@@ -327,7 +328,8 @@ export class MapViewComponent implements OnInit {
         this.infoWindowContent = {
           name: this.site?.name ?? this?.landmark ?? 'Landmark',
           cuisine: this.site?.notes,
-          spw: null
+          spw: null,
+          offers: this.restaurants[index]?.offers[0]
         }
         this.infoWindow.open(marker);
         return
@@ -399,7 +401,8 @@ export class MapViewComponent implements OnInit {
     this.infoWindowContent = {
       name: restaurant.restaurant_name,
       cuisine: restaurant.restaurant_cuisine_1,
-      spw: restaurant
+      spw: restaurant,
+      offers: restaurant.offers[0]?.offer_strapline
     };
     this.infoWindow.open(marker);
   }

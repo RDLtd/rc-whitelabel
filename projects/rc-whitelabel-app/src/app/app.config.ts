@@ -1,23 +1,14 @@
 ﻿import { environment } from '../environments/environment';
 export interface Brand {
-  logo: string;
-  bgImage: string;
-  colorBgdPrimary: string;
-  colorFgdPrimary: string;
-  colorSecondary: string;
-  colorAccent: string;
-  colorCta: string;
-}
-export interface Brand2 {
   imgLogo: string;
   imgBgd: string;
-  colHeaderBg: string;
-  colHeaderFg: string;
-  colFooterBg: string;
-  colFooterFg: string;
-  colTextAccent: string;
-  colBtnCta: string;
-  colOffers: string
+  clrHeaderBgd: string;
+  clrHeaderFgd: string;
+  clrFooterBgd: string;
+  clrFooterFgd: string;
+  clrAccent: string;
+  clrCtaPrimary: string;
+  clrOffers: string;
 }
 export interface Channel {
   id: number;
@@ -30,6 +21,7 @@ export interface Channel {
   longitude: number;
   language?: string;
   brand?: Brand;
+  openGraph: any;
   analyticsId?: string;
 }
 export class AppConfig {
@@ -72,13 +64,21 @@ export class AppConfig {
       longitude: data.longitude,
       language: data.language,
       brand: {
-        logo: data.logo,
-        bgImage: data.bgImage,
-        colorBgdPrimary: data.primaryBgColor,
-        colorFgdPrimary: data.primaryFgColor,
-        colorSecondary: data.secondaryColor,
-        colorAccent: data.accentColor,
-        colorCta: data.accentColor
+        imgLogo: data.logo,
+        imgBgd: data.bgImage,
+        clrHeaderBgd: data.primaryBgColor,
+        clrHeaderFgd: data.primaryFgColor,
+        clrFooterBgd: data.primaryBgColor,
+        clrFooterFgd: data.primaryFgColor,
+        clrAccent: data.accentColor,
+        clrCtaPrimary: data.accentColor,
+        clrOffers: '#006f42'
+      },
+      openGraph: {
+          title: `${ data.name } Restaurant Listing`,
+          image: 'https://res.cloudinary.com/rdl/image/upload/v1662038884/directory_assets/camc/og-image.jpg',
+          alt: 'Family camping',
+          url: 'https://review.camc.restauranatcollective.net/'
       }
     };
     console.log('Channel loaded!');

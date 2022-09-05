@@ -28,13 +28,13 @@ $col-text: rgb(74, 74, 74);
 $col-page-bgd: #cdcdcd;
 $col-timer-outer: #454540;
 $col-timer-inner: #bbb;
-$col-accent: #006f42;
+$col-accent: #ac1640;
 $col-dark: #252525;
 $col-icon-cuisine: #2eb871;
 $col-icon-restaurant: #23b6e0;
 $col-icon-location: #ff3d00;
 $clr-grey-100: #f1f3f4;
-$clr-offers: $col-accent;
+$clr-offers: #006f42;
 $clr-cta-primary: #B31F29;
 
 // For media queries
@@ -108,6 +108,9 @@ a, a:active, a:focus {
 .rd-icon-my-location {
   color: $col-icon-location !important;
   fill: $col-icon-location
+}
+.rd-fill-accent {
+  fill: $col-accent;
 }
 .rd-separator:after {
   display: inline-block;
@@ -703,7 +706,7 @@ rd-footer {
       justify-content: center;
       top: 0;
       left: 0;
-      background-color: rgba($col-accent, .75);
+      background-color: rgba($clr-offers, .75);
       padding: 10px 4px;
       // border-radius: 4px;
       color: white;
@@ -772,16 +775,17 @@ rd-footer {
   }
 }
 .rd-map-info-window {
-  padding: 12px 0 6px 6px;
+  padding: 4px 0 6px 6px;
   h3 {
-    margin: 0 0 4px;
-    font-size: 1.25rem;
+    margin: 0 0 0;
+    font-size: 1rem;
     line-height: 1;
-    font-weight: $font-weight-regular;
+    font-weight: $font-weight-heavy;
   }
   a {
     display: flex;
     justify-content: center;
+    cursor: pointer;
     align-items: center;
     background-color: $clr-offers;
     padding: 1em;
@@ -791,13 +795,11 @@ rd-footer {
     color: white;
   }
   .distances {
-    margin-top: 1rem;
+    margin-top: 8px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 1rem;
     .distance {
       h4 {
-        color: red;
         font-size: .625rem;
         margin: 0;
         line-height: 1.1;
@@ -808,6 +810,21 @@ rd-footer {
       }
     }
 
+  }
+  .offer-panel {
+    background-color: rgba($clr-offers, .1);
+    color: $clr-offers;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+    h4 {
+      line-height: 1.1;
+      color: $clr-offers;
+      margin-block: 0;
+      font-size: .75rem;
+      font-weight: $font-weight-heavy;
+      text-transform: uppercase;
+    }
   }
 }
 .rd-map {

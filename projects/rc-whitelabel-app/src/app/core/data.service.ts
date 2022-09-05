@@ -42,6 +42,7 @@ export class DataService {
 
   // Translations
   loadTranslations(code: string, key: string, lang: string): Promise<any> {
+    console.log('loadTranslations');
     return new Promise( async resolve => {
       await this.api.getChannelLanguage(code, key, lang)
         .toPromise()
