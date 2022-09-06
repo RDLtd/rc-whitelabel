@@ -202,7 +202,7 @@ rd-header {
       font-size: 14px;
     }
   }
-  .rd-logo { height: 24px; }
+  .rd-logo { height: 32px; }
   h1 {
     font-size: 16px;
     font-weight: $font-weight-heavy;
@@ -447,6 +447,7 @@ rd-footer {
     padding: 0 24px 24px;
     li {
       > a {
+        cursor: pointer;
         display: flex;
         align-items: center;
         padding: 6px 0;
@@ -647,7 +648,7 @@ rd-footer {
   }
 }
 .rd-map-list {
-  height: 32vh;
+  height: calc(100vh - (2 * #{$layout-header-height}));
   overflow-y: auto;
   color: #666;
   .rd-map-list-item {
@@ -798,6 +799,7 @@ rd-footer {
     margin-top: 8px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    column-gap: .5rem;
     .distance {
       h4 {
         font-size: .625rem;

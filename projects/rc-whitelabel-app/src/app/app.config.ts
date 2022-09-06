@@ -6,8 +6,9 @@ export interface Brand {
   clrHeaderFgd: string;
   clrFooterBgd: string;
   clrFooterFgd: string;
+  clrPrimary: string;
   clrAccent: string;
-  clrCtaPrimary: string;
+  clrPrimaryCta: string;
   clrOffers: string;
 }
 export interface Channel {
@@ -53,6 +54,7 @@ export class AppConfig {
   }
 
   setChannelConfig(data: any): void {
+    console.log(data);
     this.channel = {
       id: data.id,
       domain: data.domain,
@@ -68,11 +70,12 @@ export class AppConfig {
         imgBgd: data.bgImage,
         clrHeaderBgd: data.primaryBgColor,
         clrHeaderFgd: data.primaryFgColor,
-        clrFooterBgd: data.primaryBgColor,
+        clrFooterBgd: data.secondaryColor,
         clrFooterFgd: data.primaryFgColor,
+        clrPrimary: data.primaryBgColor,
         clrAccent: data.accentColor,
-        clrCtaPrimary: data.accentColor,
-        clrOffers: '#006f42'
+        clrPrimaryCta: data.accentColor,
+        clrOffers: data.primaryBgColor,
       },
       openGraph: {
           title: `${ data.name } Restaurant Listing`,
