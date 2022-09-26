@@ -1,4 +1,5 @@
 ﻿import { environment } from '../environments/environment';
+
 export interface Brand {
   imgLogo: string;
   imgBgd: string;
@@ -24,12 +25,15 @@ export interface Channel {
   brand?: Brand;
   openGraph: any;
   analyticsId?: string;
+  rcLogo?: string;
 }
 export class AppConfig {
   // Api
   public readonly apiUrl = environment.API_URL;
   public readonly geoApiKey = environment.GOOGLE_MAP_API_KEY;
   public testMode = environment.testMode;
+
+  public readonly spwMarkerDomain = environment.SPW_DOMAIN_PATH;
   // Only show 'near me' search option if
   // user is within maxDistance km range
   public maxDistance = 25;
@@ -54,7 +58,6 @@ export class AppConfig {
   }
 
   setChannelConfig(data: any): void {
-    console.log(data);
     this.channel = {
       id: data.id,
       domain: data.domain,
@@ -65,6 +68,7 @@ export class AppConfig {
       latitude: data.latitude,
       longitude: data.longitude,
       language: data.language,
+      rcLogo: data.logoRC || null,
       brand: {
         imgLogo: data.logo,
         imgBgd: data.bgImage,
@@ -74,14 +78,14 @@ export class AppConfig {
         clrFooterFgd: data.primaryFgColor,
         clrPrimary: data.primaryBgColor,
         clrAccent: data.accentColor,
-        clrPrimaryCta: data.accentColor,
+        clrPrimaryCta: data.primaryCtaColor,
         clrOffers: data.primaryBgColor,
       },
       openGraph: {
-          title: `${ data.name } Restaurant Listing`,
-          image: 'https://res.cloudinary.com/rdl/image/upload/v1662038884/directory_assets/camc/og-image.jpg',
-          alt: 'Family camping',
-          url: 'https://review.camc.restauranatcollective.net/'
+          title: `${ data.name } ${ data.ogTitle }`,
+          image: data.ogImage,
+          alt: data.ogImageAlt,
+          url: data.ogUrl
       }
     };
     console.log('Channel loaded!');

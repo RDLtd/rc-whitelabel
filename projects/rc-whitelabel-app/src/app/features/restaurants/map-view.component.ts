@@ -336,7 +336,7 @@ export class MapViewComponent implements OnInit {
       }
       this.updateMarkerList(index);
       this.selectMapMarker(marker, this.restaurants[index]);
-    console.log(this.restaurants[index]);
+    // console.log(this.restaurants[index]);
   }
 
   /**
@@ -353,7 +353,7 @@ export class MapViewComponent implements OnInit {
     const restaurant = this.restaurants[index];
     // Activate the marker
     this.selectMapMarker(mapMarkerComponent, restaurant);
-    console.log(this.restaurants[index]);
+    // console.log(this.restaurants[index]);
   }
 
   /**
