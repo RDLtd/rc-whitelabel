@@ -34,13 +34,17 @@ export class AppConfig {
   public testMode = environment.testMode;
 
   public readonly spwMarkerDomain = environment.SPW_DOMAIN_PATH;
+
   // Only show 'near me' search option if
   // user is within maxDistance km range
   public maxDistance = 25;
+
   // Number of restaurant returned in each batch
   public resultsBatchTotal = 8;
+
   // How many cuisines to display as quick links
   public maxTopCuisines = 10;
+
   // Use browser settings
   public language = window.navigator.language.substr(0, 2) || 'en';
   public channel!: Channel;

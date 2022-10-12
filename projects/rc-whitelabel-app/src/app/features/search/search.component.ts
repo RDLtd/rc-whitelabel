@@ -77,7 +77,7 @@ export class SearchComponent implements OnInit {
   // Channel search config
   channelConfig = {
     channelType: 3,
-    defaultView: 'map',
+    defaultView: 'list',
     showRecentlyViewed: true,
     showLandmarks: true,
     showCuisines: true,
@@ -129,6 +129,7 @@ export class SearchComponent implements OnInit {
         // console.log(this.channelSites);
       });
     }
+    console.log('Loading default config');
     title.setTitle('Search');
 
   }
@@ -206,6 +207,7 @@ export class SearchComponent implements OnInit {
           }
         }
       }
+
       // Check for matching sites
       if (!!this.channelSites) {
         let i = this.channelSites.length; let s; let idx;
@@ -258,12 +260,15 @@ export class SearchComponent implements OnInit {
           }
         }
       }
+
       // Sort results by index position
       this.searchSuggestions.sort((a, b) => {
         return a.index - b.index;
       });
+
       // this.searchSuggestions.splice(maxSuggestions);
       this.noSuggestions = this.searchSuggestions.length === 0;
+
     } else {
       // clear current suggestions
       this.searchSuggestions = [];

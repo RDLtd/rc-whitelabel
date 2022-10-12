@@ -43,8 +43,9 @@ export class ListViewComponent implements OnInit {
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
+      console.log(params.get('id'));
       this.isLoaded = false;
-      this.geoTarget = params.get('geo')?.split(',') ?? [];
+      this.geoTarget = params.get('id')?.split(',') ?? [];
       this.filterBy = params.get('filter');
       this.sortBy = params.get('sort');
     });

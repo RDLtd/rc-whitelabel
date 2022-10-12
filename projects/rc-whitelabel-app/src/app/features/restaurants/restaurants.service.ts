@@ -15,12 +15,14 @@ export class RestaurantsService {
   params = {
     filter: '',
     filterText: '',
-    lat: '',
-    lng: '',
-    limit: 10,
+    lat: 51.35,
+    lng: -0.165,
+    limit: 25,
     offset: 0,
-    testing: false
+    testing: false,
   };
+
+
   private resultsLoadedSubject = new BehaviorSubject<boolean>(false);
   private moreRestaurantsArray: Array<any> = [];
   private moreRestaurantsSubject = new BehaviorSubject<boolean>(false);
@@ -92,7 +94,7 @@ export class RestaurantsService {
     // store the current params for comparison
     this.params = Object.assign(this.params, params);
 
-    this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
+    this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
         if (data === null || data === undefined) {
           console.log('No data');
@@ -151,7 +153,7 @@ export class RestaurantsService {
     this.params = Object.assign(this.params, params);
 
     // call api
-    this.api.getRestaurantsByParams( this.accessCode, this.apiKey, this.params)
+    this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
         console.log(data);
 
