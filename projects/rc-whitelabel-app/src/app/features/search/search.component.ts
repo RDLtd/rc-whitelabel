@@ -220,7 +220,8 @@ export class SearchComponent implements OnInit {
               name: s.name,
               cat: 'site',
               index: idx,
-              route: ['/restaurants', this.channelConfig.defaultView, `${s.id}`, `${ s.name.replace(/\s/g , "-") }`]
+              route: ['/restaurants', this.channelConfig.defaultView, `${s.id}`]
+              //route: ['/restaurants', this.channelConfig.defaultView, `${s.id}`, `${ s.name.replace(/\s/g , "-") }`]
             });
           }
         }

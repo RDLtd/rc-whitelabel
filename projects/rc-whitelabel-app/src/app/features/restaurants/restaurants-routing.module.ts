@@ -9,10 +9,10 @@ import { ListViewComponent } from './list-view.component';
  * or site_id for type 'sites'
  */
 const routes: Routes = [
-  { path: 'map/:id', component: MapViewComponent },
-  { path: 'map/:id/:name', component: MapViewComponent },
-  { path: 'list/:id', component: ListViewComponent },
-  { path: 'list/:id/:filter', component: ListViewComponent },
+  { path: 'map/:latLng', component: MapViewComponent },
+  { path: 'map/:latLng/:name', component: MapViewComponent },
+  { path: 'list/:latLng', component: ListViewComponent },
+  { path: 'list/:latLng/:filter', component: ListViewComponent },
   {
     path: '*',
     redirectTo: '/'

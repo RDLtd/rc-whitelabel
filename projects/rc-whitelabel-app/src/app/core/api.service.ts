@@ -13,7 +13,7 @@ export class ApiService {
     filterText: '',
     lat: '51.7521849865759',
     lng: '-1.2579775767154544',
-    limit: 10,
+    limit: 100,
     offset: 0,
     testing: false
   };

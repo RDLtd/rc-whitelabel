@@ -23,6 +23,7 @@ export class ListViewComponent implements OnInit {
   geoTarget!: string[];
   userPosition: any;
   moreRestaurantsPreloaded: Observable<boolean>;
+  isChannelSite: boolean;
 
   constructor(
     public config: AppConfig,
@@ -32,29 +33,37 @@ export class ListViewComponent implements OnInit {
     private data: DataService,
     private title: Title
   ) {
+      this.isChannelSite = this.restService.isChannelSite;
       this.restaurants$ = this.restService.restaurants;
       this.resultsLoaded$ = this.restService.resultsLoaded;
       this.moreRestaurantsPreloaded = this.restService.moreRestaurantResults;
+
       title.setTitle('Restaurant Results List');
   }
 
   ngOnInit(): void {
+
     // Observe user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
+
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
-      console.log(params.get('id'));
+      console.log(params.get('latLng'));
       this.isLoaded = false;
-      this.geoTarget = params.get('id')?.split(',') ?? [];
+      this.geoTarget = params.get('latLng')?.split(',') ?? [];
       this.filterBy = params.get('filter');
       this.sortBy = params.get('sort');
     });
+
     // Load restaurant results
     this.restService.loadRestaurants({
       lat: this.geoTarget[0],
-      lng: this.geoTarget[1]
+      lng: this.geoTarget[1],
+      filter: !!this.filterBy ? 'cuisine' : '',
+      filterText: this.filterBy
     });
   }
+
   loadMore(): void {
     this.restService.loadMoreRestaurants();
   }

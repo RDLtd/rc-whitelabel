@@ -103,7 +103,7 @@ export class MapViewComponent implements OnInit {
       lng: Number(this.config.channel.longitude)
     };
 
-    this.isChannelSite = this.config.channel.type === 'sites';
+    this.isChannelSite = this.restService.isChannelSite;
 
     // Dummy numbers array to use to
     // create skeleton results
@@ -120,12 +120,12 @@ export class MapViewComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
 
       if (this.isChannelSite) {
-        // console.log('SITE');
-        // console.log(params);
-        this.setChannelSite(Number(params.get('id')));
+        console.log('SITE');
+        console.log(params);
+        this.setChannelSite(Number(params.get('latLng')));
       } else {
         //console.log('LANDMARK');
-        this.geoTarget = params.get('id')?.split(',') ?? [];
+        this.geoTarget = params.get('latLng')?.split(',') ?? [];
         //console.log(params);
         this.filterBy = params.get('filter');
         this.landmark = params.get('name');
@@ -171,6 +171,7 @@ export class MapViewComponent implements OnInit {
         this.site = data.sites[0];
         this.site.id = id;
         this.center = { lat: Number(this.site.lat), lng: Number(this.site.lng) }
+        console.log('Center:', this.center);
         this.loadRestaurants();
     });
   }

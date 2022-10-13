@@ -22,13 +22,13 @@ export class RestaurantsService {
     testing: false,
   };
 
-
   private resultsLoadedSubject = new BehaviorSubject<boolean>(false);
   private moreRestaurantsArray: Array<any> = [];
   private moreRestaurantsSubject = new BehaviorSubject<boolean>(false);
   private restaurantsArray: Array<any> = [];
   private restaurantsSubject = new BehaviorSubject<any[]>(this.restaurantsArray);
   channelSite: any;
+  private isChannelTypeSite: boolean;
   private apiKey: string;
   private accessCode: string;
   private totalResults = 0;
@@ -40,6 +40,7 @@ export class RestaurantsService {
     private data: DataService) {
       this.apiKey = this.config.channel.apiKey;
       this.accessCode = this.config.channel.accessCode;
+      this.isChannelTypeSite = this.config.channel.type === 'sites';
   }
 
   openSpw(restaurant: any, cat: string): void {
@@ -54,6 +55,10 @@ export class RestaurantsService {
 
   get site(): any {
     return this.channelSite;
+  }
+
+  get isChannelSite(): boolean {
+    return this.isChannelTypeSite;
   }
 
   get resultsLoaded(): Observable<boolean> {
@@ -176,6 +181,7 @@ export class RestaurantsService {
         // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
         // notify observers
         this.resultsLoadedSubject.next(true);
+        console.log('Total: ', this.totalResults);
         // preload next batch of results
         if (this.restaurantsArray.length < this.totalResults) { this.loadMoreRestaurants(); }
 
