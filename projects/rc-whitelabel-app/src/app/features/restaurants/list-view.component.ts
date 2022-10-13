@@ -25,6 +25,17 @@ export class ListViewComponent implements OnInit {
   moreRestaurantsPreloaded: Observable<boolean>;
   isChannelSite: boolean;
 
+  // url params
+  routeFilter: any;
+  routeSort: any;
+  // filters
+  landmarks: any[] = [];
+  cuisines: any[] = [];
+  features: any[] = [];
+  // restaurant results
+  restaurants: any[] = [];
+  nextRestaurants: any[] = [];
+
   constructor(
     public config: AppConfig,
     private route: ActivatedRoute,

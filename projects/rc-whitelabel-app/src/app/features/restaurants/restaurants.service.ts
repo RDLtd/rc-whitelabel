@@ -17,7 +17,7 @@ export class RestaurantsService {
     filterText: '',
     lat: 51.35,
     lng: -0.165,
-    limit: 25,
+    limit: 6,
     offset: 0,
     testing: false,
   };
@@ -156,6 +156,8 @@ export class RestaurantsService {
 
     // store the current params for comparison
     this.params = Object.assign(this.params, params);
+
+    console.log('Params', this.params);
 
     // call api
     this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
