@@ -65,7 +65,7 @@ export class MapViewComponent implements OnInit {
   resultsLoaded$: Observable<boolean>;
   geoTarget!: string[];
   filterBy?: string | null;
-  batchTotal = 10;
+  batchTotal = 20;
   currentOffset = 0;
   totalResults?: number;
   numbers: number[];

@@ -5,8 +5,8 @@ import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
 import { ActivatedRoute, ParamMap} from '@angular/router';
 import { LocationService } from '../../core/location.service';
 import { AppConfig } from '../../app.config';
-import {DataService} from '../../core/data.service';
-import {Title} from '@angular/platform-browser';
+import { DataService } from '../../core/data.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'rd-list-view',
@@ -29,6 +29,8 @@ export class ListViewComponent implements OnInit {
   routeFilter: any;
   routeSort: any;
   // filters
+  showFilterOptions = false;
+  filtersOn = false;
   landmarks: any[] = [];
   cuisines: any[] = [];
   features: any[] = [];
@@ -73,6 +75,14 @@ export class ListViewComponent implements OnInit {
       filter: !!this.filterBy ? 'cuisine' : '',
       filterText: this.filterBy
     });
+
+    // load summary for filter/sort options
+    this.data.loadSummarisedData().then((res: any) => {
+      // console.log('Summary loaded', res);
+      this.landmarks = res.landmarks;
+      this.cuisines = res.cuisines;
+      this.features = res.features;
+    });
   }
 
   loadMore(): void {
@@ -89,5 +99,21 @@ export class ListViewComponent implements OnInit {
   getFormattedImage(url: string): string {
     const format = 'w_900,h_600,c_fill,q_auto,dpr_auto,f_auto';
     return url.replace('upload/', `upload/${format}/`);
+  }
+
+  // If we have multiple cuisine types
+  // or multiple POIs show filter options
+  showFilterBtn(): void {
+    if (this.cuisines.length > 1 || this.landmarks.length) {
+      this.showFilterOptions = true;
+    } else {
+      console.log('No filters available');
+    }
+  }
+  clearFilters(): void {
+    //this.router.navigate(['/restaurants']).then();
+    this.filtersOn = false;
+    this.showFilterOptions = false;
+    this.showFilterBtn();
   }
 }

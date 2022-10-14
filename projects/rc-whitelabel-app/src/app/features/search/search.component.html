@@ -125,7 +125,7 @@
             </a>
           </li>
           <li *ngFor="let landmark of landmarks">
-            <a [routerLink]="['/restaurants', channelConfig.defaultView, landmark?.channel_landmark_lat + ',' +
+            <a [routerLink]="['/restaurants', 'map', landmark?.channel_landmark_lat + ',' +
             landmark?.channel_landmark_lng]">
               {{ landmark?.channel_landmark_name }}
             </a>

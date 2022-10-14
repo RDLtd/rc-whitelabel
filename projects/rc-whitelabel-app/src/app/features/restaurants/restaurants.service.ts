@@ -17,7 +17,8 @@ export class RestaurantsService {
     filterText: '',
     lat: 51.35,
     lng: -0.165,
-    limit: 6,
+    limit: 10,
+    boundary: 100,
     offset: 0,
     testing: false,
   };
@@ -90,6 +91,10 @@ export class RestaurantsService {
   }
 
   loadRestaurantBatch(params: any ): void {
+
+    console.log('loadRestaurantBatch');
+
+
     // show loader if it's an initial load, but not on preload
     this.resultsLoadedSubject.next(false);
 
@@ -101,6 +106,7 @@ export class RestaurantsService {
 
     this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
+        console.log(data);
         if (data === null || data === undefined) {
           console.log('No data');
           this.totalResults = 0;
@@ -112,6 +118,7 @@ export class RestaurantsService {
         // store the total
         this.totalResults = data?.total_count;
         this.restaurantsArray = data.restaurants;
+
         // update subject
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
         // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
@@ -147,6 +154,8 @@ export class RestaurantsService {
    */
   loadRestaurants(params: any, preload = false): void {
 
+    console.log('loadRestaurants');
+
     // show loader if it's an initial load, but not on preload
     this.resultsLoadedSubject.next(preload);
     this.moreRestaurantsSubject.next(false);
@@ -157,7 +166,7 @@ export class RestaurantsService {
     // store the current params for comparison
     this.params = Object.assign(this.params, params);
 
-    console.log('Params', this.params);
+    console.log('Params', params);
 
     // call api
     this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
@@ -178,12 +187,15 @@ export class RestaurantsService {
         }
 
         this.restaurantsArray = data.restaurants;
+
         // update subject
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
         // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
+
         // notify observers
         this.resultsLoadedSubject.next(true);
         console.log('Total: ', this.totalResults);
+
         // preload next batch of results
         if (this.restaurantsArray.length < this.totalResults) { this.loadMoreRestaurants(); }
 
