@@ -24,18 +24,15 @@ $rc-whitelabel-app-theme: mat.define-light-theme((
 @include mat.all-component-themes($rc-whitelabel-app-theme);
 
 // Default branding
-$col-text: rgb(74, 74, 74);
-$col-page-bgd: #cdcdcd;
-$col-timer-outer: #454540;
-$col-timer-inner: #bbb;
-$col-accent: #ac1640;
-$col-dark: #252525;
-$col-icon-cuisine: #2eb871;
-$col-icon-restaurant: #23b6e0;
-$col-icon-location: #ff3d00;
-$clr-grey-100: #f1f3f4;
-$clr-offers: #006f42;
-$clr-cta-primary: #B31F29;
+$col-text:            var(--clr-text-default);
+$col-accent:          var(--clr-accent);
+$col-dark:            var(--clr-bgd-default);
+$col-icon-cuisine:    var(--clr-icon-cuisine);
+$col-icon-restaurant: var(--clr-icon-restaurant);
+$col-icon-location:   var(--clr-icon-location);
+$clr-offers:          var(--clr-primary-cta);
+$clr-cta-primary:     var(--clr-primary-cta);
+$clr-grey-100:        var(--clr-grey-100);
 
 // For media queries
 $breakpoints: (
@@ -168,9 +165,9 @@ header {
   z-index: 10;
   position: fixed;
   transition: all .6s cubic-bezier(0.16, 1, 0.3, 1);
-  background: $col-page-bgd;
+  background: var(--clr-header-bgd);
   box-shadow: 0 2px 4px 0 #00000026;
-  color: $col-text;
+  color: var(--clr-header-fgd);
   &.rd-hideHeader {
     @include mq(small) {
       transform: translateY(-($layout-header-height - 8));
@@ -249,7 +246,7 @@ main {
     z-index: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url("../assets/images/bgd1.jpg");
+    background-image: var(--img-bgd);
     background-size: cover;
     background-color: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
     filter: blur(8px); // This be the blur

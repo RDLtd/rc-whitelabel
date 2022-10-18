@@ -1,7 +1,7 @@
 ﻿import { environment } from '../environments/environment';
 
 export interface Brand {
-  imgLogo: string;
+  imgLogo: '';
   imgBgd: string;
   clrHeaderBgd: string;
   clrHeaderFgd: string;
@@ -21,13 +21,15 @@ export interface Channel {
   apiKey: string;
   latitude: number;
   longitude: number;
+  boundary: number;
   language?: string;
-  brand?: Brand;
+  brand: Brand;
   openGraph: any;
   analyticsId?: string;
   rcLogo?: string;
 }
 export class AppConfig {
+
   // Api
   public readonly apiUrl = environment.API_URL;
   public readonly geoApiKey = environment.GOOGLE_MAP_API_KEY;
@@ -35,9 +37,10 @@ export class AppConfig {
 
   public readonly spwMarkerDomain = environment.SPW_DOMAIN_PATH;
 
-  // Only show 'near me' search option if
-  // user is within maxDistance km range
-  public maxDistance = 25;
+  /** Only show 'near me' search option if
+   * user is within maxDistance km range
+   */
+  public maxUserDistance = 25;
 
   // Number of restaurant returned in each batch
   public resultsBatchTotal = 8;
@@ -71,6 +74,7 @@ export class AppConfig {
       type: data.type,
       latitude: data.latitude,
       longitude: data.longitude,
+      boundary: data.boundary ?? 30,
       language: data.language,
       rcLogo: data.logoRC || null,
       brand: {
@@ -94,5 +98,24 @@ export class AppConfig {
     };
     console.log('Channel loaded!');
     this.channelLoaded = true;
+  }
+
+  /**
+   * Apply the brand colours etc. by setting the
+   * :root CSS vars in the index.html
+   */
+  setBrandTheme(): void {
+    const brand = this.channel.brand;
+    const elemStyle = document.documentElement.style;
+    elemStyle.setProperty('--img-logo', `url(${brand.imgLogo})`);
+    elemStyle.setProperty('--img-bgd', `url(${brand.imgBgd})`);
+    elemStyle.setProperty('--clr-header-bgd', brand.clrHeaderBgd);
+    elemStyle.setProperty('--clr-header-fgd', brand.clrHeaderFgd);
+    elemStyle.setProperty('--clr-footer-bgd', brand.clrFooterBgd);
+    elemStyle.setProperty('--clr-footer-fgd', brand.clrFooterFgd);
+    elemStyle.setProperty('--clr-primary', brand.clrPrimary);
+    elemStyle.setProperty('--clr-accent', brand.clrAccent);
+    elemStyle.setProperty('--clr-primary-cta', brand.clrPrimaryCta);
+    elemStyle.setProperty('--clr-offers', brand.clrOffers);
   }
 }

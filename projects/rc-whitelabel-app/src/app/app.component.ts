@@ -16,12 +16,12 @@ declare const gtag: Function;
 export class AppComponent implements OnInit {
 
   constructor(
-    private api: ApiService,
-    public config: AppConfig,
-    private activatedRoute: ActivatedRoute,
-    private meta: Meta,
-    private data: DataService,
-    private router: Router) { }
+    private   api: ApiService,
+    public    config: AppConfig,
+    private   activatedRoute: ActivatedRoute,
+    private   meta: Meta,
+    private   data: DataService,
+    private   router: Router) { }
 
   ngOnInit(): void {
     // Wait for router event to fire before
@@ -34,14 +34,14 @@ export class AppComponent implements OnInit {
           .subscribe((data: any) => {
             const params = data.params;
             if (Object.keys(params).length) {
-              console.log('URL PARAMS:', params);
+              console.log('PARAMS:', params);
               // Override default language
               if (!!params.lang) { this.config.language = params.lang; }
               // Trigger testmode
               if (!!params.t) { this.config.testMode = params.t; }
               // Override the user distance ot
               // range in which to offer a 'near me' search option
-              if (!!params.d) { this.config.maxDistance = params.d; }
+              if (!!params.d) { this.config.maxUserDistance = params.d; }
             }
             this.data.loadTranslations(
               this.config.channel.accessCode,
@@ -54,7 +54,10 @@ export class AppComponent implements OnInit {
                 console.log('loadTranslations', error);
               });
           });
+        // Update OG data etc.
         this.updateMetaData();
+        //
+        this.config.setBrandTheme();
       });
   }
 
@@ -80,4 +83,5 @@ export class AppComponent implements OnInit {
       content: this.config.channel.openGraph.url
     });
   }
+
 }

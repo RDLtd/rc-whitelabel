@@ -63,6 +63,7 @@ export class SearchComponent implements OnInit {
     takeaway: 'fast_food',
     recent: 'watch_later'
   };
+
   // Results
   restaurants: any[] = [];
   searchRestaurants: any[] = [];
@@ -71,6 +72,7 @@ export class SearchComponent implements OnInit {
   searchSuggestions: SearchSuggestion[] = [];
   cuisines: Cuisine[] = [];
   recentlyViewed: any[] = [];
+
   // User location
   userPosition: any | undefined;
 
@@ -84,6 +86,7 @@ export class SearchComponent implements OnInit {
     searchPlaceholderTxt: 'Type landmark, restaurant or cuisine',
     noResultsTxt: 'No matches'
   }
+
   siteConfig = {
     channelType: 3,
     defaultView: 'map',

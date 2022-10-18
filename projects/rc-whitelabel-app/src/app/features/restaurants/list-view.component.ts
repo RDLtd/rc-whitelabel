@@ -52,6 +52,8 @@ export class ListViewComponent implements OnInit {
       this.moreRestaurantsPreloaded = this.restService.moreRestaurantResults;
 
       title.setTitle('Restaurant Results List');
+
+    this.clearFilters();
   }
 
   ngOnInit(): void {
@@ -59,9 +61,11 @@ export class ListViewComponent implements OnInit {
     // Observe user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
 
+
+
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
-      console.log(params.get('latLng'));
+      console.log(params);
       this.isLoaded = false;
       this.geoTarget = params.get('latLng')?.split(',') ?? [];
       this.filterBy = params.get('filter');

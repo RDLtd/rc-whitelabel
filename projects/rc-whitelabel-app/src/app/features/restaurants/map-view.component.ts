@@ -118,21 +118,17 @@ export class MapViewComponent implements OnInit {
 
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
-
       if (this.isChannelSite) {
-        console.log('SITE');
-        console.log(params);
+        console.log('SITE', params);
         this.setChannelSite(Number(params.get('latLng')));
       } else {
-        //console.log('LANDMARK');
+        console.log('LANDMARK params', params);
         this.geoTarget = params.get('latLng')?.split(',') ?? [];
-        //console.log(params);
         this.filterBy = params.get('filter');
-        this.landmark = params.get('name');
+        //this.landmark = params.get('name');
         this.center = { lat: Number(this.geoTarget[0]), lng: Number(this.geoTarget[1])}
         this.loadRestaurants();
       }
-
     });
 
     // Check to see if we already have the Google Maps api

@@ -25,14 +25,14 @@ export class LocationService {
     if ('geolocation' in navigator) {
       navigator.geolocation.watchPosition((geo: any) => {
         this.api.getRestaurantsNear(this.config.channel.accessCode, this.config.channel.apiKey,
-          geo.coords.latitude, geo.coords.longitude, this.config.maxDistance)
+          geo.coords.latitude, geo.coords.longitude, this.config.maxUserDistance)
           .toPromise()
           .then((res: any) => {
             // console.log(res);
             this.userLocationSubject.next({
               lat: geo.coords.latitude,
               lng: geo.coords.longitude,
-              distance: res.distance || `More than ${this.config.maxDistance}km`,
+              distance: res.distance || `More than ${this.config.maxUserDistance}km`,
               inRange: res.near
             });
           })

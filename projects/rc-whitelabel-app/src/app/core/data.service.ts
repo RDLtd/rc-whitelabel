@@ -135,7 +135,7 @@ export class DataService {
         });
       } else {
         await this.api.getRestaurantsSummary(this.config.channel.accessCode, this.config.channel.apiKey,
-          this.config.channel.latitude, this.config.channel.longitude)
+          this.config.channel.latitude, this.config.channel.longitude, this.config.channel.boundary)
           .toPromise()
           .then((res: any) => {
             console.log('Summary loaded from API');

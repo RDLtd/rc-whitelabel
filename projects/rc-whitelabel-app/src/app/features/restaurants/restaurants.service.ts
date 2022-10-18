@@ -18,7 +18,7 @@ export class RestaurantsService {
     lat: 51.35,
     lng: -0.165,
     limit: 10,
-    boundary: 100,
+    boundary: 30,
     offset: 0,
     testing: false,
   };
@@ -82,6 +82,12 @@ export class RestaurantsService {
     return this.totalResults;
   }
 
+  resetSearchFilters(): void {
+    this.params.filter = '';
+    this.params.filterText = '';
+
+  }
+
   resetRestaurantResults(): void {
     this.restaurantsSubject.next([]);
   }
@@ -93,7 +99,6 @@ export class RestaurantsService {
   loadRestaurantBatch(params: any ): void {
 
     console.log('loadRestaurantBatch');
-
 
     // show loader if it's an initial load, but not on preload
     this.resultsLoadedSubject.next(false);
