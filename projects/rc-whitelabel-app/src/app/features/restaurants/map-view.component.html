@@ -10,21 +10,22 @@
 
     <div class="rd-map-nav">
       <span class="rd-map-nav-summary">{{ getBatchNavSummary() }}</span>
-      <ng-container *ngIf="!isChannelSite">
+
       <button [disabled]="currentOffset === 0"
               mat-icon-button
               (click)="prevBatch()"
               title="Previous {{ currentOffset }} restaurants">
         <mat-icon>arrow_back</mat-icon>
       </button>
+
       <button
-        [disabled]="currentOffset + batchTotal >= getTotalResults()"
+        [disabled]="currentOffset === totalResults"
         mat-icon-button
               (click)="nextBatch()"
               title="Next {{ batchTotal }} restaurants">
         <mat-icon>arrow_forward</mat-icon>
       </button>
-      </ng-container>
+
     </div>
 
     <ul class="rd-map-list" [@fadeIn]="restaurants$ | async">

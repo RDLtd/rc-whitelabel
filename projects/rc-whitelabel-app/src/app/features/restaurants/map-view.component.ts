@@ -47,32 +47,33 @@ export class MapViewComponent implements OnInit {
   markerListElements?: NodeList;
   markersAdded = false;
   infoWindowContent = {
-    name: null,
+    name: '',
     cuisine: null,
     spw: null,
     offers: null
   };
   bounds!: google.maps.LatLngBounds;
-  center?: google.maps.LatLngLiteral;
+  mapCentre?: google.maps.LatLngLiteral;
   display?: google.maps.LatLngLiteral;
   zoom = 14;
   lastZoom?: number;
   userPosition?: UserGeoLocation;
+  geoSearchLabel = 'Nearest here';
 
   // Restaurants
   restaurants: any[] = [];
   restaurants$!: Observable<any[]>;
   resultsLoaded$: Observable<boolean>;
   geoTarget!: string[];
-  filterBy?: string | null;
+  resultsFilter?: string | null;
   batchTotal = 20;
   currentOffset = 0;
   totalResults?: number;
   numbers: number[];
-  siteId?: string | null;
-  site: any;
+  //siteId?: string | null;
+  //site: any;
   landmark: any;
-  isChannelSite: boolean;
+  //isChannelSite: boolean;
   travelData: any[] =[];
   distanceService: any;
   distanceData = {
@@ -96,38 +97,35 @@ export class MapViewComponent implements OnInit {
     // update title for ga tracking
     title.setTitle('Restaurant Results Map');
 
-    this.restService.resetRestaurantsSubject();
+    // Get the geographical centre of the channel
+    this.mapCentre = this.config.channel.centre;
 
-    this.center = {
-      lat: Number(this.config.channel.latitude),
-      lng: Number(this.config.channel.longitude)
-    };
-
-    this.isChannelSite = this.restService.isChannelSite;
+    // this.isChannelSite = this.restService.isChannelSite;
 
     // Dummy numbers array to use to
     // create skeleton results
     this.numbers = Array(this.batchTotal).fill(1); // [4,4,4,4,4]
 
     // Results received
+    // reset search results
+    this.restService.resetRestaurantsSubject();
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
 
-    // Observe user's position in case...
+    // User's current location
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
 
-    // Check url params
+    // Check route params
     this.route.paramMap.subscribe((params: ParamMap) => {
-      if (this.isChannelSite) {
-        console.log('SITE', params);
-        this.setChannelSite(Number(params.get('latLng')));
-      } else {
-        console.log('LANDMARK params', params);
-        this.geoTarget = params.get('latLng')?.split(',') ?? [];
-        this.filterBy = params.get('filter');
-        //this.landmark = params.get('name');
-        this.center = { lat: Number(this.geoTarget[0]), lng: Number(this.geoTarget[1])}
-        this.loadRestaurants();
+      this.geoTarget = params.get('latLng')?.split(',') ?? [];
+      this.resultsFilter = params.get('filter');
+      //this.landmark = params.get('name');
+      this.mapCentre = { lat: Number(this.geoTarget[0]), lng: Number(this.geoTarget[1])}
+      this.loadRestaurants();
+    });
+    this.route.queryParams.subscribe(params => {
+      if (!!params.location) {
+        this.geoSearchLabel = params.location;
       }
     });
 
@@ -157,43 +155,24 @@ export class MapViewComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  /**
-   * Channel config
-   * @param id = channel_id
-   */
-  setChannelSite(id: number) {
-    this.restService.loadChannelSite(id)
-      .subscribe((data: any) => {
-        this.site = data.sites[0];
-        this.site.id = id;
-        this.center = { lat: Number(this.site.lat), lng: Number(this.site.lng) }
-        console.log('Center:', this.center);
-        this.loadRestaurants();
-    });
-  }
-
   loadRestaurants(): void {
     const params: any = {
-      lat: this.center?.lat,
-      lng: this.center?.lng,
+      lat: this.mapCentre?.lat,
+      lng: this.mapCentre?.lng,
       offset: this.currentOffset,
       limit: this.batchTotal,
     }
-    if (this.isChannelSite) { params.site_id = this.site.id }
-    // console.log('params', params)
     this.restService.loadRestaurantBatch(params);
   }
 
   // Construct the summary text for the
   // list navigation
   getBatchNavSummary(): string {
-    if (this.isChannelSite) {
-      return `${this.site?.name}`;
-    }
     let lastBatchItem = this.currentOffset + this.batchTotal;
     const totalResults = this.restService.totalRestaurants;
     if (lastBatchItem > totalResults) { lastBatchItem = totalResults; }
-    return `Displaying results ${ this.currentOffset + 1 } to ${ lastBatchItem } of ${ totalResults }`;
+    return `Displaying restaurants within ${this.config.channel.boundary} km of ${this.geoSearchLabel}`;
+    // return `Displaying results ${ this.currentOffset + 1 } to ${ lastBatchItem } of ${ totalResults }`;
   }
   getTotalResults(): number {
     return this.restService.totalRestaurants;
@@ -299,12 +278,12 @@ export class MapViewComponent implements OnInit {
     // Once all restaurants have been marked
     // create our centre site/channel marker
     this.markers.push({
-      position: this.center,
+      position: this.mapCentre,
       options: { label: '*' }
     });
     this.bounds.extend({
-      lat: Number(this.center?.lat),
-      lng: Number(this.center?.lng)
+      lat: Number(this.mapCentre?.lat),
+      lng: Number(this.mapCentre?.lng)
     });
     // Fit around markers
     setTimeout(() => {
@@ -323,8 +302,8 @@ export class MapViewComponent implements OnInit {
       if (this.restaurants.length === index) {
         this.showDistanceData = false;
         this.infoWindowContent = {
-          name: this.site?.name ?? this?.landmark ?? 'Landmark',
-          cuisine: this.site?.notes,
+          name: this.geoSearchLabel.toUpperCase(),
+          cuisine: null,
           spw: null,
           offers: this.restaurants[index]?.offers[0]
         }
@@ -413,7 +392,7 @@ export class MapViewComponent implements OnInit {
     this.showDistanceData = true;
     // build requests
     const drivingMode = {
-      origins: [this.center as object],
+      origins: [this.mapCentre as object],
       destinations: [latLng],
       travelMode: google.maps.TravelMode.DRIVING,
       unitSystem: google.maps.UnitSystem.IMPERIAL,

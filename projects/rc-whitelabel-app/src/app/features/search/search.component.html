@@ -112,6 +112,7 @@
           <li *ngIf="userPosition?.inRange">
             <a
               class="rd-my-location"
+              [queryParams]="{location: 'your current location'}"
               [routerLink]="['/restaurants/map/',
               userPosition?.lat + ',' +  userPosition?.lng]">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">

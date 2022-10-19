@@ -21,6 +21,10 @@ export interface Channel {
   apiKey: string;
   latitude: number;
   longitude: number;
+  centre: {
+    lat: number,
+    lng: number
+  }
   boundary: number;
   language?: string;
   brand: Brand;
@@ -74,6 +78,10 @@ export class AppConfig {
       type: data.type,
       latitude: data.latitude,
       longitude: data.longitude,
+      centre: {
+        lat: Number(data.latitude),
+        lng: Number(data.longitude)
+      },
       boundary: data.boundary ?? 30,
       language: data.language,
       rcLogo: data.logoRC || null,

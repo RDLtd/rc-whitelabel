@@ -4,6 +4,7 @@ import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 import { DataService } from '../../core/data.service';
 import { AnalyticsService } from '../../core/analytics.service';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -29,12 +30,16 @@ export class RestaurantsService {
   private restaurantsArray: Array<any> = [];
   private restaurantsSubject = new BehaviorSubject<any[]>(this.restaurantsArray);
   channelSite: any;
-  private isChannelTypeSite: boolean;
-  private apiKey: string;
-  private accessCode: string;
+
+  private readonly isChannelTypeSite: boolean;
+  private readonly apiKey: string;
+  private readonly accessCode: string;
   private totalResults = 0;
 
+
+
   constructor(
+    private route: ActivatedRoute,
     private ga: AnalyticsService,
     private config: AppConfig,
     private api: ApiService,
@@ -113,10 +118,10 @@ export class RestaurantsService {
       .subscribe((data: any) => {
         console.log(data);
         if (data === null || data === undefined) {
-          console.log('No data');
-          this.totalResults = 0;
-          this.restaurantsArray = [];
-          this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+          console.log('No data', this.restaurantsArray.length);
+
+         // this.restaurantsArray = [];
+         // this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
           this.resultsLoadedSubject.next(true);
           return;
         }
@@ -181,10 +186,10 @@ export class RestaurantsService {
         // store the total
         this.totalResults = data.total_count;
 
-        // if wwe are only preloading results for our 'Load More' option
+        // if we are only preloading results for our 'Load More' option
         if (preload) {
           this.moreRestaurantsArray = data.restaurants;
-          console.log('Next preloaded ready');
+          console.log('Next preloaded ready', data.restaurants.length);
           // update subject & notify observers
           this.moreRestaurantsSubject.next(true);
           this.resultsLoadedSubject.next(true);
