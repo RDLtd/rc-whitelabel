@@ -23,7 +23,6 @@ export class ListViewComponent implements OnInit {
   geoTarget!: string[];
   userPosition: any;
   moreRestaurantsPreloaded: Observable<boolean>;
-  isChannelSite: boolean;
 
   // url params
   routeFilter: any;
@@ -46,14 +45,13 @@ export class ListViewComponent implements OnInit {
     private data: DataService,
     private title: Title
   ) {
-      this.isChannelSite = this.restService.isChannelSite;
+      title.setTitle('Restaurant Results List');
+
       this.restaurants$ = this.restService.restaurants;
       this.resultsLoaded$ = this.restService.resultsLoaded;
       this.moreRestaurantsPreloaded = this.restService.moreRestaurantResults;
 
-      title.setTitle('Restaurant Results List');
-
-    this.clearFilters();
+      this.clearFilters();
   }
 
   ngOnInit(): void {

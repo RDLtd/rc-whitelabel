@@ -24,19 +24,20 @@ export class RestaurantsService {
     testing: false,
   };
 
+  private readonly apiKey: string;
+  private readonly accessCode: string;
+
   private resultsLoadedSubject = new BehaviorSubject<boolean>(false);
   private moreRestaurantsArray: Array<any> = [];
   private moreRestaurantsSubject = new BehaviorSubject<boolean>(false);
   private restaurantsArray: Array<any> = [];
   private restaurantsSubject = new BehaviorSubject<any[]>(this.restaurantsArray);
+
   channelSite: any;
 
   private readonly isChannelTypeSite: boolean;
-  private readonly apiKey: string;
-  private readonly accessCode: string;
+
   private totalResults = 0;
-
-
 
   constructor(
     private route: ActivatedRoute,
@@ -83,6 +84,10 @@ export class RestaurantsService {
     return this.restaurantsArray;
   }
 
+  set totalRestaurants(n) {
+    this.totalResults = n;
+  }
+
   get totalRestaurants(): number {
     return this.totalResults;
   }
@@ -104,6 +109,8 @@ export class RestaurantsService {
   loadRestaurantBatch(params: any ): void {
 
     console.log('loadRestaurantBatch');
+
+
 
     // show loader if it's an initial load, but not on preload
     this.resultsLoadedSubject.next(false);
@@ -127,7 +134,9 @@ export class RestaurantsService {
         }
         // store the total
         this.totalResults = data?.total_count;
-        this.restaurantsArray = data.restaurants;
+
+        // this.restaurantsArray = data.restaurants;
+        this.restaurantsArray.push(...data.restaurants);
 
         // update subject
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
@@ -137,25 +146,25 @@ export class RestaurantsService {
       });
   }
 
-  loadChannelRestaurants(id: number ): void {
-    console.log(id);
-    // show loader if it's an initial load, but not on preload
-    this.resultsLoadedSubject.next(false);
-
-    this.api.getChannelRestaurants(id, this.accessCode, this.apiKey)
-      .subscribe((data: any) => {
-        console.log(data.restaurants);
-        // store the total
-
-        this.restaurantsArray = data.restaurants;
-        this.totalResults = this.restaurantsArray.length;
-        // update subject
-        this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
-        // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
-        // notify observers
-        this.resultsLoadedSubject.next(true);
-      });
-  }
+  // loadChannelRestaurants(id: number ): void {
+  //   console.log(id);
+  //   // show loader if it's an initial load, but not on preload
+  //   this.resultsLoadedSubject.next(false);
+  //
+  //   this.api.getChannelRestaurants(id, this.accessCode, this.apiKey)
+  //     .subscribe((data: any) => {
+  //       console.log(data.restaurants);
+  //       // store the total
+  //
+  //       this.restaurantsArray = data.restaurants;
+  //       this.totalResults = this.restaurantsArray.length;
+  //       // update subject
+  //       this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+  //       // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
+  //       // notify observers
+  //       this.resultsLoadedSubject.next(true);
+  //     });
+  // }
 
   /**
    * Updates the results observable
@@ -237,8 +246,8 @@ export class RestaurantsService {
     }
   }
 
-  loadChannelSite(id: number): Observable<any> {
-    return this.api.getChannelSite(id, this.accessCode, this.apiKey);
-  }
+  // loadChannelSite(id: number): Observable<any> {
+  //   return this.api.getChannelSite(id, this.accessCode, this.apiKey);
+  // }
 }
 

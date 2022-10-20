@@ -32,6 +32,7 @@ export interface Channel {
   analyticsId?: string;
   rcLogo?: string;
 }
+
 export class AppConfig {
 
   // Api

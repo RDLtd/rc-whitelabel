@@ -53,10 +53,11 @@ export class MapViewComponent implements OnInit {
     offers: null
   };
   bounds!: google.maps.LatLngBounds;
-  mapCentre?: google.maps.LatLngLiteral;
+  geoTarget?: google.maps.LatLngLiteral;
   display?: google.maps.LatLngLiteral;
   zoom = 14;
   lastZoom?: number;
+
   userPosition?: UserGeoLocation;
   geoSearchLabel = 'Nearest here';
 
@@ -64,16 +65,13 @@ export class MapViewComponent implements OnInit {
   restaurants: any[] = [];
   restaurants$!: Observable<any[]>;
   resultsLoaded$: Observable<boolean>;
-  geoTarget!: string[];
-  resultsFilter?: string | null;
-  batchTotal = 20;
+  latLng!: string[];
+  searchFilter?: string | null;
+  batchTotal = 8;
   currentOffset = 0;
   totalResults?: number;
   numbers: number[];
-  //siteId?: string | null;
-  //site: any;
-  landmark: any;
-  //isChannelSite: boolean;
+
   travelData: any[] =[];
   distanceService: any;
   distanceData = {
@@ -82,6 +80,9 @@ export class MapViewComponent implements OnInit {
     driving: ''
   };
   showDistanceData = false;
+  landmarks: any;
+  cuisines: any;
+  features: any;
 
   constructor(
     private config: AppConfig,
@@ -98,29 +99,32 @@ export class MapViewComponent implements OnInit {
     title.setTitle('Restaurant Results Map');
 
     // Get the geographical centre of the channel
-    this.mapCentre = this.config.channel.centre;
-
-    // this.isChannelSite = this.restService.isChannelSite;
+    this.geoTarget = this.config.channel.centre;
 
     // Dummy numbers array to use to
     // create skeleton results
     this.numbers = Array(this.batchTotal).fill(1); // [4,4,4,4,4]
 
-    // Results received
-    // reset search results
+    // Clear any previous results
     this.restService.resetRestaurantsSubject();
+    // Subscribe to results
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
+    // Google maps
+    this.loadMapsApi();
+
+  }
+
+  ngOnInit(): void {
 
     // User's current location
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
 
-    // Check route params
+    // Check route params & query params
     this.route.paramMap.subscribe((params: ParamMap) => {
-      this.geoTarget = params.get('latLng')?.split(',') ?? [];
-      this.resultsFilter = params.get('filter');
-      //this.landmark = params.get('name');
-      this.mapCentre = { lat: Number(this.geoTarget[0]), lng: Number(this.geoTarget[1])}
+      this.latLng = params.get('latLng')?.split(',') ?? [];
+      this.searchFilter = params.get('filter');
+      this.geoTarget = { lat: Number(this.latLng[0]), lng: Number(this.latLng[1])}
       this.loadRestaurants();
     });
     this.route.queryParams.subscribe(params => {
@@ -128,7 +132,9 @@ export class MapViewComponent implements OnInit {
         this.geoSearchLabel = params.location;
       }
     });
+  }
 
+  loadMapsApi(): void {
     // Check to see if we already have the Google Maps api
     // script in the cache, so we don't load it twice!
     if (window.hasOwnProperty('google')) {
@@ -137,9 +143,9 @@ export class MapViewComponent implements OnInit {
       this.initMap();
       this.mapApiSubject.next(true);
     } else {
-    // Load the maps api script
+      // Load the maps api script
       console.log('Load Google maps api');
-      this.mapApiLoaded$ = http.jsonp(
+      this.mapApiLoaded$ = this.http.jsonp(
         `https://maps.googleapis.com/maps/api/js?key=${this.config.geoApiKey}`,
         'callback')
         .pipe(
@@ -153,17 +159,35 @@ export class MapViewComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
-
   loadRestaurants(): void {
+
+
+
     const params: any = {
-      lat: this.mapCentre?.lat,
-      lng: this.mapCentre?.lng,
+      lat: this.geoTarget?.lat,
+      lng: this.geoTarget?.lng,
       offset: this.currentOffset,
       limit: this.batchTotal,
     }
-    this.restService.loadRestaurantBatch(params);
+
+    console.log('Length:', this.restaurants.length);
+    console.log('Load:', this.currentOffset === this.restaurants.length);
+
+    if (this.currentOffset === this.restaurants.length) {
+      this.restService.loadRestaurantBatch(params);
+
+      // load summary for filter/sort options
+      this.data.loadSummarisedData().then((res: any) => {
+        console.log(`Summary loaded ${res.restaurants.length} restaurants`);
+        //this.restService.totalRestaurants = res.restaurants.length;
+        this.landmarks = res.landmarks;
+        this.cuisines = res.cuisines;
+        this.features = res.features;
+        this.totalResults = res.restaurants.length;
+      });
+    }
   }
+
 
   // Construct the summary text for the
   // list navigation
@@ -181,6 +205,7 @@ export class MapViewComponent implements OnInit {
   // List nav
   nextBatch(): void {
     this.currentOffset += this.batchTotal;
+    console.log(this.currentOffset, this.totalResults);
     this.loadRestaurants();
   }
   prevBatch(): void {
@@ -233,9 +258,9 @@ export class MapViewComponent implements OnInit {
 
   // Use the restaurants array to create an
   // array of MapMarker component data
-  addMapMarkers(): void {
+  addMapMarkers(index = 0): void {
     const totalRestaurants = this.restaurants.length;
-    let i = 0;
+    let i = index;
     let r;
     let markerComp;
     this.markers = [];
@@ -278,12 +303,12 @@ export class MapViewComponent implements OnInit {
     // Once all restaurants have been marked
     // create our centre site/channel marker
     this.markers.push({
-      position: this.mapCentre,
+      position: this.geoTarget,
       options: { label: '*' }
     });
     this.bounds.extend({
-      lat: Number(this.mapCentre?.lat),
-      lng: Number(this.mapCentre?.lng)
+      lat: Number(this.geoTarget?.lat),
+      lng: Number(this.geoTarget?.lng)
     });
     // Fit around markers
     setTimeout(() => {
@@ -392,7 +417,7 @@ export class MapViewComponent implements OnInit {
     this.showDistanceData = true;
     // build requests
     const drivingMode = {
-      origins: [this.mapCentre as object],
+      origins: [this.geoTarget as object],
       destinations: [latLng],
       travelMode: google.maps.TravelMode.DRIVING,
       unitSystem: google.maps.UnitSystem.IMPERIAL,
