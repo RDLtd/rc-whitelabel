@@ -110,6 +110,7 @@ export class MapViewComponent implements OnInit {
     // Subscribe to results
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
+
     // Google maps
     this.loadMapsApi();
 
@@ -161,8 +162,6 @@ export class MapViewComponent implements OnInit {
 
   loadRestaurants(): void {
 
-
-
     const params: any = {
       lat: this.geoTarget?.lat,
       lng: this.geoTarget?.lng,
@@ -172,8 +171,12 @@ export class MapViewComponent implements OnInit {
 
     console.log('Length:', this.restaurants.length);
     console.log('Load:', this.currentOffset === this.restaurants.length);
+    console.log('Test:', this.currentOffset < this.restaurants.length);
 
     if (this.currentOffset === this.restaurants.length) {
+
+      console.log(this.restaurants.slice())
+
       this.restService.loadRestaurantBatch(params);
 
       // load summary for filter/sort options
@@ -185,9 +188,11 @@ export class MapViewComponent implements OnInit {
         this.features = res.features;
         this.totalResults = res.restaurants.length;
       });
+    } else {
+      console.log(this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal));
+      this.addMapMarkers(this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal));
     }
   }
-
 
   // Construct the summary text for the
   // list navigation
@@ -258,17 +263,17 @@ export class MapViewComponent implements OnInit {
 
   // Use the restaurants array to create an
   // array of MapMarker component data
-  addMapMarkers(index = 0): void {
-    const totalRestaurants = this.restaurants.length;
-    let i = index;
+  addMapMarkers(batch = this.restaurants): void {
+    //const totalRestaurants = this.restaurants.length;
+    let i = 0;
     let r;
     let markerComp;
     this.markers = [];
     this.bounds = new google.maps.LatLngBounds();
 
     // Create markers for all restaurants
-    for (i; i < totalRestaurants; i++) {
-      r = this.restaurants[i];
+    for (i; i < batch.length; i++) {
+      r = batch[i];
       // Skip the loop if no valid latitude
       if (!r.restaurant_lat || r.restaurant_lat === -999) {
         console.log(`${i} Null record`);
