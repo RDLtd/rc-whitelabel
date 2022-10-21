@@ -30,6 +30,7 @@ export class DataService {
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
 
+  // Channel config.
   loadChannelConfig(domain: string): Promise<any> {
     return new Promise(async resolve => {
       await this.api.getChannelByDomain(domain)
@@ -134,11 +135,16 @@ export class DataService {
           cuisines: this.cuisines
         });
       } else {
-        await this.api.getRestaurantsSummary(this.config.channel.accessCode, this.config.channel.apiKey,
-          this.config.channel.latitude, this.config.channel.longitude, this.config.channel.boundary)
+        await this.api.getRestaurantsSummary(
+          this.config.channel.accessCode,
+          this.config.channel.apiKey,
+          this.config.channel.latitude,
+          this.config.channel.longitude,
+          this.config.channel.boundary)
           .toPromise()
           .then((res: any) => {
             console.log('Summary loaded from API');
+            console.log(res);
             this.setSummary(res);
             resolve({
               restaurants: this.searchRests,
@@ -149,6 +155,23 @@ export class DataService {
           })
           .catch((error: any) => console.log('ERROR', error));
       }
+    });
+  }
+
+  loadResultsSummary(lat = this.config.channel.latitude, lng = this.config.channel.longitude, boundary = this.config.channel.boundary): Promise <any> {
+    return new Promise(async resolve => {
+      await this.api.getRestaurantsSummary(
+        this.config.channel.accessCode,
+        this.config.channel.apiKey,
+        lat,
+        lng,
+        boundary
+      )
+        .toPromise()
+        .then((data: any) => {
+          resolve(data);
+        })
+        .catch((error: any) => console.log('ERROR', error));
     });
   }
 

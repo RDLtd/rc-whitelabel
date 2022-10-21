@@ -65,12 +65,15 @@ export class MapViewComponent implements OnInit {
   restaurants: any[] = [];
   restaurants$!: Observable<any[]>;
   resultsLoaded$: Observable<boolean>;
+  restaurantBatch$!: Observable<any[]>;
+
   latLng!: string[];
   searchFilter?: string | null;
-  batchTotal = 8;
+  batchTotal = 10;
   currentOffset = 0;
   totalResults?: number;
   numbers: number[];
+  boundary: number;
 
   travelData: any[] =[];
   distanceService: any;
@@ -80,6 +83,7 @@ export class MapViewComponent implements OnInit {
     driving: ''
   };
   showDistanceData = false;
+  totalRestaurants = 0;
   landmarks: any;
   cuisines: any;
   features: any;
@@ -100,16 +104,20 @@ export class MapViewComponent implements OnInit {
 
     // Get the geographical centre of the channel
     this.geoTarget = this.config.channel.centre;
+    this.boundary = this.config.channel.boundary;
 
     // Dummy numbers array to use to
     // create skeleton results
     this.numbers = Array(this.batchTotal).fill(1); // [4,4,4,4,4]
 
     // Clear any previous results
-    this.restService.resetRestaurantsSubject();
+
     // Subscribe to results
+    this.restService.resetRestaurantsSubject();
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
+    this.restaurantBatch$ = this.restService.restaurants;
+    // console.log(this.restaurants);
 
     // Google maps
     this.loadMapsApi();
@@ -117,6 +125,8 @@ export class MapViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+
 
     // User's current location
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
@@ -126,6 +136,7 @@ export class MapViewComponent implements OnInit {
       this.latLng = params.get('latLng')?.split(',') ?? [];
       this.searchFilter = params.get('filter');
       this.geoTarget = { lat: Number(this.latLng[0]), lng: Number(this.latLng[1])}
+      this.loadRestaurantSummary();
       this.loadRestaurants();
     });
     this.route.queryParams.subscribe(params => {
@@ -160,6 +171,14 @@ export class MapViewComponent implements OnInit {
     }
   }
 
+  loadRestaurantSummary(): void {
+    this.data.loadResultsSummary(this.geoTarget?.lat, this.geoTarget?.lng, this.boundary)
+      .then((res) => {
+      this.cuisines = res.cuisines;
+      this.totalRestaurants = res.restaurants.length;
+    });
+  }
+
   loadRestaurants(): void {
 
     const params: any = {
@@ -169,40 +188,31 @@ export class MapViewComponent implements OnInit {
       limit: this.batchTotal,
     }
 
-    console.log('Length:', this.restaurants.length);
-    console.log('Load:', this.currentOffset === this.restaurants.length);
-    console.log('Test:', this.currentOffset < this.restaurants.length);
-
+    // Do we need to hit the back-end
     if (this.currentOffset === this.restaurants.length) {
-
-      console.log(this.restaurants.slice())
 
       this.restService.loadRestaurantBatch(params);
 
-      // load summary for filter/sort options
-      this.data.loadSummarisedData().then((res: any) => {
-        console.log(`Summary loaded ${res.restaurants.length} restaurants`);
-        //this.restService.totalRestaurants = res.restaurants.length;
-        this.landmarks = res.landmarks;
-        this.cuisines = res.cuisines;
-        this.features = res.features;
-        this.totalResults = res.restaurants.length;
-      });
     } else {
-      console.log(this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal));
+
+      this.restaurantBatch$ = of(this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal));
       this.addMapMarkers(this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal));
+
     }
   }
 
   // Construct the summary text for the
   // list navigation
   getBatchNavSummary(): string {
-    let lastBatchItem = this.currentOffset + this.batchTotal;
-    const totalResults = this.restService.totalRestaurants;
-    if (lastBatchItem > totalResults) { lastBatchItem = totalResults; }
-    return `Displaying restaurants within ${this.config.channel.boundary} km of ${this.geoSearchLabel}`;
+    const nearest = this.currentOffset + 1;
+    const farthest = this.currentOffset + this.batchTotal;
+    //let lastBatchItem = this.currentOffset + this.batchTotal;
+    // const totalResults = this.restService.totalRestaurants;
+    // if (lastBatchItem > totalResults) { lastBatchItem = totalResults; }
+    return `Restaurants ${nearest} to ${farthest} of ${this.totalRestaurants} restaurants within ${this.config.channel.boundary} km of ${this.geoSearchLabel}`;
     // return `Displaying results ${ this.currentOffset + 1 } to ${ lastBatchItem } of ${ totalResults }`;
   }
+
   getTotalResults(): number {
     return this.restService.totalRestaurants;
   }
@@ -210,7 +220,7 @@ export class MapViewComponent implements OnInit {
   // List nav
   nextBatch(): void {
     this.currentOffset += this.batchTotal;
-    console.log(this.currentOffset, this.totalResults);
+    // console.log(this.currentOffset, this.batchTotal, this.restaurants.length, this.totalResults);
     this.loadRestaurants();
   }
   prevBatch(): void {
@@ -255,16 +265,19 @@ export class MapViewComponent implements OnInit {
     this.restService.restaurants.subscribe((data: any) => {
       this.restaurants = data;
       // console.log(data);
-      //if (data.length) {
-        this.addMapMarkers();
-      //}
+      const batch = this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal);
+      this.restaurantBatch$ = of(batch);
+      this.addMapMarkers(batch);
     });
   }
 
-  // Use the restaurants array to create an
-  // array of MapMarker component data
+  /**
+   * Generate and plot map markers by creating an
+   * array of MapMarker components
+   * @param batch - subset of restaurants from the restaurants array
+   */
   addMapMarkers(batch = this.restaurants): void {
-    //const totalRestaurants = this.restaurants.length;
+    // const totalRestaurants = this.restaurants.length;
     let i = 0;
     let r;
     let markerComp;

@@ -19,7 +19,7 @@ export class RestaurantsService {
     lat: 51.35,
     lng: -0.165,
     limit: 10,
-    boundary: 30,
+    boundary: 10,
     offset: 0,
     testing: false,
   };
@@ -104,6 +104,7 @@ export class RestaurantsService {
 
   resetRestaurantsSubject(): void {
     this.restaurantsSubject.next([]);
+    this.restaurantsArray = [];
   }
 
   loadRestaurantBatch(params: any ): void {

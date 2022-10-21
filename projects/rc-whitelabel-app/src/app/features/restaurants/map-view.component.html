@@ -18,9 +18,8 @@
         <mat-icon>arrow_back</mat-icon>
       </button>
 
-      <button
-        [disabled]="currentOffset === totalResults"
-        mat-icon-button
+      <button [disabled]="currentOffset + batchTotal > totalRestaurants || !resultsLoaded$"
+              mat-icon-button
               (click)="nextBatch()"
               title="Next {{ batchTotal }} restaurants">
         <mat-icon>arrow_forward</mat-icon>
@@ -28,7 +27,7 @@
 
     </div>
 
-    <ul class="rd-map-list" [@fadeIn]="restaurants$ | async">
+    <ul class="rd-map-list" [@fadeIn]="restaurantBatch$ | async">
       <ng-container *ngIf="!(resultsLoaded$ | async)">
         <div class="rd-map-list-item-skeleton" *ngFor="let n of numbers">
           <div class="thumb"></div>
@@ -44,7 +43,7 @@
       <ng-container *ngIf="resultsLoaded$ | async">
 
       <li class="rd-map-list-item"
-          *ngFor="let restaurant of restaurants$ | async; let i = index"
+          *ngFor="let restaurant of restaurantBatch$ | async; let i = index"
           (click)="listClick(i)">
         <span *ngIf="restaurant?.offers.length" class="rd-member-offer">MEMBER OFFER</span>
         <img [src]="restaurant?.image" loading="lazy" alt="Image of {{ restaurant?.restaurant_name }}">
