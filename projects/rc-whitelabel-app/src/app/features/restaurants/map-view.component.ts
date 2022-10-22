@@ -24,6 +24,7 @@ export class MapViewComponent implements OnInit {
   @ViewChild(MapMarker, { static: false }) mapMarker!: MapMarker;
   @ViewChildren('mapMarker') mapMarkerComponents!: QueryList<MapMarker>;
 
+  // Map config
   mapApiSubject = new BehaviorSubject<boolean>(false);
   mapApiLoaded$ = this.mapApiSubject.asObservable();
   mapOptions: google.maps.MapOptions = {
@@ -57,24 +58,6 @@ export class MapViewComponent implements OnInit {
   display?: google.maps.LatLngLiteral;
   zoom = 14;
   lastZoom?: number;
-
-  userPosition?: UserGeoLocation;
-  geoSearchLabel = 'Nearest here';
-
-  // Restaurants
-  restaurants: any[] = [];
-  restaurants$!: Observable<any[]>;
-  resultsLoaded$: Observable<boolean>;
-  restaurantBatch$!: Observable<any[]>;
-
-  latLng!: string[];
-  searchFilter?: string | null;
-  batchTotal = 10;
-  currentOffset = 0;
-  totalResults?: number;
-  numbers: number[];
-  boundary: number;
-
   travelData: any[] =[];
   distanceService: any;
   distanceData = {
@@ -82,11 +65,30 @@ export class MapViewComponent implements OnInit {
     walking: '',
     driving: ''
   };
-  showDistanceData = false;
-  totalRestaurants = 0;
+
+  // Restaurants
+  restaurants: any[] = [];
+  restaurants$!: Observable<any[]>;
+  resultsLoaded$: Observable<boolean>;
+  restaurantBatch$!: Observable<any[]>;
+
+  // Results
+  latLng!: string[];
+  searchFilter?: string | null;
+  batchTotal = 10;
+  currentOffset = 0;
+  totalResults?: number;
+  resultReference: number[];
+  boundary: number;
+  // Filters
   landmarks: any;
   cuisines: any;
   features: any;
+
+  userPosition?: UserGeoLocation;
+  geoSearchLabel = 'Search Focus';
+  showDistanceData = false;
+  totalRestaurants = 0;
 
   constructor(
     private config: AppConfig,
@@ -108,16 +110,13 @@ export class MapViewComponent implements OnInit {
 
     // Dummy numbers array to use to
     // create skeleton results
-    this.numbers = Array(this.batchTotal).fill(1); // [4,4,4,4,4]
-
-    // Clear any previous results
+    this.resultReference = Array(this.batchTotal).fill(1); // [4,4,4,4,4]
 
     // Subscribe to results
     this.restService.resetRestaurantsSubject();
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
     this.restaurantBatch$ = this.restService.restaurants;
-    // console.log(this.restaurants);
 
     // Google maps
     this.loadMapsApi();
@@ -174,6 +173,10 @@ export class MapViewComponent implements OnInit {
     }
   }
 
+  /**
+   * Load results summary to enable
+   * filtering options etc.
+   */
   loadRestaurantSummary(): void {
     this.data.loadResultsSummary(this.geoTarget?.lat, this.geoTarget?.lng, this.boundary)
       .then((res) => {
@@ -193,39 +196,38 @@ export class MapViewComponent implements OnInit {
       limit: this.batchTotal,
     }
 
-    // Do we need to hit the back-end
+    // Is this batch already loaded?
     if (this.currentOffset === this.restaurants.length) {
 
       this.restService.loadRestaurantBatch(params);
 
     } else {
-
-      this.restaurantBatch$ = of(this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal));
-      this.addMapMarkers(this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal));
-
+      // extract subset of restaurants from
+      // our existing array of results
+      const batch = this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal);
+      // update observable for map list
+      this.restaurantBatch$ = of(batch);
+      // plot map markers
+      this.addMapMarkers(batch);
     }
   }
 
   // Construct the summary text for the
   // list navigation
   getBatchNavSummary(): string {
-    const nearest = this.currentOffset + 1;
-    const farthest = this.currentOffset + this.batchTotal;
-    //let lastBatchItem = this.currentOffset + this.batchTotal;
-    // const totalResults = this.restService.totalRestaurants;
-    // if (lastBatchItem > totalResults) { lastBatchItem = totalResults; }
-    return `Restaurants ${nearest} to ${farthest} of ${this.totalRestaurants} restaurants within ${this.config.channel.boundary} km of ${this.geoSearchLabel}`;
-    // return `Displaying results ${ this.currentOffset + 1 } to ${ lastBatchItem } of ${ totalResults }`;
+    const from = this.currentOffset + 1;
+    const to = this.currentOffset + this.batchTotal;
+    return  `Restaurants ${from} to ${to} of ${this.totalRestaurants} ` +
+            `within ${this.config.channel.boundary} km`;
   }
 
   getTotalResults(): number {
     return this.restService.totalRestaurants;
   }
 
-  // List nav
+  // results navigation
   nextBatch(): void {
     this.currentOffset += this.batchTotal;
-    // console.log(this.currentOffset, this.batchTotal, this.restaurants.length, this.totalResults);
     this.loadRestaurants();
   }
   prevBatch(): void {
