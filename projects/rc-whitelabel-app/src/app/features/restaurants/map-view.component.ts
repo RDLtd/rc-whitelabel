@@ -126,29 +126,31 @@ export class MapViewComponent implements OnInit {
 
   ngOnInit(): void {
 
-
-
-    // User's current location
+    // Get user's current location
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
 
-    // Check route params & query params
+    // Check for route params & query params
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.latLng = params.get('latLng')?.split(',') ?? [];
       this.searchFilter = params.get('filter');
       this.geoTarget = { lat: Number(this.latLng[0]), lng: Number(this.latLng[1])}
-      this.loadRestaurantSummary();
-      this.loadRestaurants();
-    });
-    this.route.queryParams.subscribe(params => {
-      if (!!params.location) {
-        this.geoSearchLabel = params.location;
-      }
+      this.route.queryParams.subscribe(params => {
+        if (!!params.location) {
+          this.geoSearchLabel = params.location;
+        }
+        // load a summary of available restaurants
+        // within the channel or specified boundary
+        this.loadRestaurantSummary();
+        // load the first batch of restaurants
+        this.loadRestaurants();
+      });
     });
   }
 
+  // Load the Google Maps api
   loadMapsApi(): void {
-    // Check to see if we already have the Google Maps api
-    // script in the cache, so we don't load it twice!
+    // Check to see if we already have the script in cache
+    // Don't load it twice!
     if (window.hasOwnProperty('google')) {
       console.log('Google maps api already available');
       this.distanceService = new google.maps.DistanceMatrixService();
@@ -165,6 +167,7 @@ export class MapViewComponent implements OnInit {
           catchError(() => of(false)),
           finalize(() => {
             this.distanceService = new google.maps.DistanceMatrixService();
+            // Now we can initialise the map
             this.initMap();
           })
         );
@@ -175,6 +178,8 @@ export class MapViewComponent implements OnInit {
     this.data.loadResultsSummary(this.geoTarget?.lat, this.geoTarget?.lng, this.boundary)
       .then((res) => {
       this.cuisines = res.cuisines;
+      this.features = res.attributes;
+      this.landmarks = res.landmarks;
       this.totalRestaurants = res.restaurants.length;
     });
   }
