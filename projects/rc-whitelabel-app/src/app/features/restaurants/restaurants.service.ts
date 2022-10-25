@@ -111,8 +111,6 @@ export class RestaurantsService {
 
     console.log('loadRestaurantBatch');
 
-
-
     // show loader if it's an initial load, but not on preload
     this.resultsLoadedSubject.next(false);
 

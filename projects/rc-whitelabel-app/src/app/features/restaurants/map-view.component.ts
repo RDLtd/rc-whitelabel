@@ -342,7 +342,8 @@ export class MapViewComponent implements OnInit {
    * @param index restaurants array reference
    */
   markerClick(marker: MapMarker, index: number): void {
-      if (this.restaurants.length === index) {
+      // console.log(marker, index);
+      if (this.restaurants.length === this.currentOffset + index) {
         this.showDistanceData = false;
         this.infoWindowContent = {
           name: this.geoSearchLabel.toUpperCase(),
@@ -354,7 +355,7 @@ export class MapViewComponent implements OnInit {
         return
       }
       this.updateMarkerList(index);
-      this.selectMapMarker(marker, this.restaurants[index]);
+      this.selectMapMarker(marker, this.restaurants[this.currentOffset + index]);
     // console.log(this.restaurants[index]);
   }
 
@@ -369,7 +370,7 @@ export class MapViewComponent implements OnInit {
     // Reference the Angular MapMarker component
     const mapMarkerComponent = mapMarkersArray[index];
     // Reference the corresponding restaurant data
-    const restaurant = this.restaurants[index];
+    const restaurant = this.restaurants[this.currentOffset + index];
     // Activate the marker
     this.selectMapMarker(mapMarkerComponent, restaurant);
     // console.log(this.restaurants[index]);
@@ -383,7 +384,11 @@ export class MapViewComponent implements OnInit {
   updateMarkerList(index: number): void {
     const currentMarkerList = document.querySelectorAll('.rd-map-list-item');
     // console.log( currentMarkerList);
-    currentMarkerList.forEach((item: any) => item.classList.remove('active'));
+    currentMarkerList.forEach((item: any) => {
+      if (item.classList.length) {
+        item.classList.remove('active');
+      }
+    });
     currentMarkerList[index].classList.add('active');
   }
 
@@ -438,7 +443,7 @@ export class MapViewComponent implements OnInit {
       origins: [this.geoTarget as object],
       destinations: [latLng],
       travelMode: google.maps.TravelMode.DRIVING,
-      unitSystem: google.maps.UnitSystem.IMPERIAL,
+      unitSystem: google.maps.UnitSystem.METRIC,
       avoidHighways: false,
       avoidTolls: false,
     };

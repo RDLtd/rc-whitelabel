@@ -8,24 +8,7 @@
 <div class="rd-map">
   <div class="rd-component list">
 
-    <div class="rd-map-nav">
-      <span class="rd-map-nav-summary">{{ getBatchNavSummary() }}</span>
 
-      <button [disabled]="currentOffset === 0"
-              mat-icon-button
-              (click)="prevBatch()"
-              title="Previous {{ currentOffset }} restaurants">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-
-      <button [disabled]="currentOffset + batchTotal > totalRestaurants || !resultsLoaded$"
-              mat-icon-button
-              (click)="nextBatch()"
-              title="Next {{ batchTotal }} restaurants">
-        <mat-icon>arrow_forward</mat-icon>
-      </button>
-
-    </div>
 
     <ul class="rd-map-list" [@fadeIn]="restaurantBatch$ | async">
       <ng-container *ngIf="!(resultsLoaded$ | async)">
@@ -65,11 +48,30 @@
 
   <div class="rd-component map">
 
+    <div class="rd-map-nav">
+      <span class="rd-map-nav-summary">{{ getBatchNavSummary() }}</span>
+
+      <button [disabled]="currentOffset === 0"
+              mat-icon-button
+              (click)="prevBatch()"
+              title="Previous {{ currentOffset }} restaurants">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <button [disabled]="currentOffset + batchTotal > totalRestaurants  || !(resultsLoaded$ | async)"
+              mat-icon-button
+              (click)="nextBatch()"
+              title="Next {{ batchTotal }} restaurants">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+
+    </div>
+
     <ng-container *ngIf="mapApiLoaded$ | async">
 
     <google-map
       width="100%"
-      height="100%"
+      height="90%"
       [zoom]="zoom"
       [options]="mapOptions">
 
