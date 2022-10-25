@@ -88,6 +88,10 @@ export class DataService {
     });
   }
 
+  /**
+   * Get channel configuration
+   * @param id - channel id
+   */
   loadChannelSettings(id: number): Promise <any> {
     return new Promise(async resolve => {
       await this.api.getChannelSettings(id)
@@ -101,6 +105,10 @@ export class DataService {
     });
   }
 
+  /**
+   * Get all sites associated with channel
+   * like CAMC
+   */
   loadChannelSites(): Promise <any> {
     return new Promise(async resolve => {
       if (this.sites.length) {
@@ -123,7 +131,9 @@ export class DataService {
     });
   }
 
-  // Summary
+  /**
+   * Load SEARCH summary
+   */
   loadSummarisedData(): Promise <any> {
     return new Promise(async resolve => {
       if (this.cuisines.length) {
@@ -135,16 +145,22 @@ export class DataService {
           cuisines: this.cuisines
         });
       } else {
+        console.log(
+          'loadSummarisedData',
+          this.config.channel.accessCode,
+          this.config.channel.apiKey,
+          this.config.channel.latitude,
+          this.config.channel.longitude,
+          100);
         await this.api.getRestaurantsSummary(
           this.config.channel.accessCode,
           this.config.channel.apiKey,
           this.config.channel.latitude,
           this.config.channel.longitude,
-          this.config.channel.boundary)
+          2000)
           .toPromise()
           .then((res: any) => {
-            console.log('Summary loaded from API');
-            console.log(res);
+            console.log('Summary loaded from API', res);
             this.setSummary(res);
             resolve({
               restaurants: this.searchRests,
@@ -158,7 +174,17 @@ export class DataService {
     });
   }
 
-  loadResultsSummary(lat = this.config.channel.latitude, lng = this.config.channel.longitude, boundary = this.config.channel.boundary): Promise <any> {
+  /**
+   * Get summarised results of search query
+   * @param lat
+   * @param lng
+   * @param boundary
+   */
+  loadResultsSummary(
+    lat = this.config.channel.latitude,
+    lng = this.config.channel.longitude,
+    boundary = this.config.channel.boundary): Promise <any> {
+    console.log('loadResultsSummary');
     return new Promise(async resolve => {
       await this.api.getRestaurantsSummary(
         this.config.channel.accessCode,

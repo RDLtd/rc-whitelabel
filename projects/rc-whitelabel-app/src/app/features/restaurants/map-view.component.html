@@ -12,7 +12,7 @@
 
     <ul class="rd-map-list" [@fadeIn]="restaurantBatch$ | async">
       <ng-container *ngIf="!(resultsLoaded$ | async)">
-        <div class="rd-map-list-item-skeleton" *ngFor="let n of numbers">
+        <div class="rd-map-list-item-skeleton" *ngFor="let n of resultReference">
           <div class="thumb"></div>
           <div>
             <span class="heading"></span>

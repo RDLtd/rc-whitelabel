@@ -83,7 +83,7 @@ export class AppConfig {
         lat: Number(data.latitude),
         lng: Number(data.longitude)
       },
-      boundary: data.boundary ?? 1,
+      boundary: data.boundary ?? 10,
       language: data.language,
       rcLogo: data.logoRC || null,
       brand: {
