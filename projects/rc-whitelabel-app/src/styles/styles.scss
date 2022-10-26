@@ -752,6 +752,9 @@ rd-footer {
   padding-bottom: 8px;
   padding-inline: 8px 0;
   .rd-map-nav-summary {
+    // color: var(--clr-primary-cta);
+    font-weight: $font-weight-heavy;
+    font-size: 1.125rem;
     flex: 1 auto;
     align-items: center;
     margin-right: 1rem;
