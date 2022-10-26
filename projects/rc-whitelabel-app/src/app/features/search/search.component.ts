@@ -33,8 +33,8 @@ interface Site {
   notes: string;
 }
 interface Cuisine {
-  label: string;
-  total: number;
+  Cuisine: string;
+  Count: number;
 }
 
 @Component({
@@ -111,27 +111,27 @@ export class SearchComponent implements OnInit {
   ) {
 
     // Is this a type Site implementation?
-    if (this.config.channel?.type === 'sites') {
-      console.log('Loading site config');
-      this.isChannelSite = true;
-      this.channelConfig = this.siteConfig;
-      this.data.loadChannelSites().then((data: any) => {
-        const sites = data.sites;
-        console.log(sites);
-        sites.forEach((item: any) => {
-          this.channelSites.push({
-            id: item.id,
-            lat: item.lat,
-            lng: item.lng,
-            name: item.name,
-            notes: item.notes
-          });
-        });
-        // sort the list
-        //this.channelSites.sort((a, b) => (a.name < b.name) ? -1 : 1 );
-        // console.log(this.channelSites);
-      });
-    }
+    // if (this.config.channel?.type === 'sites') {
+    //   console.log('Loading site config');
+    //   this.isChannelSite = true;
+    //   this.channelConfig = this.siteConfig;
+    //   this.data.loadChannelSites().then((data: any) => {
+    //     const sites = data.sites;
+    //     console.log(sites);
+    //     sites.forEach((item: any) => {
+    //       this.channelSites.push({
+    //         id: item.id,
+    //         lat: item.lat,
+    //         lng: item.lng,
+    //         name: item.name,
+    //         notes: item.notes
+    //       });
+    //     });
+    //     // sort the list
+    //     //this.channelSites.sort((a, b) => (a.name < b.name) ? -1 : 1 );
+    //     // console.log(this.channelSites);
+    //   });
+    // }
     console.log('Loading default config');
     title.setTitle('Search');
 
@@ -146,7 +146,7 @@ export class SearchComponent implements OnInit {
     });
 
     // Summarised data
-    this.data.loadSummarisedData().then((data: any) => {
+    this.data.loadResultsSummary().then((data: any) => {
       console.log('LoadSummary', data);
       this.searchRestaurants = data.restaurants;
       this.landmarks = data.landmarks;
@@ -203,7 +203,7 @@ export class SearchComponent implements OnInit {
               name: m.channel_landmark_name,
               cat: 'location',
               index: idx,
-              route: ['/restaurants', this.channelConfig.defaultView, `${m.channel_landmark_lat},${m.channel_landmark_lng}`]
+              route: ['/restaurants', 'map', `${m.channel_landmark_lat},${m.channel_landmark_lng}`]
             });
             console.log('Route', `/restaurants/${this.channelConfig.defaultView}/${m.channel_landmark_lat},${m.channel_landmark_lng}`);
 
@@ -252,14 +252,14 @@ export class SearchComponent implements OnInit {
         let i = this.cuisines.length; let c; let idx;
         while (i--) {
           c = this.cuisines[i];
-          idx = c.label.toUpperCase().search(regex);
+          idx = c.Cuisine.toUpperCase().search(regex);
           if (idx > -1) {
             this.searchSuggestions.push({
               cat: 'cuisine',
-              name: c.label,
+              name: c.Cuisine,
               index: idx,
-              route: ['restaurants', 'list', `${this.config.channel.latitude},${this.config.channel.longitude}`, `${c.label}`],
-              misc: c.total
+              route: ['restaurants', 'list', `${this.config.channel.latitude},${this.config.channel.longitude}`, `${c.Cuisine}`],
+              misc: c.Cuisine
             });
           }
         }
@@ -280,6 +280,7 @@ export class SearchComponent implements OnInit {
   }
 
   getTopCuisines(): Array<Cuisine> {
+    console.log(this.cuisines.slice(0, this.config.maxTopCuisines));
     return this.cuisines.slice(0, this.config.maxTopCuisines);
   }
 

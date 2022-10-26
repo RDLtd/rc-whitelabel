@@ -57,7 +57,9 @@
         </a>
 
         <!-- Landmarks -->
-        <a *ngSwitchCase="'location'" [routerLink]="displayItem.route">
+        <a *ngSwitchCase="'location'"
+           [queryParams]="{location: displayItem.name}"
+           [routerLink]="displayItem.route">
           <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
             {{ displayItem?.name }}
           <span class="rd-flex-spacer"></span>
@@ -113,8 +115,7 @@
             <a
               class="rd-my-location"
               [queryParams]="{location: 'your current location'}"
-              [routerLink]="['/restaurants/map/',
-              userPosition?.lat + ',' +  userPosition?.lng]">
+              [routerLink]="['/restaurants/map/', userPosition?.lat + ',' +  userPosition?.lng]">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
                 <path d="M0 0h24v24H0z" fill="none"/>
                 <path
@@ -126,8 +127,8 @@
             </a>
           </li>
           <li *ngFor="let landmark of landmarks">
-            <a [routerLink]="['/restaurants', 'map', landmark?.channel_landmark_lat + ',' +
-            landmark?.channel_landmark_lng]">
+            <a [queryParams]="{location: landmark?.channel_landmark_name}"
+               [routerLink]="['/restaurants', 'map', landmark?.channel_landmark_lat + ',' + landmark?.channel_landmark_lng]">
               {{ landmark?.channel_landmark_name }}
             </a>
           </li>
@@ -140,11 +141,12 @@
         <h2>{{ config.i18n["Cuisines"] }}</h2>
       </div>
       <ul>
-        <li *ngFor="let cuisine of getTopCuisines()">
-          <a [routerLink]="['/restaurants', 'list', config.channel.latitude + ',' + config.channel.longitude, cuisine.label]">
-            {{ cuisine?.label }}
+        <li *ngFor="let cuisine of cuisines">
+          <a [routerLink]="['/restaurants', 'list', config.channel.latitude + ',' + config.channel.longitude,
+          cuisine.Cuisine]">
+            {{ cuisine?.Cuisine }}
             <span class="rd-flex-spacer"></span>
-            <span>{{ cuisine?.total }}</span>
+            <span>{{ cuisine?.Count }}</span>
           </a>
         </li>
       </ul>

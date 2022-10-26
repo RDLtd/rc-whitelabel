@@ -205,18 +205,17 @@ export class RestaurantsService {
     // store the current params for comparison
     this.params = Object.assign(this.params, params);
 
-    console.log('Params', this.params);
+    // console.log('Params', this.params);
 
     // call api
     this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
-        console.log(data);
 
-        // store the total
-        //this.totalResults = data.total_count;
+        // console.log(data);
 
         // if we are only preloading results for our 'Load More' option
         if (preload) {
+          if(data === null) { return } // abort
           this.moreRestaurantsArray = data.restaurants;
           console.log('Next preloaded ready', data.restaurants.length);
           // update subject & notify observers
