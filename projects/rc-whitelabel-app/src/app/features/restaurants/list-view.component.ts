@@ -20,7 +20,7 @@ export class ListViewComponent implements OnInit {
   filterBy?: string | null;
   sortBy?: string | null;
   isLoaded = false;
-  geoTarget!: string[];
+  geoTarget: any;
   userPosition: any;
   moreRestaurantsPreloaded: Observable<boolean>;
 
@@ -36,6 +36,8 @@ export class ListViewComponent implements OnInit {
   // restaurant results
   restaurants: any[] = [];
   nextRestaurants: any[] = [];
+  totalRestaurants = 0;
+  boundary?: number;
 
   constructor(
     public config: AppConfig,
@@ -59,32 +61,34 @@ export class ListViewComponent implements OnInit {
     // Observe user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
 
+    // Get the geographical centre of the channel
+    this.boundary = this.config.channel.boundary;
+
 
 
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
-      console.log(params);
       this.isLoaded = false;
-      this.geoTarget = params.get('latLng')?.split(',') ?? [];
+      this.geoTarget = {
+        lat: params.get('latLng')?.split(',')[0] ?? this.config.channel.centre.lat,
+        lng: params.get('latLng')?.split(',')[1] ?? this.config.channel.centre.lng
+      };
       this.filterBy = params.get('filter');
       this.sortBy = params.get('sort');
     });
 
+    // load summary for filter/sort options
+    this.restService.loadSummarisedResults(this.geoTarget, this.boundary);
+
     // Load restaurant results
     this.restService.loadRestaurants({
-      lat: this.geoTarget[0],
-      lng: this.geoTarget[1],
+      lat: this.geoTarget.lat,
+      lng: this.geoTarget.lng,
       filter: !!this.filterBy ? 'cuisine' : '',
-      filterText: this.filterBy
+      filterText: this.filterBy,
+      offset: 0
     });
 
-    // load summary for filter/sort options
-    this.data.loadSummarisedData().then((res: any) => {
-      // console.log('Summary loaded', res);
-      this.landmarks = res.landmarks;
-      this.cuisines = res.cuisines;
-      this.features = res.features;
-    });
   }
 
   loadMore(): void {

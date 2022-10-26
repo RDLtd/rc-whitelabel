@@ -4,7 +4,7 @@ import { ApiService } from '../../core/api.service';
 import { AppConfig } from '../../app.config';
 import { DataService } from '../../core/data.service';
 import { AnalyticsService } from '../../core/analytics.service';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,10 @@ export class RestaurantsService {
     offset: 0,
     testing: false,
   };
+
+  cuisines?: any[];
+  features?: any[];
+  landmarks?: any[];
 
   private readonly apiKey: string;
   private readonly accessCode: string;
@@ -107,6 +111,23 @@ export class RestaurantsService {
     this.restaurantsArray = [];
   }
 
+  loadSummarisedResults(geoTarget: any, boundary: number): void {
+
+    this.data.loadResultsSummary(geoTarget.lat, geoTarget.lng, boundary)
+      .then((res) => {
+        this.cuisines = res.cuisines;
+        this.features = res.attributes;
+        this.landmarks = res.landmarks;
+        this.totalRestaurants = res.restaurants.length;
+      })
+      .then(() => {
+        console.log('Landmarks', this.landmarks);
+        console.log('Cuisines', this.cuisines);
+        console.log('Features', this.features);
+        console.log('Total restaurants', this.totalRestaurants);
+      });
+  }
+
   loadRestaurantBatch(params: any ): void {
 
     console.log('loadRestaurantBatch');
@@ -172,7 +193,7 @@ export class RestaurantsService {
    */
   loadRestaurants(params: any, preload = false): void {
 
-    console.log('loadRestaurants');
+    console.log('loadRestaurants', this.restaurantsArray);
 
     // show loader if it's an initial load, but not on preload
     this.resultsLoadedSubject.next(preload);
@@ -184,7 +205,7 @@ export class RestaurantsService {
     // store the current params for comparison
     this.params = Object.assign(this.params, params);
 
-    console.log('Params', params);
+    console.log('Params', this.params);
 
     // call api
     this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
@@ -192,7 +213,7 @@ export class RestaurantsService {
         console.log(data);
 
         // store the total
-        this.totalResults = data.total_count;
+        //this.totalResults = data.total_count;
 
         // if we are only preloading results for our 'Load More' option
         if (preload) {
@@ -215,7 +236,7 @@ export class RestaurantsService {
         console.log('Total: ', this.totalResults);
 
         // preload next batch of results
-        if (this.restaurantsArray.length < this.totalResults) { this.loadMoreRestaurants(); }
+        if (this.restaurantsArray.length < this.totalRestaurants) { this.loadMoreRestaurants(); }
 
       });
 
@@ -226,6 +247,7 @@ export class RestaurantsService {
    * Preloads the next batch of results
    */
   loadMoreRestaurants(): void {
+    console.log('Load more!');
     // have they already been preloaded?
     if (this.moreRestaurantsArray.length) {
       // extend the array

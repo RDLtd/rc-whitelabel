@@ -19,9 +19,9 @@ import { Title } from '@angular/platform-browser';
 
 export class MapViewComponent implements OnInit {
 
-  @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
-  @ViewChild(MapInfoWindow, { static: false }) infoWindow!: MapInfoWindow;
-  @ViewChild(MapMarker, { static: false }) mapMarker!: MapMarker;
+  @ViewChild(GoogleMap, {static: false}) map!: GoogleMap;
+  @ViewChild(MapInfoWindow, {static: false}) infoWindow!: MapInfoWindow;
+  @ViewChild(MapMarker, {static: false}) mapMarker!: MapMarker;
   @ViewChildren('mapMarker') mapMarkerComponents!: QueryList<MapMarker>;
 
   // Map config
@@ -58,7 +58,7 @@ export class MapViewComponent implements OnInit {
   display?: google.maps.LatLngLiteral;
   zoom = 14;
   lastZoom?: number;
-  travelData: any[] =[];
+  travelData: any[] = [];
   distanceService: any;
   distanceData = {
     distance: '',
@@ -127,13 +127,13 @@ export class MapViewComponent implements OnInit {
   ngOnInit(): void {
 
     // Get user's current location
-    this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
+    this.location.userLocationObs.subscribe(pos => this.userPosition = pos);
 
     // Check for route params & query params
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.latLng = params.get('latLng')?.split(',') ?? [];
       this.searchFilter = params.get('filter');
-      this.geoTarget = { lat: Number(this.latLng[0]), lng: Number(this.latLng[1])}
+      this.geoTarget = {lat: Number(this.latLng[0]), lng: Number(this.latLng[1])}
       this.route.queryParams.subscribe(params => {
         if (!!params.location) {
           this.geoSearchLabel = params.location;
@@ -181,11 +181,11 @@ export class MapViewComponent implements OnInit {
   loadRestaurantSummary(): void {
     this.data.loadResultsSummary(this.geoTarget?.lat, this.geoTarget?.lng, this.boundary)
       .then((res) => {
-      this.cuisines = res.cuisines;
-      this.features = res.attributes;
-      this.landmarks = res.landmarks;
-      this.totalRestaurants = res.restaurants.length;
-    });
+        this.cuisines = res.cuisines;
+        this.features = res.attributes;
+        this.landmarks = res.landmarks;
+        this.totalRestaurants = res.restaurants.length;
+      });
   }
 
   loadRestaurants(): void {
@@ -216,17 +216,19 @@ export class MapViewComponent implements OnInit {
   getBatchNavCount(): string {
     const from = this.currentOffset + 1;
     let to = this.currentOffset + this.batchTotal;
-    if (to > this.totalRestaurants) { to = this.totalRestaurants; }
-    return  `${from}–${to} of ${this.totalRestaurants}`;
+    if (to > this.totalRestaurants) {
+      to = this.totalRestaurants;
+    }
+    return `${from}–${to} of ${this.totalRestaurants}`;
   }
 
   // Construct the summary text for the
   // list navigation
   getBatchNavSummary(): string {
     if (!!this.geoSearchLabel) {
-      return `Restaurants within ${this.boundary}km of ${this.geoSearchLabel}`
+      return `Restaurants within ${this.boundary} km of ${this.geoSearchLabel}`
     }
-    return  `Restaurants within ${this.boundary}km`;
+    return `Restaurants within ${this.boundary} km`;
   }
 
   getTotalResults(): number {
@@ -238,6 +240,7 @@ export class MapViewComponent implements OnInit {
     this.currentOffset += this.batchTotal;
     this.loadRestaurants();
   }
+
   prevBatch(): void {
     this.currentOffset -= this.batchTotal;
     if (this.currentOffset < 0) {
@@ -259,7 +262,7 @@ export class MapViewComponent implements OnInit {
       strokeColor: '#fff',
       rotation: 0,
       scale: .9,
-      labelOrigin: { x: 18, y: 18 },
+      labelOrigin: {x: 18, y: 18},
       anchor: new google.maps.Point(18, 40)
     };
     // Duplicate and edit to use as the 'active' icon
@@ -317,7 +320,7 @@ export class MapViewComponent implements OnInit {
         options: {
           icon: r.offers.length ? this.svgMarkerOffer : this.svgMarker,
           label: {
-            text: `${ i + this.currentOffset + 1 }`,
+            text: `${i + this.currentOffset + 1}`,
             color: 'white',
             fontSize: '12px',
           }
@@ -337,7 +340,7 @@ export class MapViewComponent implements OnInit {
     // create our centre site/channel marker
     this.markers.push({
       position: this.geoTarget,
-      options: { label: '*' }
+      options: {label: '*'}
     });
     this.bounds.extend({
       lat: Number(this.geoTarget?.lat),
@@ -357,7 +360,7 @@ export class MapViewComponent implements OnInit {
    * @param batchIndex marker array reference
    */
   markerClick(marker: MapMarker, batchIndex: number): void {
-    // console.log('batchIndex', batchIndex);
+
     const restaurantIndex = batchIndex + this.currentOffset;
     // Is it the geoTarget marker?
     if (batchIndex === 10) {
@@ -434,7 +437,7 @@ export class MapViewComponent implements OnInit {
     // this.map.fitBounds(latlngbounds, 0);
 
     // Get distance data
-    this.getDistanceData({ lat: restaurant.restaurant_lat, lng: restaurant.restaurant_lng });
+    this.getDistanceData({lat: restaurant.restaurant_lat, lng: restaurant.restaurant_lng});
 
     // Update content & open mapInfoWindow
     this.infoWindowContent = {
@@ -466,17 +469,17 @@ export class MapViewComponent implements OnInit {
     walkingMode.travelMode = google.maps.TravelMode.WALKING;
 
     this.distanceService.getDistanceMatrix(drivingMode)
-        .then((data: any) => {
-          const d = data.rows[0].elements[0];
-          this.distanceData.distance = d.distance.text;
-          this.distanceData.driving = d.duration.text;
-        });
+      .then((data: any) => {
+        const d = data.rows[0].elements[0];
+        this.distanceData.distance = d.distance.text;
+        this.distanceData.driving = d.duration.text;
+      });
 
-      this.distanceService.getDistanceMatrix(walkingMode)
-        .then((data: any) => {
-          const d = data.rows[0].elements[0];
-          this.distanceData.walking = d.duration.text;
-        });
+    this.distanceService.getDistanceMatrix(walkingMode)
+      .then((data: any) => {
+        const d = data.rows[0].elements[0];
+        this.distanceData.walking = d.duration.text;
+      });
 
 
   }
@@ -490,5 +493,4 @@ export class MapViewComponent implements OnInit {
     // console.log(restaurant);
     this.restService.openSpw(restaurant, cat);
   }
-
 }
