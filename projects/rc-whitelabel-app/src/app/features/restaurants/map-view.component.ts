@@ -86,7 +86,8 @@ export class MapViewComponent implements OnInit {
   features: any;
 
   userPosition?: UserGeoLocation;
-  geoSearchLabel = 'Search Focus';
+
+  geoSearchLabel = undefined;
   showDistanceData = false;
   totalRestaurants = 0;
 
@@ -212,13 +213,20 @@ export class MapViewComponent implements OnInit {
     }
   }
 
+  getBatchNavCount(): string {
+    const from = this.currentOffset + 1;
+    let to = this.currentOffset + this.batchTotal;
+    if (to > this.totalRestaurants) { to = this.totalRestaurants; }
+    return  `${from}–${to} of ${this.totalRestaurants}`;
+  }
+
   // Construct the summary text for the
   // list navigation
   getBatchNavSummary(): string {
-    const from = this.currentOffset + 1;
-    const to = this.currentOffset + this.batchTotal;
-    return  `Restaurants ${from} to ${to} of ${this.totalRestaurants} ` +
-            `within ${this.config.channel.boundary} km`;
+    if (!!this.geoSearchLabel) {
+      return `Restaurants within ${this.boundary}km of ${this.geoSearchLabel}`
+    }
+    return  `Restaurants within ${this.boundary}km`;
   }
 
   getTotalResults(): number {
@@ -346,24 +354,25 @@ export class MapViewComponent implements OnInit {
   /**
    * When a map marker is selected
    * @param marker MapMarker component
-   * @param index restaurants array reference
+   * @param batchIndex marker array reference
    */
-  markerClick(marker: MapMarker, index: number): void {
-      // console.log(marker, index);
-      if (this.restaurants.length === this.currentOffset + index) {
-        this.showDistanceData = false;
-        this.infoWindowContent = {
-          name: this.geoSearchLabel.toUpperCase(),
-          cuisine: null,
-          spw: null,
-          offers: this.restaurants[index]?.offers[0]
-        }
-        this.infoWindow.open(marker);
-        return
+  markerClick(marker: MapMarker, batchIndex: number): void {
+    // console.log('batchIndex', batchIndex);
+    const restaurantIndex = batchIndex + this.currentOffset;
+    // Is it the geoTarget marker?
+    if (batchIndex === 10) {
+      this.showDistanceData = false;
+      this.infoWindowContent = {
+        name: this.geoSearchLabel || 'Nearest Here',
+        cuisine: null,
+        spw: null,
+        offers: null
       }
-      this.updateMarkerList(index);
-      this.selectMapMarker(marker, this.restaurants[this.currentOffset + index]);
-    // console.log(this.restaurants[index]);
+      this.infoWindow.open(marker);
+      return
+    }
+    this.updateMarkerList(batchIndex);
+    this.selectMapMarker(marker, this.restaurants[restaurantIndex]);
   }
 
   /**
@@ -390,7 +399,6 @@ export class MapViewComponent implements OnInit {
    */
   updateMarkerList(index: number): void {
     const currentMarkerList = document.querySelectorAll('.rd-map-list-item');
-    // console.log( currentMarkerList);
     currentMarkerList.forEach((item: any) => {
       if (item.classList.length) {
         item.classList.remove('active');
@@ -463,11 +471,14 @@ export class MapViewComponent implements OnInit {
           this.distanceData.distance = d.distance.text;
           this.distanceData.driving = d.duration.text;
         });
-    this.distanceService.getDistanceMatrix(walkingMode)
-      .then((data: any) => {
-        const d = data.rows[0].elements[0];
-        this.distanceData.walking = d.duration.text;
-      });
+
+      this.distanceService.getDistanceMatrix(walkingMode)
+        .then((data: any) => {
+          const d = data.rows[0].elements[0];
+          this.distanceData.walking = d.duration.text;
+        });
+
+
   }
 
   /**

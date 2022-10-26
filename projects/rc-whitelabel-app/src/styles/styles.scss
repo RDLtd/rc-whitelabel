@@ -640,7 +640,7 @@ rd-footer {
       border-radius: 10px;
     }
     &.map {
-      height: calc(100vh - 2*#{$layout-header-height});
+      //height: calc(100vh - 2*#{$layout-header-height});
       order: 2;
       padding: 12px;
       border-radius: 10px;
@@ -765,10 +765,10 @@ rd-footer {
   align-items: center;
   justify-content: flex-end;
   font-size: 1rem;
-  padding-block: 12px;
+  padding-block: 8px;
   padding-inline: 8px 0;
-  margin-bottom: 6px;
-  min-height: 48px;
+  //margin-bottom: 6px;
+  //min-height: px;
   //border-bottom: 1px solid $col-accent;
   .rd-map-nav-summary {
     flex: 1 auto;
