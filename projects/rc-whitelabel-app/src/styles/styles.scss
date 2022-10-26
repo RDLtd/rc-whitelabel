@@ -765,7 +765,7 @@ rd-footer {
   align-items: center;
   justify-content: flex-end;
   font-size: 1rem;
-  padding-block: 8px;
+  padding-bottom: 8px;
   padding-inline: 8px 0;
   //margin-bottom: 6px;
   //min-height: px;
@@ -830,6 +830,10 @@ rd-footer {
     }
   }
 }
+.rd-map-container {
+  width: 100%;
+  height: calc(100% - 48px);
+}
 .rd-map {
   position: relative;
   padding:  0;
@@ -840,7 +844,7 @@ rd-footer {
   grid-column-gap: 12px;
   grid-row-gap: 0;
   width: 100%;
-  height: inherit;
+  height: 100%;
   @include mq(large) {
     grid-template-columns: 38% 1fr;
     padding:  16px 12px 12px;
