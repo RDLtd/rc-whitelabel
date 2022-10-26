@@ -48,3 +48,21 @@
   <div class="rd-btn-more" (click)="loadMore()"><span>{{ config.i18n['Load_more'] }}</span></div>
 </div>
 
+<div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
+  <button
+    *ngIf="!filtersOn && (resultsLoaded$ | async)"
+    mat-raised-button
+    (click)="openFilterOptions()">
+    {{ config.i18n.Sort_filter }}
+    <mat-icon>filter_list</mat-icon>
+  </button>
+  <button
+    class="rd-btn-clear"
+    *ngIf="filtersOn && isLoaded"
+    mat-raised-button
+    (click)="clearFilters()">
+    {{ config.i18n.Clear_filters }}: {{ routeFilter || 'distance' }}
+    <mat-icon>cancel</mat-icon>
+  </button>
+</div>
+

@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { RestaurantsService } from './restaurants.service';
 import { Observable } from 'rxjs';
 import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
-import { ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import { LocationService } from '../../core/location.service';
 import { AppConfig } from '../../app.config';
 import { DataService } from '../../core/data.service';
 import { Title } from '@angular/platform-browser';
+import {FilterOptionsDialogComponent} from './filter-options-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'rd-list-view',
@@ -42,10 +44,12 @@ export class ListViewComponent implements OnInit {
   constructor(
     public config: AppConfig,
     private route: ActivatedRoute,
+    private router: Router,
     private location: LocationService,
     private restService: RestaurantsService,
     private data: DataService,
-    private title: Title
+    private title: Title,
+    public dialog: MatDialog,
   ) {
       title.setTitle('Restaurant Results List');
 
@@ -79,6 +83,8 @@ export class ListViewComponent implements OnInit {
 
     // load summary for filter/sort options
     this.restService.loadSummarisedResults(this.geoTarget, this.boundary);
+    // Delay the filter options until results have loaded
+    setTimeout(() => { this.showFilterOptions = true; }, 1500);
 
     // Load restaurant results
     this.restService.loadRestaurants({
@@ -105,6 +111,30 @@ export class ListViewComponent implements OnInit {
   getFormattedImage(url: string): string {
     const format = 'w_900,h_600,c_fill,q_auto,dpr_auto,f_auto';
     return url.replace('upload/', `upload/${format}/`);
+  }
+
+  // Sort and filter dialog
+  openFilterOptions(): void {
+    const dialogRef = this.dialog.open(FilterOptionsDialogComponent, {
+      data: {
+        cuisines: this.restService.cuisineSummary,
+        landmarks: this.restService.landmarkSummary,
+        userPosition: this.userPosition
+      },
+      panelClass: 'rd-filter-dialog'
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log('Dialog', result);
+      const coords = `${result.lat},${result.lng}`;
+      if (!!result) {
+        if (result.type === 'filter') {
+          this.router.navigate(['/restaurants', 'list', `${this.geoTarget.lat},${this.geoTarget.lng}`, result.value]).then();
+        } else if (result.type === 'sort') {
+          console.log('sort');
+          this.router.navigate(['/restaurants', 'map', coords]).then();
+        }
+      }
+    });
   }
 
   // If we have multiple cuisine types

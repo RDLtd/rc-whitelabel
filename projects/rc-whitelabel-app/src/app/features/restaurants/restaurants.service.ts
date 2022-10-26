@@ -96,6 +96,14 @@ export class RestaurantsService {
     return this.totalResults;
   }
 
+  get cuisineSummary(): any[] {
+    return this.cuisines || [];
+  }
+
+  get landmarkSummary(): any[] {
+    return this.landmarks || [];
+  }
+
   resetSearchFilters(): void {
     this.params.filter = '';
     this.params.filterText = '';
@@ -127,6 +135,10 @@ export class RestaurantsService {
         console.log('Total restaurants', this.totalRestaurants);
       });
   }
+
+
+
+
 
   loadRestaurantBatch(params: any ): void {
 
