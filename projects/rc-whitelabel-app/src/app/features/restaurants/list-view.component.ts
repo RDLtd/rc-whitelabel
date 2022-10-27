@@ -23,6 +23,7 @@ export class ListViewComponent implements OnInit {
   sortBy?: string | null;
   isLoaded = false;
   geoTarget: any;
+  geoSearchLabel?: string;
   userPosition: any;
   moreRestaurantsPreloaded: Observable<boolean>;
 
@@ -79,6 +80,11 @@ export class ListViewComponent implements OnInit {
       };
       this.filterBy = params.get('filter');
       this.sortBy = params.get('sort');
+      this.route.queryParams.subscribe(params => {
+        if (!!params.location) {
+          this.geoSearchLabel = params.location;
+        }
+      });
     });
 
     // load summary for filter/sort options
@@ -125,13 +131,20 @@ export class ListViewComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       console.log('Dialog', result);
+      this.restService.resetSearchFilters();
       const coords = `${result.lat},${result.lng}`;
       if (!!result) {
         if (result.type === 'filter') {
-          this.router.navigate(['/restaurants', 'list', `${this.geoTarget.lat},${this.geoTarget.lng}`, result.value]).then();
+          this.router
+            .navigate(['/restaurants', 'list', `${this.geoTarget.lat},${this.geoTarget.lng}`, result.value],
+              { queryParams: { location: this.geoSearchLabel }})
+            .then(() => this.ngOnInit());
         } else if (result.type === 'sort') {
           console.log('sort');
-          this.router.navigate(['/restaurants', 'map', coords]).then();
+          this.router
+            .navigate(['/restaurants', 'map', coords],
+              { queryParams: { location: result.location }})
+            .then(() => this.ngOnInit());
         }
       }
     });

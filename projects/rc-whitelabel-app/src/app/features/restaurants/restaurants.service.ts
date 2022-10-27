@@ -39,7 +39,7 @@ export class RestaurantsService {
 
   channelSite: any;
 
-  private readonly isChannelTypeSite: boolean;
+  // private readonly isChannelTypeSite: boolean;
 
   private totalResults = 0;
 
@@ -51,7 +51,7 @@ export class RestaurantsService {
     private data: DataService) {
       this.apiKey = this.config.channel.apiKey;
       this.accessCode = this.config.channel.accessCode;
-      this.isChannelTypeSite = this.config.channel.type === 'sites';
+      // this.isChannelTypeSite = this.config.channel.type === 'sites';
   }
 
   openSpw(restaurant: any, cat: string): void {
@@ -68,9 +68,9 @@ export class RestaurantsService {
     return this.channelSite;
   }
 
-  get isChannelSite(): boolean {
-    return this.isChannelTypeSite;
-  }
+  // get isChannelSite(): boolean {
+  //   return this.isChannelTypeSite;
+  // }
 
   get resultsLoaded(): Observable<boolean> {
     return this.resultsLoadedSubject.asObservable();

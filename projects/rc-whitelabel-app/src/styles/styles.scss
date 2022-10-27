@@ -24,6 +24,7 @@ $rc-whitelabel-app-theme: mat.define-light-theme((
 @include mat.all-component-themes($rc-whitelabel-app-theme);
 
 // Default branding
+// Referencing CSS vars to allow config to supply values post build
 $col-text:            var(--clr-text-default);
 $col-accent:          var(--clr-accent);
 $col-dark:            var(--clr-bgd-default);
@@ -159,8 +160,6 @@ rd-loader {
 
 // LAYOUT
 // ------------------------
-
-
 header {
   width: 100vw;
   z-index: 10;
@@ -223,7 +222,6 @@ rd-header {
     .rd-logo { height: $layout-header-height;}
   }
 }
-
 main {
   display: flex;
   flex-direction: column;
@@ -625,6 +623,7 @@ rd-footer {
 }
 
 // MAP RESULTS
+// ------------------------
 .rd-component {
   position: relative;
   background-color: white;
@@ -836,8 +835,6 @@ rd-footer {
   grid-auto-rows: 1fr;
   grid-column-gap: 12px;
   grid-row-gap: 0;
-  //width: 100%;
-  //height: 100%;
   @include mq(large) {
     grid-template-columns: 38% 1fr;
     padding:  16px 12px 12px;
