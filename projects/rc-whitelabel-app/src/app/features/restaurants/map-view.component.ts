@@ -224,9 +224,6 @@ export class MapViewComponent implements OnInit {
   }
 
   getBatchNavCount(): string {
-    if (!!this.searchFilter) {
-
-    }
 
     this.totalRestaurants = this.restService.totalRestaurants;
 

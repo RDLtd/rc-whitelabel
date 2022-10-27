@@ -156,10 +156,16 @@ export class RestaurantsService {
         this.totalRestaurants = res.restaurants.length;
       })
       .then(() => {
-        console.log('Landmarks', this.landmarks);
-        console.log('Cuisines', this.cuisines);
-        console.log('Features', this.features);
-        console.log('Total restaurants', this.totalRestaurants);
+        if (!!this.params.filter) {
+          const cuisine = this.cuisines?.find((obj: any) => {
+            return obj.Cuisine === this.params.filterText;
+          });
+          this.totalRestaurants = cuisine.Count;
+        }
+        // console.log('Landmarks', this.landmarks);
+        // console.log('Cuisines', this.cuisines);
+        // console.log('Features', this.features);
+        // console.log('Total restaurants', this.totalRestaurants);
       });
   }
 
