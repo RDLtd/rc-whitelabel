@@ -209,7 +209,7 @@ export class MapViewComponent implements OnInit {
     // Is this batch already loaded?
     if (this.currentOffset === this.restaurants.length) {
 
-      this.restService.loadRestaurantBatch({offset: this.currentOffset + this.batchTotal});
+      this.restService.loadRestaurantBatch({offset: this.currentOffset});
 
     } else {
 
@@ -224,6 +224,9 @@ export class MapViewComponent implements OnInit {
   }
 
   getBatchNavCount(): string {
+    if (!!this.searchFilter) {
+
+    }
 
     this.totalRestaurants = this.restService.totalRestaurants;
 

@@ -54,7 +54,7 @@ export class AppConfig {
   public maxTopCuisines = 10;
 
   // Use browser settings
-  public language = window.navigator.language.substr(0, 2) || 'en';
+  public language = window.navigator.language.substr(0, 2) ?? 'en';
   public channel!: Channel;
   public channelLoaded = false;
   public i18n: any = {};
@@ -83,9 +83,9 @@ export class AppConfig {
         lat: Number(data.latitude),
         lng: Number(data.longitude)
       },
-      boundary: data.boundary,
+      boundary: data.boundary ?? 5,
       language: data.language,
-      rcLogo: data.logoRC || null,
+      rcLogo: data.logoRC ?? null,
       brand: {
         imgLogo: data.logo,
         imgBgd: data.bgImage,
