@@ -58,10 +58,10 @@
   </button>
   <button
     class="rd-btn-clear"
-    *ngIf="filtersOn && isLoaded"
+    *ngIf="filtersOn && (resultsLoaded$ | async)"
     mat-raised-button
     (click)="clearFilters()">
-    {{ config.i18n.Clear_filters }}: {{ routeFilter || 'distance' }}
+    {{ config.i18n.Clear_filters }}: {{ routeFilter || 'Cuisine' }}
     <mat-icon>cancel</mat-icon>
   </button>
 </div>

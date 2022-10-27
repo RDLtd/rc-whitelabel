@@ -80,6 +80,7 @@ export class ListViewComponent implements OnInit {
       };
 
       this.searchFilter = params.get('filter');
+      this.filtersOn = !!this.searchFilter;
 
       this.route.queryParams.subscribe(params => {
         if (!!params.location) {
@@ -146,7 +147,7 @@ export class ListViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe((query: any) => {
       // Guard clause
       if (!query) { return;}
-      this.restService.resetSearchFilters();
+      //this.restService.resetSearchFilters();
       this.restService.filter = query.cuisine;
 
 
@@ -155,13 +156,13 @@ export class ListViewComponent implements OnInit {
           .navigate(
             ['/restaurants', 'list', this.restService.coords, query.cuisine],
             { queryParams: { location: this.geoSearchLabel }})
-          .then(() => this.ngOnInit());
+          .then(() => console.log(`Filtered by ${query.cuisine}`));
       } else {
         this.router
           .navigate(
             ['/restaurants', 'map', `${query.lat},${query.lng}`],
             { queryParams: { location: query.label }})
-          .then(() => this.ngOnInit());
+          .then(() => console.log('No cuisine filter'));
       }
     });
   }
@@ -176,9 +177,17 @@ export class ListViewComponent implements OnInit {
     }
   }
   clearFilters(): void {
-    //this.router.navigate(['/restaurants']).then();
-    this.filtersOn = false;
-    this.showFilterOptions = false;
-    this.showFilterBtn();
+    this.restService.searchParams = {
+      lat: Number(this.geoTarget.lat),
+      lng: Number(this.geoTarget.lng),
+      filter: null,
+      filterText: null,
+      location: ''
+    }
+    //this.ngOnInit();
+    this.router.navigate(['/restaurants', 'list', `${this.geoTarget.lat},${this.geoTarget.lng}`])
+    // this.filtersOn = false;
+    // this.showFilterOptions = false;
+    // this.showFilterBtn();
   }
 }
