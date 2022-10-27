@@ -212,6 +212,7 @@ export class MapViewComponent implements OnInit {
       this.restService.loadRestaurantBatch({offset: this.currentOffset + this.batchTotal});
 
     } else {
+
       // extract subset of restaurants from
       // our existing array of results
       const batch = this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal);

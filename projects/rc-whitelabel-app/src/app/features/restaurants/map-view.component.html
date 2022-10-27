@@ -60,7 +60,7 @@
       </button>
 
 
-      <button [disabled]="currentOffset + batchTotal > totalRestaurants  || !(resultsLoaded$ | async)"
+      <button [disabled]="currentOffset + batchTotal >= totalRestaurants  || !(resultsLoaded$ | async)"
               mat-icon-button
               (click)="nextBatch()"
               title="Next {{ batchTotal }} restaurants">

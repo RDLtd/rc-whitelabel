@@ -19,7 +19,7 @@ export class RestaurantsService {
     lat: this.config.channel.latitude,
     lng: this.config.channel.longitude,
     limit: 10,
-    boundary: 10,
+    boundary: this.config.channel.boundary || 10,
     offset: 0,
     testing: false,
     location: ''
@@ -179,9 +179,11 @@ export class RestaurantsService {
     // store the current params for comparison
     this.params = {...this.params, ...params};
 
+    console.log(this.params);
+
     this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (data === null || data === undefined) {
           console.log('No data', this.restaurantsArray.length);
 
@@ -236,7 +238,7 @@ export class RestaurantsService {
     this.moreRestaurantsSubject.next(false);
 
     // if the params are all the same, there's no point in reloading
-    if (params === this.params) { return; }
+    // if (params === this.params) { return; }
 
     // store the current params for comparison
     this.params = {...this.params, ...params};

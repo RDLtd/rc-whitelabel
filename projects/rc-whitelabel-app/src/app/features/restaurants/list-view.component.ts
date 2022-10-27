@@ -40,7 +40,6 @@ export class ListViewComponent implements OnInit {
   restaurants: any[] = [];
   nextRestaurants: any[] = [];
   totalRestaurants = 0;
-  boundary?: number;
 
   constructor(
     public config: AppConfig,
@@ -59,15 +58,11 @@ export class ListViewComponent implements OnInit {
     // Observe user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
 
-    // Get the geographical centre of the channel
-    this.boundary = this.config.channel.boundary;
-
     // subscribe to results observers
     this.restaurants$ = this.restService.restaurants;
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.moreRestaurantsPreloaded = this.restService.moreRestaurantResults;
 
-    // this.clearFilters();
   }
 
   ngOnInit(): void {
@@ -106,7 +101,7 @@ export class ListViewComponent implements OnInit {
     });
 
     // load summary for filter/sort options
-    this.restService.loadSummarisedResults(this.geoTarget.lat, this.geoTarget.lng, this.boundary);
+    this.restService.loadSummarisedResults(this.geoTarget.lat, this.geoTarget.lng);
 
     // Delay the filter options until results have loaded
     setTimeout(() => { this.showFilterOptions = true; }, 1500);
