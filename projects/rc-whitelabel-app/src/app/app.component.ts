@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfig } from './app.config';
 import { ApiService } from './core/api.service';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import { DataService } from './core/data.service';
 import { filter } from 'rxjs/operators';
 import { Meta } from '@angular/platform-browser';
@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
     private   router: Router) { }
 
   ngOnInit(): void {
+
     // Wait for router event to fire before
     // checking for url params
     this.router.events
@@ -34,7 +35,6 @@ export class AppComponent implements OnInit {
           .subscribe((data: any) => {
             const params = data.params;
             if (Object.keys(params).length) {
-              console.log('PARAMS:', params);
               // Override default language
               if (!!params.lang) { this.config.language = params.lang; }
               // Trigger testmode

@@ -19,7 +19,7 @@ export class ListViewComponent implements OnInit {
 
   restaurants$: Observable<any[]>;
   resultsLoaded$: Observable<boolean>;
-  filterBy?: string | null;
+  searchFilter?: string | null;
   sortBy?: string | null;
   isLoaded = false;
   geoTarget: any;
@@ -52,16 +52,9 @@ export class ListViewComponent implements OnInit {
     private title: Title,
     public dialog: MatDialog,
   ) {
-      title.setTitle('Restaurant Results List');
 
-      this.restaurants$ = this.restService.restaurants;
-      this.resultsLoaded$ = this.restService.resultsLoaded;
-      this.moreRestaurantsPreloaded = this.restService.moreRestaurantResults;
-
-      this.clearFilters();
-  }
-
-  ngOnInit(): void {
+    // page title
+    this.title.setTitle('Restaurant Results List');
 
     // Observe user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
@@ -69,26 +62,52 @@ export class ListViewComponent implements OnInit {
     // Get the geographical centre of the channel
     this.boundary = this.config.channel.boundary;
 
+    // subscribe to results observers
+    this.restaurants$ = this.restService.restaurants;
+    this.resultsLoaded$ = this.restService.resultsLoaded;
+    this.moreRestaurantsPreloaded = this.restService.moreRestaurantResults;
 
+    // this.clearFilters();
+  }
+
+  ngOnInit(): void {
 
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.isLoaded = false;
+      const lat = Number(params.get('latLng')?.split(',')[0] ?? this.config.channel.centre.lat);
+      const lng = Number(params.get('latLng')?.split(',')[1] ?? this.config.channel.centre.lng);
+      const coords = `${lat},${lng}`;
+
       this.geoTarget = {
-        lat: params.get('latLng')?.split(',')[0] ?? this.config.channel.centre.lat,
-        lng: params.get('latLng')?.split(',')[1] ?? this.config.channel.centre.lng
+        lat: params.get('latLng')?.split(',')[0],
+        lng: params.get('latLng')?.split(',')[1]
       };
-      this.filterBy = params.get('filter');
-      this.sortBy = params.get('sort');
+
+      this.searchFilter = params.get('filter');
+
       this.route.queryParams.subscribe(params => {
         if (!!params.location) {
           this.geoSearchLabel = params.location;
         }
       });
+
+      this.restService.searchParams = {
+        lat: Number(this.geoTarget.lat),
+        lng: Number(this.geoTarget.lng),
+        filter: !!this.searchFilter ? 'cuisine' : null,
+        filterText: this.searchFilter,
+        location: this.geoSearchLabel
+      }
+
+      this.restService.geo = { label: this.geoSearchLabel || null, lat, lng, coords }
+      this.restService.filter = params.get('filter') || null;
+
     });
 
     // load summary for filter/sort options
-    this.restService.loadSummarisedResults(this.geoTarget, this.boundary);
+    this.restService.loadSummarisedResults(this.geoTarget.lat, this.geoTarget.lng, this.boundary);
+
     // Delay the filter options until results have loaded
     setTimeout(() => { this.showFilterOptions = true; }, 1500);
 
@@ -96,8 +115,8 @@ export class ListViewComponent implements OnInit {
     this.restService.loadRestaurants({
       lat: this.geoTarget.lat,
       lng: this.geoTarget.lng,
-      filter: !!this.filterBy ? 'cuisine' : '',
-      filterText: this.filterBy,
+      filter: !!this.searchFilter ? 'cuisine' : '',
+      filterText: this.searchFilter,
       offset: 0
     });
 
@@ -129,23 +148,25 @@ export class ListViewComponent implements OnInit {
       },
       panelClass: 'rd-filter-dialog'
     });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      console.log('Dialog', result);
+    dialogRef.afterClosed().subscribe((query: any) => {
+      // Guard clause
+      if (!query) { return;}
       this.restService.resetSearchFilters();
-      const coords = `${result.lat},${result.lng}`;
-      if (!!result) {
-        if (result.type === 'filter') {
-          this.router
-            .navigate(['/restaurants', 'list', `${this.geoTarget.lat},${this.geoTarget.lng}`, result.value],
-              { queryParams: { location: this.geoSearchLabel }})
-            .then(() => this.ngOnInit());
-        } else if (result.type === 'sort') {
-          console.log('sort');
-          this.router
-            .navigate(['/restaurants', 'map', coords],
-              { queryParams: { location: result.location }})
-            .then(() => this.ngOnInit());
-        }
+      this.restService.filter = query.cuisine;
+
+
+      if (query.type === 'filter') {
+        this.router
+          .navigate(
+            ['/restaurants', 'list', this.restService.coords, query.cuisine],
+            { queryParams: { location: this.geoSearchLabel }})
+          .then(() => this.ngOnInit());
+      } else {
+        this.router
+          .navigate(
+            ['/restaurants', 'map', `${query.lat},${query.lng}`],
+            { queryParams: { location: query.label }})
+          .then(() => this.ngOnInit());
       }
     });
   }

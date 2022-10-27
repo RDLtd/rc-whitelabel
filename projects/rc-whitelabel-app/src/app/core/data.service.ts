@@ -184,7 +184,6 @@ export class DataService {
     lat = this.config.channel.latitude,
     lng = this.config.channel.longitude,
     boundary = this.config.channel.boundary): Promise <any> {
-    console.log('loadResultsSummary');
     return new Promise(async resolve => {
       await this.api.getRestaurantsSummary(
         this.config.channel.accessCode,

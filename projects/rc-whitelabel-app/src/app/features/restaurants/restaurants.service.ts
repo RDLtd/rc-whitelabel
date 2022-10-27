@@ -16,13 +16,22 @@ export class RestaurantsService {
   params = {
     filter: '',
     filterText: '',
-    lat: 51.35,
-    lng: -0.165,
+    lat: this.config.channel.latitude,
+    lng: this.config.channel.longitude,
     limit: 10,
     boundary: 10,
     offset: 0,
     testing: false,
+    location: ''
   };
+
+  geoTarget!: {
+    label: string | null;
+    lat: number;
+    lng: number;
+    coords: string;
+  }
+  cuisineFilter?: string | null;
 
   cuisines?: any[];
   features?: any[];
@@ -39,8 +48,6 @@ export class RestaurantsService {
 
   channelSite: any;
 
-  // private readonly isChannelTypeSite: boolean;
-
   private totalResults = 0;
 
   constructor(
@@ -51,7 +58,6 @@ export class RestaurantsService {
     private data: DataService) {
       this.apiKey = this.config.channel.apiKey;
       this.accessCode = this.config.channel.accessCode;
-      // this.isChannelTypeSite = this.config.channel.type === 'sites';
   }
 
   openSpw(restaurant: any, cat: string): void {
@@ -64,13 +70,14 @@ export class RestaurantsService {
     window.open(restaurant.restaurant_spw_url, '_target');
   }
 
+  set searchParams(params: any) {
+    this.params = { ...this.params, ...params};
+    console.log('Set searchParams', this.params);
+  }
+
   get site(): any {
     return this.channelSite;
   }
-
-  // get isChannelSite(): boolean {
-  //   return this.isChannelTypeSite;
-  // }
 
   get resultsLoaded(): Observable<boolean> {
     return this.resultsLoadedSubject.asObservable();
@@ -88,6 +95,23 @@ export class RestaurantsService {
     return this.restaurantsArray;
   }
 
+  set filter(filter: string | null) {
+    this.cuisineFilter = filter;
+  }
+
+  set geo(geo: any) {
+    this.geoTarget = geo;
+  }
+  get geo(): object {
+    return this.geoTarget;
+  }
+  get coords(): string {
+    return this.geoTarget.coords;
+  }
+  set coords( coords) {
+    this.geoTarget.coords = coords;
+    console.log('SET', this.geoTarget.coords);
+  }
   set totalRestaurants(n) {
     this.totalResults = n;
   }
@@ -119,9 +143,12 @@ export class RestaurantsService {
     this.restaurantsArray = [];
   }
 
-  loadSummarisedResults(geoTarget: any, boundary: number): void {
-
-    this.data.loadResultsSummary(geoTarget.lat, geoTarget.lng, boundary)
+  loadSummarisedResults(
+    lat: number = this.params.lat,
+    lng: number = this.params.lng,
+    boundary: number = this.params.boundary): void {
+    console.log('loadSummarisedResults', lat, lng, boundary);
+    this.data.loadResultsSummary(lat, lng, boundary)
       .then((res) => {
         this.cuisines = res.cuisines;
         this.features = res.attributes;
@@ -136,11 +163,7 @@ export class RestaurantsService {
       });
   }
 
-
-
-
-
-  loadRestaurantBatch(params: any ): void {
+  loadRestaurantBatch(params: any = this.params ): void {
 
     console.log('loadRestaurantBatch');
 
@@ -148,10 +171,13 @@ export class RestaurantsService {
     this.resultsLoadedSubject.next(false);
 
     // if the params are all the same, there's no point in reloading
-    if (params === this.params) { return; }
+    // if (params === this.params) {
+    //   console.log('No param change');
+    //   return;
+    // }
 
     // store the current params for comparison
-    this.params = Object.assign(this.params, params);
+    this.params = {...this.params, ...params};
 
     this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
@@ -164,8 +190,6 @@ export class RestaurantsService {
           this.resultsLoadedSubject.next(true);
           return;
         }
-        // store the total
-        this.totalResults = data?.total_count;
 
         // this.restaurantsArray = data.restaurants;
         this.restaurantsArray.push(...data.restaurants);
@@ -215,7 +239,7 @@ export class RestaurantsService {
     if (params === this.params) { return; }
 
     // store the current params for comparison
-    this.params = Object.assign(this.params, params);
+    this.params = {...this.params, ...params};
 
     // console.log('Params', this.params);
 
@@ -244,7 +268,6 @@ export class RestaurantsService {
 
         // notify observers
         this.resultsLoadedSubject.next(true);
-        console.log('Total: ', this.totalResults);
 
         // preload next batch of results
         if (this.restaurantsArray.length < this.totalRestaurants) { this.loadMoreRestaurants(); }

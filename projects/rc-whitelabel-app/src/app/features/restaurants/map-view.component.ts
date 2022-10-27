@@ -80,6 +80,7 @@ export class MapViewComponent implements OnInit {
   totalResults?: number;
   resultReference: number[];
   boundary: number;
+
   // Filters
   landmarks: any;
   cuisines: any;
@@ -113,21 +114,23 @@ export class MapViewComponent implements OnInit {
     // create skeleton results
     this.resultReference = Array(this.batchTotal).fill(1); // [4,4,4,4,4]
 
+    // Get user's current location
+    this.location.userLocationObs.subscribe(pos => this.userPosition = pos);
+
     // Subscribe to results
     this.restService.resetRestaurantsSubject();
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
     this.restaurantBatch$ = this.restService.restaurants;
 
-    // Google maps
-    this.loadMapsApi();
+
 
   }
 
   ngOnInit(): void {
 
-    // Get user's current location
-    this.location.userLocationObs.subscribe(pos => this.userPosition = pos);
+    // Google maps
+    this.loadMapsApi();
 
     // Check for route params & query params
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -138,6 +141,14 @@ export class MapViewComponent implements OnInit {
         if (!!params.location) {
           this.geoSearchLabel = params.location;
         }
+        this.restService.searchParams = {
+          lat: this.latLng[0],
+          lng: this.latLng[1],
+          filter: !!this.searchFilter ? 'cuisine' : null,
+          filterText: this.searchFilter,
+          location: this.geoSearchLabel
+        }
+
         // load a summary of available restaurants
         // within the channel or specified boundary
         this.loadRestaurantSummary();
@@ -179,28 +190,26 @@ export class MapViewComponent implements OnInit {
    * filtering options etc.
    */
   loadRestaurantSummary(): void {
-    this.data.loadResultsSummary(this.geoTarget?.lat, this.geoTarget?.lng, this.boundary)
-      .then((res) => {
-        this.cuisines = res.cuisines;
-        this.features = res.attributes;
-        this.landmarks = res.landmarks;
-        this.totalRestaurants = res.restaurants.length;
-      });
+
+    // load summary for filter/sort options
+    this.restService.loadSummarisedResults();
+
+    // this.data.loadResultsSummary(this.geoTarget?.lat, this.geoTarget?.lng, this.boundary)
+    //   .then((res) => {
+    //     this.cuisines = res.cuisines;
+    //     this.features = res.attributes;
+    //     this.landmarks = res.landmarks;
+    //     this.totalRestaurants = res.restaurants.length;
+    //   });
+
   }
 
   loadRestaurants(): void {
 
-    const params: any = {
-      lat: this.geoTarget?.lat,
-      lng: this.geoTarget?.lng,
-      offset: this.currentOffset,
-      limit: this.batchTotal,
-    }
-
     // Is this batch already loaded?
     if (this.currentOffset === this.restaurants.length) {
 
-      this.restService.loadRestaurantBatch(params);
+      this.restService.loadRestaurantBatch({offset: this.currentOffset + this.batchTotal});
 
     } else {
       // extract subset of restaurants from
@@ -214,12 +223,15 @@ export class MapViewComponent implements OnInit {
   }
 
   getBatchNavCount(): string {
+
+    this.totalRestaurants = this.restService.totalRestaurants;
+
     const from = this.currentOffset + 1;
     let to = this.currentOffset + this.batchTotal;
-    if (to > this.totalRestaurants) {
-      to = this.totalRestaurants;
+    if (to > this.restService.totalRestaurants) {
+      to = this.restService.totalRestaurants;
     }
-    return `${from}–${to} of ${this.totalRestaurants}`;
+    return `${from}–${to} of ${this.restService.totalRestaurants}`;
   }
 
   // Construct the summary text for the
@@ -229,10 +241,6 @@ export class MapViewComponent implements OnInit {
       return `Restaurants within ${this.boundary} km of ${this.geoSearchLabel}`
     }
     return `Restaurants within ${this.boundary} km`;
-  }
-
-  getTotalResults(): number {
-    return this.restService.totalRestaurants;
   }
 
   // results navigation

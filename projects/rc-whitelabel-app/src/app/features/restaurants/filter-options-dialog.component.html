@@ -6,7 +6,10 @@
       <h1>{{ config.i18n["Filter_by_cuisine"] }}</h1>
       <ul>
         <li *ngFor="let cuisine of data['cuisines']">
-          <a [mat-dialog-close]="{type: 'filter', value: cuisine.Cuisine}">
+          <a [mat-dialog-close]="{
+                type: 'filter',
+                cuisine: cuisine.Cuisine
+                }">
             <mat-icon class="rd-icon-cuisine">restaurant</mat-icon>
             {{ cuisine.Cuisine }}
             <span class="rd-flex-spacer"></span>
@@ -21,8 +24,11 @@
       <ul>
         <li *ngIf="data?.userPosition.inRange">
           <a
-            [mat-dialog-close]="{ type: 'sort', lat: data?.userPosition?.lat, lng:
-            data?.userPosition?.lng}">
+            [mat-dialog-close]="{
+              type: 'geo',
+              lat: data?.userPosition?.lat,
+              lng: data?.userPosition?.lng
+              }">
             <mat-icon class="rd-icon-my-location">my_location</mat-icon>
             {{ config.i18n["My_current_location"] }}
             <span class="rd-flex-spacer"></span>
@@ -32,10 +38,10 @@
         <li *ngFor="let landmark of data.landmarks">
           <a
             [mat-dialog-close]="{
-              type: 'sort',
+              type: 'geo',
               lat: landmark?.channel_landmark_lat,
               lng: landmark?.channel_landmark_lng,
-              location: landmark.channel_landmark_name
+              label: landmark.channel_landmark_name
               }">
             <mat-icon class="rd-icon-location">location_on</mat-icon>
             {{ landmark["channel_landmark_name"] }}

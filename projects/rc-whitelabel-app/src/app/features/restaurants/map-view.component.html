@@ -59,6 +59,7 @@
         <mat-icon>arrow_back</mat-icon>
       </button>
 
+
       <button [disabled]="currentOffset + batchTotal > totalRestaurants  || !(resultsLoaded$ | async)"
               mat-icon-button
               (click)="nextBatch()"

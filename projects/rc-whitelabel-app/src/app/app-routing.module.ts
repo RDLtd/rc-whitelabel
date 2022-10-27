@@ -7,34 +7,21 @@ const routes: Routes = [
     pathMatch: 'full',
     loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
   },
-  // {
-  //   path: 'search',
-  //   loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
-  // },
+
+  {
+    path: 'search',
+    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
+  },
 
   {
     path: 'restaurants',
     loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
   },
-  // {
-  //   path: 'restaurants/:filter',
-  //   loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
-  // },
-  // {
-  //   path: 'restaurants/nearest/:sort',
-  //   loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
-  // },
-  // {
-  //   path: 'restaurants/:geo/:sort',
-  //   loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
-  // },
-  // {
-  //   path: 'restaurants/:geo/',
-  //   loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
-  // },
+
   { path: 'home',
     loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
   },
+
   {
     path: '**',
     redirectTo: ''
