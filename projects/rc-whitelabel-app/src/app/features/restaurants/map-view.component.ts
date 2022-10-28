@@ -222,12 +222,15 @@ export class MapViewComponent implements OnInit {
 
   }
 
+  // Results navigation label
   getBatchNavCount(): string {
-
+    // Available results
     this.totalRestaurants = this.restService.totalRestaurants;
-
+    // Start result, adjusted for zero based array
     const from = this.currentOffset + 1;
+    // End result
     let to = this.currentOffset + this.batchTotal;
+    // If there aren't enough results for another batch
     if (to > this.restService.totalRestaurants) {
       to = this.restService.totalRestaurants;
     }
@@ -235,23 +238,26 @@ export class MapViewComponent implements OnInit {
   }
 
   // Construct the summary text for the
-  // list navigation
+  // map navigation
   getBatchNavSummary(): string {
+    // Filtered
     if (!!this.geoTarget.label && !!this.searchFilter) {
       return `${this.searchFilter} Restaurants within ${this.boundary} km of ${this.geoTarget.label}`
     }
+    // With location label
     if (!!this.geoTarget.label) {
       return `Restaurants within ${this.boundary} km of ${this.geoTarget.label}`
     }
+    // Basic
     return `Restaurants within ${this.boundary} km`;
   }
 
-  // results navigation
+  // Next batch of results
   nextBatch(): void {
     this.currentOffset += this.batchTotal;
     this.loadRestaurants();
   }
-
+  // Previous batch of results
   prevBatch(): void {
     this.currentOffset -= this.batchTotal;
     if (this.currentOffset < 0) {
@@ -491,8 +497,6 @@ export class MapViewComponent implements OnInit {
         const d = data.rows[0].elements[0];
         this.distanceData.walking = d.duration.text;
       });
-
-
   }
 
   /**
