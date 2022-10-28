@@ -12,8 +12,9 @@
     class="rd-btn-clear"
     *ngIf="filterOn && (resultsLoaded$ | async)"
     mat-raised-button
+    [title]="searchFilter"
     (click)="clearFilters()">
-    {{ config.i18n.Clear_filters }}: {{ searchFilter || 'Cuisine' }}
+    {{ config.i18n.Clear_filters }}
     <mat-icon>cancel</mat-icon>
   </button>
 

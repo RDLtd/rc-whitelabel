@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { AppConfig } from '../../app.config';
+import { AppConfig } from '../../../app.config';
 import { FilterOptionsDialogComponent } from './filter-options-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { RestaurantsService } from './restaurants.service';
+import { RestaurantsService } from '../restaurants.service';
 import { Router } from '@angular/router';
-import { LocationService } from '../../core/location.service';
+import { LocationService } from '../../../core/location.service';
 import { Observable } from 'rxjs';
 
 @Component({

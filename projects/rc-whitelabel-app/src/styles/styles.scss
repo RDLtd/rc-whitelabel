@@ -855,13 +855,13 @@ rd-footer {
     width: auto;
   }
   .mat-raised-button {
-    margin: 0 48px 48px;
+    margin: 0 64px 64px;
     padding: 8px 20px;
-    border-radius: 32px;
+    border-radius: 32px 32px 32px 4px ;
     line-height: 40px;
     text-transform: uppercase;
     font-weight: $font-weight-regular;
-    background: black;
+    background: #ff2600;
     color: white;
     @include mat.elevation(10);
     &.rd-btn-clear { background-color: #ff2600; }
