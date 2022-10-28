@@ -70,51 +70,54 @@ export class ListViewComponent implements OnInit {
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.isLoaded = false;
-      const lat = Number(params.get('latLng')?.split(',')[0] ?? this.config.channel.centre.lat);
-      const lng = Number(params.get('latLng')?.split(',')[1] ?? this.config.channel.centre.lng);
-      const coords = `${lat},${lng}`;
-
+      // Geo search target
       this.geoTarget = {
-        lat: params.get('latLng')?.split(',')[0],
-        lng: params.get('latLng')?.split(',')[1]
+        lat: Number(params.get('latLng')?.split(',')[0] ?? this.config.channel.centre.lat).toFixed(6),
+        lng: Number(params.get('latLng')?.split(',')[1] ?? this.config.channel.centre.lng).toFixed(6)
       };
-
+      // Add latLng
+      this.geoTarget.coords = `${this.geoTarget.lat},${this.geoTarget.lng}`;
+      // Check for cuisine filter
       this.searchFilter = params.get('filter');
       this.filtersOn = !!this.searchFilter;
-
+      // Add target label
       this.route.queryParams.subscribe(params => {
         if (!!params.location) {
-          this.geoSearchLabel = params.location;
+          this.geoTarget.label = params.location ?? null;
         }
       });
-
+      // update service
       this.restService.searchParams = {
-        lat: Number(this.geoTarget.lat),
-        lng: Number(this.geoTarget.lng),
+        lat: this.geoTarget.lat,
+        lng: this.geoTarget.lng,
         filter: !!this.searchFilter ? 'cuisine' : null,
         filterText: this.searchFilter,
-        location: this.geoSearchLabel
+        location: this.geoTarget.label
       }
 
-      this.restService.geo = { label: this.geoSearchLabel || null, lat, lng, coords }
+      this.restService.geo = { label: this.geoTarget.label, lat: this.geoTarget.lat, lng: this.geoTarget.lng, coords: this.geoTarget.coords }
       this.restService.filter = params.get('filter') || null;
 
+      // load summary for filter/sort options
+      this.restService.loadSummarisedResults(this.geoTarget.lat, this.geoTarget.lng);
+
+      // Delay the filter options until results have loaded
+      setTimeout(() => { this.showFilterOptions = true; }, 2000);
+
+      // Now load restaurant results
+      this.restService.loadRestaurants({
+        lat: this.geoTarget.lat,
+        lng: this.geoTarget.lng,
+        filter: !!this.searchFilter ? 'cuisine' : '',
+        filterText: this.searchFilter,
+        offset: 0
+      });
+
     });
 
-    // load summary for filter/sort options
-    this.restService.loadSummarisedResults(this.geoTarget.lat, this.geoTarget.lng);
 
-    // Delay the filter options until results have loaded
-    setTimeout(() => { this.showFilterOptions = true; }, 1500);
 
-    // Load restaurant results
-    this.restService.loadRestaurants({
-      lat: this.geoTarget.lat,
-      lng: this.geoTarget.lng,
-      filter: !!this.searchFilter ? 'cuisine' : '',
-      filterText: this.searchFilter,
-      offset: 0
-    });
+
 
   }
 
@@ -178,11 +181,11 @@ export class ListViewComponent implements OnInit {
   }
   clearFilters(): void {
     this.restService.searchParams = {
-      lat: Number(this.geoTarget.lat),
-      lng: Number(this.geoTarget.lng),
+      lat: this.geoTarget.lat,
+      lng: this.geoTarget.lng,
       filter: null,
       filterText: null,
-      location: ''
+      location: this.geoTarget.label
     }
     //this.ngOnInit();
     this.router.navigate(['/restaurants', 'list', `${this.geoTarget.lat},${this.geoTarget.lng}`])

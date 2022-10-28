@@ -238,6 +238,9 @@ export class MapViewComponent implements OnInit {
   // Construct the summary text for the
   // list navigation
   getBatchNavSummary(): string {
+    if (!!this.geoSearchLabel && !!this.searchFilter) {
+      return `${this.searchFilter} Restaurants within ${this.boundary} km of ${this.geoSearchLabel}`
+    }
     if (!!this.geoSearchLabel) {
       return `Restaurants within ${this.boundary} km of ${this.geoSearchLabel}`
     }
