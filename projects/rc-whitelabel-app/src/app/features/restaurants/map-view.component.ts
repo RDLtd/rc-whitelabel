@@ -142,8 +142,8 @@ export class MapViewComponent implements OnInit {
       }
 
       this.geoLatLngLiteral = {
-        lat: this.geoTarget.lat,
-        lng: this.geoTarget.lng
+        lat: parseFloat(this.geoTarget.lat),
+        lng: parseFloat(this.geoTarget.lng)
       };
 
       this.route.queryParams.subscribe(params => {

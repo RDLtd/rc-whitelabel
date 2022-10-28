@@ -164,6 +164,20 @@ export class SearchComponent implements OnInit {
     // Get recent restaurants
     this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
 
+      this.data.loadChannelSites().then((data: any) => {
+        const sites = data.sites;
+        console.log('SITES', sites);
+        sites.forEach((item: any) => {
+          this.channelSites.push({
+            id: item.id,
+            lat: item.lat,
+            lng: item.lng,
+            name: item.name,
+            notes: item.notes
+          });
+        });
+      });
+
   }
 
   getRecentlyViewed(): void {
@@ -223,8 +237,7 @@ export class SearchComponent implements OnInit {
               name: s.name,
               cat: 'site',
               index: idx,
-              route: ['/restaurants', this.channelConfig.defaultView, `${s.id}`]
-              //route: ['/restaurants', this.channelConfig.defaultView, `${s.id}`, `${ s.name.replace(/\s/g , "-") }`]
+              route: ['/restaurants', 'map', `${s.lat},${s.lng}`]
             });
           }
         }

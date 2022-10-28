@@ -49,7 +49,7 @@
       <li *ngFor="let displayItem of searchSuggestions; let i = index" [tabindex]="i + 1" [ngSwitch]="displayItem.cat">
 
         <!-- Sites -->
-        <a *ngSwitchCase="'site'" [routerLink]="displayItem.route">
+        <a *ngSwitchCase="'site'" [routerLink]="displayItem.route" [queryParams]="{ location: displayItem.name}">
           <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
           {{ displayItem?.name }}
           <span class="rd-flex-spacer"></span>
