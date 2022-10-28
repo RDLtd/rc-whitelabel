@@ -114,11 +114,6 @@ export class ListViewComponent implements OnInit {
       });
 
     });
-
-
-
-
-
   }
 
   loadMore(): void {

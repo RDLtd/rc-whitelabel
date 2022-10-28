@@ -54,7 +54,7 @@ export class MapViewComponent implements OnInit {
     offers: null
   };
   bounds!: google.maps.LatLngBounds;
-  geoTarget?: google.maps.LatLngLiteral;
+  geoLatLngLiteral?: google.maps.LatLngLiteral;
   display?: google.maps.LatLngLiteral;
   zoom = 14;
   lastZoom?: number;
@@ -87,10 +87,9 @@ export class MapViewComponent implements OnInit {
   features: any;
 
   userPosition?: UserGeoLocation;
-
-  geoSearchLabel = undefined;
   showDistanceData = false;
   totalRestaurants = 0;
+  geoTarget: any;
 
   constructor(
     private config: AppConfig,
@@ -107,7 +106,7 @@ export class MapViewComponent implements OnInit {
     title.setTitle('Restaurant Results Map');
 
     // Get the geographical centre of the channel
-    this.geoTarget = this.config.channel.centre;
+    this.geoLatLngLiteral = this.config.channel.centre;
     this.boundary = this.config.channel.boundary;
 
     // Dummy numbers array to use to
@@ -136,17 +135,27 @@ export class MapViewComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.latLng = params.get('latLng')?.split(',') ?? [];
       this.searchFilter = params.get('filter');
-      this.geoTarget = {lat: Number(this.latLng[0]), lng: Number(this.latLng[1])}
+
+      this.geoTarget = {
+        lat: Number(this.latLng[0]).toFixed(6),
+        lng: Number(this.latLng[1]).toFixed(6)
+      }
+
+      this.geoLatLngLiteral = {
+        lat: this.geoTarget.lat,
+        lng: this.geoTarget.lng
+      };
+
       this.route.queryParams.subscribe(params => {
         if (!!params.location) {
-          this.geoSearchLabel = params.location;
+          this.geoTarget.label = params.location;
         }
         this.restService.searchParams = {
-          lat: this.latLng[0],
-          lng: this.latLng[1],
+          lat: this.geoTarget.lat,
+          lng: this.geoTarget.lng,
           filter: !!this.searchFilter ? 'cuisine' : null,
           filterText: this.searchFilter,
-          location: this.geoSearchLabel
+          location: this.geoTarget.label
         }
 
         // load a summary of available restaurants
@@ -194,33 +203,23 @@ export class MapViewComponent implements OnInit {
     // load summary for filter/sort options
     this.restService.loadSummarisedResults();
 
-    // this.data.loadResultsSummary(this.geoTarget?.lat, this.geoTarget?.lng, this.boundary)
-    //   .then((res) => {
-    //     this.cuisines = res.cuisines;
-    //     this.features = res.attributes;
-    //     this.landmarks = res.landmarks;
-    //     this.totalRestaurants = res.restaurants.length;
-    //   });
-
   }
 
   loadRestaurants(): void {
 
-    // Is this batch already loaded?
+    // Do we need to load a new batch?
     if (this.currentOffset === this.restaurants.length) {
-
       this.restService.loadRestaurantBatch({offset: this.currentOffset});
-
-    } else {
-
-      // extract subset of restaurants from
-      // our existing array of results
-      const batch = this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal);
-      // update observable for map list
-      this.restaurantBatch$ = of(batch);
-      // plot map markers
-      this.addMapMarkers(batch);
+      return;
     }
+
+    // Otherwise, we'll use a slice of our existing array
+    const batch = this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal);
+    // update observable for map list
+    this.restaurantBatch$ = of(batch);
+    // Add markers
+    this.addMapMarkers(batch);
+
   }
 
   getBatchNavCount(): string {
@@ -238,11 +237,11 @@ export class MapViewComponent implements OnInit {
   // Construct the summary text for the
   // list navigation
   getBatchNavSummary(): string {
-    if (!!this.geoSearchLabel && !!this.searchFilter) {
-      return `${this.searchFilter} Restaurants within ${this.boundary} km of ${this.geoSearchLabel}`
+    if (!!this.geoTarget.label && !!this.searchFilter) {
+      return `${this.searchFilter} Restaurants within ${this.boundary} km of ${this.geoTarget.label}`
     }
-    if (!!this.geoSearchLabel) {
-      return `Restaurants within ${this.boundary} km of ${this.geoSearchLabel}`
+    if (!!this.geoTarget.label) {
+      return `Restaurants within ${this.boundary} km of ${this.geoTarget.label}`
     }
     return `Restaurants within ${this.boundary} km`;
   }
@@ -351,12 +350,12 @@ export class MapViewComponent implements OnInit {
     // Once all restaurants have been marked
     // create our centre site/channel marker
     this.markers.push({
-      position: this.geoTarget,
+      position: this.geoLatLngLiteral,
       options: {label: '*'}
     });
     this.bounds.extend({
-      lat: Number(this.geoTarget?.lat),
-      lng: Number(this.geoTarget?.lng)
+      lat: Number(this.geoLatLngLiteral?.lat),
+      lng: Number(this.geoLatLngLiteral?.lng)
     });
     // Fit around markers
     setTimeout(() => {
@@ -378,7 +377,7 @@ export class MapViewComponent implements OnInit {
     if (batchIndex === 10) {
       this.showDistanceData = false;
       this.infoWindowContent = {
-        name: this.geoSearchLabel || 'Nearest Here',
+        name: this.geoTarget.label || 'Nearest Here',
         cuisine: null,
         spw: null,
         offers: null
@@ -470,7 +469,7 @@ export class MapViewComponent implements OnInit {
     this.showDistanceData = true;
     // build requests
     const drivingMode = {
-      origins: [this.geoTarget as object],
+      origins: [this.geoLatLngLiteral as object],
       destinations: [latLng],
       travelMode: google.maps.TravelMode.DRIVING,
       unitSystem: google.maps.UnitSystem.METRIC,
