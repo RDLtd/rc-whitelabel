@@ -11,6 +11,7 @@ import { MapViewComponent } from './map-view.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { ListViewComponent } from './list-view.component';
+import { FilterBtnComponent } from './filter-btn.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ListViewComponent } from './list-view.component';
     FilterOptionsDialogComponent,
     MapViewComponent,
     ListViewComponent,
-    MapViewComponent],
+    MapViewComponent,
+    FilterBtnComponent],
   imports: [
     SharedModule,
     RestaurantsRoutingModule,

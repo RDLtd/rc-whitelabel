@@ -11,7 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class RestaurantsService {
-
   // default search params
   params = {
     filter: '',
@@ -24,18 +23,18 @@ export class RestaurantsService {
     testing: false,
     location: ''
   };
-
+  // Geo data
   geoTarget!: {
     label: string | null;
     lat: number;
     lng: number;
     coords: string;
   }
-  cuisineFilter?: string | null;
 
   cuisines?: any[];
   features?: any[];
   landmarks?: any[];
+  cuisineFilter?: string | null;
 
   private readonly apiKey: string;
   private readonly accessCode: string;
@@ -46,7 +45,7 @@ export class RestaurantsService {
   private restaurantsArray: Array<any> = [];
   private restaurantsSubject = new BehaviorSubject<any[]>(this.restaurantsArray);
 
-  channelSite: any;
+  // channelSite: any;
 
   private totalResults = 0;
 
@@ -72,25 +71,23 @@ export class RestaurantsService {
 
   set searchParams(params: any) {
     this.params = { ...this.params, ...params};
-    console.log('Set searchParams', this.params);
   }
-
-  get site(): any {
-    return this.channelSite;
+  get searchParams(): any {
+    return this.params;
   }
+  // get site(): any {
+  //   return this.channelSite;
+  // }
 
   get resultsLoaded(): Observable<boolean> {
     return this.resultsLoadedSubject.asObservable();
   }
-
   get moreRestaurantResults(): Observable<boolean> {
     return this.moreRestaurantsSubject.asObservable();
   }
-
   get restaurants(): Observable<any[]> {
     return this.restaurantsSubject.asObservable();
   }
-
   get restArray(): Array<any> {
     return this.restaurantsArray;
   }
@@ -110,7 +107,6 @@ export class RestaurantsService {
   }
   set coords( coords) {
     this.geoTarget.coords = coords;
-    console.log('SET', this.geoTarget.coords);
   }
   set totalRestaurants(n) {
     this.totalResults = n;
@@ -128,12 +124,6 @@ export class RestaurantsService {
     return this.landmarks || [];
   }
 
-  resetSearchFilters(): void {
-    this.params.filter = '';
-    this.params.filterText = '';
-
-  }
-
   resetRestaurantResults(): void {
     this.restaurantsSubject.next([]);
   }
@@ -143,6 +133,13 @@ export class RestaurantsService {
     this.restaurantsArray = [];
   }
 
+  /**
+   * A summary of the available restaurants to
+   * a channel or filtered channel
+   * @param lat
+   * @param lng
+   * @param boundary
+   */
   loadSummarisedResults(
     lat: number = this.params.lat,
     lng: number = this.params.lng,
@@ -156,79 +153,51 @@ export class RestaurantsService {
         this.totalRestaurants = res.restaurants.length;
       })
       .then(() => {
+        // If a filter has been applied
+        // update the total results accordingly
         if (!!this.params.filter) {
           const cuisine = this.cuisines?.find((obj: any) => {
             return obj.Cuisine === this.params.filterText;
           });
           this.totalRestaurants = cuisine.Count;
         }
-        // console.log('Landmarks', this.landmarks);
-        // console.log('Cuisines', this.cuisines);
-        // console.log('Features', this.features);
-        // console.log('Total restaurants', this.totalRestaurants);
       });
   }
 
+  /**
+   * Add a batch (defined by offset = limit) to
+   * the results array
+   * @param params
+   */
   loadRestaurantBatch(params: any = this.params ): void {
 
     console.log('loadRestaurantBatch', params);
 
     // show loader if it's an initial load, but not on preload
+    // as that happens in the background
     this.resultsLoadedSubject.next(false);
 
-    // if the params are all the same, there's no point in reloading
-    // if (params === this.params) {
-    //   console.log('No param change');
-    //   return;
-    // }
-
-    // store the current params for comparison
+    // Update params
     this.params = {...this.params, ...params};
-
-    console.log(this.params);
 
     this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
         // console.log(data);
         if (data === null || data === undefined) {
           console.log('No data', this.restaurantsArray.length);
-
          // this.restaurantsArray = [];
          // this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
           this.resultsLoadedSubject.next(true);
           return;
         }
-
-        // this.restaurantsArray = data.restaurants;
+        // Add loaded batch to array
         this.restaurantsArray.push(...data.restaurants);
-
-        // update subject
+        // Notify observers
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
-        // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
-        // notify observers
+        // Complete the load sequence
         this.resultsLoadedSubject.next(true);
       });
   }
-
-  // loadChannelRestaurants(id: number ): void {
-  //   console.log(id);
-  //   // show loader if it's an initial load, but not on preload
-  //   this.resultsLoadedSubject.next(false);
-  //
-  //   this.api.getChannelRestaurants(id, this.accessCode, this.apiKey)
-  //     .subscribe((data: any) => {
-  //       console.log(data.restaurants);
-  //       // store the total
-  //
-  //       this.restaurantsArray = data.restaurants;
-  //       this.totalResults = this.restaurantsArray.length;
-  //       // update subject
-  //       this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
-  //       // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
-  //       // notify observers
-  //       this.resultsLoadedSubject.next(true);
-  //     });
-  // }
 
   /**
    * Updates the results observable
@@ -243,21 +212,13 @@ export class RestaurantsService {
     this.resultsLoadedSubject.next(preload);
     this.moreRestaurantsSubject.next(false);
 
-    // if the params are all the same, there's no point in reloading
-    // if (params === this.params) { return; }
-
-    // store the current params for comparison
+    // Update params
     this.params = {...this.params, ...params};
 
-    // console.log('Params', this.params);
-
-    // call api
+    // Get results
     this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
-
-        // console.log(data);
-
-        // if we are only preloading results for our 'Load More' option
+        // Is this just a preload call
         if (preload) {
           if(data === null) { return } // abort
           this.moreRestaurantsArray = data.restaurants;
@@ -265,23 +226,20 @@ export class RestaurantsService {
           // update subject & notify observers
           this.moreRestaurantsSubject.next(true);
           this.resultsLoadedSubject.next(true);
+          // abort at this point
           return;
         }
-
+        // Update restaurant results
         this.restaurantsArray = data.restaurants;
-
-        // update subject
+        // Update subject
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
-        // console.log('Restaurant loaded', this.restaurantsSubject.getValue());
-
-        // notify observers
+        // Notify observers
         this.resultsLoadedSubject.next(true);
-
-        // preload next batch of results
-        if (this.restaurantsArray.length < this.totalRestaurants) { this.loadMoreRestaurants(); }
-
+        // Preload next batch
+        if (this.restaurantsArray.length < this.totalRestaurants) {
+          this.loadMoreRestaurants();
+        }
       });
-
   }
 
   /**
@@ -308,9 +266,5 @@ export class RestaurantsService {
       console.log(`All ${this.totalResults} results loaded`)
     }
   }
-
-  // loadChannelSite(id: number): Observable<any> {
-  //   return this.api.getChannelSite(id, this.accessCode, this.apiKey);
-  // }
 }
 

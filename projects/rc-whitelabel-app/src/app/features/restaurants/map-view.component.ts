@@ -138,13 +138,16 @@ export class MapViewComponent implements OnInit {
 
       this.geoTarget = {
         lat: Number(this.latLng[0]).toFixed(6),
-        lng: Number(this.latLng[1]).toFixed(6)
+        lng: Number(this.latLng[1]).toFixed(6),
+        coords: `${this.latLng[0]},${this.latLng[1]}`
       }
 
       this.geoLatLngLiteral = {
         lat: parseFloat(this.geoTarget.lat),
         lng: parseFloat(this.geoTarget.lng)
       };
+
+      this.restService.geo = this.geoTarget;
 
       this.route.queryParams.subscribe(params => {
         if (!!params.location) {

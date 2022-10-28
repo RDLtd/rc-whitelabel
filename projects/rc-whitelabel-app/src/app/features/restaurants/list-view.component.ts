@@ -7,7 +7,6 @@ import { LocationService } from '../../core/location.service';
 import { AppConfig } from '../../app.config';
 import { DataService } from '../../core/data.service';
 import { Title } from '@angular/platform-browser';
-import {FilterOptionsDialogComponent} from './filter-options-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 
 @Component({
@@ -38,8 +37,8 @@ export class ListViewComponent implements OnInit {
   features: any[] = [];
   // restaurant results
   restaurants: any[] = [];
-  nextRestaurants: any[] = [];
-  totalRestaurants = 0;
+  // nextRestaurants: any[] = [];
+  // totalRestaurants = 0;
 
   constructor(
     public config: AppConfig,
@@ -56,7 +55,7 @@ export class ListViewComponent implements OnInit {
     this.title.setTitle('Restaurant Results List');
 
     // Observe user position
-    this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
+    this.location.userLocationObs.subscribe(pos => this.userPosition = pos);
 
     // subscribe to results observers
     this.restaurants$ = this.restService.restaurants;
@@ -95,14 +94,21 @@ export class ListViewComponent implements OnInit {
         location: this.geoTarget.label
       }
 
-      this.restService.geo = { label: this.geoTarget.label, lat: this.geoTarget.lat, lng: this.geoTarget.lng, coords: this.geoTarget.coords }
+      this.restService.geo = {
+        label: this.geoTarget.label,
+        lat: this.geoTarget.lat,
+        lng: this.geoTarget.lng,
+        coords: this.geoTarget.coords
+      }
       this.restService.filter = params.get('filter') || null;
 
       // load summary for filter/sort options
       this.restService.loadSummarisedResults(this.geoTarget.lat, this.geoTarget.lng);
 
       // Delay the filter options until results have loaded
-      setTimeout(() => { this.showFilterOptions = true; }, 2000);
+      setTimeout(() => {
+        this.showFilterOptions = true;
+      }, 2000);
 
       // Now load restaurant results
       this.restService.loadRestaurants({
@@ -112,7 +118,6 @@ export class ListViewComponent implements OnInit {
         filterText: this.searchFilter,
         offset: 0
       });
-
     });
   }
 
@@ -130,62 +135,5 @@ export class ListViewComponent implements OnInit {
   getFormattedImage(url: string): string {
     const format = 'w_900,h_600,c_fill,q_auto,dpr_auto,f_auto';
     return url.replace('upload/', `upload/${format}/`);
-  }
-
-  // Sort and filter dialog
-  openFilterOptions(): void {
-    const dialogRef = this.dialog.open(FilterOptionsDialogComponent, {
-      data: {
-        cuisines: this.restService.cuisineSummary,
-        landmarks: this.restService.landmarkSummary,
-        userPosition: this.userPosition
-      },
-      panelClass: 'rd-filter-dialog'
-    });
-    dialogRef.afterClosed().subscribe((query: any) => {
-      // Guard clause
-      if (!query) { return;}
-      //this.restService.resetSearchFilters();
-      this.restService.filter = query.cuisine;
-
-
-      if (query.type === 'filter') {
-        this.router
-          .navigate(
-            ['/restaurants', 'list', this.restService.coords, query.cuisine],
-            { queryParams: { location: this.geoSearchLabel }})
-          .then(() => console.log(`Filtered by ${query.cuisine}`));
-      } else {
-        this.router
-          .navigate(
-            ['/restaurants', 'map', `${query.lat},${query.lng}`],
-            { queryParams: { location: query.label }})
-          .then(() => console.log('No cuisine filter'));
-      }
-    });
-  }
-
-  // If we have multiple cuisine types
-  // or multiple POIs show filter options
-  showFilterBtn(): void {
-    if (this.cuisines.length > 1 || this.landmarks.length) {
-      this.showFilterOptions = true;
-    } else {
-      console.log('No filters available');
-    }
-  }
-  clearFilters(): void {
-    this.restService.searchParams = {
-      lat: this.geoTarget.lat,
-      lng: this.geoTarget.lng,
-      filter: null,
-      filterText: null,
-      location: this.geoTarget.label
-    }
-    //this.ngOnInit();
-    this.router.navigate(['/restaurants', 'list', `${this.geoTarget.lat},${this.geoTarget.lng}`])
-    // this.filtersOn = false;
-    // this.showFilterOptions = false;
-    // this.showFilterBtn();
   }
 }
