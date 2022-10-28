@@ -45,7 +45,7 @@ export class AppConfig {
   /** Only show 'near me' search option if
    * user is within maxDistance km range
    */
-  public maxUserDistance = 25;
+  public maxUserDistance = 15;
 
   // Number of restaurant returned in each batch
   public resultsBatchTotal = 8;
@@ -125,6 +125,6 @@ export class AppConfig {
     elemStyle.setProperty('--clr-primary', brand.clrPrimary);
     elemStyle.setProperty('--clr-accent', brand.clrAccent);
     elemStyle.setProperty('--clr-primary-cta', brand.clrPrimaryCta);
-    elemStyle.setProperty('--clr-offers', brand.clrOffers);
+    elemStyle.setProperty('--clr-offers', brand.clrPrimaryCta);
   }
 }

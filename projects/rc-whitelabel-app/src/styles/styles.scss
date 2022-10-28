@@ -31,7 +31,7 @@ $col-dark:            var(--clr-bgd-default);
 $col-icon-cuisine:    var(--clr-icon-cuisine);
 $col-icon-restaurant: var(--clr-icon-restaurant);
 $col-icon-location:   var(--clr-icon-location);
-$clr-offers:          var(--clr-primary-cta);
+$clr-offers:          var(--clr-offers);
 $clr-cta-primary:     var(--clr-primary-cta);
 $clr-grey-100:        var(--clr-grey-100);
 
@@ -713,7 +713,7 @@ rd-footer {
       justify-content: center;
       top: 0;
       left: 0;
-      background-color: rgba($clr-offers, .75);
+      background-color: $clr-offers;
       padding: 10px 4px;
       // border-radius: 4px;
       color: white;
