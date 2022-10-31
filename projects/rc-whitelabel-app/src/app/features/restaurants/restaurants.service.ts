@@ -170,9 +170,9 @@ export class RestaurantsService {
    * the results array
    * @param params
    */
-  loadRestaurantBatch(params: any = this.params ): void {
+  loadRestaurantBatch(params: any = this.params): void {
 
-    console.log('loadRestaurantBatch', params);
+    console.log('loadRestaurantBatch');
 
     // show loader if it's an initial load, but not on preload
     // as that happens in the background
@@ -181,9 +181,11 @@ export class RestaurantsService {
     // Update params
     this.params = {...this.params, ...params};
 
+    console.log(this.params);
+
     this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
       .subscribe((data: any) => {
-        // console.log(data);
+
         if (data === null || data === undefined) {
           console.log('No data', this.restaurantsArray.length);
          // this.restaurantsArray = [];
@@ -191,10 +193,16 @@ export class RestaurantsService {
           this.resultsLoadedSubject.next(true);
           return;
         }
+
+        // Add loaded batch to array
+        console.log(this.restaurantsArray);
+
         // Add loaded batch to array
         this.restaurantsArray.push(...data.restaurants);
+
         // Notify observers
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+
         // Complete the load sequence
         this.resultsLoadedSubject.next(true);
       });

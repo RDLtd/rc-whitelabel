@@ -71,11 +71,15 @@ export class FilterBtnComponent implements OnInit {
             { queryParams: { location: this.geoTarget.label }})
           .then(() => console.log(`Filtered by ${query.cuisine}`));
       } else {
+        const loc = query.label ?? 'Your Location';
         this.router
-          .navigate(
-            ['/restaurants', 'map', `${query.lat},${query.lng}`],
-            { queryParams: { location: query.label }})
+          .navigateByUrl(
+            `/restaurants/map/${query.lat},${query.lng}?location=${loc}`)
           .then(() => console.log('No cuisine filter'));
+          // .navigate(
+          //   ['/restaurants', 'map', `${query.lat},${query.lng}`],
+          //   { queryParams: { location: query.label }})
+          // .then(() => console.log('No cuisine filter'));
       }
     });
   }

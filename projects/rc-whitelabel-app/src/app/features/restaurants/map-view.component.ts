@@ -164,7 +164,8 @@ export class MapViewComponent implements OnInit {
         this.restService.loadSummarisedResults();
 
         // load the first batch of restaurants
-        this.loadRestaurants();
+        this.restService.loadRestaurantBatch({offset: this.currentOffset});
+
       });
     });
   }
@@ -198,13 +199,16 @@ export class MapViewComponent implements OnInit {
 
   loadRestaurants(): void {
 
-    // Do we need to load a new batch?
+    console.log('loadRestaurants');
+
+    // If our offSet is equal to the position of the last element
+    // then we need to load another batch
     if (this.currentOffset === this.restaurants.length) {
       this.restService.loadRestaurantBatch({offset: this.currentOffset});
       return;
     }
 
-    // Otherwise, we'll use a slice of our existing array
+    // Otherwise, we'll slice of our existing array
     const batch = this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal);
     // update observable for map list
     this.restaurantBatch$ = of(batch);
