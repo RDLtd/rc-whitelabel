@@ -18,13 +18,13 @@ export class ListViewComponent implements OnInit {
 
   restaurants$: Observable<any[]>;
   resultsLoaded$: Observable<boolean>;
-  searchFilter?: string | null;
 
   userPosition: any;
   moreRestaurantsPreloaded: Observable<boolean>;
 
   // filters
   showFilterOptions = false;
+  searchFilter?: string | null;
   filterOn = false;
 
   landmarks: any[] = [];
@@ -63,6 +63,7 @@ export class ListViewComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
 
       const latLng = params.get('latLng')?.split(',') ?? [];
+      this.searchFilter = params.get('filter') ?? null;
 
       this.route.queryParams.subscribe(queryParams => {
 
@@ -77,8 +78,8 @@ export class ListViewComponent implements OnInit {
         this.restService.searchParams = {
           lat: this.restService.geoLatitude,
           lng: this.restService.geoLongitude,
-          filter: !!params.get('filter') ? 'cuisine' : null,
-          filterText: params.get('filter'),
+          filter: this.searchFilter !== null ? 'cuisine' : null,
+          filterText: this.searchFilter,
           location: this.restService.geoLabel
         }
 

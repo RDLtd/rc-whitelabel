@@ -133,7 +133,7 @@ export class MapViewComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
 
       this.latLng = params.get('latLng')?.split(',') ?? [];
-      this.searchFilter = params.get('filter');
+      this.searchFilter = params.get('filter') ?? null;
 
       this.route.queryParams.subscribe(params => {
 
@@ -151,7 +151,7 @@ export class MapViewComponent implements OnInit {
         this.restService.searchParams = {
           lat: this.restService.geoLatitude,
           lng: this.restService.geoLongitude,
-          filter: !!this.searchFilter ? 'cuisine' : null,
+          filter: this.searchFilter !== null ? 'cuisine' : null,
           filterText: this.searchFilter,
           location: this.restService.geoLabel
         }
