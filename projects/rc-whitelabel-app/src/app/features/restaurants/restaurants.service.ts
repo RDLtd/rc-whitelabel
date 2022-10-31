@@ -28,7 +28,6 @@ export class RestaurantsService {
     label: string | null;
     lat: number;
     lng: number;
-    coords: string;
   }
 
   cuisines?: any[];
@@ -69,16 +68,59 @@ export class RestaurantsService {
     window.open(restaurant.restaurant_spw_url, '_target');
   }
 
+  // SEARCH PARAMS
   set searchParams(params: any) {
     this.params = { ...this.params, ...params};
   }
   get searchParams(): any {
     return this.params;
   }
-  // get site(): any {
-  //   return this.channelSite;
-  // }
+  set searchFilter(filter: string | null) {
+    this.cuisineFilter = filter;
+  }
+  get searchFilterOn(): boolean {
+    return !!this.searchParams.filterText;
+  }
 
+  // GEO TARGET
+  set geo(geo: any) {
+    this.geoTarget = {...this.geo, ...geo};
+  }
+  get geo(): object {
+    return this.geoTarget;
+  }
+  get geoLatitude(): number {
+    return Number(this.geoTarget.lat);
+  }
+  get geoLongitude(): number {
+    return Number(this.geoTarget.lng);
+  }
+  get geoLabel(): string | null {
+    return this.geoTarget.label
+  }
+  get geoCoords(): string {
+    return `${this.geoTarget.lat},${this.geoTarget.lng}`;
+  }
+  // RESULTS
+  set totalRestaurants(n) {
+    this.totalResults = n;
+  }
+  get totalRestaurants(): number {
+    return this.totalResults;
+  }
+  get cuisineSummary(): any[] {
+    return this.cuisines || [];
+  }
+  get landmarkSummary(): any[] {
+    return this.landmarks || [];
+  }
+  resetRestaurantResults(): void {
+    this.restaurantsSubject.next([]);
+  }
+  resetRestaurantsSubject(): void {
+    this.restaurantsSubject.next([]);
+    this.restaurantsArray = [];
+  }
   get resultsLoaded(): Observable<boolean> {
     return this.resultsLoadedSubject.asObservable();
   }
@@ -90,47 +132,6 @@ export class RestaurantsService {
   }
   get restArray(): Array<any> {
     return this.restaurantsArray;
-  }
-
-  set filter(filter: string | null) {
-    this.cuisineFilter = filter;
-  }
-
-  set geo(geo: any) {
-    this.geoTarget = geo;
-  }
-  get geo(): object {
-    return this.geoTarget;
-  }
-  get coords(): string {
-    return this.geoTarget.coords;
-  }
-  set coords( coords) {
-    this.geoTarget.coords = coords;
-  }
-  set totalRestaurants(n) {
-    this.totalResults = n;
-  }
-
-  get totalRestaurants(): number {
-    return this.totalResults;
-  }
-
-  get cuisineSummary(): any[] {
-    return this.cuisines || [];
-  }
-
-  get landmarkSummary(): any[] {
-    return this.landmarks || [];
-  }
-
-  resetRestaurantResults(): void {
-    this.restaurantsSubject.next([]);
-  }
-
-  resetRestaurantsSubject(): void {
-    this.restaurantsSubject.next([]);
-    this.restaurantsArray = [];
   }
 
   /**
@@ -204,7 +205,7 @@ export class RestaurantsService {
    * @param params - an object containing the search query params
    * @param preload - false if it's a new search, true if we're preloading
    */
-  loadRestaurants(params: any, preload = false): void {
+  loadRestaurants(params: any = this.searchParams, preload = false): void {
 
     console.log('loadRestaurants', this.restaurantsArray);
 

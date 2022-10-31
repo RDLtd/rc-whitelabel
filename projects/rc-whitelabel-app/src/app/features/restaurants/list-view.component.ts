@@ -19,26 +19,19 @@ export class ListViewComponent implements OnInit {
   restaurants$: Observable<any[]>;
   resultsLoaded$: Observable<boolean>;
   searchFilter?: string | null;
-  sortBy?: string | null;
-  isLoaded = false;
-  geoTarget: any;
-  geoSearchLabel?: string;
+
   userPosition: any;
   moreRestaurantsPreloaded: Observable<boolean>;
 
-  // url params
-  routeFilter: any;
-  routeSort: any;
   // filters
   showFilterOptions = false;
-  filtersOn = false;
+  filterOn = false;
+
   landmarks: any[] = [];
   cuisines: any[] = [];
   features: any[] = [];
-  // restaurant results
   restaurants: any[] = [];
-  // nextRestaurants: any[] = [];
-  // totalRestaurants = 0;
+
 
   constructor(
     public config: AppConfig,
@@ -57,7 +50,7 @@ export class ListViewComponent implements OnInit {
     // Observe user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos);
 
-    // subscribe to results observers
+    // subscribe to the results observers
     this.restaurants$ = this.restService.restaurants;
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.moreRestaurantsPreloaded = this.restService.moreRestaurantResults;
@@ -68,42 +61,34 @@ export class ListViewComponent implements OnInit {
 
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
-      this.isLoaded = false;
-      // Geo search target
-      this.geoTarget = {
-        lat: Number(params.get('latLng')?.split(',')[0] ?? this.config.channel.centre.lat).toFixed(6),
-        lng: Number(params.get('latLng')?.split(',')[1] ?? this.config.channel.centre.lng).toFixed(6)
-      };
-      // Add latLng
-      this.geoTarget.coords = `${this.geoTarget.lat},${this.geoTarget.lng}`;
-      // Check for cuisine filter
-      this.searchFilter = params.get('filter');
-      this.filtersOn = !!this.searchFilter;
-      // Add target label
-      this.route.queryParams.subscribe(params => {
-        if (!!params.location) {
-          this.geoTarget.label = params.location ?? null;
-        }
-      });
-      // update service
-      this.restService.searchParams = {
-        lat: this.geoTarget.lat,
-        lng: this.geoTarget.lng,
-        filter: !!this.searchFilter ? 'cuisine' : null,
-        filterText: this.searchFilter,
-        location: this.geoTarget.label
-      }
 
-      this.restService.geo = {
-        label: this.geoTarget.label,
-        lat: this.geoTarget.lat,
-        lng: this.geoTarget.lng,
-        coords: this.geoTarget.coords
-      }
-      this.restService.filter = params.get('filter') || null;
+      const latLng = params.get('latLng')?.split(',') ?? [];
+
+      this.route.queryParams.subscribe(queryParams => {
+
+        // Update geoTarget
+        this.restService.geo = {
+          lat: Number(latLng[0]).toFixed(6),
+          lng: Number(latLng[1]).toFixed(6),
+          label: queryParams.location
+        }
+
+        // Update search params
+        this.restService.searchParams = {
+          lat: this.restService.geoLatitude,
+          lng: this.restService.geoLongitude,
+          filter: !!params.get('filter') ? 'cuisine' : null,
+          filterText: params.get('filter'),
+          location: this.restService.geoLabel
+        }
+
+        this.filterOn = this.restService.searchFilterOn;
+        this.restService.searchFilter = params.get('filter') || null;
+
+      });
 
       // load summary for filter/sort options
-      this.restService.loadSummarisedResults(this.geoTarget.lat, this.geoTarget.lng);
+      this.restService.loadSummarisedResults();
 
       // Delay the filter options until results have loaded
       setTimeout(() => {
@@ -111,13 +96,7 @@ export class ListViewComponent implements OnInit {
       }, 2000);
 
       // Now load restaurant results
-      this.restService.loadRestaurants({
-        lat: this.geoTarget.lat,
-        lng: this.geoTarget.lng,
-        filter: !!this.searchFilter ? 'cuisine' : '',
-        filterText: this.searchFilter,
-        offset: 0
-      });
+      this.restService.loadRestaurants();
     });
   }
 

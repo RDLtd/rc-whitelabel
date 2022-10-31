@@ -122,8 +122,6 @@ export class MapViewComponent implements OnInit {
     this.restaurants$ = this.restService.restaurants;
     this.restaurantBatch$ = this.restService.restaurants;
 
-
-
   }
 
   ngOnInit(): void {
@@ -133,32 +131,29 @@ export class MapViewComponent implements OnInit {
 
     // Check for route params & query params
     this.route.paramMap.subscribe((params: ParamMap) => {
+
       this.latLng = params.get('latLng')?.split(',') ?? [];
       this.searchFilter = params.get('filter');
 
-      this.geoTarget = {
-        lat: Number(this.latLng[0]).toFixed(6),
-        lng: Number(this.latLng[1]).toFixed(6),
-        coords: `${this.latLng[0]},${this.latLng[1]}`
-      }
-
-      this.geoLatLngLiteral = {
-        lat: parseFloat(this.geoTarget.lat),
-        lng: parseFloat(this.geoTarget.lng)
-      };
-
-      this.restService.geo = this.geoTarget;
-
       this.route.queryParams.subscribe(params => {
-        if (!!params.location) {
-          this.geoTarget.label = params.location;
+
+        this.restService.geo = {
+          lat: Number(this.latLng[0]).toFixed(6),
+          lng: Number(this.latLng[1]).toFixed(6),
+          label: params.location
         }
+
+        this.geoLatLngLiteral = {
+          lat: this.restService.geoLatitude,
+          lng: this.restService.geoLongitude
+        };
+
         this.restService.searchParams = {
-          lat: this.geoTarget.lat,
-          lng: this.geoTarget.lng,
+          lat: this.restService.geoLatitude,
+          lng: this.restService.geoLongitude,
           filter: !!this.searchFilter ? 'cuisine' : null,
           filterText: this.searchFilter,
-          location: this.geoTarget.label
+          location: this.restService.geoLabel
         }
 
         // load a summary of available restaurants
@@ -244,12 +239,12 @@ export class MapViewComponent implements OnInit {
   // map navigation
   getBatchNavSummary(): string {
     // Filtered
-    if (!!this.geoTarget.label && !!this.searchFilter) {
-      return `${this.searchFilter} Restaurants within ${this.boundary} km of ${this.geoTarget.label}`
+    if (!!this.restService.geoLabel && !!this.searchFilter) {
+      return `${this.searchFilter} Restaurants within ${this.boundary} km of ${this.restService.geoLabel}`
     }
     // With location label
-    if (!!this.geoTarget.label) {
-      return `Restaurants within ${this.boundary} km of ${this.geoTarget.label}`
+    if (!!this.restService.geoLabel) {
+      return `Restaurants within ${this.boundary} km of ${this.restService.geoLabel}`
     }
     // Basic
     return `Restaurants within ${this.boundary} km`;
@@ -386,7 +381,7 @@ export class MapViewComponent implements OnInit {
     if (batchIndex === 10) {
       this.showDistanceData = false;
       this.infoWindowContent = {
-        name: this.geoTarget.label || 'Nearest Here',
+        name: this.restService.geoLabel || 'Focal Point',
         cuisine: null,
         spw: null,
         offers: null

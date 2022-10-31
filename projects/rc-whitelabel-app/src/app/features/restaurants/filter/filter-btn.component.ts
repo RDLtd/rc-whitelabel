@@ -62,12 +62,12 @@ export class FilterBtnComponent implements OnInit {
       // Guard clause
       if (!query) { return;}
       //this.restService.resetSearchFilters();
-      this.restService.filter = query.cuisine;
+      this.restService.searchFilter = query.cuisine;
 
       if (query.type === 'filter') {
         this.router
           .navigate(
-            ['/restaurants', this.view, this.restService.coords, query.cuisine],
+            ['/restaurants', this.view, this.restService.geoCoords, query.cuisine],
             { queryParams: { location: this.geoTarget.label }})
           .then(() => console.log(`Filtered by ${query.cuisine}`));
       } else {
