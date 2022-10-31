@@ -137,17 +137,20 @@ export class MapViewComponent implements OnInit {
 
       this.route.queryParams.subscribe(params => {
 
+        // Update geoTarget
         this.restService.geo = {
           lat: Number(this.latLng[0]).toFixed(6),
           lng: Number(this.latLng[1]).toFixed(6),
           label: params.location
         }
 
+        // Set maps object
         this.geoLatLngLiteral = {
           lat: this.restService.geoLatitude,
           lng: this.restService.geoLongitude
         };
 
+        // Set params
         this.restService.searchParams = {
           lat: this.restService.geoLatitude,
           lng: this.restService.geoLongitude,
@@ -158,7 +161,8 @@ export class MapViewComponent implements OnInit {
 
         // load a summary of available restaurants
         // within the channel or specified boundary
-        this.loadRestaurantSummary();
+        this.restService.loadSummarisedResults();
+
         // load the first batch of restaurants
         this.loadRestaurants();
       });
@@ -190,17 +194,6 @@ export class MapViewComponent implements OnInit {
           })
         );
     }
-  }
-
-  /**
-   * Load results summary to enable
-   * filtering options etc.
-   */
-  loadRestaurantSummary(): void {
-
-    // load summary for filter/sort options
-    this.restService.loadSummarisedResults();
-
   }
 
   loadRestaurants(): void {

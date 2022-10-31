@@ -23,8 +23,7 @@ export class ListViewComponent implements OnInit {
   moreRestaurantsPreloaded: Observable<boolean>;
 
   // filters
-  showFilterOptions = false;
-  searchFilter?: string | null;
+  searchFilter!: string | null;
   filterOn = false;
 
   landmarks: any[] = [];
@@ -84,17 +83,12 @@ export class ListViewComponent implements OnInit {
         }
 
         this.filterOn = this.restService.searchFilterOn;
-        this.restService.searchFilter = params.get('filter') || null;
+        this.restService.searchFilter = this.searchFilter;
 
       });
 
       // load summary for filter/sort options
       this.restService.loadSummarisedResults();
-
-      // Delay the filter options until results have loaded
-      setTimeout(() => {
-        this.showFilterOptions = true;
-      }, 2000);
 
       // Now load restaurant results
       this.restService.loadRestaurants();
