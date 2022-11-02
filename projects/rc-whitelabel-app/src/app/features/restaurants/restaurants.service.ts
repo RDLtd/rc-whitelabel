@@ -33,7 +33,6 @@ export class RestaurantsService {
   cuisines?: any[];
   features?: any[];
   landmarks?: any[];
-  cuisineFilter?: string | null;
 
   private readonly apiKey: string;
   private readonly accessCode: string;
@@ -75,11 +74,8 @@ export class RestaurantsService {
   get searchParams(): any {
     return this.params;
   }
-  set searchFilter(filter: string | null) {
-    this.cuisineFilter = filter;
-  }
   get searchFilterOn(): boolean {
-    return !!this.searchParams.filterText;
+    return !!this.params.filterText;
   }
 
   // GEO TARGET
@@ -169,9 +165,9 @@ export class RestaurantsService {
    * Add a batch (defined by offset = limit) to
    * the results array
    * @param params
-   * @param isNewGeoTarget
+   * @param init
    */
-  loadRestaurantBatch(params: any = {}, isNewGeoTarget: boolean = false): void {
+  loadRestaurantBatch(params: any = {}, init: boolean = false): void {
 
     console.log('loadRestaurantBatch');
 
@@ -182,8 +178,8 @@ export class RestaurantsService {
     this.params = {...this.params, ...params};
 
     // console.log(this.params);
-    if (isNewGeoTarget) {
-      console.log('New GeoTarget', this.params);
+    if (init) {
+      console.log('`Init`', this.params);
       this.restaurantsArray.length = 0;
     }
 
@@ -217,9 +213,9 @@ export class RestaurantsService {
    * @param params - an object containing the search query params
    * @param preload - false if it's a new search, true if we're preloading
    */
-  loadRestaurants(params: any = this.searchParams, preload = false): void {
+  loadRestaurants(params: any = {}, preload = false): void {
 
-    console.log('loadRestaurants', this.restaurantsArray);
+    console.log('loadRestaurants', params);
 
     // show loader if it's an initial load, but not on preload
     this.resultsLoadedSubject.next(preload);
@@ -228,14 +224,16 @@ export class RestaurantsService {
     // Update params
     this.params = {...this.params, ...params};
 
-    // Get results
-    this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
-      .subscribe((data: any) => {
+    // console.log(params);
+
+    this.data.loadRestaurantResults( this.accessCode, this.apiKey, this.params)
+      .then((res) => {
+        console.log(res);
         // Is this just a preload call
         if (preload) {
-          if(data === null) { return } // abort
-          this.moreRestaurantsArray = data.restaurants;
-          console.log('Next preloaded ready', data.restaurants.length);
+          if(res === null) { return } // abort
+          this.moreRestaurantsArray = res.restaurants;
+          console.log('Next preloaded ready', res.restaurants.length);
           // update subject & notify observers
           this.moreRestaurantsSubject.next(true);
           this.resultsLoadedSubject.next(true);
@@ -243,7 +241,7 @@ export class RestaurantsService {
           return;
         }
         // Update restaurant results
-        this.restaurantsArray = data.restaurants;
+        this.restaurantsArray = res.restaurants;
         // Update subject
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
         // Notify observers

@@ -45,7 +45,7 @@ export class FilterBtnComponent implements OnInit {
     // ie. only shpw cuisine filters if there are sensible choices to be made
     // Delay the filter options until results have loaded
     setTimeout(() => {
-      this.showFilterOptions = this.restService.cuisineSummary.length > 1;
+      this.showFilterOptions = true;
       }, 2000);
   }
 
@@ -63,14 +63,11 @@ export class FilterBtnComponent implements OnInit {
 
       // Guard clause
       if (!query) { return;}
-      //this.restService.resetSearchFilters();
-      this.restService.searchFilter = query.cuisine;
 
       if (query.type === 'filter') {
         this.router
-          .navigate(
-            ['/restaurants', this.view, this.restService.geoCoords, query.cuisine],
-            { queryParams: { location: this.geoTarget.label }})
+          .navigateByUrl(
+          `/restaurants/${this.view}/${this.restService.geoCoords}/${query.cuisine}?location=${this.geoTarget.label}`)
           .then(() => console.log(`Filtered by ${query.cuisine}`));
       } else {
 

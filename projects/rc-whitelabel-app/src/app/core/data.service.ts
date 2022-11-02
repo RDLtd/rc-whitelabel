@@ -120,7 +120,7 @@ export class DataService {
   }
 
   loadRestaurantResults(code: string, key: string, params: any): Promise<any> {
-    console.log('loadRestaurantResults', params.offset);
+    console.log('loadRestaurantResults', params);
     return new Promise(async resolve => {
       await this.api.getRestaurantsByParamsFast(code, key, params)
         .toPromise()

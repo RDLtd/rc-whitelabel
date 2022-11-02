@@ -82,17 +82,15 @@ export class ListViewComponent implements OnInit {
           location: this.restService.geoLabel
         }
 
-        this.filterOn = this.restService.searchFilterOn;
-        this.restService.searchFilter = this.searchFilter;
-
       });
 
-      // load summary for filter/sort options
-      this.restService.loadSummarisedResults();
-
-      // Now load restaurant results
-      this.restService.loadRestaurants();
     });
+
+    // load summary for filter/sort options
+    this.restService.loadSummarisedResults();
+
+    // Now load restaurant results
+    this.restService.loadRestaurants({offset: 0});
   }
 
   loadMore(): void {
