@@ -28,23 +28,25 @@ export class FilterBtnComponent implements OnInit {
     private restService: RestaurantsService,
     private router: Router,
     private location: LocationService
-
-
   ) {
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.searchFilter = this.restService.searchParams.filterText;
   }
 
   ngOnInit(): void {
+
     // Observe user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
+
     // Current geoTarget
     this.geoTarget = this.restService.geo;
+
+    // TODO: This could do with being a bit more intelligent
+    // ie. only shpw cuisine filters if there are sensible choices to be made
     // Delay the filter options until results have loaded
     setTimeout(() => {
       this.showFilterOptions = this.restService.cuisineSummary.length > 1;
       }, 2000);
-
   }
 
   // Sort and filter dialog
@@ -71,28 +73,16 @@ export class FilterBtnComponent implements OnInit {
             { queryParams: { location: this.geoTarget.label }})
           .then(() => console.log(`Filtered by ${query.cuisine}`));
       } else {
+
         const loc = query.label ?? 'Your Location';
+
         this.router
           .navigateByUrl(
             `/restaurants/map/${query.lat},${query.lng}?location=${loc}`)
           .then(() => console.log('No cuisine filter'));
-          // .navigate(
-          //   ['/restaurants', 'map', `${query.lat},${query.lng}`],
-          //   { queryParams: { location: query.label }})
-          // .then(() => console.log('No cuisine filter'));
       }
     });
   }
-
-  // If we have multiple cuisine types
-  // or multiple POIs show filter options
-  // showFilterBtn(): void {
-  //   if (this.cuisines.length > 1 || this.landmarks.length) {
-  //     this.showFilterOptions = true;
-  //   } else {
-  //     console.log('No filters available');
-  //   }
-  // }
 
   clearFilters(): void {
     this.restService.searchParams = {
@@ -102,11 +92,9 @@ export class FilterBtnComponent implements OnInit {
       filterText: null,
       location: this.geoTarget.label
     }
-    //this.ngOnInit();
-    this.router.navigate(['/restaurants', this.view, `${this.geoTarget.lat},${this.geoTarget.lng}`])
-    // this.filtersOn = false;
-    // this.showFilterOptions = false;
-    // this.showFilterBtn();
+    this.router.navigate(
+      ['/restaurants', this.view, `${this.geoTarget.lat},${this.geoTarget.lng}`],
+      { queryParams: { location: this.geoTarget.label }})
   }
 
 }

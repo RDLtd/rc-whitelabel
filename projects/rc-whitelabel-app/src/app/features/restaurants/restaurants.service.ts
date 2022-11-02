@@ -169,27 +169,31 @@ export class RestaurantsService {
    * Add a batch (defined by offset = limit) to
    * the results array
    * @param params
+   * @param isNewGeoTarget
    */
-  loadRestaurantBatch(params: any = this.params): void {
+  loadRestaurantBatch(params: any = {}, isNewGeoTarget: boolean = false): void {
 
     console.log('loadRestaurantBatch');
 
-    // show loader if it's an initial load, but not on preload
-    // as that happens in the background
+    // Show loader
     this.resultsLoadedSubject.next(false);
 
-    // Update params
+    // Merge params
     this.params = {...this.params, ...params};
 
-    console.log(this.params);
+    // console.log(this.params);
+    if (isNewGeoTarget) {
+      console.log('New GeoTarget', this.params);
+      this.restaurantsArray.length = 0;
+    }
 
-    this.api.getRestaurantsByParamsFast( this.accessCode, this.apiKey, this.params)
-      .subscribe((data: any) => {
-
-        if (data === null || data === undefined) {
+    this.data.loadRestaurantResults( this.accessCode, this.apiKey, this.params)
+      .then((res) => {
+        console.log(res);
+        if (res === null || res === undefined) {
           console.log('No data', this.restaurantsArray.length);
-         // this.restaurantsArray = [];
-         // this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+          // this.restaurantsArray = [];
+          // this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
           this.resultsLoadedSubject.next(true);
           return;
         }
@@ -198,7 +202,7 @@ export class RestaurantsService {
         console.log(this.restaurantsArray);
 
         // Add loaded batch to array
-        this.restaurantsArray.push(...data.restaurants);
+        this.restaurantsArray.push(...res.restaurants);
 
         // Notify observers
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));

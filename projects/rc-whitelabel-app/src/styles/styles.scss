@@ -770,6 +770,7 @@ rd-footer {
 }
 .rd-map-info-window {
   padding: 4px 0 6px 6px;
+  width: 200px;
   h3 {
     margin: 0 0 0;
     font-size: 1rem;
@@ -847,7 +848,7 @@ rd-footer {
 .rd-filter-btn {
   z-index: 20;
   position: fixed;
-  bottom: 0; right: 0;
+  bottom: 64px; right: 96px;
   transform: scale(0);
   width: 100%;
   text-align: center;
@@ -855,7 +856,7 @@ rd-footer {
     width: auto;
   }
   .mat-raised-button {
-    margin: 0 64px 64px;
+    margin: 0;
     padding: 8px 20px;
     border-radius: 32px 32px 32px 4px ;
     line-height: 40px;

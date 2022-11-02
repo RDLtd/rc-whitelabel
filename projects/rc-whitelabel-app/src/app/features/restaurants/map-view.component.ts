@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import { GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
-import { RestaurantsService} from './restaurants.service';
+import { RestaurantsService } from './restaurants.service';
 import { BehaviorSubject, Observable, of} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, map } from 'rxjs/operators';
@@ -76,7 +76,7 @@ export class MapViewComponent implements OnInit {
   latLng!: string[];
   searchFilter?: string | null;
   batchTotal = 10;
-  currentOffset = 0;
+  currentOffset: number;
   totalResults?: number;
   resultReference: number[];
   boundary: number;
@@ -93,7 +93,6 @@ export class MapViewComponent implements OnInit {
 
   constructor(
     private config: AppConfig,
-    private results: RestaurantsService,
     private restService: RestaurantsService,
     private data: DataService,
     private http: HttpClient,
@@ -101,6 +100,8 @@ export class MapViewComponent implements OnInit {
     private route: ActivatedRoute,
     private title: Title
   ) {
+
+    this.currentOffset = 0;
 
     // update title for ga tracking
     title.setTitle('Restaurant Results Map');
@@ -125,6 +126,8 @@ export class MapViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    console.log('init');
 
     // Google maps
     this.loadMapsApi();
@@ -158,15 +161,17 @@ export class MapViewComponent implements OnInit {
           filterText: this.searchFilter,
           location: this.restService.geoLabel
         }
-
-        // load a summary of available restaurants
-        // within the channel or specified boundary
-        this.restService.loadSummarisedResults();
-
-        // load the first batch of restaurants
-        this.restService.loadRestaurantBatch({offset: this.currentOffset});
-
       });
+
+      // Reset the offset
+      this.currentOffset = 0;
+
+      // load a summary of available restaurants
+      // within the channel or specified boundary
+      this.restService.loadSummarisedResults();
+
+      // load the first batch of restaurants
+      this.restService.loadRestaurantBatch({ offset: this.currentOffset }, true);
     });
   }
 
@@ -199,7 +204,7 @@ export class MapViewComponent implements OnInit {
 
   loadRestaurants(): void {
 
-    console.log('loadRestaurants');
+    console.log('loadRestaurants', this.currentOffset);
 
     // If our offSet is equal to the position of the last element
     // then we need to load another batch
@@ -210,8 +215,10 @@ export class MapViewComponent implements OnInit {
 
     // Otherwise, we'll slice of our existing array
     const batch = this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal);
+
     // update observable for map list
     this.restaurantBatch$ = of(batch);
+
     // Add markers
     this.addMapMarkers(batch);
 

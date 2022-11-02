@@ -3,7 +3,6 @@ import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app.config';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,20 +11,14 @@ import { Router } from '@angular/router';
 export class DataService {
 
   // Caches
-  private restaurants: any[] = [];
-  private searchRests: any[] = [];
   recentlyViewed: any = [];
-  private cuisines: any[] = [];
-  private landmarks: any[] = [];
-  private features: any[] = [];
   private sites: any[] = [];
 
   constructor(
     private api: ApiService,
     private local: LocalStorageService,
     private http: HttpClient,
-    private config: AppConfig,
-    private router: Router
+    private config: AppConfig
   ) {
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
@@ -56,38 +49,6 @@ export class DataService {
   }
 
   // Get restaurants
-  loadRestaurantsByParams(options: any): Promise<any> {
-
-    const params = {
-      filter: options.filter,
-      filterText: options.filterText,
-      offset: options.offset || 0,
-      limit: options.limit,
-      lat: options.lat,
-      lng: options.lng,
-      testing: this.config.testMode
-    };
-
-    // console.log('Params', params);
-
-    return new Promise(async resolve => {
-      await this.api.getRestaurantsByParams(this.config.channel.accessCode, this.config.channel.apiKey, params)
-        .toPromise()
-        .then((res: any) => {
-          // console.log(res);
-          if (!!res) {
-            resolve(res.restaurants);
-          } else {
-            resolve([]);
-          }
-        })
-        .catch((error: any) => {
-          console.log('ERROR', error);
-          this.router.navigate(['/error']);
-        });
-    });
-  }
-
   /**
    * Get channel configuration
    * @param id - channel id
@@ -131,48 +92,6 @@ export class DataService {
     });
   }
 
-  /**
-   * Load SEARCH summary
-   */
-  loadSummarisedData(): Promise <any> {
-    return new Promise(async resolve => {
-      if (this.cuisines.length) {
-        console.log('Summary loaded from CACHE', this);
-        resolve({
-          restaurants: this.searchRests,
-          landmarks: this.landmarks,
-          features: this.features,
-          cuisines: this.cuisines
-        });
-      } else {
-        console.log(
-          'loadSummarisedData',
-          this.config.channel.accessCode,
-          this.config.channel.apiKey,
-          this.config.channel.latitude,
-          this.config.channel.longitude,
-          100);
-        await this.api.getRestaurantsSummary(
-          this.config.channel.accessCode,
-          this.config.channel.apiKey,
-          this.config.channel.latitude,
-          this.config.channel.longitude,
-          2000)
-          .toPromise()
-          .then((res: any) => {
-            console.log('Summary loaded from API', res);
-            this.setSummary(res);
-            resolve({
-              restaurants: this.searchRests,
-              landmarks: this.landmarks,
-              features: this.features,
-              cuisines: this.cuisines
-            });
-          })
-          .catch((error: any) => console.log('ERROR', error));
-      }
-    });
-  }
 
   /**
    * Get summarised results of search query
@@ -200,41 +119,19 @@ export class DataService {
     });
   }
 
-  // Summary data
-  setSummary(s: any): void {
-    this.setCuisines(s.cuisines);
-    this.landmarks = s.landmarks;
-    this.features = s.attributes;
-    this.searchRests = s.restaurants;
-  }
-  getCuisines(): any[] {
-    return this.cuisines;
-  }
-  getLandmarks(): any[] {
-    return this.landmarks;
-  }
-  setCuisines(arr: any): void {
-    this.cuisines = [];
-    let i = arr.length;
-    let c;
-    while (i--) {
-      c = arr[i];
-      // @ts-ignore
-      this.cuisines.push({
-        label: c.Cuisine,
-        total: c.Count
-      });
-    }
-    this.cuisines.sort((a, b) => {
-      return b.total - a.total;
+  loadRestaurantResults(code: string, key: string, params: any): Promise<any> {
+    console.log('loadRestaurantResults', params.offset);
+    return new Promise(async resolve => {
+      await this.api.getRestaurantsByParamsFast(code, key, params)
+        .toPromise()
+        .then((data: any) => {
+          resolve(data);
+        })
+        .catch((error: any) => console.log('ERROR', error));
     });
-    console.log(this.cuisines);
   }
 
-  // recently viewed
-  getRecentlyViewed(): any[] {
-    return this.recentlyViewed;
-  }
+// recently viewed
   setRecentlyViewed(restaurant: any): void {
     console.log('Recent', restaurant);
 
@@ -257,5 +154,4 @@ export class DataService {
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
     console.log(this.recentlyViewed);
   }
-
 }
