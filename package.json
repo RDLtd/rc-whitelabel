@@ -1,6 +1,6 @@
 {
   "name": "rc-whitelabel",
-  "version": "13.3.1",
+  "version": "13.4.0",
   "scripts": {
     "ng": "ng",
     "rdl": "ng serve --port 54747",
