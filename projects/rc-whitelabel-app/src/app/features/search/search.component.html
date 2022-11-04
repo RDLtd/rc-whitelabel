@@ -23,7 +23,7 @@
           autocomplete="off"
           type="text"
           ngModel
-          placeholder="{{ config.i18n['Search_by_name_or_location'] }}"
+          placeholder="{{ channelConfig.searchPlaceholderTxt }}"
           tabindex="0">
         <button
           mat-button
@@ -41,17 +41,31 @@
         {{ config.i18n["No_matching_search_results"] }}
       </mat-error>
     </form>
+
     <!--  Search Results -->
     <ul [class.open]="!!rdSearchInput.value && !!searchSuggestions" class="rd-search-autofill">
+
       <!-- Suggestions -->
       <li *ngFor="let displayItem of searchSuggestions; let i = index" [tabindex]="i + 1" [ngSwitch]="displayItem.cat">
+
+        <!-- Sites -->
+        <a *ngSwitchCase="'site'" [routerLink]="displayItem.route" [queryParams]="{ location: displayItem.name}">
+          <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
+          {{ displayItem?.name }}
+          <span class="rd-flex-spacer"></span>
+          <span></span>
+        </a>
+
         <!-- Landmarks -->
-        <a *ngSwitchCase="'location'" [routerLink]="displayItem.route">
+        <a *ngSwitchCase="'location'"
+           [queryParams]="{location: displayItem.name}"
+           [routerLink]="displayItem.route">
           <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
             {{ displayItem?.name }}
           <span class="rd-flex-spacer"></span>
           <span></span>
         </a>
+
         <!-- Restaurants -->
         <a *ngSwitchCase="'restaurant'" [routerLink]="[]" (click)="viewRestaurantSpw(displayItem)">
           <mat-icon class="rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
@@ -59,6 +73,7 @@
           <span class="rd-flex-spacer"></span>
           <span>{{ displayItem.misc }}</span>
         </a>
+
         <!-- Cuisines -->
         <a *ngSwitchCase="'cuisine'" [routerLink]="displayItem.route">
           <mat-icon class="rd-icon-cuisine">{{ icons['cuisine'] }}</mat-icon>
@@ -66,11 +81,14 @@
           <span class="rd-flex-spacer"></span>
           <span class="rd-count" *ngIf="!!displayItem.misc">{{ displayItem.misc }}</span>
         </a>
+
       </li>
     </ul>
+
     <!-- Quick links -->
     <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
-      <section class="rd-quick-links">
+
+      <section *ngIf="channelConfig.showRecentlyViewed" class="rd-quick-links">
         <div>
           <mat-icon class="rd-icon-restaurant">{{ icons.restaurant }}</mat-icon>
           <h2>{{ config.i18n["Recently_viewed"] }}</h2>
@@ -80,13 +98,14 @@
             <a>{{ config.i18n["You_are_new"] }}</a>
           </li>
           <li *ngFor="let recent of recentlyViewed">
-            <a [href]="recent['restaurant_spw_url']" target="_blank" (click)="searchReset()">
+            <a target="_blank" (click)="viewRecentlyViewed(recent)">
               {{ recent['restaurant_name'] }}
             </a>
           </li>
         </ul>
       </section>
-      <section class="rd-quick-links" *ngIf="landmarks?.length || userPosition?.inRange">
+
+      <section class="rd-quick-links" *ngIf="(landmarks?.length || userPosition?.inRange) && channelConfig.showLandmarks">
         <div>
           <mat-icon class="rd-icon-location">{{ icons.location }}</mat-icon>
         <h2>{{ config.i18n["Nearest_to"] }}</h2>
@@ -95,8 +114,8 @@
           <li *ngIf="userPosition?.inRange">
             <a
               class="rd-my-location"
-              [routerLink]="['/restaurants/nearest/',
-              userPosition?.lat + ':' +  userPosition?.lng]">
+              [queryParams]="{location: 'your current location'}"
+              [routerLink]="['/restaurants/map/', userPosition?.lat + ',' +  userPosition?.lng]">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
                 <path d="M0 0h24v24H0z" fill="none"/>
                 <path
@@ -108,27 +127,31 @@
             </a>
           </li>
           <li *ngFor="let landmark of landmarks">
-            <a [routerLink]="['/restaurants/nearest/', landmark?.channel_landmark_lat + ':' + landmark?.channel_landmark_lng]">
+            <a [queryParams]="{location: landmark?.channel_landmark_name}"
+               [routerLink]="['/restaurants', 'map', landmark?.channel_landmark_lat + ',' + landmark?.channel_landmark_lng]">
               {{ landmark?.channel_landmark_name }}
             </a>
           </li>
         </ul>
       </section>
-      <section class="rd-quick-links" *ngIf="cuisines.length">
+
+      <section *ngIf="channelConfig.showCuisines && cuisines.length" class="rd-quick-links">
       <div>
         <mat-icon class="rd-icon-cuisine">{{ icons.cuisine }}</mat-icon>
         <h2>{{ config.i18n["Cuisines"] }}</h2>
       </div>
       <ul>
-        <li *ngFor="let cuisine of getTopCuisines()">
-          <a [routerLink]="['/restaurants', cuisine.label]">
-            {{ cuisine?.label }}
+        <li *ngFor="let cuisine of cuisines">
+          <a [routerLink]="['/restaurants', 'list', config.channel.latitude + ',' + config.channel.longitude,
+          cuisine.Cuisine]">
+            {{ cuisine?.Cuisine }}
             <span class="rd-flex-spacer"></span>
-            <span>{{ cuisine?.total }}</span>
+            <span>{{ cuisine?.Count }}</span>
           </a>
         </li>
       </ul>
     </section>
+
     </div>
   </div>
 </div>

@@ -1,19 +1,15 @@
 
 <header
   *ngIf="config.channelLoaded"
-  [class.rd-hideHeader]="hideHeader"
-  [ngStyle]="{'background-color': config.channel.brand?.colorBgdPrimary, 'color': config.channel.brand?.colorFgdPrimary }">
+  [class.rd-hideHeader]="hideHeader">
   <rd-header></rd-header>
 </header>
 
 <main>
-  <div class="rd-cover" [style.background-image]="'url(' + config.channel.brand?.bgImage + ')'" @fadeIn></div>
+  <div class="rd-cover" @fadeIn></div>
   <router-outlet></router-outlet>
   <div class="rd-flex-spacer"></div>
   <footer>
     <rd-footer></rd-footer>
   </footer>
 </main>
-
-
-

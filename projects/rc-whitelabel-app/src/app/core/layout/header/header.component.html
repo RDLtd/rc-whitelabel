@@ -1,22 +1,42 @@
 <!-- HEADER CONTENT -->
 <div class="rd-title" *ngIf="!showSearchOption">
-  {{ config.channel.name | uppercase }}
+<!--  {{ config.channel.name | uppercase }}-->
 </div>
 <a routerLink="search">
   <img
     class="rd-logo"
-    [src]="config.channel.brand?.logo"
+    [src]="config.channel.brand?.imgLogo"
     alt="Logo">
 </a>
 <span class="rd-flex-spacer"></span>
-<button
-  *ngIf="showSearchOption"
-  mat-button
-  routerLink="search"
-  @fadeIn>
-  <mat-icon>search</mat-icon>
-  <span class="hide-small">{{ config.i18n.Search }}</span>
-</button>
+
+<ng-container *ngIf="showSearchOption">
+
+  <ng-container *ngIf="showViews">
+    <button *ngIf="isMapView" mat-button (click)="toggleView('list')">
+      <mat-icon>list_alt</mat-icon>
+      <span class="hide-small">LIST</span>
+    </button>
+    <button *ngIf="!isMapView" mat-button (click)="toggleView('map')">
+      <mat-icon>fmd_good</mat-icon>
+      <span class="hide-small">MAP</span>
+    </button>
+  </ng-container>
+
+  <button
+    mat-button
+    routerLink=""
+    @fadeIn>
+    <mat-icon>search</mat-icon>
+    <span class="hide-small">{{ config.i18n.Search }}</span>
+  </button>
+</ng-container>
+<a routerLink="search" class="rd-logo" *ngIf="!!config.channel.rcLogo">
+  <img
+    class="rd-logo"
+    [src]="config.channel.rcLogo"
+    alt="Logo">
+</a>
 
 
 

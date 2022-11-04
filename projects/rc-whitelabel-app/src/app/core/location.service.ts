@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { AppConfig } from '../app.config';
 
-export interface UserPosition {
+export interface UserGeoLocation {
   lat?: number;
   lng?: number;
   distance: string;
@@ -15,7 +15,7 @@ export interface UserPosition {
 })
 
 export class LocationService {
-  private userLocationSubject = new BehaviorSubject<UserPosition>({ inRange: false, distance: 'Unknown' });
+  private userLocationSubject = new BehaviorSubject<UserGeoLocation>({ inRange: false, distance: 'Unknown' });
 
   constructor(
     private config: AppConfig,
@@ -25,14 +25,14 @@ export class LocationService {
     if ('geolocation' in navigator) {
       navigator.geolocation.watchPosition((geo: any) => {
         this.api.getRestaurantsNear(this.config.channel.accessCode, this.config.channel.apiKey,
-          geo.coords.latitude, geo.coords.longitude, this.config.maxDistance)
+          geo.coords.latitude, geo.coords.longitude, this.config.maxUserDistance)
           .toPromise()
           .then((res: any) => {
-            console.log(res);
+            // console.log(res);
             this.userLocationSubject.next({
               lat: geo.coords.latitude,
               lng: geo.coords.longitude,
-              distance: res.distance || `More than ${this.config.maxDistance}km`,
+              distance: res.distance || `More than ${this.config.maxUserDistance}km`,
               inRange: res.near
             });
           })
@@ -47,7 +47,7 @@ export class LocationService {
     }
   }
 
-  get userLocationObs(): Observable<UserPosition> {
+  get userLocationObs(): Observable<UserGeoLocation> {
     return this.userLocationSubject.asObservable();
   }
 

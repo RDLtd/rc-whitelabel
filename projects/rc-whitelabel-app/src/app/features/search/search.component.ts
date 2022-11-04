@@ -6,6 +6,8 @@ import { AppConfig } from '../../app.config';
 import { Router } from '@angular/router';
 import { LocationService } from '../../core/location.service';
 import { fadeIn, fadeInSlideUp } from '../../shared/animations';
+import { Title } from '@angular/platform-browser';
+import {AnalyticsService} from '../../core/analytics.service';
 
 interface SearchSuggestion {
   cat: string;
@@ -23,9 +25,16 @@ interface Landmark {
   channel_landmark_name: string;
   channel_landmark_number: number;
 }
+interface Site {
+  name: string;
+  id: number;
+  lat: string;
+  lng: string;
+  notes: string;
+}
 interface Cuisine {
-  label: string;
-  total: number;
+  Cuisine: string;
+  Count: number;
 }
 
 @Component({
@@ -37,6 +46,7 @@ interface Cuisine {
 export class SearchComponent implements OnInit {
   isLoaded = false;
   maxCuisines = 5;
+  isChannelSite = false;
 
   // Reference to search element
   // so that we can set focus
@@ -53,6 +63,7 @@ export class SearchComponent implements OnInit {
     takeaway: 'fast_food',
     recent: 'watch_later'
   };
+
   // Results
   restaurants: any[] = [];
   searchRestaurants: any[] = [];
@@ -61,8 +72,32 @@ export class SearchComponent implements OnInit {
   searchSuggestions: SearchSuggestion[] = [];
   cuisines: Cuisine[] = [];
   recentlyViewed: any[] = [];
+
   // User location
   userPosition: any | undefined;
+
+  // Channel search config
+  channelConfig = {
+    channelType: 3,
+    defaultView: 'list',
+    showRecentlyViewed: true,
+    showLandmarks: true,
+    showCuisines: true,
+    searchPlaceholderTxt: 'Type landmark, restaurant or cuisine',
+    noResultsTxt: 'No matches'
+  }
+
+  siteConfig = {
+    channelType: 3,
+    defaultView: 'map',
+    showRecentlyViewed: true,
+    showLandmarks: false,
+    showCuisines: false,
+    searchPlaceholderTxt: 'Enter a site name or restaurant name',
+    noResultsTxt: 'No matches'
+  }
+
+  channelSites: Site[] = [];
 
   constructor(
     private api: ApiService,
@@ -70,10 +105,40 @@ export class SearchComponent implements OnInit {
     private data: DataService,
     public config: AppConfig,
     public router: Router,
-    private location: LocationService
-  ) {}
+    private location: LocationService,
+    private title: Title,
+    private ga: AnalyticsService
+  ) {
+
+    // Is this a type Site implementation?
+    // if (this.config.channel?.type === 'sites') {
+    //   console.log('Loading site config');
+    //   this.isChannelSite = true;
+    //   this.channelConfig = this.siteConfig;
+    //   this.data.loadChannelSites().then((data: any) => {
+    //     const sites = data.sites;
+    //     console.log(sites);
+    //     sites.forEach((item: any) => {
+    //       this.channelSites.push({
+    //         id: item.id,
+    //         lat: item.lat,
+    //         lng: item.lng,
+    //         name: item.name,
+    //         notes: item.notes
+    //       });
+    //     });
+    //     // sort the list
+    //     //this.channelSites.sort((a, b) => (a.name < b.name) ? -1 : 1 );
+    //     // console.log(this.channelSites);
+    //   });
+    // }
+    console.log('Loading default config');
+    title.setTitle('Search');
+
+  }
 
   ngOnInit(): void {
+
     // Observe user's position
     this.location.userLocationObs.subscribe((userPos) => {
       console.log(userPos);
@@ -81,7 +146,12 @@ export class SearchComponent implements OnInit {
     });
 
     // Summarised data
-    this.data.loadSummarisedData().then((data: any) => {
+    this.data.loadResultsSummary().then((data: any) => {
+      if ( data === null) {
+        console.log(`No restaurants available within ${this.config.channel.boundary} of the Channel centre.`);
+        this.isLoaded = true;
+        return;
+      }
       console.log('LoadSummary', data);
       this.searchRestaurants = data.restaurants;
       this.landmarks = data.landmarks;
@@ -98,6 +168,22 @@ export class SearchComponent implements OnInit {
 
     // Get recent restaurants
     this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
+
+      this.data.loadChannelSites().then((data: any) => {
+
+        const sites = data.sites;
+        console.log('SITES', data);
+        sites.forEach((item: any) => {
+          this.channelSites.push({
+            id: item.id,
+            lat: item.lat,
+            lng: item.lng,
+            name: item.name,
+            notes: item.notes
+          });
+        });
+      });
+
   }
 
   getRecentlyViewed(): void {
@@ -124,6 +210,7 @@ export class SearchComponent implements OnInit {
       const regex =  new RegExp(`\\b${str}\\S*`, 'g');
       // Clear current suggestions
       this.searchSuggestions = [];
+
       // Check for matching landmarks
       if (!!this.landmarks) {
         let i = this.landmarks.length; let m; let idx;
@@ -136,11 +223,32 @@ export class SearchComponent implements OnInit {
               name: m.channel_landmark_name,
               cat: 'location',
               index: idx,
-              route: ['/restaurants/nearest/', `${m.channel_landmark_lat}:${m.channel_landmark_lng}`]
+              route: ['/restaurants', 'map', `${m.channel_landmark_lat},${m.channel_landmark_lng}`]
+            });
+            console.log('Route', `/restaurants/${this.channelConfig.defaultView}/${m.channel_landmark_lat},${m.channel_landmark_lng}`);
+
+          }
+        }
+      }
+
+      // Check for matching sites
+      if (!!this.channelSites) {
+        let i = this.channelSites.length; let s; let idx;
+        while (i--) {
+          s = this.channelSites[i];
+          idx = s.name.toUpperCase().search(regex);
+          if (idx > -1) {
+            // Add SearchSuggestion
+            this.searchSuggestions.push({
+              name: s.name,
+              cat: 'site',
+              index: idx,
+              route: ['/restaurants', 'map', `${s.lat},${s.lng}`]
             });
           }
         }
       }
+
       // Check for matching restaurants
       if (!!this.searchRestaurants) {
         let i = this.searchRestaurants.length; let r; let idx;
@@ -157,35 +265,41 @@ export class SearchComponent implements OnInit {
           }
         }
       }
+
       // Check for matching cuisines
-      if (!!this.cuisines) {
+      if (!!this.cuisines && this.channelConfig.showCuisines) {
         let i = this.cuisines.length; let c; let idx;
         while (i--) {
           c = this.cuisines[i];
-          idx = c.label.toUpperCase().search(regex);
+          idx = c.Cuisine.toUpperCase().search(regex);
           if (idx > -1) {
             this.searchSuggestions.push({
               cat: 'cuisine',
-              name: c.label,
+              name: c.Cuisine,
               index: idx,
-              route: ['/restaurants', `${c.label}`],
-              misc: c.total
+              route: ['restaurants', 'list', `${this.config.channel.latitude},${this.config.channel.longitude}`, `${c.Cuisine}`],
+              misc: c.Cuisine
             });
           }
         }
       }
+
       // Sort results by index position
       this.searchSuggestions.sort((a, b) => {
         return a.index - b.index;
       });
+
       // this.searchSuggestions.splice(maxSuggestions);
       this.noSuggestions = this.searchSuggestions.length === 0;
+
     } else {
       // clear current suggestions
       this.searchSuggestions = [];
     }
   }
+
   getTopCuisines(): Array<Cuisine> {
+    console.log(this.cuisines.slice(0, this.config.maxTopCuisines));
     return this.cuisines.slice(0, this.config.maxTopCuisines);
   }
 
@@ -196,14 +310,28 @@ export class SearchComponent implements OnInit {
     this.rdSearchInput.nativeElement.focus();
   }
 
+  viewRecentlyViewed(restaurant: any): void {
+    console.log('recent', restaurant);
+    this.viewRestaurantSpw(restaurant);
+    this.searchReset()
+  }
+
   viewRestaurantSpw(restaurant: any): void {
     console.log(restaurant);
+    this.data.setRecentlyViewed(restaurant);
     this.data.setRecentlyViewed({
-      restaurant_name: restaurant.name,
+      restaurant_name: restaurant.name || restaurant.restaurant_name,
       restaurant_spw_url: restaurant.spw || restaurant.restaurant_spw_url,
-      restaurant_number: restaurant.number
+      restaurant_number: restaurant.number || restaurant.restaurant_number
     });
     this.searchReset();
-    window.open(restaurant.spw, '_blank');
+    //
+    const restName = restaurant.name || restaurant.restaurant_name;
+    this.ga.eventEmitter(
+      'page_view_spw',
+      'search_recently_viewed',
+      'open_spw', `spw/${restName.replace(/\s/g , "-")}`,
+      0);
+    window.open(restaurant.spw || restaurant.restaurant_spw_url, '_blank');
   }
 }

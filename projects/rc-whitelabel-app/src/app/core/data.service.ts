@@ -3,7 +3,6 @@ import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app.config';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,24 +11,19 @@ import { Router } from '@angular/router';
 export class DataService {
 
   // Caches
-  private restaurants: any[] = [];
-  private searchRests: any[] = [];
   recentlyViewed: any = [];
-  private cuisines: any[] = [];
-  private landmarks: any[] = [];
-  private features: any[] = [];
+  private sites: any[] = [];
 
   constructor(
     private api: ApiService,
     private local: LocalStorageService,
     private http: HttpClient,
-    private config: AppConfig,
-    private router: Router
+    private config: AppConfig
   ) {
-
     this.recentlyViewed = this.local.get('rdRecentlyViewed');
   }
 
+  // Channel config.
   loadChannelConfig(domain: string): Promise<any> {
     return new Promise(async resolve => {
       await this.api.getChannelByDomain(domain)
@@ -42,6 +36,7 @@ export class DataService {
 
   // Translations
   loadTranslations(code: string, key: string, lang: string): Promise<any> {
+    console.log('loadTranslations');
     return new Promise( async resolve => {
       await this.api.getChannelLanguage(code, key, lang)
         .toPromise()
@@ -54,102 +49,96 @@ export class DataService {
   }
 
   // Get restaurants
-  loadRestaurantsByParams(options: any): Promise<any> {
-
-    const params = {
-      filter: options.filter,
-      filterText: options.filterText,
-      offset: options.offset || 0,
-      limit: options.limit,
-      lat: options.lat,
-      lng: options.lng,
-      testing: this.config.testMode
-    };
-
-    // console.log('Params', params);
-
+  /**
+   * Get channel configuration
+   * @param id - channel id
+   */
+  loadChannelSettings(id: number): Promise <any> {
     return new Promise(async resolve => {
-      await this.api.getRestaurantsByParams(this.config.channel.accessCode, this.config.channel.apiKey, params)
+      await this.api.getChannelSettings(id)
         .toPromise()
-        .then((res: any) => {
-          // console.log(res);
-          if (!!res) {
-            resolve(res.restaurants);
-          } else {
-            resolve([]);
-          }
+        .then((data: any) => {
+          console.log('Channel settings loaded', data);
+          this.sites = data.camc;
+          resolve(data);
         })
-        .catch((error: any) => {
-          console.log('ERROR', error);
-          this.router.navigate(['/error']);
-        });
+        .catch((error: any) => console.log('ERROR', error));
     });
   }
 
-  // Summary
-  loadSummarisedData(): Promise <any> {
+  /**
+   * Get all sites associated with channel
+   * like CAMC
+   */
+  loadChannelSites(): Promise <any> {
     return new Promise(async resolve => {
-      if (this.cuisines.length) {
-        console.log('Summary loaded from CACHE', this);
+      if (this.sites.length) {
+        console.log('Sites loaded from CACHE');
         resolve({
-          restaurants: this.searchRests,
-          landmarks: this.landmarks,
-          features: this.features,
-          cuisines: this.cuisines
+          sites: this.sites
         });
       } else {
-        await this.api.getRestaurantsSummary(this.config.channel.accessCode, this.config.channel.apiKey,
-          this.config.channel.latitude, this.config.channel.longitude)
+        await this.api.getChannelSites(this.config.channel.id,  this.config.channel.accessCode, this.config.channel.apiKey)
           .toPromise()
           .then((res: any) => {
-            console.log('Summary loaded from API');
-            this.setSummary(res);
+            if (res === null) {
+              console.log('This Channel does not have sites configured');
+              return;
+            }
+            console.log('Sites loaded from API', res);
+            this.sites = res.sites;
             resolve({
-              restaurants: this.searchRests,
-              landmarks: this.landmarks,
-              features: this.features,
-              cuisines: this.cuisines
+              sites: this.sites
             });
           })
           .catch((error: any) => console.log('ERROR', error));
       }
     });
   }
-  // Summary data
-  setSummary(s: any): void {
-    this.setCuisines(s.cuisines);
-    this.landmarks = s.landmarks;
-    this.features = s.attributes;
-    this.searchRests = s.restaurants;
-  }
-  getCuisines(): any[] {
-    return this.cuisines;
-  }
-  getLandmarks(): any[] {
-    return this.landmarks;
-  }
-  setCuisines(arr: any): void {
-    this.cuisines = [];
-    let i = arr.length;
-    let c;
-    while (i--) {
-      c = arr[i];
-      // @ts-ignore
-      this.cuisines.push({
-        label: c.Cuisine,
-        total: c.Count
-      });
-    }
-    this.cuisines.sort((a, b) => {
-      return b.total - a.total;
+
+
+  /**
+   * Get summarised results of search query
+   * @param lat
+   * @param lng
+   * @param boundary
+   */
+  loadResultsSummary(
+    lat = this.config.channel.latitude,
+    lng = this.config.channel.longitude,
+    boundary = this.config.channel.boundary): Promise <any> {
+    return new Promise(async resolve => {
+      await this.api.getRestaurantsSummary(
+        this.config.channel.accessCode,
+        this.config.channel.apiKey,
+        lat,
+        lng,
+        boundary
+      )
+        .toPromise()
+        .then((data: any) => {
+          resolve(data);
+        })
+        .catch((error: any) => console.log('ERROR', error));
     });
-    console.log(this.cuisines);
   }
-  // recently viewed
-  getRecentlyViewed(): any[] {
-    return this.recentlyViewed;
+
+  loadRestaurantResults(code: string, key: string, params: any): Promise<any> {
+    console.log('loadRestaurantResults', params);
+    return new Promise(async resolve => {
+      await this.api.getRestaurantsByParamsFast(code, key, params)
+        .toPromise()
+        .then((data: any) => {
+          resolve(data);
+        })
+        .catch((error: any) => console.log('ERROR', error));
+    });
   }
+
+// recently viewed
   setRecentlyViewed(restaurant: any): void {
+    console.log('Recent', restaurant);
+
     // Check whether this restaurant is already in the array
     const maxNum = 5;
     if (this.recentlyViewed) {
@@ -167,6 +156,6 @@ export class DataService {
     }
     // Update localStorage
     this.local.set('rdRecentlyViewed', this.recentlyViewed);
-    // console.log(this.recentlyViewed);
+    console.log(this.recentlyViewed);
   }
 }

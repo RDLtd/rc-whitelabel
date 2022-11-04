@@ -15,25 +15,55 @@
         media="print" onload="this.media='all'">
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/icon?family=Material+Icons" >
-
   <base href="/">
 
-  <meta property="og:title" content="Member's Restaurant Directory">
-  <meta property="og:description" content="Restaurant Collective member's restaurants">
+  <meta property="og:title" content="Restaurant Collective">
+  <meta property="og:description" content="Restaurant Collective brings together independent restaurateurs to give members a loud collective voice, and benefit from a wide range of offers and support.">
   <meta property="og:image" content="/assets/images/safe_image.jpeg">
   <meta property="og:image:alt" content="Image of Restaurant Collective">
   <meta property="og:locale" content="en_GB">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://directory.restauranatcollective.org.uk/">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="/assets/images/safe_image.jpeg">
 
   <link rel="icon" href="/favicon.ico">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest" crossorigin="use-credentials">
 
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js"></script>
+  <!-- Spw Marker -->
+  <script defer src="http://localhost:8080/assets/scripts/js"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+  </script>
+
+  <style>
+    :root {
+      /*--img-logo: '';*/
+      /*--img-bgd: '';*/
+      /*--clr-grey-100: #f1f3f4;*/
+      /*--clr-bgd-default: #252525;*/
+      /*--clr-text-default: #4A4A4A;*/
+      /*--clr-page-bgd: #cdcdcd;*/
+      /*--clr-header-bgd: #000;*/
+      /*--clr-header-fgd: #fff;*/
+      /*--clr-footer-bgd: #000;*/
+      /*--clr-footer-fgd: #fff;*/
+      /*--clr-primary: #fff;*/
+      /*--clr-accent: #ff3d00;*/
+      /*--clr-primary-cta: #ff3d00;*/
+      /*--clr-promotion: #ff3d00;*/
+      --clr-icon-cuisine: #2eb871;
+      --clr-icon-restaurant: #23b6e0;
+      --clr-icon-location: #ff3d00;
+    }
+  </style>
+
 </head>
+
 <body class="mat-typography">
   <rd-root></rd-root>
 </body>
