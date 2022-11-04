@@ -81,7 +81,11 @@ export class DataService {
         await this.api.getChannelSites(this.config.channel.id,  this.config.channel.accessCode, this.config.channel.apiKey)
           .toPromise()
           .then((res: any) => {
-            console.log('Sites loaded from API');
+            if (res === null) {
+              console.log('This Channel does not have sites configured');
+              return;
+            }
+            console.log('Sites loaded from API', res);
             this.sites = res.sites;
             resolve({
               sites: this.sites

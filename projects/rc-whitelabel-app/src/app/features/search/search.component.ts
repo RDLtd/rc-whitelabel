@@ -147,6 +147,11 @@ export class SearchComponent implements OnInit {
 
     // Summarised data
     this.data.loadResultsSummary().then((data: any) => {
+      if ( data === null) {
+        console.log(`No restaurants available within ${this.config.channel.boundary} of the Channel centre.`);
+        this.isLoaded = true;
+        return;
+      }
       console.log('LoadSummary', data);
       this.searchRestaurants = data.restaurants;
       this.landmarks = data.landmarks;
@@ -165,8 +170,9 @@ export class SearchComponent implements OnInit {
     this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
 
       this.data.loadChannelSites().then((data: any) => {
+
         const sites = data.sites;
-        console.log('SITES', sites);
+        console.log('SITES', data);
         sites.forEach((item: any) => {
           this.channelSites.push({
             id: item.id,
