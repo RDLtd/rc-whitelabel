@@ -757,15 +757,17 @@ rd-footer {
   align-items: center;
   justify-content: flex-end;
   font-size: 1rem;
-  padding-bottom: 8px;
+  padding-block: 8px;
   padding-inline: 8px 0;
   .rd-map-nav-summary {
-    // color: var(--clr-primary-cta);
     font-weight: $font-weight-heavy;
     font-size: 1.125rem;
     flex: 1 auto;
     align-items: center;
-    margin-right: 1rem;
+    margin:0;
+  }
+  @include mq(med) {
+    padding: 0;
   }
 }
 .rd-map-info-window {
@@ -848,12 +850,13 @@ rd-footer {
 .rd-filter-btn {
   z-index: 20;
   position: fixed;
-  bottom: 64px; right: 96px;
+  bottom: 64px; left: auto; right: auto;
   transform: scale(0);
   width: 100%;
   text-align: center;
   @include mq(med){
     width: auto;
+    right: 96px;
   }
   .mat-raised-button {
     margin: 0;

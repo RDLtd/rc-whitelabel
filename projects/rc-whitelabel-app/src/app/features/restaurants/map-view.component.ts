@@ -38,6 +38,7 @@ export class MapViewComponent implements OnInit {
     mapId: 'f547725f57ef2ea8',
     mapTypeControl: false
   };
+  hideMap = true;
   svgMarker: any;
   svgMarkerOffer: any
   svgMarkerActive: any;
@@ -89,7 +90,6 @@ export class MapViewComponent implements OnInit {
   userPosition?: UserGeoLocation;
   showDistanceData = false;
   totalRestaurants = 0;
-  geoTarget: any;
 
   constructor(
     private config: AppConfig,

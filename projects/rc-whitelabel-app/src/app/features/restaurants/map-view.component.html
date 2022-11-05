@@ -8,9 +8,7 @@
 <div class="rd-map">
   <div class="rd-component list">
 
-    <ul class="rd-map-list" [@fadeInStaggerIn]="restaurantBatch$ | async">
-
-      <ng-container *ngIf="!(resultsLoaded$ | async)">
+    <ng-container *ngIf="!(resultsLoaded$ | async)" >
       <div class="rd-map-list-item-skeleton" *ngFor="let n of resultReference">
         <div class="thumb"></div>
         <div>
@@ -19,7 +17,9 @@
           <span class="text2"></span>
         </div>
       </div>
-      </ng-container>
+    </ng-container>
+
+    <ul class="rd-map-list" [@fadeInStaggerIn]="restaurantBatch$ | async">
 
       <ng-container *ngIf="resultsLoaded$ | async">
       <li class="rd-map-list-item"
