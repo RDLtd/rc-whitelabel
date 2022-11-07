@@ -8,17 +8,19 @@
 <div class="rd-map">
   <div class="rd-component list">
 
+
+
     <ul class="rd-map-list" [@fadeInStaggerIn]="restaurantBatch$ | async">
 
-      <ng-container *ngIf="!(resultsLoaded$ | async)">
-      <div class="rd-map-list-item-skeleton" *ngFor="let n of resultReference">
-        <div class="thumb"></div>
-        <div>
-          <span class="heading"></span>
-          <span class="text"></span>
-          <span class="text2"></span>
+      <ng-container *ngIf="!(resultsLoaded$ | async)" >
+        <div class="rd-map-list-item-skeleton" *ngFor="let n of resultReference">
+          <div class="thumb"></div>
+          <div>
+            <span class="heading"></span>
+            <span class="text"></span>
+            <span class="text2"></span>
+          </div>
         </div>
-      </div>
       </ng-container>
 
       <ng-container *ngIf="resultsLoaded$ | async">
@@ -63,7 +65,9 @@
 
     </div>
 
-    <div class="rd-map-container" *ngIf="mapApiLoaded$ | async">
+
+
+    <div class="rd-map-container" *ngIf="mapApiLoaded$ | async" [ngStyle]="{ 'opacity': mapOpacity}">
 
     <google-map
       height="100%"
@@ -134,6 +138,7 @@
 </div>
 
 <rd-filter-btn
+  (onMapUpdate)="toggleMap($event)"
   [searchFilter]="searchFilter"
   [view]="'map'"
   [filterOn]="!!searchFilter">

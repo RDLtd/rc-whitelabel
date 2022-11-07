@@ -38,6 +38,7 @@ export class MapViewComponent implements OnInit {
     mapId: 'f547725f57ef2ea8',
     mapTypeControl: false
   };
+  mapOpacity = 0;
   svgMarker: any;
   svgMarkerOffer: any
   svgMarkerActive: any;
@@ -89,7 +90,6 @@ export class MapViewComponent implements OnInit {
   userPosition?: UserGeoLocation;
   showDistanceData = false;
   totalRestaurants = 0;
-  geoTarget: any;
 
   constructor(
     private config: AppConfig,
@@ -173,6 +173,11 @@ export class MapViewComponent implements OnInit {
       // load the first batch of restaurants
       this.restService.loadRestaurantBatch({ offset: this.currentOffset }, true);
     });
+  }
+
+  toggleMap(opacity: number): void {
+    console.log('Hide map', opacity);
+    this.mapOpacity = opacity;
   }
 
   // Load the Google Maps api
@@ -365,10 +370,12 @@ export class MapViewComponent implements OnInit {
       lat: Number(this.geoLatLngLiteral?.lat),
       lng: Number(this.geoLatLngLiteral?.lng)
     });
+    this.mapOpacity = 1;
     // Fit around markers
     setTimeout(() => {
       this?.map.fitBounds(this.bounds, 100);
       this.markersAdded = true;
+      console.log('Show map');
     }, 0);
     this.lastZoom = this.zoom;
   }
