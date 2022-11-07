@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AppConfig } from '../../../app.config';
 import { FilterOptionsDialogComponent } from './filter-options-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +16,7 @@ export class FilterBtnComponent implements OnInit {
   @Input() filterOn = false;
   @Input() searchFilter: any;
   @Input() view = 'list';
+  @Output() onMapUpdate = new EventEmitter<number>();
 
   showFilterOptions = false;
   userPosition: any;
@@ -64,19 +65,28 @@ export class FilterBtnComponent implements OnInit {
       // Guard clause
       if (!query) { return;}
 
+      this.onMapUpdate.emit(0);
+
       if (query.type === 'filter') {
         this.router
           .navigateByUrl(
           `/restaurants/${this.view}/${this.restService.geoCoords}/${query.cuisine}?location=${this.geoTarget.label}`)
           .then(() => console.log(`Filtered by ${query.cuisine}`));
       } else {
+        if (query.lat == this.restService.geoLatitude && query.lng == this.restService.geoLongitude) {
+          console.log(`No change`);
+          this.onMapUpdate.emit(1);
+          return;
+        }
 
         const loc = query.label ?? 'Your Location';
 
         this.router
           .navigateByUrl(
             `/restaurants/map/${query.lat},${query.lng}?location=${loc}`)
-          .then(() => console.log('No cuisine filter'));
+          .then(() => {
+            console.log('No cuisine filter');
+          });
       }
     });
   }

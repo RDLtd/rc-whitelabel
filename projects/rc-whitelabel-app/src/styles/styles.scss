@@ -101,6 +101,7 @@ a, a:active, a:focus {
 .rd-show { opacity: 1 !important;}
 .rd-highlight { color: $col-accent; }
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
+.rd-hidden { opacity: 0;}
 .rd-icon-restaurant { color: $col-icon-restaurant !important;}
 .rd-icon-cuisine { color: $col-icon-cuisine !important;}
 .rd-icon-location,
@@ -828,6 +829,7 @@ rd-footer {
 .rd-map-container {
   width: 100%;
   height: calc(100% - 48px);
+  transition: opacity .3s ease-out;
 }
 .rd-map {
   position: relative;
