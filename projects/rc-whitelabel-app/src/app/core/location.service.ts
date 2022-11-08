@@ -30,8 +30,8 @@ export class LocationService {
           .then((res: any) => {
             // console.log(res);
             this.userLocationSubject.next({
-              lat: geo.coords.latitude,
-              lng: geo.coords.longitude,
+              lat: geo.coords.latitude.toFixed(6),
+              lng: geo.coords.longitude.toFixed(6),
               distance: res.distance || `More than ${this.config.maxUserDistance}km`,
               inRange: res.near
             });
