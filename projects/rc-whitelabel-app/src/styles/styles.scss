@@ -830,6 +830,7 @@ rd-footer {
   width: 100%;
   height: calc(100% - 48px);
   transition: opacity .3s ease-out;
+  border-radius: 8px;
 }
 .rd-map {
   position: relative;

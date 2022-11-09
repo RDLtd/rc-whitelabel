@@ -375,7 +375,6 @@ export class MapViewComponent implements OnInit {
     setTimeout(() => {
       this?.map.fitBounds(this.bounds, 100);
       this.markersAdded = true;
-      console.log('Show map');
     }, 0);
     this.lastZoom = this.zoom;
   }
