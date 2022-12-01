@@ -8,6 +8,7 @@ import { LocationService } from '../../core/location.service';
 import { fadeIn, fadeInSlideUp } from '../../shared/animations';
 import { Title } from '@angular/platform-browser';
 import { AnalyticsService } from '../../core/analytics.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 interface SearchSuggestion {
   cat: string;
@@ -25,28 +26,20 @@ interface Landmark {
   channel_landmark_name: string;
   channel_landmark_number: number;
 }
-interface Site {
-  name: string;
-  id: number;
-  lat: string;
-  lng: string;
-  notes: string;
-}
+
 interface Cuisine {
   Cuisine: string;
   Count: number;
 }
 
 @Component({
-  selector: 'rd-search',
-  templateUrl: './search.component.html',
+  selector: 'rd-search-form',
+  templateUrl: './search-form.component.html',
   animations: [fadeIn, fadeInSlideUp]
 })
 
-export class SearchComponent implements OnInit {
+export class SearchFormComponent implements OnInit {
   isLoaded = false;
-  maxCuisines = 5;
-  isChannelSite = false;
 
   // Reference to search element
   // so that we can set focus
@@ -87,18 +80,6 @@ export class SearchComponent implements OnInit {
     noResultsTxt: 'No matches'
   }
 
-  siteConfig = {
-    channelType: 3,
-    defaultView: 'map',
-    showRecentlyViewed: true,
-    showLandmarks: false,
-    showCuisines: false,
-    searchPlaceholderTxt: 'Enter a site name or restaurant name',
-    noResultsTxt: 'No matches'
-  }
-
-  channelSites: Site[] = [];
-
   constructor(
     private api: ApiService,
     private storageService: LocalStorageService,
@@ -107,10 +88,10 @@ export class SearchComponent implements OnInit {
     public router: Router,
     private location: LocationService,
     private title: Title,
-    private ga: AnalyticsService
+    private ga: AnalyticsService,
+    public dialog: MatDialogRef<any>
   ) {
 
-    console.log('Loading default config');
     title.setTitle('Search');
 
   }
@@ -130,7 +111,7 @@ export class SearchComponent implements OnInit {
         this.isLoaded = true;
         return;
       }
-      console.log('LoadSummary', data);
+      // console.log('LoadSummary', data);
       this.searchRestaurants = data.restaurants;
       this.landmarks = data.landmarks;
       this.features = data.attributes;
@@ -145,25 +126,8 @@ export class SearchComponent implements OnInit {
     }, 0);
 
     // Get recent restaurants
-    this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
+    // this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
 
-      // this.data.loadChannelSites().then((data: any) => {
-      //   const sites = data.sites;
-      //   console.log('SITES', data);
-      //   sites.forEach((item: any) => {
-      //     this.channelSites.push({
-      //       id: item.id,
-      //       lat: item.lat,
-      //       lng: item.lng,
-      //       name: item.name,
-      //       notes: item.notes
-      //     });
-      //   });
-      // });
-  }
-
-  getRecentlyViewed(): void {
-    this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
   }
 
   doSearch(str: string): void {
@@ -202,25 +166,6 @@ export class SearchComponent implements OnInit {
               route: ['/restaurants', 'map', `${m.channel_landmark_lat},${m.channel_landmark_lng}`]
             });
             console.log('Route', `/restaurants/${this.channelConfig.defaultView}/${m.channel_landmark_lat},${m.channel_landmark_lng}`);
-
-          }
-        }
-      }
-
-      // Check for matching sites
-      if (!!this.channelSites) {
-        let i = this.channelSites.length; let s; let idx;
-        while (i--) {
-          s = this.channelSites[i];
-          idx = s.name.toUpperCase().search(regex);
-          if (idx > -1) {
-            // Add SearchSuggestion
-            this.searchSuggestions.push({
-              name: s.name,
-              cat: 'site',
-              index: idx,
-              route: ['/restaurants', 'map', `${s.lat},${s.lng}`]
-            });
           }
         }
       }
@@ -274,9 +219,8 @@ export class SearchComponent implements OnInit {
     }
   }
 
-  getTopCuisines(): Array<Cuisine> {
-    console.log(this.cuisines.slice(0, this.config.maxTopCuisines));
-    return this.cuisines.slice(0, this.config.maxTopCuisines);
+  closeSearchForm(): void {
+    this.dialog.close();
   }
 
   searchReset(): void {
@@ -309,5 +253,7 @@ export class SearchComponent implements OnInit {
       'open_spw', `spw/${restName.replace(/\s/g , "-")}`,
       0);
     window.open(restaurant.spw || restaurant.restaurant_spw_url, '_blank');
+    this.closeSearchForm();
   }
 }
+

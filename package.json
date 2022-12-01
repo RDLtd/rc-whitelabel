@@ -3,6 +3,7 @@
   "version": "13.4.0",
   "scripts": {
     "ng": "ng",
+    "start": "node server.js",
     "rdl": "ng serve --port 54747",
     "camc": "ng serve --port 8006",
     "ssl": "npm run cert & ng serve --port",

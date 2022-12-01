@@ -88,22 +88,22 @@
     <!-- Quick links -->
     <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
 
-      <section *ngIf="channelConfig.showRecentlyViewed" class="rd-quick-links">
-        <div>
-          <mat-icon class="rd-icon-restaurant">{{ icons.restaurant }}</mat-icon>
-          <h2>{{ config.i18n["Recently_viewed"] }}</h2>
-        </div>
-        <ul>
-          <li *ngIf="!recentlyViewed?.length">
-            <a>{{ config.i18n["You_are_new"] }}</a>
-          </li>
-          <li *ngFor="let recent of recentlyViewed">
-            <a target="_blank" (click)="viewRecentlyViewed(recent)">
-              {{ recent['restaurant_name'] }}
-            </a>
-          </li>
-        </ul>
-      </section>
+<!--      <section *ngIf="channelConfig.showRecentlyViewed" class="rd-quick-links">-->
+<!--        <div>-->
+<!--          <mat-icon class="rd-icon-restaurant">{{ icons.restaurant }}</mat-icon>-->
+<!--          <h2>{{ config.i18n["Recently_viewed"] }}</h2>-->
+<!--        </div>-->
+<!--        <ul>-->
+<!--          <li *ngIf="!recentlyViewed?.length">-->
+<!--            <a>{{ config.i18n["You_are_new"] }}</a>-->
+<!--          </li>-->
+<!--          <li *ngFor="let recent of recentlyViewed">-->
+<!--            <a target="_blank" (click)="viewRecentlyViewed(recent)">-->
+<!--              {{ recent['restaurant_name'] }}-->
+<!--            </a>-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--      </section>-->
 
       <section class="rd-quick-links" *ngIf="(landmarks?.length || userPosition?.inRange) && channelConfig.showLandmarks">
         <div>
@@ -135,23 +135,24 @@
         </ul>
       </section>
 
-      <section *ngIf="channelConfig.showCuisines && cuisines.length" class="rd-quick-links">
-      <div>
-        <mat-icon class="rd-icon-cuisine">{{ icons.cuisine }}</mat-icon>
-        <h2>{{ config.i18n["Cuisines"] }}</h2>
-      </div>
-      <ul>
-        <li *ngFor="let cuisine of cuisines">
-          <a [routerLink]="['/restaurants', 'list', config.channel.latitude + ',' + config.channel.longitude,
-          cuisine.Cuisine]">
-            {{ cuisine?.Cuisine }}
-            <span class="rd-flex-spacer"></span>
-            <span>{{ cuisine?.Count }}</span>
-          </a>
-        </li>
-      </ul>
-    </section>
+<!--      <section *ngIf="channelConfig.showCuisines && cuisines.length" class="rd-quick-links">-->
+<!--      <div>-->
+<!--        <mat-icon class="rd-icon-cuisine">{{ icons.cuisine }}</mat-icon>-->
+<!--        <h2>{{ config.i18n["Cuisines"] }}</h2>-->
+<!--      </div>-->
+<!--      <ul>-->
+<!--        <li *ngFor="let cuisine of cuisines">-->
+<!--          <a [routerLink]="['/restaurants', 'list', config.channel.latitude + ',' + config.channel.longitude,-->
+<!--          cuisine.Cuisine]">-->
+<!--            {{ cuisine?.Cuisine }}-->
+<!--            <span class="rd-flex-spacer"></span>-->
+<!--            <span>{{ cuisine?.Count }}</span>-->
+<!--          </a>-->
+<!--        </li>-->
+<!--      </ul>-->
+<!--    </section>-->
 
     </div>
   </div>
+
 </div>

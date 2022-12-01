@@ -7,8 +7,10 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
+
   declarations: [
     MainLayoutComponent,
     HeaderComponent,
@@ -19,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
     BrowserAnimationsModule,
     RouterModule,
     // Material
+    MatDialogModule,
     MatButtonModule,
     MatIconModule
   ],

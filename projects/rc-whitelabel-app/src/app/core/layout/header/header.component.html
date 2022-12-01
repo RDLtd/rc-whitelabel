@@ -25,13 +25,13 @@
 
   <button
     mat-button
-    routerLink=""
+    (click)="openSearchForm()"
     @fadeIn>
     <mat-icon>search</mat-icon>
     <span class="hide-small">{{ config.i18n.Search }}</span>
   </button>
 </ng-container>
-<a routerLink="search" class="rd-logo" *ngIf="!!config.channel.rcLogo">
+<a routerLink="" class="rd-logo" *ngIf="!!config.channel.rcLogo">
   <img
     class="rd-logo"
     [src]="config.channel.rcLogo"

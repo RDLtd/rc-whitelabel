@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfig } from '../../../app.config';
-import {NavigationEnd, Router, Event as NavigationEvent, NavigationStart, ActivatedRoute} from '@angular/router';
+import { NavigationEnd, Router, Event as NavigationEvent, NavigationStart, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { fadeIn } from '../../../shared/animations';
 import { RestaurantsService } from '../../../features/restaurants/restaurants.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SearchFormComponent } from '../../../features/search/search-form.component';
 
 @Component({
   selector: 'rd-header',
@@ -23,7 +25,8 @@ export class HeaderComponent implements OnInit {
     public config: AppConfig,
     private router: Router,
     private restService: RestaurantsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {
     this.router.events
       .subscribe(
@@ -48,6 +51,13 @@ export class HeaderComponent implements OnInit {
     });
     this.restService.restaurants.subscribe(res => {
       this.showViews = res.length > 0;
+    });
+  }
+
+  openSearchForm(): void {
+    console.log(this.dialog);
+    const dialogRef = this.dialog.open(SearchFormComponent, {
+      panelClass: 'rd-search-dialog'
     });
   }
 

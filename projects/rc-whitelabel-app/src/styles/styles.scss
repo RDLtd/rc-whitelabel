@@ -291,6 +291,15 @@ rd-footer {
 
 // SEARCH
 // ------------------------
+.rd-search-form-container {
+  width: min(90vw, 640px);
+}
+.rd-search-dialog {
+  .mat-dialog-container {
+    border-radius: 12px;
+    padding: 0;
+  }
+}
 .rd-search-container {
   position: relative ;
   z-index: 0;
