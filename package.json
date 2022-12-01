@@ -2,6 +2,7 @@
   "name": "rc-whitelabel",
   "version": "13.4.0",
   "scripts": {
+    "start": "node server.js",
     "ng": "ng",
     "rdl": "ng serve --port 54747",
     "camc": "ng serve --port 8006",
