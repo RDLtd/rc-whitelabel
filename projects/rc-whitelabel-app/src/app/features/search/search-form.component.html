@@ -1,8 +1,7 @@
 <mat-dialog-content>
   <div
     [class.loaded]="isLoaded"
-    class="rd-search-form-container"
-    @fadeInSlideUp>
+    class="rd-search-form-container">
 
     <rd-loader
       class="fill-accent"
@@ -11,8 +10,9 @@
     </rd-loader>
 
     <div class="rd-search-content" [class.rd-show]="isLoaded && config.channelLoaded">
+
       <!-- SEARCH FORM -->
-      <form #rdSearchForm="ngForm" (ngSubmit)="doSearch(rdSearchInput.value)">
+      <form #rdSearchForm="ngForm" (ngSubmit)="getAutoSuggestions(rdSearchInput.value)">
         <mat-form-field floatLabel="never" appearance="standard">
           <mat-label><mat-icon>search</mat-icon>
             {{ config.i18n['Search'] }}</mat-label>
@@ -20,7 +20,7 @@
             #rdSearchInput
             name="searchString"
             matInput
-            (keyup)="doSearch(rdSearchInput.value)"
+            (keyup)="getAutoSuggestions(rdSearchInput.value)"
             autocomplete="off"
             type="text"
             ngModel
@@ -47,36 +47,32 @@
       <ul [class.open]="!!rdSearchInput.value && !!searchSuggestions" class="rd-search-autofill">
 
         <!-- Suggestions -->
-        <li *ngFor="let displayItem of searchSuggestions; let i = index" [tabindex]="i + 1" [ngSwitch]="displayItem.cat">
+        <li *ngFor="let suggestion of searchSuggestions; let i = index" [tabindex]="i + 1"
+            [ngSwitch]="suggestion.cat">
 
           <!-- Landmarks -->
           <a *ngSwitchCase="'location'"
-             [queryParams]="{location: displayItem.name}"
-             [routerLink]="displayItem.route"
-             (click)="closeSearchForm()">
+             (click)="doGeoSearch(suggestion)">
             <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
-            {{ displayItem?.name }}
+            {{ suggestion?.name }}
             <span class="rd-flex-spacer"></span>
             <span></span>
           </a>
 
           <!-- Restaurants -->
           <a *ngSwitchCase="'restaurant'"
-             [routerLink]="[]" (click)="viewRestaurantSpw(displayItem)">
+             (click)="viewRestaurantSpw(suggestion)">
             <mat-icon class="rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
-            {{ displayItem?.name }}
+            {{ suggestion?.name }}
             <span class="rd-flex-spacer"></span>
-            <span>{{ displayItem.misc }}</span>
           </a>
 
           <!-- Cuisines -->
           <a *ngSwitchCase="'cuisine'"
-             [routerLink]="displayItem.route"
-             (click)="closeSearchForm()">
+             (click)="doCuisineSearch(suggestion)">
             <mat-icon class="rd-icon-cuisine">{{ icons['cuisine'] }}</mat-icon>
-            {{ displayItem?.name }}
+            {{ suggestion?.name }}
             <span class="rd-flex-spacer"></span>
-            <span class="rd-count" *ngIf="!!displayItem.misc">{{ displayItem.misc }}</span>
           </a>
 
         </li>

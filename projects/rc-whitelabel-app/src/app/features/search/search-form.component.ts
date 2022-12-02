@@ -14,9 +14,8 @@ interface SearchSuggestion {
   cat: string;
   name: string;
   index: number;
-  route?: string[];
   spw?: string;
-  misc?: any;
+  latLng?: string;
 }
 interface Landmark {
   channel_landmark_channel_id: string;
@@ -130,7 +129,7 @@ export class SearchFormComponent implements OnInit {
 
   }
 
-  doSearch(str: string): void {
+  getAutoSuggestions(str: string): void {
 
     // Scroll window to maximise room for search suggestions
     // window.scrollTo(0, 64);
@@ -139,73 +138,78 @@ export class SearchFormComponent implements OnInit {
     // const maxSuggestions = 10;
 
     if (str.length >= this.minSearchChars) {
-      // Normalize any extended latin (if supported by browser)
+
+      // Normalize any extended latin characters
       // and force uppercase for matching
+      // IF supported by current browser
       if (str.normalize !== undefined) {
         str = str.normalize ('NFKD').replace (/[\u0300-\u036F]/g, '').toUpperCase();
       } else {
         str = str.toUpperCase();
       }
-      // Create regex that looks for beginning of word matches
+
+      // Create a regex pattern that only
+      // looks for beginning of word matches
       const regex =  new RegExp(`\\b${str}\\S*`, 'g');
+
       // Clear current suggestions
       this.searchSuggestions = [];
 
-      // Check for matching landmarks
+      // Landmarks/Points of interest
       if (!!this.landmarks) {
-        let i = this.landmarks.length; let m; let idx;
-        while (i--) {
-          m = this.landmarks[i];
-          idx = m.channel_landmark_name.toUpperCase().search(regex);
-          if (idx > -1) {
-            // Add SearchSuggestion
+        let matchPosition;
+        this.landmarks.forEach((item: any) => {
+          // record the match position
+          // lower number = higher relevancy
+          matchPosition = item.channel_landmark_name.toUpperCase().search(regex)
+          if (matchPosition >= 0) {
             this.searchSuggestions.push({
-              name: m.channel_landmark_name,
+              name: item.channel_landmark_name,
               cat: 'location',
-              index: idx,
-              route: ['/restaurants', 'map', `${m.channel_landmark_lat},${m.channel_landmark_lng}`]
+              index: matchPosition,
+              latLng: `${item.channel_landmark_lat},${item.channel_landmark_lng}`
             });
-            console.log('Route', `/restaurants/${this.channelConfig.defaultView}/${m.channel_landmark_lat},${m.channel_landmark_lng}`);
           }
+        });
+
+        // Restaurants
+        if (!!this.searchRestaurants) {
+          let matchPosition;
+          this.searchRestaurants.forEach((item: any) => {
+            // record the match position
+            // lower number = higher relevancy
+            matchPosition = item.restaurant_name.toUpperCase().search(regex);
+            if (matchPosition >= 0) {
+              this.searchSuggestions.push({
+                cat: 'restaurant',
+                name: item.restaurant_name,
+                index: matchPosition,
+                spw: item.restaurant_spw_url
+              });
+            }
+          });
+        }
+
+        // Check for matching cuisines
+        if (!!this.cuisines && this.channelConfig.showCuisines) {
+          let matchPosition;
+          this.cuisines.forEach((item: any) => {
+            // record the match position
+            // lower number = higher relevancy
+            matchPosition = item.Cuisine.toUpperCase().search(regex);
+            if(matchPosition >= 0) {
+              this.searchSuggestions.push({
+                cat: 'cuisine',
+                name: item.Cuisine,
+                index: matchPosition,
+                latLng: `${this.config.channel.latitude},${this.config.channel.longitude}`
+              });
+            }
+          });
         }
       }
 
-      // Check for matching restaurants
-      if (!!this.searchRestaurants) {
-        let i = this.searchRestaurants.length; let r; let idx;
-        while (i--) {
-          r = this.searchRestaurants[i];
-          idx = r.restaurant_name.toUpperCase().search(regex);
-          if (idx > -1) {
-            this.searchSuggestions.push({
-              cat: 'restaurant',
-              name: r.restaurant_name,
-              index: idx,
-              spw: r.restaurant_spw_url
-            });
-          }
-        }
-      }
-
-      // Check for matching cuisines
-      if (!!this.cuisines && this.channelConfig.showCuisines) {
-        let i = this.cuisines.length; let c; let idx;
-        while (i--) {
-          c = this.cuisines[i];
-          idx = c.Cuisine.toUpperCase().search(regex);
-          if (idx > -1) {
-            this.searchSuggestions.push({
-              cat: 'cuisine',
-              name: c.Cuisine,
-              index: idx,
-              route: ['restaurants', 'list', `${this.config.channel.latitude},${this.config.channel.longitude}`, `${c.Cuisine}`],
-              misc: c.Cuisine
-            });
-          }
-        }
-      }
-
-      // Sort results by index position
+      // Sort results by index position - i.e. relevancy
       this.searchSuggestions.sort((a, b) => {
         return a.index - b.index;
       });
@@ -217,6 +221,21 @@ export class SearchFormComponent implements OnInit {
       // clear current suggestions
       this.searchSuggestions = [];
     }
+  }
+
+  doGeoSearch(obj: any): void {
+    this.router.navigate(['/restaurants', 'map', obj.latLng], { queryParams: { label: obj.name }})
+      .then(() => this.closeSearchForm());
+
+  }
+  doCuisineSearch(obj: any): void {
+    this.router.navigate([
+      '/restaurants',
+      'map',
+      obj.latLng,
+      obj.name
+    ])
+      .then(() => this.closeSearchForm());
   }
 
   closeSearchForm(): void {

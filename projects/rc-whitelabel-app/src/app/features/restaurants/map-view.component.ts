@@ -144,7 +144,7 @@ export class MapViewComponent implements OnInit {
         this.restService.geo = {
           lat: Number(this.latLng[0]).toFixed(6),
           lng: Number(this.latLng[1]).toFixed(6),
-          label: params.location
+          label: params.label
         }
 
         // Set maps object
