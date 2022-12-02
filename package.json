@@ -2,10 +2,9 @@
   "name": "rc-whitelabel",
   "version": "13.4.1",
   "scripts": {
-    "start": "node server.js",
     "ng": "ng",
     "start": "node server.js",
-    "rdl": "ng serve --port 54747",
+    "rdl": "npm run cert & ng serve --port 54747",
     "camc": "ng serve --port 8006",
     "ssl": "npm run cert & ng serve --port",
     "cert": "mkdir -p ./tls & mkcert -cert-file ./tls/localhost-cert.pem -key-file ./tls/localhost-key.pem -ecdsa localhost 127.0.0.1 ::1",
