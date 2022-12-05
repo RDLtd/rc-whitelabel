@@ -291,6 +291,10 @@ rd-footer {
 
 // SEARCH
 // ------------------------
+.rd-backdrop {
+  // backdrop-filter: blur(1px);
+  background-color: hsl(184 80% 8% / .8);
+}
 .rd-search-form-container {
   width: min(90vw, 640px);
 }
@@ -298,6 +302,7 @@ rd-footer {
   .mat-dialog-container {
     border-radius: 12px;
     padding: 0;
+    max-height: 62vh;
   }
 }
 .rd-search-container {

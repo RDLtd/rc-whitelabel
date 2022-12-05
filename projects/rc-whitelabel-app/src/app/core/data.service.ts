@@ -13,6 +13,7 @@ export class DataService {
   // Caches
   recentlyViewed: any = [];
   private sites: any[] = [];
+  summarisedResults: any;
 
   constructor(
     private api: ApiService,
@@ -107,20 +108,29 @@ export class DataService {
     lat = this.config.channel.latitude,
     lng = this.config.channel.longitude,
     boundary = this.config.channel.boundary): Promise <any> {
-    return new Promise(async resolve => {
-      await this.api.getRestaurantsSummary(
-        this.config.channel.accessCode,
-        this.config.channel.apiKey,
-        lat,
-        lng,
-        boundary
-      )
-        .toPromise()
-        .then((data: any) => {
-          resolve(data);
-        })
-        .catch((error: any) => console.log('ERROR', error));
-    });
+    // Has it already been loaded?
+    console.log(`loadResultsSummary cached: ${this.summarisedResults?.restaurants?.length > 0}`);
+    if (!!this.summarisedResults) {
+      return new Promise<any>( resolve => {
+        resolve(this.summarisedResults);
+      });
+    } else {
+      return new Promise(async resolve => {
+        await this.api.getRestaurantsSummary(
+          this.config.channel.accessCode,
+          this.config.channel.apiKey,
+          lat,
+          lng,
+          boundary
+        )
+          .toPromise()
+          .then((data: any) => {
+            this.summarisedResults = data;
+            resolve(this.summarisedResults);
+          })
+          .catch((error: any) => console.log('ERROR', error));
+      });
+    }
   }
 
   loadRestaurantResults(code: string, key: string, params: any): Promise<any> {

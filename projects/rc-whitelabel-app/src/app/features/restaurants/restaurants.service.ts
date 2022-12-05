@@ -5,6 +5,8 @@ import { AppConfig } from '../../app.config';
 import { DataService } from '../../core/data.service';
 import { AnalyticsService } from '../../core/analytics.service';
 import { ActivatedRoute } from '@angular/router';
+import { SearchFormComponent } from '../search/search-form.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +54,7 @@ export class RestaurantsService {
     private ga: AnalyticsService,
     private config: AppConfig,
     private api: ApiService,
+    private dialog: MatDialog,
     private data: DataService) {
       this.apiKey = this.config.channel.apiKey;
       this.accessCode = this.config.channel.accessCode;
@@ -92,7 +95,7 @@ export class RestaurantsService {
     return Number(this.geoTarget.lng);
   }
   get geoLabel(): string | null {
-    return this.geoTarget.label
+    return this.geoTarget.label;
   }
   get geoCoords(): string {
     return `${this.geoTarget.lat},${this.geoTarget.lng}`;
@@ -147,7 +150,7 @@ export class RestaurantsService {
         this.cuisines = res.cuisines;
         this.features = res.attributes;
         this.landmarks = res.landmarks;
-        this.totalRestaurants = res.restaurants.length;
+        this.totalRestaurants = res.restaurants?.length;
       })
       .then(() => {
         // If a filter has been applied
@@ -276,6 +279,14 @@ export class RestaurantsService {
     } else {
       console.log(`All ${this.totalResults} results loaded`)
     }
+  }
+
+  openSearchForm(): void {
+    const dialogRef = this.dialog.open(SearchFormComponent, {
+      position: {'top': '19vh'},
+      backdropClass: 'rd-backdrop',
+      panelClass: 'rd-search-dialog'
+    });
   }
 }
 

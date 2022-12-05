@@ -61,6 +61,12 @@ export class ListViewComponent implements OnInit {
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
 
+      console.log('x', params.get('latLng'));
+      if (params.get('latLng') === null) {
+        this.restService.openSearchForm();
+        return;
+      }
+
       const latLng = params.get('latLng')?.split(',') ?? [];
       this.searchFilter = params.get('filter') ?? null;
 

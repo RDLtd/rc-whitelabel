@@ -9,6 +9,7 @@ import { ListViewComponent } from './list-view.component';
  * or site_id for type 'sites'
  */
 const routes: Routes = [
+  { path: '', component: ListViewComponent },
   { path: 'map/:latLng', component: MapViewComponent },
   { path: 'map/:latLng/:filter', component: MapViewComponent },
   { path: 'list/:latLng', component: ListViewComponent },

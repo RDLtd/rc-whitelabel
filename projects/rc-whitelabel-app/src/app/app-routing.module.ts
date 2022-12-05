@@ -9,22 +9,13 @@ const routes: Routes = [
   },
 
   {
-    path: 'search',
-    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
-  },
-
-  {
     path: 'restaurants',
     loadChildren: () => import('./features/restaurants/restaurants.module').then(m => m.RestaurantsModule)
   },
 
-  { path: 'home',
-    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
-  },
-
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: 'restaurants'
   }
 ];
 

@@ -91,7 +91,6 @@ export class SearchFormComponent implements OnInit {
     public dialog: MatDialogRef<any>
   ) {
 
-    title.setTitle('Search');
 
   }
 
@@ -99,24 +98,13 @@ export class SearchFormComponent implements OnInit {
 
     // Observe user's position
     this.location.userLocationObs.subscribe((userPos) => {
-      console.log(userPos);
+      // console.log(userPos);
       this.userPosition = userPos;
     });
 
-    // Summarised data
-    this.data.loadResultsSummary().then((data: any) => {
-      if ( data === null) {
-        console.log(`No restaurants available within ${this.config.channel.boundary} of the Channel centre.`);
-        this.isLoaded = true;
-        return;
-      }
-      // console.log('LoadSummary', data);
-      this.searchRestaurants = data.restaurants;
-      this.landmarks = data.landmarks;
-      this.features = data.attributes;
-      this.cuisines = data.cuisines;
-      this.isLoaded = true;
-    });
+    this.loadSummarisedResults();
+
+
 
     // Focus the search input
     // Need to use a timeout to force a different thread
@@ -127,6 +115,23 @@ export class SearchFormComponent implements OnInit {
     // Get recent restaurants
     // this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
 
+  }
+
+  loadSummarisedResults(): void {
+    // Summarised data
+    this.data.loadResultsSummary().then((data: any) => {
+      if ( data === null) {
+        console.log(`No restaurants available within ${this.config.channel.boundary} of the Channel centre.`);
+        this.isLoaded = true;
+        return;
+      }
+      console.log('LoadSummary', data);
+      this.searchRestaurants = data.restaurants;
+      this.landmarks = data.landmarks;
+      this.features = data.attributes;
+      this.cuisines = data.cuisines;
+      this.isLoaded = true;
+    });
   }
 
   getAutoSuggestions(str: string): void {
