@@ -90,7 +90,7 @@
             <li *ngIf="userPosition?.inRange">
               <a
                 class="rd-my-location"
-                [queryParams]="{location: 'your current location'}"
+                [queryParams]="{label: 'your current location'}"
                 [routerLink]="['/restaurants/map/', userPosition?.lat + ',' +  userPosition?.lng]"
                 (click)="closeSearchForm()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
@@ -104,7 +104,7 @@
               </a>
             </li>
             <li *ngFor="let landmark of landmarks">
-              <a [queryParams]="{location: landmark?.channel_landmark_name}"
+              <a [queryParams]="{label: landmark?.channel_landmark_name}"
                  [routerLink]="['/restaurants', 'map', landmark?.channel_landmark_lat + ',' + landmark?.channel_landmark_lng]"
                  (click)="closeSearchForm()">
                 {{ landmark?.channel_landmark_name }}
