@@ -3,9 +3,9 @@ import { AppConfig } from '../../../app.config';
 import { NavigationEnd, Router, Event as NavigationEvent, NavigationStart, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { fadeIn } from '../../../shared/animations';
-import { RestaurantsService } from '../../../features/restaurants/restaurants.service';
+import { RestaurantsService } from '../../../restaurants/restaurants.service';
 import { MatDialog } from '@angular/material/dialog';
-import { SearchFormComponent } from '../../../features/search/search-form.component';
+import { SearchFormComponent } from '../../../restaurants/search/search-form.component';
 
 @Component({
   selector: 'rd-header',

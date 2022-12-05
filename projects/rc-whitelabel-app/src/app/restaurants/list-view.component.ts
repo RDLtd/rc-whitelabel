@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { RestaurantsService } from './restaurants.service';
 import { Observable } from 'rxjs';
-import { fadeInSlideUp, fadeInStagger } from '../../shared/animations';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import { LocationService } from '../../core/location.service';
-import { AppConfig } from '../../app.config';
-import { DataService } from '../../core/data.service';
+import { fadeInSlideUp, fadeInStagger } from '../shared/animations';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { LocationService } from '../core/location.service';
+import { AppConfig } from '../app.config';
+import { DataService } from '../core/data.service';
 import { Title } from '@angular/platform-browser';
-import {MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'rd-list-view',

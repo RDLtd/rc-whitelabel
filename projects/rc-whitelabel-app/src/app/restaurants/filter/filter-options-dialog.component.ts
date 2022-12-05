@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AppConfig } from '../../../app.config';
+import { AppConfig } from '../../app.config';
 
 @Component({
   selector: 'rd-filter-options-dialog',

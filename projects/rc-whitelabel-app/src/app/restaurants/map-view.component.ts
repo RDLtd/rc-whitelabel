@@ -4,11 +4,11 @@ import { RestaurantsService } from './restaurants.service';
 import { BehaviorSubject, Observable, of} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, map } from 'rxjs/operators';
-import { AppConfig } from '../../app.config';
-import { LocationService, UserGeoLocation} from '../../core/location.service';
+import { AppConfig } from '../app.config';
+import { LocationService, UserGeoLocation} from '../core/location.service';
 import { ActivatedRoute, ParamMap} from '@angular/router';
-import { fadeIn, fadeInSlideUp, fadeInStaggerIn } from '../../shared/animations';
-import { DataService } from '../../core/data.service';
+import { fadeIn, fadeInSlideUp, fadeInStaggerIn } from '../shared/animations';
+import { DataService } from '../core/data.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({

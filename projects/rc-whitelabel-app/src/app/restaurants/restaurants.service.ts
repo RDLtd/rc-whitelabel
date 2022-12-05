@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable} from 'rxjs';
-import { ApiService } from '../../core/api.service';
-import { AppConfig } from '../../app.config';
-import { DataService } from '../../core/data.service';
-import { AnalyticsService } from '../../core/analytics.service';
+import { ApiService } from '../core/api.service';
+import { AppConfig } from '../app.config';
+import { DataService } from '../core/data.service';
+import { AnalyticsService } from '../core/analytics.service';
 import { ActivatedRoute } from '@angular/router';
-import { SearchFormComponent } from '../search/search-form.component';
+import { SearchFormComponent } from './search/search-form.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
