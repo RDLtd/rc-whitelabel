@@ -13,21 +13,24 @@ import { ListViewComponent } from './list-view.component';
 import { FilterBtnComponent } from './filter/filter-btn.component';
 
 @NgModule({
-  declarations: [
-    FilterOptionsDialogComponent,
-    MapViewComponent,
-    ListViewComponent,
-    MapViewComponent,
-    FilterBtnComponent],
-  imports: [
-    SharedModule,
-    RestaurantsRoutingModule,
-    MatChipsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    GoogleMapsModule,
-    HttpClientModule,
-    HttpClientJsonpModule
-  ]
+    declarations: [
+        FilterOptionsDialogComponent,
+        MapViewComponent,
+        ListViewComponent,
+        MapViewComponent,
+        FilterBtnComponent],
+    exports: [
+        ListViewComponent
+    ],
+    imports: [
+        SharedModule,
+        RestaurantsRoutingModule,
+        MatChipsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        GoogleMapsModule,
+        HttpClientModule,
+        HttpClientJsonpModule
+    ]
 })
 export class RestaurantsModule { }

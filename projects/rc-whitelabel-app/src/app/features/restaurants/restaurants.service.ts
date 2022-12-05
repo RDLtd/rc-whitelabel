@@ -100,6 +100,7 @@ export class RestaurantsService {
   get geoCoords(): string {
     return `${this.geoTarget.lat},${this.geoTarget.lng}`;
   }
+
   // RESULTS
   set totalRestaurants(n) {
     this.totalResults = n;

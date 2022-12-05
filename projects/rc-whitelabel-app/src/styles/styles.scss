@@ -174,9 +174,7 @@ header {
       transform: translateY(-($layout-header-height - 8));
     }
   }
-  a {
-    cursor: pointer;
-  }
+  a { cursor: pointer; }
 }
 rd-header {
   display: flex;

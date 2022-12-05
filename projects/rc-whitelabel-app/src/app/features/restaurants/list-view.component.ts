@@ -93,7 +93,7 @@ export class ListViewComponent implements OnInit {
     });
 
     // load summary for filter/sort options
-    this.restService.loadSummarisedResults();
+    //this.restService.loadSummarisedResults();
 
     // Now load restaurant results
     this.restService.loadRestaurants({offset: 0});
