@@ -10,12 +10,14 @@
     </rd-loader>
 
     <div class="rd-search-content" [class.rd-show]="isLoaded && config.channelLoaded">
-
+      <div class="rd-search-autofill-container">
       <!-- SEARCH FORM -->
-      <form #rdSearchForm="ngForm" (ngSubmit)="getAutoSuggestions(rdSearchInput.value)">
+      <form #rdSearchForm="ngForm">
         <mat-form-field floatLabel="never" appearance="standard">
-          <mat-label><mat-icon>search</mat-icon>
-            {{ config.i18n['Search'] }}</mat-label>
+          <mat-label>
+            <mat-icon>search</mat-icon>
+            {{ config.i18n['Search'] }}
+          </mat-label>
           <input
             #rdSearchInput
             name="searchString"
@@ -77,7 +79,7 @@
 
         </li>
       </ul>
-
+      </div>
       <!-- Popular searches -->
       <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
 

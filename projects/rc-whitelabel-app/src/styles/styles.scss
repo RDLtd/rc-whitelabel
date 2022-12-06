@@ -375,6 +375,9 @@ rd-footer {
     max-height: 400px;
   }
 }
+.rd-search-item-selected {
+  color: red;
+}
 .rd-search-content {
   opacity: 0;
   display: flex;

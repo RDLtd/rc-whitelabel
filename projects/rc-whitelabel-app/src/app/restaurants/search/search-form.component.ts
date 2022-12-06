@@ -25,7 +25,6 @@ interface Landmark {
   channel_landmark_name: string;
   channel_landmark_number: number;
 }
-
 interface Cuisine {
   Cuisine: string;
   Count: number;
@@ -47,6 +46,15 @@ export class SearchFormComponent implements OnInit {
   // Config
   minSearchChars = 1;
   noSuggestions = false;
+  searchStr?: string;
+
+  searchItemSelected = 0;
+  searchItemsCount = 0;
+  searchItemsIndex = 0;
+
+
+
+
   icons = {
     location: 'location_on',
     cuisine: 'restaurant',
@@ -94,25 +102,51 @@ export class SearchFormComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    const userInput = this.elemRef.nativeElement.querySelector('.rd-search-content');
-    const itemsList = this.elemRef.nativeElement.querySelector('.rd-search-autofill');
-    console.log('E', userInput);
+
+    const autoSuggest = this.elemRef.nativeElement.querySelector('.rd-search-autofill-container');
+    const navKeys = [40, 39, 38, 37, 9];
     let itemsTotal = 0;
-    let i = 0;
+    let i = -1;
     let itemSelected;
-    userInput.addEventListener('keydown', (event: any) => {
+
+    let lastItem: any | null;
+
+    autoSuggest.addEventListener('keydown', (event: any) => {
       console.log(event.which);
-      itemsTotal = itemsList.getElementsByTagName('li').length;
-      console.log(`Total suggestions = ${itemsTotal}`);
-      if(event.which === 40 || event.which === 39) {
-        i++
-        console.log(`navigate to ${i}`);
+      if(!navKeys.includes(event.which)) {
+        i = 0;
+      } else {
+        const itemsList = autoSuggest.getElementsByTagName('li');
+        itemsTotal = this.searchSuggestions.length;
+        switch (event.which) {
+          case 40:
+          case 39:
+          case 9:
+            i++;
+            break;
+          case 37:
+          case 38:
+            i--;
+            break;
+          default:
+            return;
+        }
+        if (i === itemsTotal) {
+          i = 0;
+        }
+        if (i === -1) {
+          i = (itemsTotal - 1);
+        }
+        itemSelected = itemsList[i].getElementsByTagName('a')[0];
+        if (!!lastItem) {
+          lastItem.style.backgroundColor = 'transparent';
+        }
+        lastItem = itemSelected;
+        itemSelected.style.backgroundColor = 'red';
+        console.log(itemSelected);
       }
-      if(event.which === 39 || event.which === 38) {
-        i--
-        console.log(`navigate to ${i}`);
-      }
-    })
+    });
+
   }
 
   ngOnInit(): void {
@@ -157,6 +191,11 @@ export class SearchFormComponent implements OnInit {
 
     // Scroll window to maximise room for search suggestions
     // window.scrollTo(0, 64);
+
+    // Abort if there's no change to search string
+    if (this.searchStr === str) { return; }
+
+    this.searchStr = str;
 
     this.noSuggestions = false;
     // const maxSuggestions = 10;
@@ -240,6 +279,9 @@ export class SearchFormComponent implements OnInit {
 
       // this.searchSuggestions.splice(maxSuggestions);
       this.noSuggestions = this.searchSuggestions.length === 0;
+      this.searchItemsCount = this.searchSuggestions.length;
+      this.searchItemsIndex = 0;
+      console.log('Select item');
 
     } else {
       // clear current suggestions
