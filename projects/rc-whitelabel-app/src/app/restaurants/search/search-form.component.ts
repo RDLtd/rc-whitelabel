@@ -88,10 +88,33 @@ export class SearchFormComponent implements OnInit {
     private location: LocationService,
     private title: Title,
     private ga: AnalyticsService,
-    public dialog: MatDialogRef<any>
+    public dialog: MatDialogRef<any>,
+    private elemRef: ElementRef
   ) {
 
 
+  }
+
+  ngAfterViewInit(): void {
+    const userInput = this.elemRef.nativeElement.querySelector('.rd-search-content');
+    const list = this.elemRef.nativeElement.querySelector('.rd-search-autofill');
+    console.log('E', userInput);
+    let listLength = 0;
+    let i = 0;
+    let itemSelected;
+    userInput.addEventListener('keydown', (event: any) => {
+      console.log(event.which);
+      listLength = list.getElementsByTagName('li').length;
+      console.log(`Total suggestions = ${listLength}`);
+      if(event.which === 40 || event.which === 39) {
+        i++
+        console.log(`navigate to ${i}`);
+      }
+      if(event.which === 39 || event.which === 38) {
+        i--
+        console.log(`navigate to ${i}`);
+      }
+    })
   }
 
   ngOnInit(): void {
