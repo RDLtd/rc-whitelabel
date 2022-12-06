@@ -91,8 +91,6 @@ export class SearchFormComponent implements OnInit {
     public dialog: MatDialogRef<any>,
     private elemRef: ElementRef
   ) {
-
-
   }
 
   ngAfterViewInit(): void {
@@ -126,8 +124,6 @@ export class SearchFormComponent implements OnInit {
     });
 
     this.loadSummarisedResults();
-
-
 
     // Focus the search input
     // Need to use a timeout to force a different thread
