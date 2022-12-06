@@ -97,15 +97,15 @@ export class SearchFormComponent implements OnInit {
 
   ngAfterViewInit(): void {
     const userInput = this.elemRef.nativeElement.querySelector('.rd-search-content');
-    const list = this.elemRef.nativeElement.querySelector('.rd-search-autofill');
+    const itemsList = this.elemRef.nativeElement.querySelector('.rd-search-autofill');
     console.log('E', userInput);
-    let listLength = 0;
+    let itemsTotal = 0;
     let i = 0;
     let itemSelected;
     userInput.addEventListener('keydown', (event: any) => {
       console.log(event.which);
-      listLength = list.getElementsByTagName('li').length;
-      console.log(`Total suggestions = ${listLength}`);
+      itemsTotal = itemsList.getElementsByTagName('li').length;
+      console.log(`Total suggestions = ${itemsTotal}`);
       if(event.which === 40 || event.which === 39) {
         i++
         console.log(`navigate to ${i}`);
