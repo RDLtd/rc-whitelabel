@@ -63,7 +63,7 @@ export class ListViewComponent implements OnInit {
 
       console.log('x', params.get('latLng'));
       if (params.get('latLng') === null) {
-        this.restService.openSearchForm();
+        //this.restService.openSearchForm();
         return;
       }
 

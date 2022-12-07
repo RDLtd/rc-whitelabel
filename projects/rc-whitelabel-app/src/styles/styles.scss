@@ -300,7 +300,8 @@ rd-footer {
   .mat-dialog-container {
     border-radius: 12px;
     padding: 0;
-    max-height: 62vh;
+    max-height: 70vh;
+    overflow-x: hidden;
   }
 }
 .rd-search-container {

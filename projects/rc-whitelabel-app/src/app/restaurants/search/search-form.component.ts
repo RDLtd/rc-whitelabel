@@ -43,12 +43,17 @@ export class SearchFormComponent implements OnInit {
   // so that we can set focus
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
 
-  // Search
+  // Number of chars user must type for auto-suggest to kick in
   minSearchChars = 1;
+  // zero suggestions
   noSuggestions = false;
+  // Set as positive number to restrict the number of suggestions displayed
+  maxSuggestions = null;
+  // The search input string
   searchStr?: string;
+  // Number of results
   searchItemsCount = 0;
-  searchItemsIndex = 0;
+  // Designated nav keys to act on
   listNavKeys = [40, 39, 38, 37, 9, 13];
 
   icons = {
@@ -76,9 +81,9 @@ export class SearchFormComponent implements OnInit {
   channelConfig = {
     channelType: 3,
     defaultView: 'list',
-    showRecentlyViewed: true,
+    showRecentlyViewed: false,
     showLandmarks: true,
-    showCuisines: true,
+    showCuisines: false,
     searchPlaceholderTxt: 'Type a location, postcode or restaurant name',
     noResultsTxt: 'No matches'
   }
@@ -128,28 +133,25 @@ export class SearchFormComponent implements OnInit {
     let itemTarget: any;
     let lastItem: any | null;
 
+    // listen for nav keys
     autoSuggest.addEventListener('keyup', (event: any) => {
 
-      // key pressed
-      console.log(`Key: ${event.which}`);
+      // console.log(`Key: ${event.which}`);
 
-      // Target array & number of suggested items
+      // ref. list array
       const itemsList = autoSuggest.getElementsByTagName('li');
       itemsTotal = this.searchSuggestions.length;
 
-      console.log(itemsList);
-
-      // Ignore anything that is not a nav key
+      // Is it one of our designated nav keys?
       if(this.listNavKeys.includes(event.which)) {
-        // Navigate list
         switch (event.which) {
-          // down
+          // arrow-down, arrow-right, tab
           case 40:
           case 39:
           case 9:
             itemIndex++;
             break;
-          // up
+          // arrow-up, arrow-left
           case 37:
           case 38:
             itemIndex--;
@@ -161,22 +163,24 @@ export class SearchFormComponent implements OnInit {
           default:
             return;
         }
-        // if it's the last list item or the first
-        // reset the counter
+
+        // reset the counter if it's the 1st or last item
         if (itemIndex === itemsTotal) { itemIndex = 0; }
         if (itemIndex === -1) { itemIndex = (itemsTotal - 1); }
+
       } else {
-        // if it wasn't a nav key then it was most likely
-        // another letter being typed, so reset i
+        // if it wasn't a nav key then reset i
         itemIndex = 0;
       }
 
+      // Are there any suggestion items?
       if(itemsList.length > 0) {
-        console.log(itemsList[itemIndex]);
+        // set the targets
         itemSelected = itemsList[itemIndex];
         itemTarget = itemSelected.querySelector('a');
-
+        // un-highlight last selection
         if (!!lastItem) { lastItem.classList.remove('rd-search-item-selected') }
+        // highlight selected item
         itemSelected.classList.add('rd-search-item-selected');
         lastItem = itemSelected;
       }
@@ -213,7 +217,6 @@ export class SearchFormComponent implements OnInit {
     this.searchStr = str;
 
     this.noSuggestions = false;
-    // const maxSuggestions = 10;
 
     if (str.length >= this.minSearchChars) {
 
@@ -292,10 +295,9 @@ export class SearchFormComponent implements OnInit {
         return a.index - b.index;
       });
 
-      // this.searchSuggestions.splice(maxSuggestions);
+      if(this.maxSuggestions) { this.searchSuggestions.splice(this.maxSuggestions); }
       this.noSuggestions = this.searchSuggestions.length === 0;
       this.searchItemsCount = this.searchSuggestions.length;
-      this.searchItemsIndex = 0;
 
     } else {
       // clear current suggestions

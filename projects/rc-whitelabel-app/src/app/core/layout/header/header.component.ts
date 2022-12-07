@@ -16,7 +16,7 @@ import { SearchFormComponent } from '../../../restaurants/search/search-form.com
 export class HeaderComponent implements OnInit {
 
   // @Input() direction = '';
-  showSearchOption = false;
+  showSearchOption = true;
   showViews = false;
   isMapView = true;
   geoSearchLabel?: string;
@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
         // console.log(this.router.url);
-        this.showSearchOption = this.router.url !== '/';
+        // this.showSearchOption = this.router.url !== '/';
     });
     this.restService.restaurants.subscribe(res => {
       this.showViews = res.length > 0;
@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit {
 
   openSearchForm(): void {
     const dialogRef = this.dialog.open(SearchFormComponent, {
-      position: {'top': '19vh'},
+      position: {'top': '15vh'},
       backdropClass: 'rd-backdrop',
       panelClass: 'rd-search-dialog'
     });
