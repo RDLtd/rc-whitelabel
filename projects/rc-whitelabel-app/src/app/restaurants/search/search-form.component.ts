@@ -43,17 +43,13 @@ export class SearchFormComponent implements OnInit {
   // so that we can set focus
   @ViewChild('rdSearchInput') rdSearchInput!: ElementRef;
 
-  // Config
+  // Search
   minSearchChars = 1;
   noSuggestions = false;
   searchStr?: string;
-
-  searchItemSelected = 0;
   searchItemsCount = 0;
   searchItemsIndex = 0;
-
-
-
+  listNavKeys = [40, 39, 38, 37, 9, 13];
 
   icons = {
     location: 'location_on',
@@ -83,7 +79,7 @@ export class SearchFormComponent implements OnInit {
     showRecentlyViewed: true,
     showLandmarks: true,
     showCuisines: true,
-    searchPlaceholderTxt: 'Type landmark, restaurant or cuisine',
+    searchPlaceholderTxt: 'Type a location, postcode or restaurant name',
     noResultsTxt: 'No matches'
   }
 
@@ -99,63 +95,6 @@ export class SearchFormComponent implements OnInit {
     public dialog: MatDialogRef<any>,
     private elemRef: ElementRef
   ) {
-  }
-
-  ngAfterViewInit(): void {
-    // ref. search form
-    const autoSuggest = this.elemRef.nativeElement.querySelector('.rd-search-autofill-container');
-    // identify relevant keys
-    const navKeys = [40, 39, 38, 37, 9];
-
-    let itemsCount = 0;
-    let i = 0;
-    let itemSelected;
-    let itemTarget: any;
-
-    let lastItem: any | null;
-
-    autoSuggest.addEventListener('keydown', (event: any) => {
-      console.log(`Key: ${event.which}`);
-      // We're only interested in navigational keys
-      if(!navKeys.includes(event.which)) { i = 0; return; }
-      // array & number of suggested items
-      const itemsList = autoSuggest.getElementsByTagName('li');
-      itemsCount = this.searchSuggestions.length;
-      // List nav
-      switch (event.which) {
-        case 40:
-        case 39:
-        case 9:
-          i++;
-          break;
-        case 37:
-        case 38:
-          i--;
-          break;
-        case 13:
-          itemTarget.click();
-          break;
-        default:
-          return;
-      }
-
-      // if it's the last list item or the first
-      // reset the counter
-      if (i === itemsCount - 1) { i = 0; }
-      if (i === -1) { i = (itemsCount - 1); }
-
-      itemSelected = itemsList[i];
-      itemTarget = itemsList[i].querySelector('a');
-
-      if (!!lastItem) {
-        lastItem.style.color = 'black';
-      }
-      lastItem = itemTarget;
-      itemTarget.style.color = 'red';
-      console.log(itemSelected);
-      console.log(itemTarget);
-    });
-
   }
 
   ngOnInit(): void {
@@ -176,6 +115,73 @@ export class SearchFormComponent implements OnInit {
 
     // Get recent restaurants
     // this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
+
+  }
+
+  ngAfterViewInit(): void {
+    // ref. search form
+    const autoSuggest = this.elemRef.nativeElement.querySelector('.rd-search-autofill-container');
+
+    let itemsTotal = 0;
+    let itemIndex = 0;
+    let itemSelected;
+    let itemTarget: any;
+    let lastItem: any | null;
+
+    autoSuggest.addEventListener('keyup', (event: any) => {
+
+      // key pressed
+      console.log(`Key: ${event.which}`);
+
+      // Target array & number of suggested items
+      const itemsList = autoSuggest.getElementsByTagName('li');
+      itemsTotal = this.searchSuggestions.length;
+
+      console.log(itemsList);
+
+      // Ignore anything that is not a nav key
+      if(this.listNavKeys.includes(event.which)) {
+        // Navigate list
+        switch (event.which) {
+          // down
+          case 40:
+          case 39:
+          case 9:
+            itemIndex++;
+            break;
+          // up
+          case 37:
+          case 38:
+            itemIndex--;
+            break;
+          // enter
+          case 13:
+            itemTarget.click();
+            break;
+          default:
+            return;
+        }
+        // if it's the last list item or the first
+        // reset the counter
+        if (itemIndex === itemsTotal) { itemIndex = 0; }
+        if (itemIndex === -1) { itemIndex = (itemsTotal - 1); }
+      } else {
+        // if it wasn't a nav key then it was most likely
+        // another letter being typed, so reset i
+        itemIndex = 0;
+      }
+
+      if(itemsList.length > 0) {
+        console.log(itemsList[itemIndex]);
+        itemSelected = itemsList[itemIndex];
+        itemTarget = itemSelected.querySelector('a');
+
+        if (!!lastItem) { lastItem.classList.remove('rd-search-item-selected') }
+        itemSelected.classList.add('rd-search-item-selected');
+        lastItem = itemSelected;
+      }
+
+    });
 
   }
 
@@ -290,7 +296,6 @@ export class SearchFormComponent implements OnInit {
       this.noSuggestions = this.searchSuggestions.length === 0;
       this.searchItemsCount = this.searchSuggestions.length;
       this.searchItemsIndex = 0;
-      console.log('Select item');
 
     } else {
       // clear current suggestions
