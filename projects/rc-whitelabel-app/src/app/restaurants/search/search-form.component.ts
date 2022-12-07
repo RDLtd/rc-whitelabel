@@ -102,49 +102,58 @@ export class SearchFormComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-
+    // ref. search form
     const autoSuggest = this.elemRef.nativeElement.querySelector('.rd-search-autofill-container');
+    // identify relevant keys
     const navKeys = [40, 39, 38, 37, 9];
-    let itemsTotal = 0;
-    let i = -1;
+
+    let itemsCount = 0;
+    let i = 0;
     let itemSelected;
+    let itemTarget: any;
 
     let lastItem: any | null;
 
     autoSuggest.addEventListener('keydown', (event: any) => {
-      console.log(event.which);
-      if(!navKeys.includes(event.which)) {
-        i = 0;
-      } else {
-        const itemsList = autoSuggest.getElementsByTagName('li');
-        itemsTotal = this.searchSuggestions.length;
-        switch (event.which) {
-          case 40:
-          case 39:
-          case 9:
-            i++;
-            break;
-          case 37:
-          case 38:
-            i--;
-            break;
-          default:
-            return;
-        }
-        if (i === itemsTotal) {
-          i = 0;
-        }
-        if (i === -1) {
-          i = (itemsTotal - 1);
-        }
-        itemSelected = itemsList[i].getElementsByTagName('a')[0];
-        if (!!lastItem) {
-          lastItem.style.backgroundColor = 'transparent';
-        }
-        lastItem = itemSelected;
-        itemSelected.style.backgroundColor = 'red';
-        console.log(itemSelected);
+      console.log(`Key: ${event.which}`);
+      // We're only interested in navigational keys
+      if(!navKeys.includes(event.which)) { i = 0; return; }
+      // array & number of suggested items
+      const itemsList = autoSuggest.getElementsByTagName('li');
+      itemsCount = this.searchSuggestions.length;
+      // List nav
+      switch (event.which) {
+        case 40:
+        case 39:
+        case 9:
+          i++;
+          break;
+        case 37:
+        case 38:
+          i--;
+          break;
+        case 13:
+          itemTarget.click();
+          break;
+        default:
+          return;
       }
+
+      // if it's the last list item or the first
+      // reset the counter
+      if (i === itemsCount - 1) { i = 0; }
+      if (i === -1) { i = (itemsCount - 1); }
+
+      itemSelected = itemsList[i];
+      itemTarget = itemsList[i].querySelector('a');
+
+      if (!!lastItem) {
+        lastItem.style.color = 'black';
+      }
+      lastItem = itemTarget;
+      itemTarget.style.color = 'red';
+      console.log(itemSelected);
+      console.log(itemTarget);
     });
 
   }
@@ -254,22 +263,22 @@ export class SearchFormComponent implements OnInit {
         }
 
         // Check for matching cuisines
-        if (!!this.cuisines && this.channelConfig.showCuisines) {
-          let matchPosition;
-          this.cuisines.forEach((item: any) => {
-            // record the match position
-            // lower number = higher relevancy
-            matchPosition = item.Cuisine.toUpperCase().search(regex);
-            if(matchPosition >= 0) {
-              this.searchSuggestions.push({
-                cat: 'cuisine',
-                name: item.Cuisine,
-                index: matchPosition,
-                latLng: `${this.config.channel.latitude},${this.config.channel.longitude}`
-              });
-            }
-          });
-        }
+        // if (!!this.cuisines && this.channelConfig.showCuisines) {
+        //   let matchPosition;
+        //   this.cuisines.forEach((item: any) => {
+        //     // record the match position
+        //     // lower number = higher relevancy
+        //     matchPosition = item.Cuisine.toUpperCase().search(regex);
+        //     if(matchPosition >= 0) {
+        //       this.searchSuggestions.push({
+        //         cat: 'cuisine',
+        //         name: item.Cuisine,
+        //         index: matchPosition,
+        //         latLng: `${this.config.channel.latitude},${this.config.channel.longitude}`
+        //       });
+        //     }
+        //   });
+        // }
       }
 
       // Sort results by index position - i.e. relevancy
