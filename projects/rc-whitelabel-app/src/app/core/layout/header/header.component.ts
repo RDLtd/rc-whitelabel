@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfig } from '../../../app.config';
-import { NavigationEnd, Router, Event as NavigationEvent, NavigationStart, ActivatedRoute } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { NavigationEnd, Router, Event as NavigationEvent, ActivatedRoute } from '@angular/router';
 import { fadeIn } from '../../../shared/animations';
 import { RestaurantsService } from '../../../restaurants/restaurants.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,6 +17,8 @@ export class HeaderComponent implements OnInit {
   // @Input() direction = '';
   showSearchOption = true;
   showViews = false;
+  isDeepLink = false;
+  defaultRoute = '/restaurants';
   isMapView = true;
   geoSearchLabel?: string;
 
@@ -28,29 +29,29 @@ export class HeaderComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog
   ) {
+
+  }
+
+  ngOnInit(): void {
+
     this.router.events
       .subscribe(
         (event: NavigationEvent) => {
-          if(event instanceof NavigationStart) {
+          if(event instanceof NavigationEnd) {
+            const url = this.router.url;
+            this.isDeepLink = url !== this.defaultRoute;
             this.isMapView = event.url.indexOf('map') > 0;
           }
         });
+
     this.route.queryParams.subscribe((params) => {
       if (!!params.location) {
         this.geoSearchLabel = params.location;
       }
-    })
-  }
-
-  ngOnInit(): void {
-    // Hide the search option when on the search page
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        // console.log(this.router.url);
-        // this.showSearchOption = this.router.url !== '/';
     });
+
     this.restService.restaurants.subscribe(res => {
-      this.showViews = res.length > 0;
+      this.showViews = res.length > 0 && this.isDeepLink;
     });
   }
 
