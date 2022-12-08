@@ -96,6 +96,9 @@ a, a:active, a:focus {
   align-items: center;
   padding: 0;
 }
+.rd-flex-end {
+  justify-content: flex-end;
+}
 .rd-flex-spacer { flex: 1 0 auto; text-align: center;}
 .rd-hide { display: none !important; }
 .rd-show { opacity: 1 !important;}

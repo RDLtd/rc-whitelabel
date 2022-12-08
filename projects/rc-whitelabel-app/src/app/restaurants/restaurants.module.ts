@@ -13,6 +13,7 @@ import { ListViewComponent } from './list-view.component';
 import { FilterBtnComponent } from './filter/filter-btn.component';
 import { SearchFormComponent } from './search/search-form.component';
 import { FormsModule } from '@angular/forms';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
     declarations: [
@@ -35,7 +36,8 @@ import { FormsModule } from '@angular/forms';
         MatInputModule,
         GoogleMapsModule,
         HttpClientModule,
-        HttpClientJsonpModule
+        HttpClientJsonpModule,
+        MatListModule
     ]
 })
 export class RestaurantsModule { }

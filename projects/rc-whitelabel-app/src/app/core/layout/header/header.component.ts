@@ -39,6 +39,7 @@ export class HeaderComponent implements OnInit {
         (event: NavigationEvent) => {
           if(event instanceof NavigationEnd) {
             const url = this.router.url;
+
             this.isDeepLink = url !== this.defaultRoute;
             this.isMapView = event.url.indexOf('map') > 0;
           }

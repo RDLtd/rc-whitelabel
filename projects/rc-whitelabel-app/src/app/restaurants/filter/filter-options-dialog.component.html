@@ -4,20 +4,33 @@
     <!-- Cuisine filters -->
     <section class="rd-filter-list" *ngIf="data['cuisines'].length > 1">
 <!--      <h1>{{ config.i18n["Filter_by_cuisine"] }}</h1>-->
-      <ul>
-        <li *ngFor="let cuisine of data['cuisines']">
-          <a [mat-dialog-close]="{
-                type: 'filter',
-                cuisine: cuisine.Cuisine
-                }">
-            <mat-icon class="rd-icon-cuisine">restaurant</mat-icon>
-            {{ cuisine.Cuisine }}
-            <span class="rd-flex-spacer"></span>
-            <span class="rd-count">{{ cuisine.Count }}</span>
-          </a>
-        </li>
-      </ul>
+<!--      <ul>-->
+<!--        <li *ngFor="let cuisine of data['cuisines']">-->
+<!--          <a [mat-dialog-close]="{-->
+<!--                type: 'filter',-->
+<!--                cuisine: cuisine.Cuisine-->
+<!--                }">-->
+<!--            <mat-icon class="rd-icon-cuisine">restaurant</mat-icon>-->
+<!--            {{ cuisine.Cuisine }}-->
+<!--            <span class="rd-flex-spacer"></span>-->
+<!--            <span class="rd-count">{{ cuisine.Count }}</span>-->
+<!--          </a>-->
+<!--        </li>-->
+<!--      </ul>-->
+
+        <mat-selection-list #filters>
+          <mat-list-option
+            *ngFor="let cuisine of data['cuisines']"
+            checkboxPosition="after"
+            color="primary" [value]="cuisine.Cuisine">
+            {{ cuisine.Cuisine }} ({{ cuisine.Count }})
+          </mat-list-option>
+        </mat-selection-list>
+      <mat-dialog-actions class="rd-flex-end">
+        <button mat-flat-button [mat-dialog-close]="filters.selectedOptions.selected">APPLY FILTER</button>
+      </mat-dialog-actions>
     </section>
+
     <!-- Landmarks -->
 <!--    <section class="rd-filter-list" *ngIf="data?.landmarks.length || !!data?.userPosition.inRange">-->
 <!--      <h1>{{ config.i18n["Sort_by_location"] }}</h1>-->
@@ -53,6 +66,7 @@
 <!--    </section>-->
   </div>
 </div>
+
 
 <button mat-icon-button class="rd-dialog-close" [mat-dialog-close]="false"
         tabindex="-1"><mat-icon>close</mat-icon></button>

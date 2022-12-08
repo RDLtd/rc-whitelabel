@@ -65,6 +65,8 @@ export class FilterBtnComponent implements OnInit {
       // Guard clause
       if (!query) { return;}
 
+      console.log(query);
+
       this.onMapUpdate.emit(0);
 
       if (query.type === 'filter') {
