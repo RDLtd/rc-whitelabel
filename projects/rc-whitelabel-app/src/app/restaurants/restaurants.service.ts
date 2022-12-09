@@ -98,6 +98,9 @@ export class RestaurantsService {
     return this.geoTarget.label;
   }
   get geoCoords(): string {
+    if(this.geoTarget.lat === undefined) {
+      return `${this.config.channel.latitude},${this.config.channel.longitude}`;
+    }
     return `${this.geoTarget.lat},${this.geoTarget.lng}`;
   }
 

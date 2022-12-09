@@ -18,6 +18,7 @@ export class FilterBtnComponent implements OnInit {
   @Input() view = 'list';
   @Output() onMapUpdate = new EventEmitter<number>();
 
+  minCuisineFilters = 3;
   showFilterOptions = false;
   userPosition: any;
   geoTarget: any;
@@ -42,11 +43,9 @@ export class FilterBtnComponent implements OnInit {
     // Current geoTarget
     this.geoTarget = this.restService.geo;
 
-    // TODO: This could do with being a bit more intelligent
-    // ie. only shpw cuisine filters if there are sensible choices to be made
     // Delay the filter options until results have loaded
     setTimeout(() => {
-      this.showFilterOptions = true;
+      this.showFilterOptions = this.restService.cuisineSummary.length > this.minCuisineFilters;
       }, 2000);
   }
 
@@ -55,8 +54,8 @@ export class FilterBtnComponent implements OnInit {
     const dialogRef = this.dialog.open(FilterOptionsDialogComponent, {
       data: {
         cuisines: this.restService.cuisineSummary,
-        landmarks: this.restService.landmarkSummary,
-        userPosition: this.userPosition
+        // landmarks: this.restService.landmarkSummary,
+        // userPosition: this.userPosition
       },
       panelClass: 'rd-filter-dialog'
     });

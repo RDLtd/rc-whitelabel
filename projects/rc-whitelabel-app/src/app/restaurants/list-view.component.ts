@@ -31,7 +31,6 @@ export class ListViewComponent implements OnInit {
   features: any[] = [];
   restaurants: any[] = [];
 
-
   constructor(
     public config: AppConfig,
     private route: ActivatedRoute,
@@ -62,6 +61,7 @@ export class ListViewComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
 
       if (params.get('latLng') === null) {
+        // Uncomment to open Search form by default
         //this.restService.openSearchForm();
         return;
       }
