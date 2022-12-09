@@ -250,15 +250,16 @@ export class MapViewComponent implements OnInit {
   // Construct the summary text for the
   // map navigation
   getBatchNavSummary(): string {
-    // Filtered
-    if (!!this.restService.geoLabel && !!this.searchFilter) {
+    // Filtered: only include cuisine name if there's
+    // just 1 otherwise we run out of UI space
+    if (!!this.restService.geoLabel && this.searchFilter?.split(',').length === 1) {
       return `${this.searchFilter} Restaurants within ${this.boundary} km of ${this.restService.geoLabel}`
     }
     // With location label
     if (!!this.restService.geoLabel) {
       return `Restaurants within ${this.boundary} km of ${this.restService.geoLabel}`
     }
-    // Basic
+    // Just boundary
     return `Restaurants within ${this.boundary} km`;
   }
 

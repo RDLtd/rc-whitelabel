@@ -55,7 +55,7 @@ $font-family-heading: 'Roboto Slab', 'Georgia', serif;
 $font-weight-lite: 300;
 $font-weight-regular: 400;
 $font-weight-heavy: 500;
-$layout-header-height: 64px;
+$layout-header-height: 56px;
 $layout-max-width: 960px;
 $loaderSize: 48px;
 $container-padding: 16px;
@@ -103,6 +103,7 @@ a, a:active, a:focus {
 .rd-hide { display: none !important; }
 .rd-show { opacity: 1 !important;}
 .rd-highlight { color: $col-accent; }
+.rd-cta { background-color: $clr-cta-primary; }
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
 .rd-hidden { opacity: 0;}
 .rd-icon-restaurant { color: $col-icon-restaurant !important;}
@@ -172,6 +173,7 @@ header {
   background: var(--clr-header-bgd);
   box-shadow: 0 2px 4px 0 #00000026;
   color: var(--clr-header-fgd);
+  height: auto;
   &.rd-hideHeader {
     @include mq(small) {
       transform: translateY(-($layout-header-height + $container-padding));
@@ -187,20 +189,24 @@ rd-header {
   a {
     display: flex;
     align-items: center;
+    height: 100px;
+    max-height: $layout-header-height/2;
+    @include mq(med) {
+      max-height: $layout-header-height;
+    }
   }
   .rd-title {
     position: absolute;
     right: 12px;
     width: 100vw;
     text-align: right;
-    font-size: 11px;
     font-weight: $font-weight-lite;
     letter-spacing: 1px;
     @include mq(med) {
       font-size: 14px;
     }
   }
-  .rd-logo { height: 32px; }
+  .rd-logo { height: 100%; }
   h1 {
     font-size: 16px;
     font-weight: $font-weight-heavy;
@@ -216,21 +222,21 @@ rd-header {
   }
   .mat-button {
     font-weight: $font-weight-regular;
-    font-size: 14px;
+    font-size: 1.1rem;
     letter-spacing: 1px;
+    .mat-icon { margin-right: 4px; }
   }
   @include mq(med) {
-    .rd-logo { height: $layout-header-height;}
+    //.rd-logo { height: $layout-header-height;}
   }
 }
 main {
   display: flex;
   flex-direction: column;
-  //justify-content: space-between;
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: calc(100vh - #{$layout-header-height});
   background: #fff;
-  padding-top: $layout-header-height;
+  padding-top: $layout-header-height + ($container-padding);
   @include mq(med) {
     background: #eee;
     padding-top: $layout-header-height + (2 * $container-padding);
@@ -291,18 +297,17 @@ rd-footer {
 
 // SEARCH
 // ------------------------
-.rd-backdrop {
-  // backdrop-filter: blur(1px);
+.rd-dialog-backdrop {
   background-color: hsl(184 80% 8% / .8);
 }
 .rd-search-form-container {
-  width: min(90vw, 640px);
+  width: min(100vw, 640px);
 }
 .rd-search-dialog {
   .mat-dialog-container {
     border-radius: 12px;
     padding: 0;
-    max-height: 70vh;
+    max-height: 100vh;
     overflow-x: hidden;
   }
 }
@@ -317,15 +322,15 @@ rd-footer {
 
   @include mq(med) {
     @include mat.elevation(5);
-    position: absolute;
-    z-index: 5;
-    top: 15vh;
-    left: calc(50% - 400px);
-    border-radius: 12px;
-    width: 800px;
-    min-height: 50vh;
-    height: auto;
-    margin: 0 auto 0;
+    //position: absolute;
+    //z-index: 5;
+    //top: 15vh;
+    //left: calc(50% - 400px);
+    //border-radius: 12px;
+    //width: 800px;
+    //min-height: 50vh;
+    //height: auto;
+    //margin: 0 auto 0;
     &.loaded {
       min-height: 0;
     }
@@ -482,13 +487,12 @@ rd-footer {
         align-items: center;
         padding: 6px 0;
         font-size: 16px;
-        color: #000;
-        font-weight: $font-weight-lite;
-        opacity: .6;
-        transition: opacity 200ms ease-out;
+        color: hsla(0 0% 50% / 1);
+        font-weight: $font-weight-regular;
+        transition: color 200ms ease-out;
         &.rd-my-location svg { margin: 0 5px 0 -23px; height: 12px;}
         span:last-child { font-size: 11px; }
-        &:hover { opacity: 1; }
+        &:hover { color: hsla(0 0% 0% / 1); }
       }
     }
   }

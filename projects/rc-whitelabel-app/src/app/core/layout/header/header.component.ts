@@ -59,7 +59,7 @@ export class HeaderComponent implements OnInit {
   openSearchForm(): void {
     const dialogRef = this.dialog.open(SearchFormComponent, {
       position: {'top': '15vh'},
-      backdropClass: 'rd-backdrop',
+      backdropClass: 'rd-dialog-backdrop',
       panelClass: 'rd-search-dialog'
     });
   }
