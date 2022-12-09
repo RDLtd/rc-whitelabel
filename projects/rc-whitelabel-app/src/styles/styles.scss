@@ -174,7 +174,7 @@ header {
   color: var(--clr-header-fgd);
   &.rd-hideHeader {
     @include mq(small) {
-      transform: translateY(-($layout-header-height - 8));
+      transform: translateY(-($layout-header-height + $container-padding));
     }
   }
   a { cursor: pointer; }
@@ -197,7 +197,6 @@ rd-header {
     font-weight: $font-weight-lite;
     letter-spacing: 1px;
     @include mq(med) {
-      //text-align: center;
       font-size: 14px;
     }
   }
@@ -798,7 +797,7 @@ rd-footer {
 }
 .rd-map-info-window {
   padding: 4px 0 6px 6px;
-  width: 200px;
+  max-width: 200px;
   h3 {
     margin: 0 0 0;
     font-size: 1rem;

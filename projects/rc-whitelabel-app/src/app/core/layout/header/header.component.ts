@@ -46,8 +46,8 @@ export class HeaderComponent implements OnInit {
         });
 
     this.route.queryParams.subscribe((params) => {
-      if (!!params.location) {
-        this.geoSearchLabel = params.location;
+      if (!!params.label) {
+        this.geoSearchLabel = params.label;
       }
     });
 
@@ -78,7 +78,7 @@ export class HeaderComponent implements OnInit {
     this.restService.resetRestaurantsSubject();
     // console.log(path);
     // navigate to the new view, passing any query params
-    this.router.navigate(path, { queryParams: { location: this.geoSearchLabel || ''} }).then();
+    this.router.navigate(path, { queryParams: { label: this.geoSearchLabel || ''} }).then();
   }
 }
 

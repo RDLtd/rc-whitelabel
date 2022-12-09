@@ -69,10 +69,10 @@ export class SearchFormComponent implements OnInit {
   restaurants: any[] = [];
   searchRestaurants: any[] = [];
   landmarks: Landmark[] = [];
-  features: any[] = [];
+  // features: any[] = [];
   searchSuggestions: SearchSuggestion[] = [];
-  cuisines: Cuisine[] = [];
-  recentlyViewed: any[] = [];
+  // cuisines: Cuisine[] = [];
+  // recentlyViewed: any[] = [];
 
   // User location
   userPosition: any | undefined;
@@ -200,8 +200,8 @@ export class SearchFormComponent implements OnInit {
       console.log('LoadSummary', data);
       this.searchRestaurants = data.restaurants;
       this.landmarks = data.landmarks;
-      this.features = data.attributes;
-      this.cuisines = data.cuisines;
+      // this.features = data.attributes;
+      // this.cuisines = data.cuisines;
       this.isLoaded = true;
     });
   }
@@ -310,15 +310,16 @@ export class SearchFormComponent implements OnInit {
       .then(() => this.closeSearchForm());
 
   }
-  doCuisineSearch(obj: any): void {
-    this.router.navigate([
-      '/restaurants',
-      'map',
-      obj.latLng,
-      obj.name
-    ])
-      .then(() => this.closeSearchForm());
-  }
+
+  // doCuisineSearch(obj: any): void {
+  //   this.router.navigate([
+  //     '/restaurants',
+  //     'map',
+  //     obj.latLng,
+  //     obj.name
+  //   ])
+  //     .then(() => this.closeSearchForm());
+  // }
 
   closeSearchForm(): void {
     this.dialog.close();

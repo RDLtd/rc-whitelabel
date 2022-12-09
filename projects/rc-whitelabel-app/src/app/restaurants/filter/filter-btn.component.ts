@@ -18,7 +18,7 @@ export class FilterBtnComponent implements OnInit {
   @Input() view = 'list';
   @Output() onMapUpdate = new EventEmitter<number>();
 
-  minCuisineFilters = 3;
+  minCuisineFilters = 3; // number of cuisine options to warrant offering filters
   showFilterOptions = false;
   userPosition: any;
   geoTarget: any;
@@ -37,7 +37,7 @@ export class FilterBtnComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // Observe user position
+    // Watch user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
 
     // Current geoTarget
@@ -54,17 +54,16 @@ export class FilterBtnComponent implements OnInit {
     const dialogRef = this.dialog.open(FilterOptionsDialogComponent, {
       data: {
         cuisines: this.restService.cuisineSummary,
-        // landmarks: this.restService.landmarkSummary,
-        // userPosition: this.userPosition
       },
       panelClass: 'rd-filter-dialog'
     });
 
     dialogRef.afterClosed().subscribe((selected: any) => {
-      console.log('MatSelect', selected);
+
       // Guard clause
       if (selected === null || selected === undefined || selected.length < 1) { return;}
-      // Get the option values
+
+      // Extract the filter options that have been selected
       const cuisineFilters: string[] = [];
       selected.forEach((item: any) => {
         cuisineFilters.push(item.value);
@@ -72,9 +71,8 @@ export class FilterBtnComponent implements OnInit {
 
       this.router
         .navigateByUrl(
-          `/restaurants/${this.view}/${this.restService.geoCoords}/${cuisineFilters.join(',')}?location=${this.geoTarget.label}`)
+          `/restaurants/${this.view}/${this.restService.geoCoords}/${cuisineFilters.join(',')}?label=${this.geoTarget.label}`)
         .then(() => console.log(`Filtered by ${cuisineFilters}`));
-
       this.onMapUpdate.emit(0);
     });
   }
@@ -89,7 +87,7 @@ export class FilterBtnComponent implements OnInit {
     }
     this.router.navigate(
       ['/restaurants', this.view, `${this.geoTarget.lat},${this.geoTarget.lng}`],
-      { queryParams: { location: this.geoTarget.label }})
+      { queryParams: { label: this.geoTarget.label }})
   }
 
 }
