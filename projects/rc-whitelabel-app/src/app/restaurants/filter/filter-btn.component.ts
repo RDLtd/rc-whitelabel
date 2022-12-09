@@ -60,36 +60,22 @@ export class FilterBtnComponent implements OnInit {
       },
       panelClass: 'rd-filter-dialog'
     });
-    dialogRef.afterClosed().subscribe((query: any) => {
 
+    dialogRef.afterClosed().subscribe((selected: any) => {
       // Guard clause
-      if (!query) { return;}
+      if (!selected) { return;}
+      // Get the option values
+      const cuisineFilters: string[] = [];
+      selected.forEach((item: any) => {
+        cuisineFilters.push(item.value);
+      });
 
-      console.log(query);
+      this.router
+        .navigateByUrl(
+          `/restaurants/${this.view}/${this.restService.geoCoords}/${cuisineFilters.join(',')}?location=${this.geoTarget.label}`)
+        .then(() => console.log(`Filtered by ${cuisineFilters}`));
 
       this.onMapUpdate.emit(0);
-
-      if (query.type === 'filter') {
-        this.router
-          .navigateByUrl(
-          `/restaurants/${this.view}/${this.restService.geoCoords}/${query.cuisine}?location=${this.geoTarget.label}`)
-          .then(() => console.log(`Filtered by ${query.cuisine}`));
-      } else {
-        if (query.lat == this.restService.geoLatitude && query.lng == this.restService.geoLongitude) {
-          console.log(`No change`);
-          this.onMapUpdate.emit(1);
-          return;
-        }
-
-        const loc = query.label ?? 'Your Location';
-
-        this.router
-          .navigateByUrl(
-            `/restaurants/map/${query.lat},${query.lng}?location=${loc}`)
-          .then(() => {
-            console.log('No cuisine filter');
-          });
-      }
     });
   }
 

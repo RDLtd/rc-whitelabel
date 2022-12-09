@@ -156,11 +156,18 @@ export class RestaurantsService {
       .then(() => {
         // If a filter has been applied
         // update the total results accordingly
+        // by adding together the count of each cuisine included
+        // in the filter
+        console.log('Filter', this.params.filter);
         if (!!this.params.filter) {
-          const cuisine = this.cuisines?.find((obj: any) => {
-            return obj.Cuisine === this.params.filterText;
+          let cuisineCount = 0;
+          this.cuisines?.forEach((obj: any) => {
+            if(this.params.filterText.includes(obj.Cuisine)) {
+              console.log(`Add ${obj.Count}`);
+              cuisineCount += obj.Count;
+            }
           });
-          this.totalRestaurants = cuisine.Count;
+          this.totalRestaurants = cuisineCount;
         }
       });
   }

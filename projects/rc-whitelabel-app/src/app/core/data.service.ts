@@ -112,6 +112,7 @@ export class DataService {
     console.log(`loadResultsSummary cached: ${this.summarisedResults?.restaurants?.length > 0}`);
     if (!!this.summarisedResults) {
       return new Promise<any>( resolve => {
+        console.log(this.summarisedResults);
         resolve(this.summarisedResults);
       });
     } else {
