@@ -14,9 +14,9 @@
   </div>
 </div>
 <mat-dialog-actions class="rd-flex-end">
-  <button mat-flat-button [mat-dialog-close]="cuisineSection?.selectedOptions?.selected">APPLY FILTER</button>
+  <button mat-button [mat-dialog-close]="null">CANCEL</button>
+  <button
+    mat-flat-button
+    color="accent"
+    [mat-dialog-close]="cuisineSection?.selectedOptions?.selected">APPLY FILTER</button>
 </mat-dialog-actions>
-
-
-<button mat-icon-button class="rd-dialog-close" [mat-dialog-close]="false"
-        tabindex="-1"><mat-icon>close</mat-icon></button>

@@ -62,8 +62,9 @@ export class FilterBtnComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((selected: any) => {
+      console.log('MatSelect', selected);
       // Guard clause
-      if (!selected) { return;}
+      if (selected === null || selected === undefined || selected.length < 1) { return;}
       // Get the option values
       const cuisineFilters: string[] = [];
       selected.forEach((item: any) => {

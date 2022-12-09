@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConfig } from '../../app.config';
 import {MatSelectionList} from '@angular/material/list';
@@ -7,7 +7,7 @@ import {MatSelectionList} from '@angular/material/list';
   selector: 'rd-filter-options-dialog',
   templateUrl: './filter-options-dialog.component.html'
 })
-export class FilterOptionsDialogComponent implements OnInit {
+export class FilterOptionsDialogComponent implements AfterViewInit {
 
   @ViewChild('cuisineSelection') cuisineSection?: MatSelectionList;
 
@@ -15,7 +15,7 @@ export class FilterOptionsDialogComponent implements OnInit {
     public config: AppConfig,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-  ngOnInit(): void {
-    console.log('Filter data:', this.data);
+  ngAfterViewInit(): void {
+    console.log('Filter data:', this.cuisineSection);
   }
 }
