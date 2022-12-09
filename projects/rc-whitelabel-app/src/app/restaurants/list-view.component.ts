@@ -61,7 +61,6 @@ export class ListViewComponent implements OnInit {
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
 
-      console.log('x', params.get('latLng'));
       if (params.get('latLng') === null) {
         //this.restService.openSearchForm();
         return;
@@ -84,7 +83,7 @@ export class ListViewComponent implements OnInit {
           lat: this.restService.geoLatitude,
           lng: this.restService.geoLongitude,
           filter: this.searchFilter !== null ? 'cuisine' : null,
-          filterText: this.searchFilter,
+          filterText: this.searchFilter?.split(','),
           location: this.restService.geoLabel
         }
 
@@ -93,7 +92,7 @@ export class ListViewComponent implements OnInit {
     });
 
     // load summary for filter/sort options
-    //this.restService.loadSummarisedResults();
+    this.restService.loadSummarisedResults();
 
     // Now load restaurant results
     this.restService.loadRestaurants({offset: 0});
