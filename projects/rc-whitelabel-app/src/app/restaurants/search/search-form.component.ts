@@ -25,10 +25,6 @@ interface Landmark {
   channel_landmark_name: string;
   channel_landmark_number: number;
 }
-interface Cuisine {
-  Cuisine: string;
-  Count: number;
-}
 
 @Component({
   selector: 'rd-search-form',
@@ -270,24 +266,6 @@ export class SearchFormComponent implements OnInit {
             }
           });
         }
-
-        // Check for matching cuisines
-        // if (!!this.cuisines && this.channelConfig.showCuisines) {
-        //   let matchPosition;
-        //   this.cuisines.forEach((item: any) => {
-        //     // record the match position
-        //     // lower number = higher relevancy
-        //     matchPosition = item.Cuisine.toUpperCase().search(regex);
-        //     if(matchPosition >= 0) {
-        //       this.searchSuggestions.push({
-        //         cat: 'cuisine',
-        //         name: item.Cuisine,
-        //         index: matchPosition,
-        //         latLng: `${this.config.channel.latitude},${this.config.channel.longitude}`
-        //       });
-        //     }
-        //   });
-        // }
       }
 
       // Sort results by index position - i.e. relevancy
@@ -308,18 +286,7 @@ export class SearchFormComponent implements OnInit {
   doGeoSearch(obj: any): void {
     this.router.navigate(['/restaurants', 'map', obj.latLng], { queryParams: { label: obj.name }})
       .then(() => this.closeSearchForm());
-
   }
-
-  // doCuisineSearch(obj: any): void {
-  //   this.router.navigate([
-  //     '/restaurants',
-  //     'map',
-  //     obj.latLng,
-  //     obj.name
-  //   ])
-  //     .then(() => this.closeSearchForm());
-  // }
 
   closeSearchForm(): void {
     this.dialog.close();

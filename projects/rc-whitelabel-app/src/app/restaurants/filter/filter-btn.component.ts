@@ -55,6 +55,7 @@ export class FilterBtnComponent implements OnInit {
       data: {
         cuisines: this.restService.cuisineSummary,
       },
+      maxWidth: '90vw',
       panelClass: 'rd-filter-dialog'
     });
 

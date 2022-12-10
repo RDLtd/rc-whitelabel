@@ -58,7 +58,9 @@ export class HeaderComponent implements OnInit {
 
   openSearchForm(): void {
     const dialogRef = this.dialog.open(SearchFormComponent, {
-      position: {'top': '15vh'},
+      position: {'top': '0'},
+      maxHeight: '100vh',
+      maxWidth: '100vw',
       backdropClass: 'rd-dialog-backdrop',
       panelClass: 'rd-search-dialog'
     });

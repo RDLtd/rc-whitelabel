@@ -31,17 +31,17 @@
               ngModel
               placeholder="{{ channelConfig.searchPlaceholderTxt }}"
               tabindex="0">
-            <button
-              mat-button
-              type="button"
-              *ngIf="rdSearchInput.value"
-              matSuffix
-              mat-icon-button
-              aria-label="Clear"
-              tabindex="-1"
-              (click)="searchReset()">
-              <mat-icon>close</mat-icon>
-            </button>
+<!--            <button-->
+<!--              mat-button-->
+<!--              type="button"-->
+<!--              *ngIf="rdSearchInput.value"-->
+<!--              matSuffix-->
+<!--              mat-icon-button-->
+<!--              aria-label="Clear"-->
+<!--              tabindex="-1"-->
+<!--              (click)="searchReset()">-->
+<!--              <mat-icon>close</mat-icon>-->
+<!--            </button>-->
           </mat-form-field>
           <mat-error *ngIf="noSuggestions" @fadeIn>
             {{ config.i18n["No_matching_search_results"] }}
@@ -118,4 +118,5 @@
 
   </div>
 </mat-dialog-content>
+<button mat-icon-button [mat-dialog-close]="false" class="rd-dialog-close"><mat-icon>close</mat-icon></button>
 

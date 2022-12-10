@@ -287,13 +287,25 @@ rd-footer {
 
 // the class passed to dialog on init
 .rd-search-dialog {
+  @include mq(med) {
+    transform: translateY(10vh);
+  }
   .mat-dialog-container {
-    border-radius: 12px;
+    border-radius: 0;
     padding: 0;
     max-height: 100vh;
     overflow-x: hidden;
+    @include mq(med) {
+      border-radius: 12px;
+    }
   }
-  .mat-dialog-content {}
+  .mat-dialog-content {
+    max-height: 100vh;
+    height: 100vh;
+    @include mq(med) {
+      height: auto;
+    }
+  }
   .rd-search-form-container {
     width: min(100vw, 640px);
     .rd-search-content {
@@ -319,10 +331,13 @@ rd-footer {
         }
       }
       .mat-form-field {
-        margin-top: 4px;
+        margin-top: 2rem;
         font-size: 18px;
         line-height: 20px;
         width: 100%;
+        @include mq(med) {
+          margin-top: 1rem;
+        }
       }
       .mat-error {
         margin: -12px 0 24px;
@@ -395,7 +410,11 @@ rd-footer {
             &:focus { background: #eee; }
           }
           &.open {
-            max-height: 400px;
+            max-height: 100vh;
+            @include mq(med) {
+              top: 5vh;
+              max-height: 62vh;
+            }
           }
         }
       }
@@ -906,18 +925,19 @@ rd-footer {
   }
 }
 .rd-filter-dialog {
-  @include mq(med) { min-width: 480px;}
+  width: 100vw;
+  @include mq(med) { width: clamp(38vw, 62vw, 480px)}
   .mat-dialog-container {
     position: relative;
     width: 100%;
     border-radius: 12px;
   }
-  .rd-dialog-close {
-    position: absolute !important;
-    top: 4px; right: 4px;
-    z-index: 100;
-    color: gray;
-  }
+}
+.rd-dialog-close {
+  position: absolute !important;
+  top: 1rem; right: 1rem;
+  z-index: 100;
+  color: gray;
 }
 .rd-filter-list {
   position: relative;
