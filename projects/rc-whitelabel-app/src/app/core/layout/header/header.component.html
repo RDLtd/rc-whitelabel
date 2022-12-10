@@ -1,11 +1,14 @@
 <!-- HEADER CONTENT -->
-<div class="rd-title" *ngIf="!showSearchOption">
-<!--  {{ config.channel.name | uppercase }}-->
-</div>
-<a routerLink="search">
+<a routerLink="/" [title]="config.channel.name">
   <img
     class="rd-logo"
     [src]="config.channel.brand?.imgLogo"
+    alt="Logo">
+</a>
+<a routerLink="" class="rd-logo" *ngIf="!!config.channel.rcLogo">
+  <img
+    class="rd-logo"
+    [src]="config.channel.rcLogo"
     alt="Logo">
 </a>
 <span class="rd-flex-spacer"></span>
@@ -31,12 +34,7 @@
     <span class="hide-small">{{ config.i18n.Search }}</span>
   </button>
 </ng-container>
-<a routerLink="" class="rd-logo" *ngIf="!!config.channel.rcLogo">
-  <img
-    class="rd-logo"
-    [src]="config.channel.rcLogo"
-    alt="Logo">
-</a>
+
 
 
 

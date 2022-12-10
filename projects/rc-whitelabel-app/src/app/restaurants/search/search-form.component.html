@@ -9,70 +9,75 @@
       [loadText]="config.i18n['Loading']">
     </rd-loader>
 
-    <div class="rd-search-content" [class.rd-show]="isLoaded && config.channelLoaded">
+    <div class="rd-search-content"
+         [class.rd-show]="isLoaded && config.channelLoaded">
+
       <div class="rd-search-autofill-container">
-      <!-- SEARCH FORM -->
-      <form #rdSearchForm="ngForm">
-        <mat-form-field floatLabel="never" appearance="standard">
-          <mat-label>
-            <mat-icon>search</mat-icon>
-            {{ config.i18n['Search'] }}
-          </mat-label>
-          <input
-            #rdSearchInput
-            name="searchString"
-            matInput
-            (keyup)="getAutoSuggestions(rdSearchInput.value)"
-            autocomplete="off"
-            type="text"
-            ngModel
-            placeholder="{{ channelConfig.searchPlaceholderTxt }}"
-            tabindex="0">
-          <button
-            mat-button
-            type="button"
-            *ngIf="rdSearchInput.value"
-            matSuffix
-            mat-icon-button
-            aria-label="Clear"
-            tabindex="-1"
-            (click)="searchReset()">
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-form-field>
-        <mat-error *ngIf="noSuggestions" @fadeIn>
-          {{ config.i18n["No_matching_search_results"] }}
-        </mat-error>
-      </form>
 
-      <!--  Search Results -->
-      <ul [class.open]="!!rdSearchInput.value && !!searchSuggestions" class="rd-search-autofill">
+        <!-- SEARCH FORM -->
+        <form #rdSearchForm="ngForm">
+          <mat-form-field floatLabel="never" appearance="standard">
+            <mat-label>
+              <mat-icon>search</mat-icon>
+              {{ config.i18n['Search'] }}
+            </mat-label>
+            <input
+              #rdSearchInput
+              name="searchString"
+              matInput
+              (keyup)="getAutoSuggestions(rdSearchInput.value)"
+              autocomplete="off"
+              type="text"
+              ngModel
+              placeholder="{{ channelConfig.searchPlaceholderTxt }}"
+              tabindex="0">
+            <button
+              mat-button
+              type="button"
+              *ngIf="rdSearchInput.value"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              tabindex="-1"
+              (click)="searchReset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-error *ngIf="noSuggestions" @fadeIn>
+            {{ config.i18n["No_matching_search_results"] }}
+          </mat-error>
+        </form>
 
-        <!-- Suggestions -->
-        <li *ngFor="let suggestion of searchSuggestions; let i = index" [tabindex]="i + 1"
-            [ngSwitch]="suggestion.cat">
+        <!--  Search Results -->
+        <ul class="rd-search-autofill"
+            [class.open]="!!rdSearchInput.value && !!searchSuggestions">
 
-          <!-- Landmarks -->
-          <a *ngSwitchCase="'location'"
-             (click)="doGeoSearch(suggestion)">
-            <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
-            {{ suggestion?.name }}
-            <span class="rd-flex-spacer"></span>
-            <span></span>
-          </a>
+          <!-- Suggestions -->
+          <li *ngFor="let suggestion of searchSuggestions; let i = index" [tabindex]="i + 1"
+              [ngSwitch]="suggestion.cat">
 
-          <!-- Restaurants -->
-          <a *ngSwitchCase="'restaurant'"
-             (click)="viewRestaurantSpw(suggestion)">
-            <mat-icon class="rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
-            {{ suggestion?.name }}
-            <span class="rd-flex-spacer"></span>
-            <span></span>
-          </a>
+            <!-- Landmarks -->
+            <a *ngSwitchCase="'location'"
+               (click)="doGeoSearch(suggestion)">
+              <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
+              {{ suggestion?.name }}
+              <span class="rd-flex-spacer"></span>
+              <span></span>
+            </a>
 
-        </li>
-      </ul>
+            <!-- Restaurants -->
+            <a *ngSwitchCase="'restaurant'"
+               (click)="viewRestaurantSpw(suggestion)">
+              <mat-icon class="rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
+              {{ suggestion?.name }}
+              <span class="rd-flex-spacer"></span>
+              <span></span>
+            </a>
+
+          </li>
+        </ul>
       </div>
+
       <!-- Popular searches -->
       <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
 
