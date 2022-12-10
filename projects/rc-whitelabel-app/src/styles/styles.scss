@@ -34,6 +34,7 @@ $col-icon-location:   var(--clr-icon-location);
 $clr-offers:          var(--clr-offers);
 $clr-cta-primary:     var(--clr-primary-cta);
 $clr-grey-100:        var(--clr-grey-100);
+$clr-header:          var(--clr-header-bgd);
 
 // For media queries
 $breakpoints: (
@@ -103,7 +104,7 @@ a, a:active, a:focus {
 .rd-hide { display: none !important; }
 .rd-show { opacity: 1 !important;}
 .rd-highlight { color: $col-accent; }
-.rd-cta { background-color: $clr-cta-primary; }
+.rd-cta { background-color: $clr-cta-primary; color: white;}
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
 .rd-hidden { opacity: 0;}
 .rd-icon-restaurant { color: $col-icon-restaurant !important;}
@@ -170,7 +171,7 @@ header {
   z-index: 10;
   position: fixed;
   transition: all .6s cubic-bezier(0.16, 1, 0.3, 1);
-  background: var(--clr-header-bgd);
+  background: $clr-header;
   box-shadow: 0 2px 4px 0 #00000026;
   color: var(--clr-header-fgd);
   height: auto;
@@ -283,13 +284,14 @@ rd-footer {
 
 // SEARCH
 // ------------------------
-.rd-dialog-backdrop { background-color: hsl(184 80% 8% / .8); }
+.rd-dialog-backdrop {
+  //backdrop-filter: blur(20px);
+  background-color: hsla(0 0% 0% / .75);
+}
 
 // the class passed to dialog on init
 .rd-search-dialog {
-  @include mq(med) {
-    transform: translateY(10vh);
-  }
+  @include mq(med) { transform: translateY(10vh); }
   .mat-dialog-container {
     border-radius: 0;
     padding: 0;
@@ -900,14 +902,14 @@ rd-footer {
   .mat-raised-button {
     margin: 0;
     padding: 8px 20px;
-    border-radius: 32px 32px 32px 4px ;
+    border-radius: 32px;
     line-height: 40px;
     text-transform: uppercase;
     font-weight: $font-weight-regular;
-    background: #ff2600;
+    background: $clr-cta-primary;
     color: white;
     @include mat.elevation(10);
-    &.rd-btn-clear { background-color: #ff2600; }
+    &.rd-btn-clear { background-color: #000; }
   }
   .mat-button-wrapper {
     display: flex;
@@ -915,6 +917,8 @@ rd-footer {
   }
   .mat-icon { margin-left: 8px; }
 }
+// checkbox bgd color
+.mat-primary .mat-pseudo-checkbox-checked { background-color: $clr-cta-primary;}
 .rd-filter-list-container {
   display: flex;
   flex-direction: column;
