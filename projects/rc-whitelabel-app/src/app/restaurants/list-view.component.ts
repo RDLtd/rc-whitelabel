@@ -75,7 +75,7 @@ export class ListViewComponent implements OnInit {
         this.restService.geo = {
           lat: Number(latLng[0]).toFixed(6),
           lng: Number(latLng[1]).toFixed(6),
-          label: queryParams.location
+          label: queryParams.label
         }
 
         // Update search params
@@ -84,7 +84,7 @@ export class ListViewComponent implements OnInit {
           lng: this.restService.geoLongitude,
           filter: this.searchFilter !== null ? 'cuisine' : null,
           filterText: this.searchFilter?.split(','),
-          location: this.restService.geoLabel
+          label: this.restService.geoLabel
         }
 
       });

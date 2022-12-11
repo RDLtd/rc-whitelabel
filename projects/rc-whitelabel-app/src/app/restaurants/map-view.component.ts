@@ -162,7 +162,7 @@ export class MapViewComponent implements OnInit {
           lng: this.restService.geoLongitude,
           filter: this.searchFilter !== null ? 'cuisine' : null,
           filterText: this.searchFilter?.split(','),
-          location: this.restService.geoLabel
+          label: this.restService.geoLabel
         }
       });
 

@@ -8,8 +8,6 @@
 <div class="rd-map">
   <div class="rd-component list">
 
-
-
     <ul class="rd-map-list" [@fadeInStaggerIn]="restaurantBatch$ | async">
 
       <ng-container *ngIf="!(resultsLoaded$ | async)" >
@@ -52,7 +50,7 @@
       <button [disabled]="currentOffset === 0"
               mat-icon-button
               (click)="prevBatch()"
-              title="Previous {{ currentOffset }} restaurants">
+              title="Previous {{ batchTotal }} restaurants">
         <mat-icon>arrow_back</mat-icon>
       </button>
 

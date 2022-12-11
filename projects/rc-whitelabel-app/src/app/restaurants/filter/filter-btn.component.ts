@@ -43,6 +43,8 @@ export class FilterBtnComponent implements OnInit {
     // Current geoTarget
     this.geoTarget = this.restService.geo;
 
+    console.log('GEO',this.geoTarget);
+
     // Delay the filter options until results have loaded
     setTimeout(() => {
       this.showFilterOptions = this.restService.cuisineSummary.length > this.minCuisineFilters;
@@ -84,7 +86,7 @@ export class FilterBtnComponent implements OnInit {
       lng: this.geoTarget.lng,
       filter: null,
       filterText: null,
-      location: this.geoTarget.label
+      label: this.geoTarget.label
     }
     this.router.navigate(
       ['/restaurants', this.view, `${this.geoTarget.lat},${this.geoTarget.lng}`],

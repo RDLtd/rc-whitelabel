@@ -23,7 +23,7 @@ export class RestaurantsService {
     boundary: this.config.channel.boundary || 10,
     offset: 0,
     testing: false,
-    location: ''
+    label: ''
   };
   // Geo data
   geoTarget!: {
@@ -44,8 +44,6 @@ export class RestaurantsService {
   private moreRestaurantsSubject = new BehaviorSubject<boolean>(false);
   private restaurantsArray: Array<any> = [];
   private restaurantsSubject = new BehaviorSubject<any[]>(this.restaurantsArray);
-
-  // channelSite: any;
 
   private totalResults = 0;
 
@@ -151,6 +149,9 @@ export class RestaurantsService {
     console.log('loadSummarisedResults', lat, lng, boundary);
     this.data.loadResultsSummary(lat, lng, boundary)
       .then((res) => {
+        if(res === null) {
+          throw('No results to summarise');
+        }
         this.cuisines = res.cuisines;
         this.features = res.attributes;
         this.landmarks = res.landmarks;
@@ -172,7 +173,8 @@ export class RestaurantsService {
           });
           this.totalRestaurants = cuisineCount;
         }
-      });
+      })
+      .catch((error) => console.log('ERROR:', error));
   }
 
   /**
@@ -242,10 +244,11 @@ export class RestaurantsService {
 
     this.data.loadRestaurantResults( this.accessCode, this.apiKey, this.params)
       .then((res) => {
-        console.log(res);
+        if(res === null) {
+          throw(`No restaurants returned within ${this.params.boundary}km of geocode`);
+        }
         // Is this just a preload call
         if (preload) {
-          if(res === null) { return } // abort
           this.moreRestaurantsArray = res.restaurants;
           console.log('Next preloaded ready', res.restaurants.length);
           // update subject & notify observers
@@ -264,7 +267,7 @@ export class RestaurantsService {
         if (this.restaurantsArray.length < this.totalRestaurants) {
           this.loadMoreRestaurants();
         }
-      });
+      }).catch((error) => console.log('ERROR:', error));
   }
 
   /**

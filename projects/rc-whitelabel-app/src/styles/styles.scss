@@ -12,7 +12,7 @@ $rc-whitelabel-app-accent: mat.define-palette(mat.$orange-palette, A200, A100, A
 // The warn palette is optional (defaults to red).
 $rc-whitelabel-app-warn: mat.define-palette(mat.$deep-orange-palette);
 
-// Create the theme object
+// Create a custom theme object
 $rc-whitelabel-app-theme: mat.define-light-theme((
   color: (
     primary: $rc-whitelabel-app-primary,
@@ -23,26 +23,29 @@ $rc-whitelabel-app-theme: mat.define-light-theme((
 
 @include mat.all-component-themes($rc-whitelabel-app-theme);
 
-// Default branding
-// Referencing CSS vars to allow config to supply values post build
-$col-text:            var(--clr-text-default);
-$col-accent:          var(--clr-accent);
-$col-dark:            var(--clr-bgd-default); //pre-load
+// Brand theming
+// Referencing CSS vars that have been added to index.html
+// This allows them to be set post-build by AppConfig
 
-$col-icon-cuisine:    var(--clr-icon-cuisine);
-$col-icon-restaurant: var(--clr-icon-restaurant);
-$col-icon-location:   var(--clr-icon-location);
-
+// Set by default for all channels
+$clr-icon-cuisine:    var(--clr-icon-cuisine);
+$clr-icon-restaurant: var(--clr-icon-restaurant);
+$clr-icon-location:   var(--clr-icon-location);
 $clr-grey-100:        var(--clr-grey-100);
+$clr-grey-500:        var(--clr-grey-500);
+$clr-grey-900:        var(--clr-grey-900);
+$clr-text:            var(--clr-text-default);
 
+// Set from Channel config
+$clr-accent:          var(--clr-accent);
 $clr-offers:          var(--clr-offers);
 $clr-cta:             var(--clr-primary-cta);
-
 $clr-header:          var(--clr-header-bgd);
 $clr-header-txt:      var(--clr-header-fgd);
+$img-channel-logo:    var(--img-logo);
+$img-channel-bgd:     var(--img-bgd);
 
-$clr-backdrop:        rgba($clr-header, .75);
-
+$clr-backdrop:        hsla(0 0% 15% / .85);
 
 // For media queries
 $breakpoints: (
@@ -58,13 +61,13 @@ $breakpoints: (
   }
 };
 
-// Typography
+// Typography vars
 $font-family-default: 'Roboto', sans-serif;
 $font-family-heading: 'Roboto Slab', 'Georgia', serif;
 $font-weight-lite: 300;
 $font-weight-regular: 400;
 $font-weight-heavy: 500;
-// Layouts
+// Layout vars
 $layout-header-height: 56px;
 $layout-max-width: 960px;
 $loaderSize: 48px;
@@ -82,9 +85,9 @@ html { scroll-behavior: smooth; }
 body {
   height: 100vh;
   margin: 0;
-  background: $col-dark;
+  background: $clr-grey-900;
   font-family: $font-family-default;
-  color: $col-text;
+  color: $clr-text;
 }
 a, a:active, a:focus {
   outline: none;
@@ -106,28 +109,28 @@ a, a:active, a:focus {
 .rd-flex-spacer { flex: 1 0 auto; text-align: center;}
 .rd-hide { display: none !important; }
 .rd-show { opacity: 1 !important;}
-.rd-highlight { color: $col-accent; }
+.rd-highlight { color: $clr-accent; }
 .rd-cta { background-color: $clr-cta; color: white;}
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
 .rd-hidden { opacity: 0;}
-.rd-icon-restaurant { color: $col-icon-restaurant !important;}
-.rd-icon-cuisine { color: $col-icon-cuisine !important;}
+.rd-icon-restaurant { color: $clr-icon-restaurant !important;}
+.rd-icon-cuisine { color: $clr-icon-cuisine !important;}
 .rd-icon-location,
 .rd-icon-my-location {
-  color: $col-icon-location !important;
-  fill: $col-icon-location
+  color: $clr-icon-location !important;
+  fill: $clr-icon-location
 }
-.rd-fill-accent { fill: $col-accent; }
+.rd-fill-accent { fill: $clr-accent; }
 .rd-separator:after {
   display: inline-block;
   content: '|';
   font-size: 1rem;
-  color: $col-text;
+  color: $clr-text;
   margin-inline: .25rem 0.1rem;
 }
 
 // Loading component
-// -------------------------------------------------
+// -------------------------------------------------------------------------
 rd-loader {
   .rd-loader-container {
     position: absolute;
@@ -142,7 +145,7 @@ rd-loader {
   .rd-loader-svg {
     width: $loaderSize;
     height: $loaderSize;
-    fill: $col-accent;
+    fill: $clr-accent;
     animation: spin .5s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite both;
     //animation-delay: .5s;
   }
@@ -150,12 +153,12 @@ rd-loader {
     margin-top: 4px;
     font-size: 12px;
     letter-spacing: 1px;
-    color: $col-accent;
+    color: $clr-accent;
   }
   // color variations
   &.fill-accent {
-    fill: $col-accent;
-    .rd-loader-txt { color: $col-accent; }
+    fill: $clr-accent;
+    .rd-loader-txt { color: $clr-accent; }
   }
   &.fill-white {
     @include mq(small) {
@@ -166,7 +169,7 @@ rd-loader {
 }
 
 // Page layouts
-// -------------------------------------------------
+// -------------------------------------------------------------------------
 header {
   width: 100vw;
   z-index: 10;
@@ -206,13 +209,12 @@ rd-header {
     }
   }
   .mat-button {
-    padding-inline: .75rem;
+    padding-inline: .5rem;
     font-weight: $font-weight-regular;
     font-size: 1.1rem;
     letter-spacing: 1px;
     min-width: 0;
     @include mq(med) {
-      padding-inline: 1rem;
       .mat-icon { margin-right: .25rem; }
     }
   }
@@ -238,7 +240,7 @@ main {
     z-index: 0;
     width: 100vw;
     height: 100vh;
-    background-image: var(--img-bgd);
+    background-image: $img-channel-bgd;
     background-size: cover;
     background-color: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
     filter: blur(8px); // This be the blur
@@ -281,7 +283,7 @@ rd-footer {
 }
 
 // Search form dialog
-// -----------------------------------------------------
+// -------------------------------------------------------------------------
 .rd-dialog-backdrop {
   //backdrop-filter: blur(20px);
   background-color: $clr-backdrop;
@@ -338,7 +340,7 @@ rd-footer {
       }
       .mat-error {
         margin: -12px 0 24px;
-        color: $col-text;
+        color: $clr-text;
       }
       .rd-search-autofill {
         display: block;
@@ -355,14 +357,15 @@ rd-footer {
         }
         li:first-child { border-top: 0; }
         li > a {
-          transition: all .3s ease-out;
-          outline: none;
           display: flex;
           align-items: center;
           width: 100%;
           padding: 16px 8px;
           font-size: 16px;
-          color: $col-text;
+          color: $clr-text;
+          transition: all .3s ease-out;
+          outline: none;
+          cursor: pointer;
           .mat-icon {
             width: 22px;
             height: 22px;
@@ -370,7 +373,7 @@ rd-footer {
             margin-right: 4px;
             color: lightgray;
           }
-          &:hover, &:focus { background: #eee; }
+          &:focus { background: #eee; }
         }
         &.open {
           max-height: 100vh;
@@ -440,9 +443,8 @@ rd-footer {
   }
 }
 
-
 // Results: List view
-// ------------------------------------------
+// -------------------------------------------------------------------------
 .rd-results-container {
   position: relative;
   @include mq(med) {
@@ -595,7 +597,7 @@ rd-footer {
 }
 
 // Results: Map view
-// ------------------------------------------
+// -------------------------------------------------------------------------
 .rd-component {
   position: relative;
   background-color: white;
@@ -820,7 +822,7 @@ rd-footer {
 }
 
 // Cuisine Filters
-// -------------------------------------------------
+// -------------------------------------------------------------------------
 .rd-filter-btn {
   z-index: 20;
   position: fixed;
