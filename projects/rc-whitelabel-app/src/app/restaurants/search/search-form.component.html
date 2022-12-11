@@ -14,7 +14,7 @@
 
       <div class="rd-search-autofill-container">
 
-        <!-- SEARCH FORM -->
+        <!-- Search input form -->
         <form #rdSearchForm="ngForm">
           <mat-form-field floatLabel="never" appearance="standard">
             <mat-label>
@@ -31,17 +31,6 @@
               ngModel
               placeholder="{{ channelConfig.searchPlaceholderTxt }}"
               tabindex="0">
-<!--            <button-->
-<!--              mat-button-->
-<!--              type="button"-->
-<!--              *ngIf="rdSearchInput.value"-->
-<!--              matSuffix-->
-<!--              mat-icon-button-->
-<!--              aria-label="Clear"-->
-<!--              tabindex="-1"-->
-<!--              (click)="searchReset()">-->
-<!--              <mat-icon>close</mat-icon>-->
-<!--            </button>-->
           </mat-form-field>
           <mat-error *ngIf="noSuggestions" @fadeIn>
             {{ config.i18n["No_matching_search_results"] }}
@@ -51,7 +40,6 @@
         <!--  Search Results -->
         <ul class="rd-search-autofill"
             [class.open]="!!rdSearchInput.value && !!searchSuggestions">
-
           <!-- Suggestions -->
           <li *ngFor="let suggestion of searchSuggestions; let i = index" [tabindex]="i + 1"
               [ngSwitch]="suggestion.cat">
@@ -79,14 +67,17 @@
       </div>
 
       <!-- Popular searches -->
-      <div class="rd-quick-links-container" [class.rd-invisible]="searchSuggestions?.length">
+      <div class="rd-popular-links-container"
+           [class.rd-invisible]="searchSuggestions?.length">
 
-        <section class="rd-quick-links" *ngIf="(landmarks?.length || userPosition?.inRange) && channelConfig.showLandmarks">
+        <section class="rd-popular-links"
+                 *ngIf="(landmarks?.length || userPosition?.inRange) && channelConfig.showLandmarks">
           <div>
             <mat-icon class="rd-icon-location">{{ icons.location }}</mat-icon>
             <h2>{{ config.i18n["Nearest_to"] }}</h2>
           </div>
           <ul>
+            <!-- User current location -->
             <li *ngIf="userPosition?.inRange">
               <a
                 class="rd-my-location"
@@ -118,5 +109,10 @@
 
   </div>
 </mat-dialog-content>
-<button mat-icon-button [mat-dialog-close]="false" class="rd-dialog-close"><mat-icon>close</mat-icon></button>
+
+<button mat-icon-button
+        [mat-dialog-close]="false"
+        class="rd-dialog-close">
+  <mat-icon>close</mat-icon>
+</button>
 
