@@ -125,4 +125,11 @@ export class ApiService {
       });
   }
 
+  getFeaturedRestaurants(): any {
+    return this.http.post(this.config.apiUrl + '/channel/restaurants/featured',
+      {
+        channel_access_code: this.config.channel.accessCode,
+        channel_access_api_key: this.config.channel.apiKey
+      });
+  }
 }

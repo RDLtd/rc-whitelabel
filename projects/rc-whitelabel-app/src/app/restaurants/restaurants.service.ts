@@ -136,6 +136,24 @@ export class RestaurantsService {
     return this.restaurantsArray;
   }
 
+  loadFeaturedRestaurants(): void {
+    this.data.loadFeaturedRestaurants()
+      .then((res: any) => {
+        if(res === null) {
+          throw new Error('No featured restaurants defined');
+        }
+        // Add loaded batch to array
+        this.restaurantsArray.push(...res.restaurants);
+
+        // Notify observers
+        this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
+
+        // Complete the load sequence
+        this.resultsLoadedSubject.next(true);
+      })
+      .catch((error: Error) => console.log(`ERROR: ${error}`));
+  }
+
   /**
    * A summary of the available restaurants to
    * a channel or filtered channel

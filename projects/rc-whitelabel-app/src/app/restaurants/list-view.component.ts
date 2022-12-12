@@ -63,6 +63,7 @@ export class ListViewComponent implements OnInit {
       if (params.get('latLng') === null) {
         // Uncomment to open Search form by default
         //this.restService.openSearchForm();
+        this.restService.loadFeaturedRestaurants();
         return;
       }
 
@@ -70,14 +71,12 @@ export class ListViewComponent implements OnInit {
       this.searchFilter = params.get('filter') ?? null;
 
       this.route.queryParams.subscribe(queryParams => {
-
         // Update geoTarget
         this.restService.geo = {
           lat: Number(latLng[0]).toFixed(6),
           lng: Number(latLng[1]).toFixed(6),
           label: queryParams.label
         }
-
         // Update search params
         this.restService.searchParams = {
           lat: this.restService.geoLatitude,
@@ -86,16 +85,14 @@ export class ListViewComponent implements OnInit {
           filterText: this.searchFilter?.split(','),
           label: this.restService.geoLabel
         }
-
       });
 
+      // load summary for filter/sort options
+      this.restService.loadSummarisedResults();
+
+      // Now load restaurant results
+      this.restService.loadRestaurants({offset: 0});
     });
-
-    // load summary for filter/sort options
-    this.restService.loadSummarisedResults();
-
-    // Now load restaurant results
-    this.restService.loadRestaurants({offset: 0});
   }
 
   loadMore(): void {
