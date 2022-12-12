@@ -81,9 +81,8 @@
             <li *ngIf="userPosition?.inRange">
               <a
                 class="rd-my-location"
-                [queryParams]="{label: 'your current location'}"
-                [routerLink]="['/restaurants/map/', userPosition?.lat + ',' +  userPosition?.lng]"
-                (click)="closeSearchForm()">
+                (click)="doGeoSearch(
+                {latLng: userPosition?.lat + ',' + userPosition?.lng, name: 'my location'})">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
                   <path d="M0 0h24v24H0z" fill="none"/>
                   <path
@@ -95,9 +94,8 @@
               </a>
             </li>
             <li *ngFor="let landmark of landmarks">
-              <a [queryParams]="{label: landmark?.channel_landmark_name}"
-                 [routerLink]="['/restaurants', 'map', landmark?.channel_landmark_lat + ',' + landmark?.channel_landmark_lng]"
-                 (click)="closeSearchForm()">
+              <a (click)="doGeoSearch(
+              { latLng: landmark?.channel_landmark_lat + ',' + landmark?.channel_landmark_lng, name: landmark?.channel_landmark_name})">
                 {{ landmark?.channel_landmark_name }}
               </a>
             </li>

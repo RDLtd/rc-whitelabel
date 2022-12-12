@@ -82,6 +82,7 @@ export class RestaurantsService {
   // GEO TARGET
   set geo(geo: any) {
     this.geoTarget = {...this.geo, ...geo};
+    // console.log('RS', this.geoTarget);
   }
   get geo(): object {
     return this.geoTarget;
@@ -150,7 +151,7 @@ export class RestaurantsService {
     this.data.loadResultsSummary(lat, lng, boundary)
       .then((res) => {
         if(res === null) {
-          throw('No results to summarise');
+          throw new Error('No results to summarise');
         }
         this.cuisines = res.cuisines;
         this.features = res.attributes;
@@ -174,7 +175,7 @@ export class RestaurantsService {
           this.totalRestaurants = cuisineCount;
         }
       })
-      .catch((error) => console.log('ERROR:', error));
+      .catch((error) => console.log(`ERROR: ${error}`));
   }
 
   /**
@@ -183,7 +184,9 @@ export class RestaurantsService {
    * @param params
    * @param init
    */
-  loadRestaurantBatch(params: any = {}, init: boolean = false): void {
+  loadRestaurantBatch(
+    params: any = {},
+    init: boolean = false): void {
 
     console.log('loadRestaurantBatch');
 
@@ -229,7 +232,9 @@ export class RestaurantsService {
    * @param params - an object containing the search query params
    * @param preload - false if it's a new search, true if we're preloading
    */
-  loadRestaurants(params: any = {}, preload = false): void {
+  loadRestaurants(
+    params: any = {},
+    preload = false): void {
 
     console.log('loadRestaurants', params);
 
@@ -245,7 +250,7 @@ export class RestaurantsService {
     this.data.loadRestaurantResults( this.accessCode, this.apiKey, this.params)
       .then((res) => {
         if(res === null) {
-          throw(`No restaurants returned within ${this.params.boundary}km of geocode`);
+          throw new Error(`No restaurants returned within ${this.params.boundary}km of geocode`);
         }
         // Is this just a preload call
         if (preload) {
@@ -267,7 +272,8 @@ export class RestaurantsService {
         if (this.restaurantsArray.length < this.totalRestaurants) {
           this.loadMoreRestaurants();
         }
-      }).catch((error) => console.log('ERROR:', error));
+      })
+      .catch((error) => console.log('ERROR:', error));
   }
 
   /**

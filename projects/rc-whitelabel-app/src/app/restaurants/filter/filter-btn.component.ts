@@ -72,6 +72,8 @@ export class FilterBtnComponent implements OnInit {
         cuisineFilters.push(item.value);
       });
 
+      console.log(this.geoTarget);
+
       this.router
         .navigateByUrl(
           `/restaurants/${this.view}/${this.restService.geoCoords}/${cuisineFilters.join(',')}?label=${this.geoTarget.label}`)

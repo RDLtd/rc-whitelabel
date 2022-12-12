@@ -143,6 +143,8 @@ export class MapViewComponent implements OnInit {
 
       this.route.queryParams.subscribe(params => {
 
+        console.log(params);
+
         // Update geoTarget
         this.restService.geo = {
           lat: Number(this.latLng[0]).toFixed(6),

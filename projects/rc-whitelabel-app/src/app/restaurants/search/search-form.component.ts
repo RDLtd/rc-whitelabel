@@ -102,17 +102,10 @@ export class SearchFormComponent implements OnInit {
 
     // Observe user's position
     this.location.userLocationObs.subscribe((userPos) => {
-      // console.log(userPos);
       this.userPosition = userPos;
     });
 
     this.loadSummarisedResults();
-
-    // Focus the search input
-    // Need to use a timeout to force a different thread
-    setTimeout( () => {
-      this.rdSearchInput.nativeElement.focus();
-    }, 0);
 
     // Get recent restaurants
     // this.recentlyViewed = this.storageService.get('rdRecentlyViewed');
@@ -120,7 +113,13 @@ export class SearchFormComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    // ref. search form
+
+    // pre-focus the search input
+    this.rdSearchInput.nativeElement.focus();
+
+    // Set up keyboard navigation for the
+    // auto-suggestion results list.
+    // First, reference the UI container
     const autoSuggest = this.elemRef.nativeElement.querySelector('.rd-search-autofill-container');
 
     let itemsTotal = 0;
@@ -129,16 +128,15 @@ export class SearchFormComponent implements OnInit {
     let itemTarget: any;
     let lastItem: any | null;
 
-    // listen for nav keys
+    // listen for our designated navigation keys
     autoSuggest.addEventListener('keyup', (event: any) => {
-
       // console.log(`Key: ${event.which}`);
 
-      // ref. list array
+      // reference our results list array
       const itemsList = autoSuggest.getElementsByTagName('li');
       itemsTotal = this.searchSuggestions.length;
 
-      // Is it one of our designated nav keys?
+      // Is it a key we're interested in?
       if(this.listNavKeys.includes(event.which)) {
         switch (event.which) {
           // arrow-down, arrow-right, tab
@@ -165,17 +163,20 @@ export class SearchFormComponent implements OnInit {
         if (itemIndex === -1) { itemIndex = (itemsTotal - 1); }
 
       } else {
-        // if it wasn't a nav key then reset i
+        // Otherwise, we need to reset our index
         itemIndex = 0;
       }
 
       // Are there any suggestion items?
       if(itemsList.length > 0) {
+
         // set the targets
         itemSelected = itemsList[itemIndex];
         itemTarget = itemSelected.querySelector('a');
-        // un-highlight last selection
+
+        // clear the last selection
         if (!!lastItem) { lastItem.classList.remove('rd-search-item-selected') }
+
         // highlight selected item
         itemSelected.classList.add('rd-search-item-selected');
         lastItem = itemSelected;
@@ -187,18 +188,19 @@ export class SearchFormComponent implements OnInit {
 
   loadSummarisedResults(): void {
     // Summarised data
-    this.data.loadResultsSummary().then((data: any) => {
+    this.data.loadResultsSummary()
+      .then((data: any) => {
       if ( data === null) {
-        console.log(`No restaurants available within ${this.config.channel.boundary} of the Channel centre.`);
-        this.isLoaded = true;
-        return;
+        throw new Error(`No restaurants available within ${this.config.channel.boundary} of the Channel centre.`);
       }
       console.log('LoadSummary', data);
       this.searchRestaurants = data.restaurants;
       this.landmarks = data.landmarks;
-      // this.features = data.attributes;
-      // this.cuisines = data.cuisines;
       this.isLoaded = true;
+    })
+      .catch((error) => {
+        console.log(`ERROR: ${error}`);
+        this.isLoaded = true;
     });
   }
 
@@ -283,9 +285,14 @@ export class SearchFormComponent implements OnInit {
     }
   }
 
+  /**
+   * Search with latLng
+   * @param obj latLng & name (a.k.a. label)
+   */
   doGeoSearch(obj: any): void {
     this.router.navigate(['/restaurants', 'map', obj.latLng], { queryParams: { label: obj.name }})
-      .then(() => this.closeSearchForm());
+      .then(() => this.closeSearchForm())
+      .catch((error) => console.log(`ERROR: ${error}`));
   }
 
   closeSearchForm(): void {
@@ -325,4 +332,3 @@ export class SearchFormComponent implements OnInit {
     this.closeSearchForm();
   }
 }
-
