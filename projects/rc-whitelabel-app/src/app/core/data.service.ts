@@ -14,6 +14,7 @@ export class DataService {
   recentlyViewed: any = [];
   private sites: any[] = [];
   summarisedResults: any;
+  summaryCache: any[] = [];
 
   constructor(
     private api: ApiService,
@@ -109,29 +110,43 @@ export class DataService {
     lng = this.config.channel.longitude,
     boundary = this.config.channel.boundary): Promise <any> {
     // Has it already been loaded?
-    console.log(`loadResultsSummary cached: ${this.summarisedResults?.restaurants?.length > 0}`);
-    if (!!this.summarisedResults) {
-      return new Promise<any>( resolve => {
-        console.log(this.summarisedResults);
-        resolve(this.summarisedResults);
-      });
-    } else {
-      return new Promise(async resolve => {
-        await this.api.getRestaurantsSummary(
-          this.config.channel.accessCode,
-          this.config.channel.apiKey,
-          lat,
-          lng,
-          boundary
-        )
-          .toPromise()
-          .then((data: any) => {
-            this.summarisedResults = data;
-            resolve(this.summarisedResults);
-          })
-          .catch((error: any) => console.log('ERROR', error));
-      });
+    console.log(this.summaryCache);
+    // console.log(`loadResultsSummary cached: ${this.summarisedResults?.restaurants?.length > 0}`);
+    if (this.summaryCache.length > 0) {
+
+      let cachedData = this.summaryCache.find(element => element.lat === lat);
+
+      if(cachedData) {
+        console.log('From cache');
+        this.summarisedResults = cachedData.data;
+        return new Promise<any>( resolve => {
+          console.log('Cached', this.summarisedResults);
+          resolve(this.summarisedResults);
+        });
+      }
     }
+    return new Promise(async resolve => {
+      await this.api.getRestaurantsSummary(
+        this.config.channel.accessCode,
+        this.config.channel.apiKey,
+        lat,
+        lng,
+        boundary
+      )
+        .toPromise()
+        .then((data: any) => {
+          this.summarisedResults = data;
+          this.summaryCache.push({
+            latitude: lat,
+            longitude: lng,
+            data: this.summarisedResults
+          });
+          console.log(this.summaryCache);
+          resolve(this.summarisedResults);
+        })
+        .catch((error: any) => console.log('ERROR', error));
+    });
+
   }
 
   loadRestaurantResults(code: string, key: string, params: any): Promise<any> {

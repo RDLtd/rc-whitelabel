@@ -173,6 +173,7 @@ export class RestaurantsService {
     console.log('loadSummarisedResults', lat, lng, boundary);
     this.data.loadResultsSummary(lat, lng, boundary)
       .then((res) => {
+        console.log('SUM:', res);
         if(res === null) {
           throw new Error('No results to summarise');
         }
@@ -211,15 +212,12 @@ export class RestaurantsService {
     params: any = {},
     init: boolean = false): void {
 
-    console.log('loadRestaurantBatch');
-
     // Show loader
     this.resultsLoadedSubject.next(false);
 
     // Merge params
     this.params = {...this.params, ...params};
 
-    // console.log(this.params);
     if (init) {
       console.log('`Init`', this.params);
       this.restaurantsArray.length = 0;
@@ -227,7 +225,7 @@ export class RestaurantsService {
 
     this.data.loadRestaurantResults( this.accessCode, this.apiKey, this.params)
       .then((res) => {
-        console.log(res);
+
         if (res === null || res === undefined) {
           console.log('No data', this.restaurantsArray.length);
           // this.restaurantsArray = [];

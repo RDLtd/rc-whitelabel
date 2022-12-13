@@ -83,6 +83,7 @@ export class MapViewComponent implements OnInit {
   boundary: number;
 
   // Filters
+  showFilters = false;
   landmarks: any;
   cuisines: any;
   features: any;
@@ -127,14 +128,15 @@ export class MapViewComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log('init');
-
     // Google maps
     this.loadMapsApi();
 
     // Check for route params & query params
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.get('latLng') === null) {
+        // We may need to reset the restaurant results
+        // if the user has already interacted with the site
+        this.restService.resetRestaurantsSubject();
         this.restService.openSearchForm();
         return;
       }
@@ -143,7 +145,7 @@ export class MapViewComponent implements OnInit {
 
       this.route.queryParams.subscribe(params => {
 
-        console.log(params);
+        // console.log(params);
 
         // Update geoTarget
         this.restService.geo = {
@@ -177,6 +179,8 @@ export class MapViewComponent implements OnInit {
 
       // load the first batch of restaurants
       this.restService.loadRestaurantBatch({ offset: this.currentOffset }, true);
+
+      this.showFilters = true;
     });
   }
 

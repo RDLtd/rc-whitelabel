@@ -25,6 +25,7 @@ export class ListViewComponent implements OnInit {
   // filters
   searchFilter!: string | null;
   filterOn = false;
+  showFilters = false;
 
   landmarks: any[] = [];
   cuisines: any[] = [];
@@ -95,6 +96,8 @@ export class ListViewComponent implements OnInit {
 
       // Now load restaurant results
       this.restService.loadRestaurants({offset: 0});
+
+      this.showFilters = true;
     });
   }
 

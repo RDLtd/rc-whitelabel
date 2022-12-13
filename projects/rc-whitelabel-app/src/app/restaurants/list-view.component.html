@@ -49,6 +49,7 @@
 </div>
 
 <rd-filter-btn
+  *ngIf="showFilters"
   [searchFilter]="searchFilter"
   [view]="'list'"
   [filterOn]="!!searchFilter">
