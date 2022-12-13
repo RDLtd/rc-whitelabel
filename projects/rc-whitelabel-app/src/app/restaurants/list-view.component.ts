@@ -106,7 +106,12 @@ export class ListViewComponent implements OnInit {
 
   // Todo: we need to store on the Cloudinary ids so that
   //  we an appropriately sized & formatted image
-  getFormattedImage(url: string): string {
+  getFormattedImage(url: string): string | boolean {
+    if(!url) {
+      console.log('ERROR: No image url provided');
+      return false;
+    }
+    console.log(`getFormattedImage(${url})`);
     const format = 'w_900,h_600,c_fill,q_auto,dpr_auto,f_auto';
     return url.replace('upload/', `upload/${format}/`);
   }

@@ -99,7 +99,7 @@ export class AppConfig {
         clrOffers: data.primaryBgColor,
       },
       openGraph: {
-          title: `${ data.name } ${ data.ogTitle }`,
+          title: data.ogTitle,
           image: data.ogImage,
           alt: data.ogImageAlt,
           url: data.ogUrl
