@@ -265,7 +265,7 @@ export class RestaurantsService {
     this.resultsLoadedSubject.next(preload);
     this.moreRestaurantsSubject.next(false);
 
-    // Update params
+    // merge params
     this.params = {...this.params, ...params};
 
     // console.log(params);
@@ -329,9 +329,10 @@ export class RestaurantsService {
       position: {'top': '0'},
       maxHeight: '100vh',
       maxWidth: '100vw',
-      backdropClass: 'rd-backdrop',
+      backdropClass: 'rd-dialog-backdrop',
       panelClass: 'rd-search-dialog'
     });
   }
+
 }
 

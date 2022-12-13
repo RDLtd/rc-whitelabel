@@ -3,8 +3,6 @@ import { AppConfig } from '../../../app.config';
 import { NavigationEnd, Router, Event as NavigationEvent, ActivatedRoute } from '@angular/router';
 import { fadeIn } from '../../../shared/animations';
 import { RestaurantsService } from '../../../restaurants/restaurants.service';
-import { MatDialog } from '@angular/material/dialog';
-import { SearchFormComponent } from '../../../restaurants/search/search-form.component';
 
 @Component({
   selector: 'rd-header',
@@ -26,8 +24,7 @@ export class HeaderComponent implements OnInit {
     public config: AppConfig,
     private router: Router,
     private restService: RestaurantsService,
-    private route: ActivatedRoute,
-    private dialog: MatDialog
+    private route: ActivatedRoute
   ) {
 
   }
@@ -39,7 +36,6 @@ export class HeaderComponent implements OnInit {
         (event: NavigationEvent) => {
           if(event instanceof NavigationEnd) {
             const url = this.router.url;
-
             this.isDeepLink = url !== this.defaultRoute;
             this.isMapView = event.url.indexOf('map') > 0;
           }
@@ -57,13 +53,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openSearchForm(): void {
-    this.dialog.open(SearchFormComponent, {
-      position: {'top': '0'},
-      maxHeight: '100vh',
-      maxWidth: '100vw',
-      backdropClass: 'rd-dialog-backdrop',
-      panelClass: 'rd-search-dialog'
-    });
+    this.restService.openSearchForm()
   }
 
   /**

@@ -136,10 +136,13 @@ export class DataService {
 
   loadRestaurantResults(code: string, key: string, params: any): Promise<any> {
     console.log('loadRestaurantResults', params);
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       await this.api.getRestaurantsByParamsFast(code, key, params)
         .toPromise()
         .then((data: any) => {
+          if(!data) {
+            reject();
+          }
           resolve(data);
         })
         .catch((error: any) => console.log('ERROR', error));
