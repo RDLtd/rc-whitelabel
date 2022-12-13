@@ -136,22 +136,27 @@ export class RestaurantsService {
     return this.restaurantsArray;
   }
 
+  /**
+   * Load restaurants marked as 'featured'
+   */
   loadFeaturedRestaurants(): void {
     this.data.loadFeaturedRestaurants()
       .then((res: any) => {
-        if(res === null) {
-          throw new Error('No featured restaurants defined');
-        }
         // Add loaded batch to array
         this.restaurantsArray.push(...res.restaurants);
-
         // Notify observers
         this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
-
         // Complete the load sequence
         this.resultsLoadedSubject.next(true);
       })
-      .catch((error: Error) => console.log(`ERROR: ${error}`));
+      .catch((error: Error) => {
+        console.log(`ERROR: ${error}`);
+        // If there are no featured restaurants
+        // launch search
+        this.openSearchForm();
+        // kill the loader
+        this.resultsLoadedSubject.next(true);
+      });
   }
 
   /**
@@ -320,8 +325,10 @@ export class RestaurantsService {
   }
 
   openSearchForm(): void {
-    const dialogRef = this.dialog.open(SearchFormComponent, {
-      position: {'top': '19vh'},
+    this.dialog.open(SearchFormComponent, {
+      position: {'top': '0'},
+      maxHeight: '100vh',
+      maxWidth: '100vw',
       backdropClass: 'rd-backdrop',
       panelClass: 'rd-search-dialog'
     });

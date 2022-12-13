@@ -147,12 +147,12 @@ export class DataService {
   }
 
   loadFeaturedRestaurants(): Promise<any> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       await this.api.getFeaturedRestaurants()
         .toPromise()
         .then((data: any) => {
-          if(data === null) {
-            throw new Error('No featured restaurants defined!!');
+          if(!data) {
+            reject('No featured restaurants defined!!!');
           }
           resolve(data);
         })

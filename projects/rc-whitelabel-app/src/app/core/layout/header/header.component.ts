@@ -57,7 +57,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openSearchForm(): void {
-    const dialogRef = this.dialog.open(SearchFormComponent, {
+    this.dialog.open(SearchFormComponent, {
       position: {'top': '0'},
       maxHeight: '100vh',
       maxWidth: '100vw',

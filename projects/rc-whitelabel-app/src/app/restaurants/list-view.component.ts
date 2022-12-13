@@ -60,8 +60,8 @@ export class ListViewComponent implements OnInit {
     // Check url params
     this.route.paramMap.subscribe((params: ParamMap) => {
 
+      // If this is not a deep link
       if (params.get('latLng') === null) {
-        // Uncomment to open Search form by default
         //this.restService.openSearchForm();
         this.restService.loadFeaturedRestaurants();
         return;
