@@ -77,8 +77,8 @@ export class AppConfig {
       accessCode: data.access_code,
       apiKey: data.api_key,
       type: data.type,
-      latitude: data.latitude,
-      longitude: data.longitude,
+      latitude: +data.latitude,
+      longitude: +data.longitude,
       centre: {
         lat: Number(data.latitude),
         lng: Number(data.longitude)

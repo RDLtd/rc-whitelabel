@@ -136,6 +136,7 @@
 </div>
 
 <rd-filter-btn
+  *ngIf="showFilters"
   (onMapUpdate)="toggleMap($event)"
   [searchFilter]="searchFilter"
   [view]="'map'"

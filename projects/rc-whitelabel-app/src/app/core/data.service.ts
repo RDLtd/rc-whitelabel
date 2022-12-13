@@ -109,18 +109,17 @@ export class DataService {
     lat = this.config.channel.latitude,
     lng = this.config.channel.longitude,
     boundary = this.config.channel.boundary): Promise <any> {
-    // Has it already been loaded?
-    console.log(this.summaryCache);
-    // console.log(`loadResultsSummary cached: ${this.summarisedResults?.restaurants?.length > 0}`);
+
+    // Do we have a cache?
     if (this.summaryCache.length > 0) {
-
-      let cachedData = this.summaryCache.find(element => element.lat === lat);
-
+      // Have we got a summary for this latLng
+      // in our cache?
+      let cachedData =
+        this.summaryCache.find(element => element.latLng === `${lat},${lng}`);
       if(cachedData) {
-        console.log('From cache');
         this.summarisedResults = cachedData.data;
         return new Promise<any>( resolve => {
-          console.log('Cached', this.summarisedResults);
+          console.log('CACHED', this.summaryCache);
           resolve(this.summarisedResults);
         });
       }
@@ -136,12 +135,11 @@ export class DataService {
         .toPromise()
         .then((data: any) => {
           this.summarisedResults = data;
+          // Store in our cache
           this.summaryCache.push({
-            latitude: lat,
-            longitude: lng,
+            latLng: `${lat},${lng}`,
             data: this.summarisedResults
           });
-          console.log(this.summaryCache);
           resolve(this.summarisedResults);
         })
         .catch((error: any) => console.log('ERROR', error));

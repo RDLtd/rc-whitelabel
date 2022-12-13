@@ -117,7 +117,7 @@ export class ListViewComponent implements OnInit {
       console.log('ERROR: No image url provided');
       return false;
     }
-    console.log(`getFormattedImage(${url})`);
+    // console.log(`getFormattedImage(${url})`);
     const format = 'w_900,h_600,c_fill,q_auto,dpr_auto,f_auto';
     return url.replace('upload/', `upload/${format}/`);
   }
