@@ -43,7 +43,7 @@ export class ListViewComponent implements OnInit {
   ) {
 
     // page title
-    this.title.setTitle('Restaurant Results List');
+    this.title.setTitle(`${this.config.channel.name} | Restaurant List`);
 
     // Observe user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos);

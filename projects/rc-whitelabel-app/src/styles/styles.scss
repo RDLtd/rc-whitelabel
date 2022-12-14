@@ -184,13 +184,16 @@ header {
       transform: translateY(-($layout-header-height + $container-padding));
     }
   }
-  a { cursor: pointer; }
+  a {
+    cursor: pointer;
+    color: currentColor;}
 }
 rd-header {
   display: flex;
   align-items: center;
   padding: $container-padding/2;
   column-gap: 8px;
+  color: currentColor;
   @include mq(med) {
     padding: $container-padding;
   }
@@ -200,7 +203,11 @@ rd-header {
     height: 200px;
     max-height: calc(#{$layout-header-height}/2.5);
     transition: max-height .3s ease-out;
-    .rd-logo { height: 100%; }
+    .rd-logo {
+      height: 100%;
+      color: currentColor;
+      margin-right: 1rem;
+    }
     @include mq(med) {
       max-height: $layout-header-height;
     }

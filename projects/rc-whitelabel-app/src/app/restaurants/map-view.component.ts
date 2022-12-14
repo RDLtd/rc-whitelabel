@@ -105,7 +105,7 @@ export class MapViewComponent implements OnInit {
     this.currentOffset = 0;
 
     // update title for ga tracking
-    title.setTitle('Restaurant Results Map');
+    this.title.setTitle(`${this.config.channel.name} | Restaurant Map`);
 
     // Get the geographical centre of the channel
     this.geoLatLngLiteral = this.config.channel.centre;
