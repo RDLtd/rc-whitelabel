@@ -1,5 +1,5 @@
 <!-- HEADER CONTENT -->
-<a routerLink="/" [title]="config.channel.name">
+<a [title]="config.channel.name" (click)="reset()">
   <img
     class="rd-logo"
     [src]="config.channel.brand?.imgLogo"

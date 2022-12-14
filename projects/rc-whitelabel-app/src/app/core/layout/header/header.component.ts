@@ -72,5 +72,11 @@ export class HeaderComponent implements OnInit {
     // navigate to the new view, passing any query params
     this.router.navigate(path, { queryParams: { label: this.geoSearchLabel || ''} }).then();
   }
+  reset(): void {
+    console.log(this.router.url);
+    if(this.router.url === '/restaurants'){ return; }
+    this.restService.resetAll();
+    this.router.navigateByUrl('/restaurants');
+  }
 }
 

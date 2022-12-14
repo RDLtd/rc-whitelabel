@@ -189,13 +189,16 @@ header {
 rd-header {
   display: flex;
   align-items: center;
-  padding: $container-padding;
+  padding: $container-padding/2;
   column-gap: 8px;
+  @include mq(med) {
+    padding: $container-padding;
+  }
   a {
     display: flex;
     align-items: center;
     height: 200px;
-    max-height: calc(#{$layout-header-height}/2);
+    max-height: calc(#{$layout-header-height}/2.5);
     transition: max-height .3s ease-out;
     .rd-logo { height: 100%; }
     @include mq(med) {
@@ -288,7 +291,6 @@ rd-footer {
   //backdrop-filter: blur(20px);
   background-color: $clr-backdrop;
 }
-
 // the class passed to dialog on init
 .rd-search-dialog {
   @include mq(med) { transform: translateY(10vh); }
@@ -826,13 +828,13 @@ rd-footer {
 .rd-filter-btn {
   z-index: 20;
   position: fixed;
-  bottom: 64px; left: auto; right: auto;
+  bottom: 24px; left: auto; right: auto;
   transform: scale(0);
   width: 100%;
   text-align: center;
   @include mq(med){
     width: auto;
-    right: 96px;
+    bottom: 64px; left: auto; right: 96px;
   }
   .mat-raised-button {
     margin: 0;
@@ -919,7 +921,6 @@ rd-footer {
 // -------------------------------------------------
 .scale-in-center { animation: scale-in-center 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; }
 @keyframes pulse {
-
   0% {
     opacity: 1;
   }

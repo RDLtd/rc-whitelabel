@@ -114,13 +114,6 @@ export class RestaurantsService {
   get landmarkSummary(): any[] {
     return this.landmarks || [];
   }
-  resetRestaurantResults(): void {
-    this.restaurantsSubject.next([]);
-  }
-  resetRestaurantsSubject(): void {
-    this.restaurantsSubject.next([]);
-    this.restaurantsArray = [];
-  }
   get resultsLoaded(): Observable<boolean> {
     return this.resultsLoadedSubject.asObservable();
   }
@@ -135,6 +128,19 @@ export class RestaurantsService {
   }
   get showCuisineFilters(): Observable<boolean> {
     return this.showFiltersSubject.asObservable();
+  }
+  resetRestaurantResults(): void {
+    this.restaurantsSubject.next([]);
+  }
+  resetRestaurantsSubject(): void {
+    this.restaurantsSubject.next([]);
+    this.restaurantsArray = [];
+  }
+  resetAll(): void {
+    this.resetRestaurantsSubject();
+    this.resetRestaurantResults();
+    this.showFiltersSubject.next(false);
+    this.moreRestaurantsSubject.next(false);
   }
 
   /**
@@ -330,6 +336,5 @@ export class RestaurantsService {
       panelClass: 'rd-search-dialog'
     });
   }
-
 }
 
