@@ -193,7 +193,7 @@ export class SearchFormComponent implements OnInit {
       if ( data === null) {
         throw new Error(`No restaurants available within ${this.config.channel.boundary} of the Channel centre.`);
       }
-      console.log('LoadSummary', data);
+      // console.log('LoadSummary', data);
       this.searchRestaurants = data.restaurants;
       this.landmarks = data.landmarks;
       this.isLoaded = true;

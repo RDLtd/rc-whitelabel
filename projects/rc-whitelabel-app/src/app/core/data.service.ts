@@ -78,8 +78,8 @@ export class DataService {
    * @param boundary
    */
   loadResultsSummary(
-    lat = this.config.channel.latitude,
-    lng = this.config.channel.longitude,
+    lat = +this.config.channel.latitude.toFixed(6),
+    lng = +this.config.channel.longitude.toFixed(6),
     boundary = this.config.channel.boundary): Promise <any> {
 
     // Do we have a cache?

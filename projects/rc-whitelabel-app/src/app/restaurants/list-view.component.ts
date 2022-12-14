@@ -25,9 +25,8 @@ export class ListViewComponent implements OnInit {
   // filters
   searchFilter!: string | null;
   filterOn = false;
-  showFilters = false;
+  showFilters$: Observable<boolean>;
 
-  landmarks: any[] = [];
   cuisines: any[] = [];
   features: any[] = [];
   restaurants: any[] = [];
@@ -53,6 +52,7 @@ export class ListViewComponent implements OnInit {
     this.restaurants$ = this.restService.restaurants;
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.moreRestaurantsPreloaded = this.restService.moreRestaurantResults;
+    this.showFilters$ = this.restService.showCuisineFilters;
 
   }
 
@@ -97,7 +97,6 @@ export class ListViewComponent implements OnInit {
       // Now load restaurant results
       this.restService.loadRestaurants({offset: 0});
 
-      this.showFilters = true;
     });
   }
 

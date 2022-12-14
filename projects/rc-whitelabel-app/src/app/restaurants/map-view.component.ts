@@ -83,7 +83,7 @@ export class MapViewComponent implements OnInit {
   boundary: number;
 
   // Filters
-  showFilters = false;
+  showFilters$: Observable<boolean>;
   landmarks: any;
   cuisines: any;
   features: any;
@@ -123,6 +123,7 @@ export class MapViewComponent implements OnInit {
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
     this.restaurantBatch$ = this.restService.restaurants;
+    this.showFilters$ = this.restService.showCuisineFilters;
 
   }
 
@@ -180,7 +181,6 @@ export class MapViewComponent implements OnInit {
       // load the first batch of restaurants
       this.restService.loadRestaurantBatch({ offset: this.currentOffset }, true);
 
-      this.showFilters = true;
     });
   }
 

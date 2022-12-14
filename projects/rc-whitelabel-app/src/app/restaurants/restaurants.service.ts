@@ -32,7 +32,7 @@ export class RestaurantsService {
     lng: number;
   }
 
-  cuisines?: any[];
+  cuisines?: any[] = [];
   features?: any[];
   landmarks?: any[];
 
@@ -44,6 +44,7 @@ export class RestaurantsService {
   private moreRestaurantsSubject = new BehaviorSubject<boolean>(false);
   private restaurantsArray: Array<any> = [];
   private restaurantsSubject = new BehaviorSubject<any[]>(this.restaurantsArray);
+  private showFiltersSubject = new BehaviorSubject<boolean>(false);
 
   private totalResults = 0;
 
@@ -74,9 +75,6 @@ export class RestaurantsService {
   }
   get searchParams(): any {
     return this.params;
-  }
-  get searchFilterOn(): boolean {
-    return !!this.params.filterText;
   }
 
   // GEO TARGET
@@ -135,6 +133,9 @@ export class RestaurantsService {
   get restArray(): Array<any> {
     return this.restaurantsArray;
   }
+  get showCuisineFilters(): Observable<boolean> {
+    return this.showFiltersSubject.asObservable();
+  }
 
   /**
    * Load restaurants marked as 'featured'
@@ -170,6 +171,7 @@ export class RestaurantsService {
     lat: number = this.params.lat,
     lng: number = this.params.lng,
     boundary: number = this.params.boundary): void {
+    this.showFiltersSubject.next(false);
     // console.log('loadSummarisedResults', lat, lng, boundary);
     this.data.loadResultsSummary(lat, lng, boundary)
       .then((res) => {
@@ -180,6 +182,8 @@ export class RestaurantsService {
         this.totalRestaurants = res.restaurants?.length;
       })
       .then(() => {
+        // Are there enough cuisine styles to warrant a filter option?
+        this.showFiltersSubject.next(!!this.cuisines && this.cuisines.length > 3);
         // If a filter has been applied update the total
         // results accordingly by adding together the count
         // of each cuisine included in the filter
