@@ -43,7 +43,7 @@ export class FilterBtnComponent implements OnInit {
     // Current geoTarget
     this.geoTarget = this.restService.geo;
 
-    console.log('GEO',this.geoTarget);
+    // console.log('GEO',this.geoTarget);
 
     // Delay the filter options until results have loaded
     setTimeout(() => {
@@ -71,8 +71,6 @@ export class FilterBtnComponent implements OnInit {
       selected.forEach((item: any) => {
         cuisineFilters.push(item.value);
       });
-
-      console.log(this.geoTarget);
 
       this.router
         .navigateByUrl(

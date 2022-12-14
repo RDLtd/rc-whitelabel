@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Inject, ViewChild} from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConfig } from '../../app.config';
 import {MatSelectionList} from '@angular/material/list';
@@ -16,6 +16,6 @@ export class FilterOptionsDialogComponent implements AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngAfterViewInit(): void {
-    console.log('Filter data:', this.cuisineSection);
+    // console.log('Filter data:', this.cuisineSection);
   }
 }

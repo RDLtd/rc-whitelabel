@@ -170,29 +170,24 @@ export class RestaurantsService {
     lat: number = this.params.lat,
     lng: number = this.params.lng,
     boundary: number = this.params.boundary): void {
-    console.log('loadSummarisedResults', lat, lng, boundary);
+    // console.log('loadSummarisedResults', lat, lng, boundary);
     this.data.loadResultsSummary(lat, lng, boundary)
       .then((res) => {
-        console.log('SUM:', res);
-        if(res === null) {
-          throw new Error('No results to summarise');
-        }
+        // console.log('SUM:', res);
         this.cuisines = res.cuisines;
         this.features = res.attributes;
         this.landmarks = res.landmarks;
         this.totalRestaurants = res.restaurants?.length;
       })
       .then(() => {
-        // If a filter has been applied
-        // update the total results accordingly
-        // by adding together the count of each cuisine included
-        // in the filter
-        console.log('Filter', this.params.filter);
+        // If a filter has been applied update the total
+        // results accordingly by adding together the count
+        // of each cuisine included in the filter
         if (!!this.params.filter) {
           let cuisineCount = 0;
           this.cuisines?.forEach((obj: any) => {
             if(this.params.filterText.includes(obj.Cuisine)) {
-              console.log(`Add ${obj.Count}`);
+              // console.log(`Add ${obj.Count}`);
               cuisineCount += obj.Count;
             }
           });
@@ -206,11 +201,11 @@ export class RestaurantsService {
    * Add a batch (defined by offset = limit) to
    * the results array
    * @param params
-   * @param init
+   * @param initialLoad
    */
   loadRestaurantBatch(
     params: any = {},
-    init: boolean = false): void {
+    initialLoad: boolean = false): void {
 
     // Show loader
     this.resultsLoadedSubject.next(false);
@@ -218,24 +213,20 @@ export class RestaurantsService {
     // Merge params
     this.params = {...this.params, ...params};
 
-    if (init) {
-      console.log('`Init`', this.params);
+    // If this is the first batch loaded, reset our array
+    if (initialLoad) {
+      // console.log('`Init`', this.params);
       this.restaurantsArray.length = 0;
     }
 
-    this.data.loadRestaurantResults( this.accessCode, this.apiKey, this.params)
+    this.data.loadRestaurantResults(this.params)
       .then((res) => {
 
-        if (res === null || res === undefined) {
-          console.log('No data', this.restaurantsArray.length);
-          // this.restaurantsArray = [];
-          // this.restaurantsSubject.next(Object.assign([], this.restaurantsArray));
-          this.resultsLoadedSubject.next(true);
-          return;
-        }
-
-        // Add loaded batch to array
-        console.log(this.restaurantsArray);
+        // if (res === null || res === undefined) {
+        //   console.log('No data', this.restaurantsArray.length);
+        //   this.resultsLoadedSubject.next(true);
+        //   return;
+        // }
 
         // Add loaded batch to array
         this.restaurantsArray.push(...res.restaurants);
@@ -245,7 +236,11 @@ export class RestaurantsService {
 
         // Complete the load sequence
         this.resultsLoadedSubject.next(true);
-      });
+      })
+      .catch((error) => {
+        console.log(`ERROR: ${error}`);
+        this.resultsLoadedSubject.next(true);
+    });
   }
 
   /**
@@ -268,7 +263,7 @@ export class RestaurantsService {
 
     // console.log(params);
 
-    this.data.loadRestaurantResults( this.accessCode, this.apiKey, this.params)
+    this.data.loadRestaurantResults(this.params)
       .then((res) => {
         if(res === null) {
           throw new Error(`No restaurants returned within ${this.params.boundary}km of geocode`);

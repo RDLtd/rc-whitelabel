@@ -200,7 +200,7 @@ export class MapViewComponent implements OnInit {
       this.mapApiSubject.next(true);
     } else {
       // Load the maps api script
-      console.log('Load Google maps api');
+      // console.log('Load Google maps api');
       this.mapApiLoaded$ = this.http.jsonp(
         `https://maps.googleapis.com/maps/api/js?key=${this.config.geoApiKey}`,
         'callback')

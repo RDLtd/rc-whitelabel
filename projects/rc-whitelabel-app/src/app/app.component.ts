@@ -43,10 +43,7 @@ export class AppComponent implements OnInit {
               // range in which to offer a 'near me' search option
               if (!!params.d) { this.config.maxUserDistance = params.d; }
             }
-            this.data.loadTranslations(
-              this.config.channel.accessCode,
-              this.config.channel.apiKey,
-              this.config.language)
+            this.data.loadTranslations()
               .then((obj: any) => {
                 this.config.setLanguage(obj);
               })

@@ -12,7 +12,6 @@ export class DataService {
 
   // Caches
   recentlyViewed: any = [];
-  private sites: any[] = [];
   summarisedResults: any;
   summaryCache: any[] = [];
 
@@ -27,77 +26,51 @@ export class DataService {
 
   // Channel config.
   loadChannelConfig(domain: string): Promise<any> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       await this.api.getChannelByDomain(domain)
         .toPromise()
         .then((res: any) => {
+          if(!res) {
+            reject('Failed to load channel config!!');
+          }
           resolve(res);
-        });
+        })
+        .catch((error: any) => console.log(error));
     });
   }
 
   // Translations
-  loadTranslations(code: string, key: string, lang: string): Promise<any> {
+  loadTranslations(): Promise<any> {
     console.log('loadTranslations');
-    return new Promise( async resolve => {
-      await this.api.getChannelLanguage(code, key, lang)
+    return new Promise( async (resolve, reject) => {
+      await this.api.getChannelLanguage()
         .toPromise()
         .then((res: any) => {
+          if(!res) {
+            reject('Unable to load language!!');
+          }
           resolve(res.language[0]);
         })
-        .catch((error: any) => console.log('Unable to read Language information!', error)
-        );
+        .catch((error: any) => console.log(error));
     });
   }
 
   // Get restaurants
   /**
    * Get channel configuration
-   * @param id - channel id
    */
-  loadChannelSettings(id: number): Promise <any> {
-    return new Promise(async resolve => {
-      await this.api.getChannelSettings(id)
+  loadChannelSettings(): Promise <any> {
+    return new Promise(async (resolve, reject) => {
+      await this.api.getChannelSettings()
         .toPromise()
         .then((data: any) => {
+          if(!data){ reject('Failed to load channel settings!!')}
           console.log('Channel settings loaded', data);
-          this.sites = data.camc;
           resolve(data);
         })
-        .catch((error: any) => console.log('ERROR', error));
+        .catch((error: any) => console.log(error));
     });
   }
-
-  /**
-   * Get all sites associated with channel
-   * like CAMC
-   */
-  loadChannelSites(): Promise <any> {
-    return new Promise(async resolve => {
-      if (this.sites.length) {
-        console.log('Sites loaded from CACHE');
-        resolve({
-          sites: this.sites
-        });
-      } else {
-        await this.api.getChannelSites(this.config.channel.id,  this.config.channel.accessCode, this.config.channel.apiKey)
-          .toPromise()
-          .then((res: any) => {
-            if (res === null) {
-              console.log('This Channel does not have sites configured');
-              return;
-            }
-            console.log('Sites loaded from API', res);
-            this.sites = res.sites;
-            resolve({
-              sites: this.sites
-            });
-          })
-          .catch((error: any) => console.log('ERROR', error));
-      }
-    });
-  }
-
 
   /**
    * Get summarised results of search query
@@ -124,16 +97,11 @@ export class DataService {
         });
       }
     }
-    return new Promise(async resolve => {
-      await this.api.getRestaurantsSummary(
-        this.config.channel.accessCode,
-        this.config.channel.apiKey,
-        lat,
-        lng,
-        boundary
-      )
+    return new Promise(async (resolve, reject) => {
+      await this.api.getRestaurantsSummary(lat, lng, boundary)
         .toPromise()
         .then((data: any) => {
+          if(!data) { reject('Failed to load restaurant summary!!')}
           this.summarisedResults = data;
           // Store in our cache
           this.summaryCache.push({
@@ -142,23 +110,23 @@ export class DataService {
           });
           resolve(this.summarisedResults);
         })
-        .catch((error: any) => console.log('ERROR', error));
+        .catch((error: any) => console.log(error));
     });
 
   }
 
-  loadRestaurantResults(code: string, key: string, params: any): Promise<any> {
-    console.log('loadRestaurantResults', params);
+  loadRestaurantResults(params: any): Promise<any> {
+    // console.log('loadRestaurantResults', params);
     return new Promise(async (resolve, reject) => {
-      await this.api.getRestaurantsByParamsFast(code, key, params)
+      await this.api.getRestaurantsByParamsFast(params)
         .toPromise()
         .then((data: any) => {
           if(!data) {
-            reject();
+            reject('No restaurant results!!');
           }
           resolve(data);
         })
-        .catch((error: any) => console.log('ERROR', error));
+        .catch((error: any) => console.log(error));
     });
   }
 
@@ -172,7 +140,7 @@ export class DataService {
           }
           resolve(data);
         })
-        .catch((error: Error) => console.log(`ERROR: ${error}`))
+        .catch((error: any) => console.log(error))
     });
   }
 
