@@ -25,7 +25,6 @@ export class ApiService {
     this.apiUrl = this.config.apiUrl;
   }
 
-  // tslint:disable-next-line:variable-name
   getChannelByDomain(channel_domain: string): any {
     return this.http.post(this.apiUrl + '/channel/domain',
       {
@@ -33,7 +32,6 @@ export class ApiService {
       });
   }
 
-  // tslint:disable-next-line:variable-name
   getChannelLanguage(): any {
     return this.http.post(this.apiUrl + '/channel/language',
       {
@@ -50,7 +48,6 @@ export class ApiService {
       });
   }
 
-  // tslint:disable-next-line:variable-name
   getRestaurantsNear(lat: number, lng: number, distance: number): any {
     return this.http.post(this.apiUrl + '/channel/restaurants/near',
       {
@@ -71,7 +68,6 @@ export class ApiService {
       });
   }
 
-  // tslint:disable-next-line:variable-name
   getRestaurantsSummary(lat: number, lng: number, boundary: number): any {
     // console.log(channel_access_code: this.accessCode, channel_access_api_key: this.apiKey, lat, lng, boundary);
     return this.http.post(this.apiUrl + '/channel/restaurants/summary',

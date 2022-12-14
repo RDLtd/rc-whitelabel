@@ -55,7 +55,6 @@ export class DataService {
     });
   }
 
-  // Get restaurants
   /**
    * Get channel configuration
    */
