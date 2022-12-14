@@ -290,7 +290,7 @@ export class MapViewComponent implements OnInit {
     this.svgMarker = {
       path:
         'M11.9858571,34.9707603 C5.00209157,32.495753 0,25.8320271 0,18 C0,8.0588745 8.0588745,0 18,0 C27.9411255,0 36,8.0588745 36,18 C36,25.8320271 30.9979084,32.495753 24.0141429,34.9707603 C24.0096032,34.980475 24.0048892,34.9902215 24,35 C20,37 18,40.6666667 18,46 C18,40.6666667 16,37 12,35 C11.9951108,34.9902215 11.9903968,34.980475 11.9858571,34.9707603 Z',
-      fillColor: '#6e6e6e',
+      fillColor: this.config.channel.brand?.clrPrimaryCta,
       fillOpacity: 1,
       strokeWeight: 1,
       strokeColor: '#fff',
@@ -306,7 +306,7 @@ export class MapViewComponent implements OnInit {
     this.svgMarkerActive = Object.assign({}, this.svgMarker);
     this.svgMarkerActive.scale = 1.5;
     this.svgMarkerActive.fillOpacity = 1;
-    //this.svgMarkerActive.fillColor = '#00a69b';
+    this.svgMarkerActive.fillColor = '#000';
     // Centre point
     this.svgMarkerCentre = Object.assign({}, this.svgMarker);
     this.svgMarkerCentre.fillOpacity = 1;
@@ -374,7 +374,15 @@ export class MapViewComponent implements OnInit {
     // create our centre site/channel marker
     this.markers.push({
       position: this.geoLatLngLiteral,
-      options: {label: '*'}
+      options: {
+        strokeColor: '#fff',
+        label: {
+          text: '◎',
+          color: '#fff',
+          fontSize: '18px'
+        },
+        icon: this.svgMarkerCentre
+      }
     });
     this.bounds.extend({
       lat: Number(this.geoLatLngLiteral?.lat),

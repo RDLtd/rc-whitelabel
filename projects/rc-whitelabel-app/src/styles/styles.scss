@@ -191,7 +191,7 @@ header {
 rd-header {
   display: flex;
   align-items: center;
-  padding: $container-padding/2;
+  padding: calc(#{$container-padding}/2);
   column-gap: 8px;
   color: currentColor;
   @include mq(med) {
