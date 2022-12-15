@@ -77,8 +77,8 @@ export class AppConfig {
       accessCode: data.access_code,
       apiKey: data.api_key,
       type: data.type,
-      latitude: data.latitude,
-      longitude: data.longitude,
+      latitude: +data.latitude,
+      longitude: +data.longitude,
       centre: {
         lat: Number(data.latitude),
         lng: Number(data.longitude)
@@ -99,7 +99,7 @@ export class AppConfig {
         clrOffers: data.primaryBgColor,
       },
       openGraph: {
-          title: `${ data.name } ${ data.ogTitle }`,
+          title: data.ogTitle,
           image: data.ogImage,
           alt: data.ogImageAlt,
           url: data.ogUrl

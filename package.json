@@ -1,11 +1,13 @@
 {
   "name": "rc-whitelabel",
-  "version": "13.4.0",
+  "version": "13.6.1",
   "scripts": {
     "ng": "ng",
-    "rdl": "ng serve --port 54747",
-    "camc": "ng serve --port 8006",
     "start": "node server.js",
+    "rdl": "npm run cert & ng serve --port 54747",
+    "camc": "ng serve --port 8006",
+    "ssl": "npm run cert & ng serve --port",
+    "cert": "mkdir -p ./tls & mkcert -cert-file ./tls/localhost-cert.pem -key-file ./tls/localhost-key.pem -ecdsa localhost 127.0.0.1 ::1",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

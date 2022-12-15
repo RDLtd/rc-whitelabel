@@ -12,7 +12,8 @@ export class DataService {
 
   // Caches
   recentlyViewed: any = [];
-  private sites: any[] = [];
+  summarisedResults: any;
+  summaryCache: any[] = [];
 
   constructor(
     private api: ApiService,
@@ -25,77 +26,48 @@ export class DataService {
 
   // Channel config.
   loadChannelConfig(domain: string): Promise<any> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       await this.api.getChannelByDomain(domain)
         .toPromise()
         .then((res: any) => {
+          if(!res) {
+            reject('Failed to load channel config!!');
+          }
           resolve(res);
-        });
+        })
+        .catch((error: any) => console.log(error));
     });
   }
 
   // Translations
-  loadTranslations(code: string, key: string, lang: string): Promise<any> {
+  loadTranslations(): Promise<any> {
     console.log('loadTranslations');
-    return new Promise( async resolve => {
-      await this.api.getChannelLanguage(code, key, lang)
+    return new Promise( async (resolve, reject) => {
+      await this.api.getChannelLanguage()
         .toPromise()
         .then((res: any) => {
+          if(!res) { reject('Unable to load language!!'); }
           resolve(res.language[0]);
         })
-        .catch((error: any) => console.log('Unable to read Language information!', error)
-        );
+        .catch((error: any) => console.log(error));
     });
   }
 
-  // Get restaurants
   /**
    * Get channel configuration
-   * @param id - channel id
    */
-  loadChannelSettings(id: number): Promise <any> {
-    return new Promise(async resolve => {
-      await this.api.getChannelSettings(id)
+  loadChannelSettings(): Promise <any> {
+    return new Promise(async (resolve, reject) => {
+      await this.api.getChannelSettings()
         .toPromise()
         .then((data: any) => {
+          if(!data){ reject('Failed to load channel settings!!')}
           console.log('Channel settings loaded', data);
-          this.sites = data.camc;
           resolve(data);
         })
-        .catch((error: any) => console.log('ERROR', error));
+        .catch((error: any) => console.log(error));
     });
   }
-
-  /**
-   * Get all sites associated with channel
-   * like CAMC
-   */
-  loadChannelSites(): Promise <any> {
-    return new Promise(async resolve => {
-      if (this.sites.length) {
-        console.log('Sites loaded from CACHE');
-        resolve({
-          sites: this.sites
-        });
-      } else {
-        await this.api.getChannelSites(this.config.channel.id,  this.config.channel.accessCode, this.config.channel.apiKey)
-          .toPromise()
-          .then((res: any) => {
-            if (res === null) {
-              console.log('This Channel does not have sites configured');
-              return;
-            }
-            console.log('Sites loaded from API', res);
-            this.sites = res.sites;
-            resolve({
-              sites: this.sites
-            });
-          })
-          .catch((error: any) => console.log('ERROR', error));
-      }
-    });
-  }
-
 
   /**
    * Get summarised results of search query
@@ -104,34 +76,68 @@ export class DataService {
    * @param boundary
    */
   loadResultsSummary(
-    lat = this.config.channel.latitude,
-    lng = this.config.channel.longitude,
+    lat = +this.config.channel.latitude.toFixed(6),
+    lng = +this.config.channel.longitude.toFixed(6),
     boundary = this.config.channel.boundary): Promise <any> {
-    return new Promise(async resolve => {
-      await this.api.getRestaurantsSummary(
-        this.config.channel.accessCode,
-        this.config.channel.apiKey,
-        lat,
-        lng,
-        boundary
-      )
+
+    // Do we have a cache?
+    if (this.summaryCache.length > 0) {
+      // Have we got a summary for this latLng
+      // in our cache?
+      let cachedData =
+        this.summaryCache.find(element => element.latLng === `${lat},${lng}`);
+      if(cachedData) {
+        this.summarisedResults = cachedData.data;
+        return new Promise<any>( resolve => {
+          console.log('CACHED', this.summaryCache);
+          resolve(this.summarisedResults);
+        });
+      }
+    }
+    return new Promise(async (resolve, reject) => {
+      await this.api.getRestaurantsSummary(lat, lng, boundary)
         .toPromise()
         .then((data: any) => {
+          if(!data) { reject('Failed to load restaurant summary!!')}
+          this.summarisedResults = data;
+          // Store in our cache
+          this.summaryCache.push({
+            latLng: `${lat},${lng}`,
+            data: this.summarisedResults
+          });
+          resolve(this.summarisedResults);
+        })
+        .catch((error: any) => console.log(error));
+    });
+
+  }
+
+  loadRestaurantResults(params: any): Promise<any> {
+    // console.log('loadRestaurantResults', params);
+    return new Promise(async (resolve, reject) => {
+      await this.api.getRestaurantsByParamsFast(params)
+        .toPromise()
+        .then((data: any) => {
+          if(!data) {
+            reject('No restaurant results!!');
+          }
           resolve(data);
         })
-        .catch((error: any) => console.log('ERROR', error));
+        .catch((error: any) => console.log(error));
     });
   }
 
-  loadRestaurantResults(code: string, key: string, params: any): Promise<any> {
-    console.log('loadRestaurantResults', params);
-    return new Promise(async resolve => {
-      await this.api.getRestaurantsByParamsFast(code, key, params)
+  loadFeaturedRestaurants(): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      await this.api.getFeaturedRestaurants()
         .toPromise()
         .then((data: any) => {
+          if(!data) {
+            reject('No featured restaurants defined!!!');
+          }
           resolve(data);
         })
-        .catch((error: any) => console.log('ERROR', error));
+        .catch((error: any) => console.log(error))
     });
   }
 

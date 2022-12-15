@@ -4,11 +4,11 @@ import { RestaurantsService } from './restaurants.service';
 import { BehaviorSubject, Observable, of} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, map } from 'rxjs/operators';
-import { AppConfig } from '../../app.config';
-import { LocationService, UserGeoLocation} from '../../core/location.service';
+import { AppConfig } from '../app.config';
+import { LocationService, UserGeoLocation} from '../core/location.service';
 import { ActivatedRoute, ParamMap} from '@angular/router';
-import { fadeIn, fadeInSlideUp, fadeInStaggerIn } from '../../shared/animations';
-import { DataService } from '../../core/data.service';
+import { fadeIn, fadeInSlideUp, fadeInStaggerIn } from '../shared/animations';
+import { DataService } from '../core/data.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -83,6 +83,7 @@ export class MapViewComponent implements OnInit {
   boundary: number;
 
   // Filters
+  showFilters$: Observable<boolean>;
   landmarks: any;
   cuisines: any;
   features: any;
@@ -104,7 +105,7 @@ export class MapViewComponent implements OnInit {
     this.currentOffset = 0;
 
     // update title for ga tracking
-    title.setTitle('Restaurant Results Map');
+    this.title.setTitle(`${this.config.channel.name} | Restaurant Map`);
 
     // Get the geographical centre of the channel
     this.geoLatLngLiteral = this.config.channel.centre;
@@ -122,29 +123,36 @@ export class MapViewComponent implements OnInit {
     this.resultsLoaded$ = this.restService.resultsLoaded;
     this.restaurants$ = this.restService.restaurants;
     this.restaurantBatch$ = this.restService.restaurants;
+    this.showFilters$ = this.restService.showCuisineFilters;
 
   }
 
   ngOnInit(): void {
-
-    console.log('init');
 
     // Google maps
     this.loadMapsApi();
 
     // Check for route params & query params
     this.route.paramMap.subscribe((params: ParamMap) => {
-
+      if (params.get('latLng') === null) {
+        // We may need to reset the restaurant results
+        // if the user has already interacted with the site
+        this.restService.resetRestaurantsSubject();
+        this.restService.openSearchForm();
+        return;
+      }
       this.latLng = params.get('latLng')?.split(',') ?? [];
       this.searchFilter = params.get('filter') ?? null;
 
       this.route.queryParams.subscribe(params => {
 
+        // console.log(params);
+
         // Update geoTarget
         this.restService.geo = {
           lat: Number(this.latLng[0]).toFixed(6),
           lng: Number(this.latLng[1]).toFixed(6),
-          label: params.location
+          label: params.label
         }
 
         // Set maps object
@@ -158,8 +166,8 @@ export class MapViewComponent implements OnInit {
           lat: this.restService.geoLatitude,
           lng: this.restService.geoLongitude,
           filter: this.searchFilter !== null ? 'cuisine' : null,
-          filterText: this.searchFilter,
-          location: this.restService.geoLabel
+          filterText: this.searchFilter?.split(','),
+          label: this.restService.geoLabel
         }
       });
 
@@ -172,6 +180,7 @@ export class MapViewComponent implements OnInit {
 
       // load the first batch of restaurants
       this.restService.loadRestaurantBatch({ offset: this.currentOffset }, true);
+
     });
   }
 
@@ -191,7 +200,7 @@ export class MapViewComponent implements OnInit {
       this.mapApiSubject.next(true);
     } else {
       // Load the maps api script
-      console.log('Load Google maps api');
+      // console.log('Load Google maps api');
       this.mapApiLoaded$ = this.http.jsonp(
         `https://maps.googleapis.com/maps/api/js?key=${this.config.geoApiKey}`,
         'callback')
@@ -247,15 +256,16 @@ export class MapViewComponent implements OnInit {
   // Construct the summary text for the
   // map navigation
   getBatchNavSummary(): string {
-    // Filtered
-    if (!!this.restService.geoLabel && !!this.searchFilter) {
+    // Filtered: only include cuisine name if there's
+    // just 1 otherwise we run out of UI space
+    if (!!this.restService.geoLabel && this.searchFilter?.split(',').length === 1) {
       return `${this.searchFilter} Restaurants within ${this.boundary} km of ${this.restService.geoLabel}`
     }
     // With location label
     if (!!this.restService.geoLabel) {
       return `Restaurants within ${this.boundary} km of ${this.restService.geoLabel}`
     }
-    // Basic
+    // Just boundary
     return `Restaurants within ${this.boundary} km`;
   }
 
@@ -280,7 +290,7 @@ export class MapViewComponent implements OnInit {
     this.svgMarker = {
       path:
         'M11.9858571,34.9707603 C5.00209157,32.495753 0,25.8320271 0,18 C0,8.0588745 8.0588745,0 18,0 C27.9411255,0 36,8.0588745 36,18 C36,25.8320271 30.9979084,32.495753 24.0141429,34.9707603 C24.0096032,34.980475 24.0048892,34.9902215 24,35 C20,37 18,40.6666667 18,46 C18,40.6666667 16,37 12,35 C11.9951108,34.9902215 11.9903968,34.980475 11.9858571,34.9707603 Z',
-      fillColor: '#6e6e6e',
+      fillColor: this.config.channel.brand?.clrPrimaryCta,
       fillOpacity: 1,
       strokeWeight: 1,
       strokeColor: '#fff',
@@ -296,7 +306,7 @@ export class MapViewComponent implements OnInit {
     this.svgMarkerActive = Object.assign({}, this.svgMarker);
     this.svgMarkerActive.scale = 1.5;
     this.svgMarkerActive.fillOpacity = 1;
-    //this.svgMarkerActive.fillColor = '#00a69b';
+    this.svgMarkerActive.fillColor = '#000';
     // Centre point
     this.svgMarkerCentre = Object.assign({}, this.svgMarker);
     this.svgMarkerCentre.fillOpacity = 1;
@@ -364,7 +374,15 @@ export class MapViewComponent implements OnInit {
     // create our centre site/channel marker
     this.markers.push({
       position: this.geoLatLngLiteral,
-      options: {label: '*'}
+      options: {
+        strokeColor: '#fff',
+        label: {
+          text: '◎',
+          color: '#fff',
+          fontSize: '18px'
+        },
+        icon: this.svgMarkerCentre
+      }
     });
     this.bounds.extend({
       lat: Number(this.geoLatLngLiteral?.lat),
@@ -375,7 +393,6 @@ export class MapViewComponent implements OnInit {
     setTimeout(() => {
       this?.map.fitBounds(this.bounds, 100);
       this.markersAdded = true;
-      console.log('Show map');
     }, 0);
     this.lastZoom = this.zoom;
   }

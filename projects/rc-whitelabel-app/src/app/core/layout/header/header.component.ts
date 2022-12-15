@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfig } from '../../../app.config';
-import {NavigationEnd, Router, Event as NavigationEvent, NavigationStart, ActivatedRoute} from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { NavigationEnd, Router, Event as NavigationEvent, ActivatedRoute } from '@angular/router';
 import { fadeIn } from '../../../shared/animations';
-import { RestaurantsService } from '../../../features/restaurants/restaurants.service';
+import { RestaurantsService } from '../../../restaurants/restaurants.service';
 
 @Component({
   selector: 'rd-header',
@@ -14,8 +13,10 @@ import { RestaurantsService } from '../../../features/restaurants/restaurants.se
 export class HeaderComponent implements OnInit {
 
   // @Input() direction = '';
-  showSearchOption = false;
+  showSearchOption = true;
   showViews = false;
+  isDeepLink = false;
+  defaultRoute = '/restaurants';
   isMapView = true;
   geoSearchLabel?: string;
 
@@ -25,30 +26,34 @@ export class HeaderComponent implements OnInit {
     private restService: RestaurantsService,
     private route: ActivatedRoute
   ) {
-    this.router.events
-      .subscribe(
-        (event: NavigationEvent) => {
-          if(event instanceof NavigationStart) {
-            this.isMapView = event.url.indexOf('map') > 0;
-          }
-        });
-    this.route.queryParams.subscribe((params) => {
-      if (!!params.location) {
-        this.geoSearchLabel = params.location;
-      }
-    })
+
   }
 
   ngOnInit(): void {
-    // Hide the search option when on the search page
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        // console.log(this.router.url);
-        this.showSearchOption = this.router.url !== '/';
+
+    this.router.events
+      .subscribe(
+        (event: NavigationEvent) => {
+          if(event instanceof NavigationEnd) {
+            const url = this.router.url;
+            this.isDeepLink = url !== this.defaultRoute;
+            this.isMapView = event.url.indexOf('map') > 0;
+          }
+        });
+
+    this.route.queryParams.subscribe((params) => {
+      if (!!params.label) {
+        this.geoSearchLabel = params.label;
+      }
     });
+
     this.restService.restaurants.subscribe(res => {
-      this.showViews = res.length > 0;
+      this.showViews = res.length > 0 && this.isDeepLink;
     });
+  }
+
+  openSearchForm(): void {
+    this.restService.openSearchForm()
   }
 
   /**
@@ -65,7 +70,13 @@ export class HeaderComponent implements OnInit {
     this.restService.resetRestaurantsSubject();
     // console.log(path);
     // navigate to the new view, passing any query params
-    this.router.navigate(path, { queryParams: { location: this.geoSearchLabel || ''} }).then();
+    this.router.navigate(path, { queryParams: { label: this.geoSearchLabel || ''} }).then();
+  }
+  reset(): void {
+    console.log(this.router.url);
+    if(this.router.url === '/restaurants'){ return; }
+    this.restService.resetAll();
+    this.router.navigateByUrl('/restaurants');
   }
 }
 

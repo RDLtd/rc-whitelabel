@@ -1,0 +1,116 @@
+<mat-dialog-content>
+  <div
+    [class.loaded]="isLoaded"
+    class="rd-search-form-container">
+
+    <rd-loader
+      class="fill-accent"
+      [class.rd-hide]="isLoaded && config.channelLoaded"
+      [loadText]="config.i18n['Loading']">
+    </rd-loader>
+
+    <div class="rd-search-content"
+         [class.rd-show]="isLoaded && config.channelLoaded">
+
+      <div class="rd-search-autofill-container">
+
+        <!-- Search input form -->
+        <form #rdSearchForm="ngForm">
+          <mat-form-field floatLabel="never" appearance="standard">
+            <mat-label>
+              <mat-icon>search</mat-icon>
+              {{ config.i18n['Search'] }}
+            </mat-label>
+            <input
+              #rdSearchInput
+              name="searchString"
+              matInput
+              (keyup)="getAutoSuggestions(rdSearchInput.value)"
+              autocomplete="off"
+              type="text"
+              ngModel
+              placeholder="{{ channelConfig.searchPlaceholderTxt }}"
+              tabindex="0">
+          </mat-form-field>
+          <mat-error *ngIf="noSuggestions" @fadeIn>
+            {{ config.i18n["No_matching_search_results"] }}
+          </mat-error>
+        </form>
+
+        <!--  Search Results -->
+        <ul class="rd-search-autofill"
+            [class.open]="!!rdSearchInput.value && !!searchSuggestions">
+          <!-- Suggestions -->
+          <li *ngFor="let suggestion of searchSuggestions; let i = index" [tabindex]="i + 1"
+              [ngSwitch]="suggestion.cat">
+
+            <!-- Landmarks -->
+            <a *ngSwitchCase="'location'"
+               (click)="doGeoSearch(suggestion)">
+              <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
+              {{ suggestion?.name }}
+              <span class="rd-flex-spacer"></span>
+              <span></span>
+            </a>
+
+            <!-- Restaurants -->
+            <a *ngSwitchCase="'restaurant'"
+               (click)="viewRestaurantSpw(suggestion)">
+              <mat-icon class="rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
+              {{ suggestion?.name }}
+              <span class="rd-flex-spacer"></span>
+              <span></span>
+            </a>
+
+          </li>
+        </ul>
+      </div>
+
+      <!-- Popular searches -->
+      <div class="rd-popular-links-container"
+           [class.rd-invisible]="searchSuggestions?.length">
+
+        <section class="rd-popular-links"
+                 *ngIf="(landmarks?.length || userPosition?.inRange) && channelConfig.showLandmarks">
+          <div>
+            <mat-icon class="rd-icon-location">{{ icons.location }}</mat-icon>
+            <h2>{{ config.i18n["Nearest_to"] }}</h2>
+          </div>
+          <ul>
+            <!-- User current location -->
+            <li *ngIf="userPosition?.inRange">
+              <a
+                class="rd-my-location"
+                (click)="doGeoSearch(
+                {latLng: userPosition?.lat + ',' + userPosition?.lng, name: 'my location'})">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
+                  <path d="M0 0h24v24H0z" fill="none"/>
+                  <path
+                    class="rd-icon-my-location"
+                    d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94
+      3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                </svg>
+                {{ config.i18n["My_current_location"] }}!
+              </a>
+            </li>
+            <li *ngFor="let landmark of landmarks">
+              <a (click)="doGeoSearch(
+              { latLng: landmark?.channel_landmark_lat + ',' + landmark?.channel_landmark_lng, name: landmark?.channel_landmark_name})">
+                {{ landmark?.channel_landmark_name }}
+              </a>
+            </li>
+          </ul>
+        </section>
+
+      </div>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+<button mat-icon-button
+        [mat-dialog-close]="false"
+        class="rd-dialog-close">
+  <mat-icon>close</mat-icon>
+</button>
+

@@ -17,107 +17,63 @@ export class ApiService {
     offset: 0,
     testing: false
   };
+  apiUrl: string;
 
   constructor(
     private http: HttpClient,
-    private config: AppConfig) { }
+    private config: AppConfig) {
+    this.apiUrl = this.config.apiUrl;
+  }
 
-  // tslint:disable-next-line:variable-name
   getChannelByDomain(channel_domain: string): any {
-    return this.http.post(this.config.apiUrl + '/channel/domain',
+    return this.http.post(this.apiUrl + '/channel/domain',
       {
         channel_domain
       });
   }
 
-  // tslint:disable-next-line:variable-name
-  getChannelLanguage(channel_access_code: string, channel_access_api_key: string, language: string): any {
-    return this.http.post(this.config.apiUrl + '/channel/language',
+  getChannelLanguage(): any {
+    return this.http.post(this.apiUrl + '/channel/language',
       {
-        channel_access_code,
-        channel_access_api_key,
-        language
+        channel_access_code: this.config.channel.accessCode,
+        channel_access_api_key: this.config.channel.apiKey,
+        language: this.config.channel.language
       });
   }
 
-  getChannelSettings(channel_id: number): any {
-    return this.http.post(this.config.apiUrl + '/channels/getchannel',
+  getChannelSettings(): any {
+    return this.http.post(this.apiUrl + '/channels/getchannel',
       {
-        channel_id
+        channel_id: this.config.channel.id
       });
   }
 
-  getChannelSites(channel_id: number, channel_access_code: string, channel_access_api_key: string,): any {
-    return this.http.post(this.config.apiUrl + '/channel/sites',
+  getRestaurantsNear(lat: number, lng: number, distance: number): any {
+    return this.http.post(this.apiUrl + '/channel/restaurants/near',
       {
-        channel_id,
-        channel_access_code,
-        channel_access_api_key
-      });
-  }
-  getChannelSite(site_id: number, channel_access_code: string, channel_access_api_key: string,): any {
-    return this.http.post(this.config.apiUrl + '/channel/site',
-      {
-        site_id,
-        channel_access_code,
-        channel_access_api_key
-      });
-  }
-  getChannelRestaurants(site_id: number, channel_access_code: string, channel_access_api_key: string,): any {
-    return this.http.post(this.config.apiUrl + '/channel/siterestaurants',
-      {
-        site_id,
-        channel_access_code,
-        channel_access_api_key
-      });
-  }
-
-  // tslint:disable-next-line:variable-name
-  getRestaurantsNear(channel_access_code: string, channel_access_api_key: string,
-                     lat: number, lng: number, distance: number): any {
-    return this.http.post(this.config.apiUrl + '/channel/restaurants/near',
-      {
-        channel_access_code,
-        channel_access_api_key,
+        channel_access_code: this.config.channel.accessCode,
+        channel_access_api_key: this.config.channel.apiKey,
         lat,
         lng,
         distance, testing: this.config.testMode
       });
   }
 
-
-
-  // Restaurants
-  // tslint:disable-next-line:variable-name
-  getRestaurantsByParams(channel_access_code: string, channel_access_api_key: string, params: any): any {
-    // console.log('getRestaurantsByParams');
-    return this.http.post(this.config.apiUrl + '/channel/restaurants/parameters',
+  getRestaurantsByParamsFast(params: any): any {
+    return this.http.post(this.apiUrl + '/channel/restaurants/parametersfast',
       {
-        channel_access_code,
-        channel_access_api_key,
+        channel_access_code: this.config.channel.accessCode,
+        channel_access_api_key: this.config.channel.apiKey,
         params
       });
   }
 
-  getRestaurantsByParamsFast(channel_access_code: string, channel_access_api_key: string, params: any): any {
-    // console.log(channel_access_code,
-    //         channel_access_api_key,
-    //         params);
-    return this.http.post(this.config.apiUrl + '/channel/restaurants/parametersfast',
+  getRestaurantsSummary(lat: number, lng: number, boundary: number): any {
+    // console.log(channel_access_code: this.accessCode, channel_access_api_key: this.apiKey, lat, lng, boundary);
+    return this.http.post(this.apiUrl + '/channel/restaurants/summary',
       {
-        channel_access_code,
-        channel_access_api_key,
-        params
-      });
-  }
-
-  // tslint:disable-next-line:variable-name
-  getRestaurantsSummary(channel_access_code: string, channel_access_api_key: string, lat: number, lng: number, boundary: number): any {
-    // console.log(channel_access_code, channel_access_api_key, lat, lng, boundary);
-    return this.http.post(this.config.apiUrl + '/channel/restaurants/summary',
-      {
-        channel_access_code,
-        channel_access_api_key,
+        channel_access_code: this.config.channel.accessCode,
+        channel_access_api_key: this.config.channel.apiKey,
         lat,
         lng,
         boundary,
@@ -125,4 +81,11 @@ export class ApiService {
       });
   }
 
+  getFeaturedRestaurants(): any {
+    return this.http.post(this.apiUrl + '/channel/restaurants/featured',
+      {
+        channel_access_code: this.config.channel.accessCode,
+        channel_access_api_key: this.config.channel.apiKey
+      });
+  }
 }

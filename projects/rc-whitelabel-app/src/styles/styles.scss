@@ -12,7 +12,7 @@ $rc-whitelabel-app-accent: mat.define-palette(mat.$orange-palette, A200, A100, A
 // The warn palette is optional (defaults to red).
 $rc-whitelabel-app-warn: mat.define-palette(mat.$deep-orange-palette);
 
-// Create the theme object
+// Create a custom theme object
 $rc-whitelabel-app-theme: mat.define-light-theme((
   color: (
     primary: $rc-whitelabel-app-primary,
@@ -23,17 +23,29 @@ $rc-whitelabel-app-theme: mat.define-light-theme((
 
 @include mat.all-component-themes($rc-whitelabel-app-theme);
 
-// Default branding
-// Referencing CSS vars to allow config to supply values post build
-$col-text:            var(--clr-text-default);
-$col-accent:          var(--clr-accent);
-$col-dark:            var(--clr-bgd-default);
-$col-icon-cuisine:    var(--clr-icon-cuisine);
-$col-icon-restaurant: var(--clr-icon-restaurant);
-$col-icon-location:   var(--clr-icon-location);
-$clr-offers:          var(--clr-offers);
-$clr-cta-primary:     var(--clr-primary-cta);
+// Brand theming
+// Referencing CSS vars that have been added to index.html
+// This allows them to be set post-build by AppConfig
+
+// Set by default for all channels
+$clr-icon-cuisine:    var(--clr-icon-cuisine);
+$clr-icon-restaurant: var(--clr-icon-restaurant);
+$clr-icon-location:   var(--clr-icon-location);
 $clr-grey-100:        var(--clr-grey-100);
+$clr-grey-500:        var(--clr-grey-500);
+$clr-grey-900:        var(--clr-grey-900);
+$clr-text:            var(--clr-text-default);
+
+// Set from Channel config
+$clr-accent:          var(--clr-accent);
+$clr-offers:          var(--clr-offers);
+$clr-cta:             var(--clr-primary-cta);
+$clr-header:          var(--clr-header-bgd);
+$clr-header-txt:      var(--clr-header-fgd);
+$img-channel-logo:    var(--img-logo);
+$img-channel-bgd:     var(--img-bgd);
+
+$clr-backdrop:        hsla(0 0% 15% / .25);
 
 // For media queries
 $breakpoints: (
@@ -48,17 +60,25 @@ $breakpoints: (
     @content;
   }
 };
+@function set-text-color($color) {
+  @if (lightness($color) > 50) {
+    @return #000000;
+  } @else {
+    @return #ffffff;
+  }
+}
 
-// Fonts
+// Typography vars
 $font-family-default: 'Roboto', sans-serif;
 $font-family-heading: 'Roboto Slab', 'Georgia', serif;
 $font-weight-lite: 300;
 $font-weight-regular: 400;
 $font-weight-heavy: 500;
-$layout-header-height: 64px;
+// Layout vars
+$layout-header-height: 56px;
 $layout-max-width: 960px;
 $loaderSize: 48px;
-$container-padding: 16px;
+$container-padding: 12px;
 
 // Global resets
 * { box-sizing: border-box; }
@@ -68,60 +88,62 @@ ul, li {
   list-style: none;
 }
 a { text-decoration: none; }
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 body {
   height: 100vh;
   margin: 0;
-  background: $col-dark;
+  background: $clr-grey-900;
   font-family: $font-family-default;
-  color: $col-text;
+  color: $clr-text;
 }
 a, a:active, a:focus {
   outline: none;
 }
-*:focus {
-  outline: 0 !important;
-}
+*:focus { outline: 0 !important; }
 ::selection {
   background-color: black;
   color: white;
 }
 
-// UTILS
-// ------------------------
+// Utility classes
+// -------------------------------------------------
 .rd-flex {
   display: flex;
   align-items: center;
   padding: 0;
 }
+.rd-flex-end { justify-content: flex-end; }
 .rd-flex-spacer { flex: 1 0 auto; text-align: center;}
 .rd-hide { display: none !important; }
 .rd-show { opacity: 1 !important;}
-.rd-highlight { color: $col-accent; }
+.rd-highlight { color: $clr-accent; }
+.rd-cta { background-color: $clr-cta; color: white;}
 .rd-invisible { opacity: 0; pointer-events: none; display: none !important;}
 .rd-hidden { opacity: 0;}
-.rd-icon-restaurant { color: $col-icon-restaurant !important;}
-.rd-icon-cuisine { color: $col-icon-cuisine !important;}
+.rd-icon-restaurant { color: $clr-icon-restaurant !important;}
+.rd-icon-cuisine { color: $clr-icon-cuisine !important;}
 .rd-icon-location,
 .rd-icon-my-location {
-  color: $col-icon-location !important;
-  fill: $col-icon-location
+  color: $clr-icon-location !important;
+  fill: $clr-icon-location
 }
-.rd-fill-accent {
-  fill: $col-accent;
-}
+.rd-fill-accent { fill: $clr-accent; }
 .rd-separator:after {
   display: inline-block;
   content: '|';
   font-size: 1rem;
-  color: #bbb;
+  color: $clr-text;
   margin-inline: .25rem 0.1rem;
 }
-
-// LOAD COMPONENT
-// ------------------------
+// Mat overrides for search form
+.mat-form-field.mat-focused .mat-form-field-ripple {
+  background-color: $clr-accent !important;
+}
+.mat-form-field.mat-focused .mat-form-field-label {
+  color: $clr-accent !important;
+}
+// Loading component
+// -------------------------------------------------------------------------
 rd-loader {
   .rd-loader-container {
     position: absolute;
@@ -136,7 +158,7 @@ rd-loader {
   .rd-loader-svg {
     width: $loaderSize;
     height: $loaderSize;
-    fill: $col-accent;
+    fill: $clr-accent;
     animation: spin .5s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite both;
     //animation-delay: .5s;
   }
@@ -144,12 +166,12 @@ rd-loader {
     margin-top: 4px;
     font-size: 12px;
     letter-spacing: 1px;
-    color: $col-accent;
+    color: $clr-accent;
   }
   // color variations
   &.fill-accent {
-    fill: $col-accent;
-    .rd-loader-txt { color: $col-accent; }
+    fill: $clr-accent;
+    .rd-loader-txt { color: $clr-accent; }
   }
   &.fill-white {
     @include mq(small) {
@@ -159,54 +181,49 @@ rd-loader {
   }
 }
 
-// LAYOUT
-// ------------------------
+// Page layouts
+// -------------------------------------------------------------------------
 header {
   width: 100vw;
   z-index: 10;
   position: fixed;
   transition: all .6s cubic-bezier(0.16, 1, 0.3, 1);
-  background: var(--clr-header-bgd);
+  background: $clr-header;
   box-shadow: 0 2px 4px 0 #00000026;
-  color: var(--clr-header-fgd);
+  color: $clr-header-txt;
+  height: auto;
   &.rd-hideHeader {
     @include mq(small) {
-      transform: translateY(-($layout-header-height - 8));
+      transform: translateY(-($layout-header-height + $container-padding));
     }
   }
   a {
     cursor: pointer;
-  }
+    color: currentColor;}
 }
 rd-header {
   display: flex;
   align-items: center;
-  padding: $container-padding;
+  padding: calc(#{$container-padding}/2);
   column-gap: 8px;
+  color: currentColor;
+  @include mq(med) {
+    padding: $container-padding;
+  }
   a {
     display: flex;
     align-items: center;
-  }
-  .rd-title {
-    position: absolute;
-    right: 12px;
-    width: 100vw;
-    text-align: right;
-    font-size: 11px;
-    font-weight: $font-weight-lite;
-    letter-spacing: 1px;
-    @include mq(med) {
-      //text-align: center;
-      font-size: 14px;
+    height: 200px;
+    max-height: calc(#{$layout-header-height}/2.5);
+    transition: max-height .3s ease-out;
+    .rd-logo {
+      height: 100%;
+      color: currentColor;
+      margin-right: 1rem;
     }
-  }
-  .rd-logo { height: 32px; }
-  h1 {
-    font-size: 16px;
-    font-weight: $font-weight-heavy;
-    line-height: 1;
-    margin: 0;
-    text-align: center;
+    @include mq(med) {
+      max-height: $layout-header-height;
+    }
   }
   .hide-small {
     display: none;
@@ -215,22 +232,23 @@ rd-header {
     }
   }
   .mat-button {
+    padding-inline: .5rem;
     font-weight: $font-weight-regular;
-    font-size: 14px;
+    font-size: 1.1rem;
     letter-spacing: 1px;
-  }
-  @include mq(med) {
-    .rd-logo { height: $layout-header-height;}
+    min-width: 0;
+    @include mq(med) {
+      .mat-icon { margin-right: .25rem; }
+    }
   }
 }
 main {
   display: flex;
   flex-direction: column;
-  //justify-content: space-between;
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: calc(100vh - #{$layout-header-height});
   background: #fff;
-  padding-top: $layout-header-height;
+  padding-top: $layout-header-height + ($container-padding);
   @include mq(med) {
     background: #eee;
     padding-top: $layout-header-height + (2 * $container-padding);
@@ -245,7 +263,7 @@ main {
     z-index: 0;
     width: 100vw;
     height: 100vh;
-    background-image: var(--img-bgd);
+    background-image: $img-channel-bgd;
     background-size: cover;
     background-color: rgba(0,0,0, 0.5); // Make sure this color has an opacity of less than 1
     filter: blur(8px); // This be the blur
@@ -283,195 +301,173 @@ rd-footer {
     padding: 0;
     margin: 16px;
     line-height: 1.2;
-    p {
-      margin: 0;
-    }
+    p { margin: 0; }
   }
 }
 
-// SEARCH
-// ------------------------
-.rd-search-container {
-  position: relative ;
-  z-index: 0;
-  width: 100vw;
-  height: auto;
-  overflow: auto;
-  background: white;
-  transition: min-height 1s ease-out;
-
-  @include mq(med) {
-    @include mat.elevation(5);
-    position: absolute;
-    z-index: 5;
-    top: 15vh;
-    left: calc(50% - 400px);
-    border-radius: 12px;
-    width: 800px;
-    min-height: 50vh;
-    height: auto;
-    margin: 0 auto 0;
-    &.loaded {
-      min-height: 0;
-    }
-  }
+// Search form dialog
+// -------------------------------------------------------------------------
+.rd-dialog-backdrop {
+  //backdrop-filter: blur(20px);
+  background-color: $clr-backdrop;
 }
-.rd-search-autofill {
-  display: block;
-  height: auto;
-  max-height: 0;
-  transition:max-height 0.3s ease-out;
-  overflow: auto;
-  width: 100%;
-  margin: -16px 0 0;
-  padding: 0;
-  li ~ li { border-top: 1px solid #eee; }
-  li  > a {
-    transition: all .3s ease-out;
-    background-color: white;
-    outline: none;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 16px 0;
-    font-size: 16px;
-    font-weight: $font-weight-regular;
-    color: black;
-    .mat-icon {
-      width: 22px;
-      height: 22px;
-      font-size: 20px;
-      margin-right: 4px;
-      color: lightgray;
-    }
-    span.rd-count {
-      display: inline-block;
-      height: 20px;
-      width: 20px;
-      line-height: 20px;
-      border-radius: 10px;
-      text-align: center;
-      background-color: $col-icon-cuisine;
-      color: white;
-      margin-right: 8px;
-      font-size: 9px;
-    }
-    &:hover,
-    &:focus { background: #eee; }
-  }
-  &.open {
-    max-height: 400px;
-  }
-}
-.rd-search-content {
-  opacity: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 8px 24px;
-  transition: all .3s ease-out;
-  h3 {
-    font-family: $font-family-heading;
-    margin: 0;
+// the class passed to dialog on init
+.rd-search-dialog {
+  @include mq(med) { transform: translateY(10vh); }
+  .mat-dialog-container {
+    border-radius: 0;
     padding: 0;
-  }
-  .rd-full-width {}
-  form mat-label {
-    display: flex;
-    .mat-icon {
-      height: 20px;
-      width: 20px;
-      font-size: 20px;
-      margin-right: 4px;
+    max-height: 100vh;
+    overflow-x: hidden;
+    @include mq(med) {
+      border-radius: 12px;
     }
   }
-  .mat-form-field {
-    margin-top: 4px;
-    font-size: 18px;
-    line-height: 20px;
-    width: 100%;
+  .mat-dialog-content {
+    max-height: 100vh;
+    height: 100vh;
+    @include mq(med) {
+      height: auto;
+    }
   }
-  .mat-error {
-    margin: -12px 0 24px;
-    color: $col-text;
-  }
-  ul.rd-search-suggestions {
-    margin: 0 0 12px;
-    width: 100%;
-    li > a {
-      display: flex;
-      align-items: center;
-      line-height: 36px;
-      margin: 0;
-      font-size: 14px;
-      font-weight: $font-weight-lite;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-decoration: none;
-      color: $col-text;
-      .mat-icon {
-        color: red;
-        margin-right: 8px;
+}
+.rd-search-form-container {
+  width: min(100vw, 640px);
+  .rd-search-content {
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1.6rem;
+    overflow-x: hidden;
+    transition: all .3s ease-out;
+    .rd-search-autofill-container {
+      form mat-label {
+        display: flex;
+        .mat-icon {
+          height: 20px;
+          width: 20px;
+          font-size: 20px;
+          margin-right: 4px;
+        }
+      }
+      .mat-form-field {
+        margin-top: 2rem;
+        font-size: 18px;
+        line-height: 20px;
+        width: 100%;
+        @include mq(med) {
+          margin-top: 1rem;
+        }
+      }
+      .mat-error {
+        margin: -12px 0 24px;
+        color: $clr-text;
+      }
+      .rd-search-autofill {
+        display: block;
+        height: auto;
+        max-height: 0;
+        transition:max-height 0.3s ease-out;
+        overflow: auto;
+        width: 100%;
+        margin: -16px 0 0;
+        padding: 0;
+        li {
+          border-top: 1px solid #eee;
+          border-radius: 6px;
+        }
+        li:first-child { border-top: 0; }
+        li > a {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          padding: 16px 8px;
+          font-size: 16px;
+          color: $clr-text;
+          transition: all .3s ease-out;
+          outline: none;
+          cursor: pointer;
+          .mat-icon {
+            width: 22px;
+            height: 22px;
+            font-size: 20px;
+            margin-right: 4px;
+            color: lightgray;
+          }
+          &:focus { background: #eee; }
+        }
+        &.open {
+          max-height: 100vh;
+          top: 0;
+          @include mq(med) {
+            top: 15vh;
+            max-height: 60vh;
+          }
+        }
+
+        .rd-search-item-selected {
+          background-color: hsla(0 0% 90% / 1);
+          a { color: black; }
+        }
       }
     }
-  }
-}
-.rd-quick-links-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  @include mq(small) {
-    flex-direction: row;
-    > * { width: 100%; }
-  }
-}
-.rd-quick-links {
-  margin-top: 10px;
-  > div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    h2 {
-      display: inline-block;
+    .rd-popular-links-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
       margin: 0;
-      padding: 0;
-      font-family: $font-family-heading;
-      font-size: 18px;
-    }
-    > .mat-icon {
-      font-size: 20px;
-      height: 20px;
-      width: 20px;
-      margin-right: 4px;
-      color: #666;
-    }
-  }
-  ul {
-    margin: 0;
-    padding: 0 24px 24px;
-    li {
-      > a {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        padding: 6px 0;
-        font-size: 16px;
-        color: #000;
-        font-weight: $font-weight-lite;
-        opacity: .6;
-        transition: opacity 200ms ease-out;
-        &.rd-my-location svg { margin: 0 5px 0 -23px; height: 12px;}
-        span:last-child { font-size: 11px; }
-        &:hover { opacity: 1; }
+      @include mq(small) {
+        flex-direction: row;
+        > * { width: 100%; }
+      }
+      .rd-popular-links {
+        margin-top: 10px;
+        > div {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          h2 {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+            font-family: $font-family-heading;
+            font-size: 18px;
+          }
+          > .mat-icon {
+            font-size: 20px;
+            height: 20px;
+            width: 20px;
+            margin-right: 4px;
+            color: #666;
+          }
+        }
+        ul {
+          margin: 0;
+          padding: 0 24px 24px;
+          li {
+            > a {
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              padding: 6px 0;
+              font-size: 16px;
+              color: hsla(0 0% 50% / 1);
+              font-weight: $font-weight-regular;
+              transition: color 200ms ease-out;
+              &.rd-my-location svg { margin: 0 5px 0 -23px; height: 12px;}
+              span:last-child { font-size: 11px; }
+              &:hover { color: hsla(0 0% 0% / 1); }
+            }
+          }
+        }
       }
     }
   }
 }
 
-// RESULTS
-// ------------------------
+// Results: List view
+// -------------------------------------------------------------------------
 .rd-results-container {
   position: relative;
   @include mq(med) {
@@ -550,12 +546,13 @@ rd-footer {
         font-size: 10px;
         text-transform: uppercase;
         margin: 0 3px 3px 0;
-        padding: 6px;
+        padding-inline: .6rem;
+        background-color: $clr-offers;
+        color: white;
       }
       .mat-standard-chip {
         min-height: 24px;
-        line-height: 13px;
-        border-radius: 10px;
+        line-height: 1;
       }
     }
     .rd-restaurant-img {
@@ -599,6 +596,7 @@ rd-footer {
     }
   }
 }
+
 .rd-load-more {
   position: relative;
   cursor: pointer;
@@ -623,8 +621,8 @@ rd-footer {
   }
 }
 
-// MAP RESULTS
-// ------------------------
+// Results: Map view
+// -------------------------------------------------------------------------
 .rd-component {
   position: relative;
   background-color: white;
@@ -701,7 +699,7 @@ rd-footer {
     span {
       font-size: .75rem;
       line-height: 1;
-      text-transform: uppercase
+      text-transform: uppercase;
     }
     svg {
       margin-left:4px;
@@ -773,7 +771,7 @@ rd-footer {
 }
 .rd-map-info-window {
   padding: 4px 0 6px 6px;
-  width: 200px;
+  max-width: 200px;
   h3 {
     margin: 0 0 0;
     font-size: 1rem;
@@ -830,6 +828,7 @@ rd-footer {
   width: 100%;
   height: calc(100% - 48px);
   transition: opacity .3s ease-out;
+  border-radius: 8px;
 }
 .rd-map {
   position: relative;
@@ -846,31 +845,55 @@ rd-footer {
     grid-row-gap: 16px;
   }
 }
+.rd-promo-tag {
+  position: absolute;
+  top: 1rem;
+  left: .5rem;
+  width: auto;
+  display: flex;
+  align-items: center;
+  background-color: $clr-offers;
+  border-radius: 1rem;
+  padding-inline: .5rem .625rem;
+  padding-block: .375rem;
+  font-size: 14px !important;
+  color: white;
+  line-height: 1 !important;
+  @include mat.elevation(5);
+  &:before {
+    content: '★';
+    margin-right: .125rem;
+    color: currentColor;
+  }
+  &.map {
+    top: .5rem;
+  }
+}
 
-// FILTERS
-// ------------------------
+// Cuisine Filters
+// -------------------------------------------------------------------------
 .rd-filter-btn {
   z-index: 20;
   position: fixed;
-  bottom: 64px; left: auto; right: auto;
+  bottom: 24px; left: auto; right: auto;
   transform: scale(0);
   width: 100%;
   text-align: center;
   @include mq(med){
     width: auto;
-    right: 96px;
+    bottom: 64px; left: auto; right: 96px;
   }
   .mat-raised-button {
     margin: 0;
     padding: 8px 20px;
-    border-radius: 32px 32px 32px 4px ;
+    border-radius: 32px;
     line-height: 40px;
     text-transform: uppercase;
     font-weight: $font-weight-regular;
-    background: #ff2600;
+    background: $clr-cta;
     color: white;
     @include mat.elevation(10);
-    &.rd-btn-clear { background-color: #ff2600; }
+    &.rd-btn-clear { background-color: #000; }
   }
   .mat-button-wrapper {
     display: flex;
@@ -878,6 +901,8 @@ rd-footer {
   }
   .mat-icon { margin-left: 8px; }
 }
+// checkbox bgd color
+.mat-primary .mat-pseudo-checkbox-checked { background-color: $clr-cta;}
 .rd-filter-list-container {
   display: flex;
   flex-direction: column;
@@ -888,18 +913,19 @@ rd-footer {
   }
 }
 .rd-filter-dialog {
-  @include mq(med) { min-width: 480px;}
+  width: 100vw;
+  @include mq(med) { width: clamp(38vw, 62vw, 480px)}
   .mat-dialog-container {
     position: relative;
     width: 100%;
     border-radius: 12px;
   }
-  .rd-dialog-close {
-    position: absolute !important;
-    top: 4px; right: 4px;
-    z-index: 100;
-    color: gray;
-  }
+}
+.rd-dialog-close {
+  position: absolute !important;
+  top: 1rem; right: 1rem;
+  z-index: 100;
+  color: gray;
 }
 .rd-filter-list {
   position: relative;
@@ -938,13 +964,10 @@ rd-footer {
   }
 }
 
-// ANIMATIONS
-// ------------------------
-.scale-in-center {
-  animation: scale-in-center 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
-}
+// Animations
+// -------------------------------------------------
+.scale-in-center { animation: scale-in-center 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; }
 @keyframes pulse {
-
   0% {
     opacity: 1;
   }

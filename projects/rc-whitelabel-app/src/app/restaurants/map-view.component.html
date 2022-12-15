@@ -8,8 +8,6 @@
 <div class="rd-map">
   <div class="rd-component list">
 
-
-
     <ul class="rd-map-list" [@fadeInStaggerIn]="restaurantBatch$ | async">
 
       <ng-container *ngIf="!(resultsLoaded$ | async)" >
@@ -27,7 +25,7 @@
       <li class="rd-map-list-item"
           *ngFor="let restaurant of restaurantBatch$ | async; let i = index"
           (click)="listClick(i)">
-        <span *ngIf="restaurant?.offers.length" class="rd-member-offer">MEMBER OFFER</span>
+        <span *ngIf="restaurant.offers.length" class="rd-promo-tag map">Offers</span>
         <img [src]="restaurant?.image" loading="lazy" alt="Image of {{ restaurant?.restaurant_name }}">
         <div>
           <h3>{{ i + currentOffset + 1 }}. {{ restaurant.restaurant_name }}</h3>
@@ -52,7 +50,7 @@
       <button [disabled]="currentOffset === 0"
               mat-icon-button
               (click)="prevBatch()"
-              title="Previous {{ currentOffset }} restaurants">
+              title="Previous {{ batchTotal }} restaurants">
         <mat-icon>arrow_back</mat-icon>
       </button>
 
@@ -138,6 +136,7 @@
 </div>
 
 <rd-filter-btn
+  *ngIf="showFilters$ | async"
   (onMapUpdate)="toggleMap($event)"
   [searchFilter]="searchFilter"
   [view]="'map'"

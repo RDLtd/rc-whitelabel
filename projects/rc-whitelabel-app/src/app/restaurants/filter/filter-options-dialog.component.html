@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>{{ config.i18n["Filter_by_cuisine"] }} </h1>
+<div mat-dialog-content>
+  <div class="rd-filter-list-container">
+    <section class="rd-filter-list" *ngIf="data['cuisines'].length > 1">
+        <mat-selection-list #cuisineSelection color="primary">
+          <mat-list-option
+            *ngFor="let cuisine of data['cuisines']"
+            checkboxPosition="after"
+            color="primary" [value]="cuisine.Cuisine">
+            {{ cuisine.Cuisine }} ({{ cuisine.Count }})
+          </mat-list-option>
+        </mat-selection-list>
+    </section>
+  </div>
+</div>
+<mat-dialog-actions class="rd-flex-end">
+  <button mat-button [mat-dialog-close]="null">CANCEL</button>
+  <button
+    mat-flat-button
+    class="rd-cta"
+    [mat-dialog-close]="cuisineSection?.selectedOptions?.selected">APPLY FILTER</button>
+</mat-dialog-actions>

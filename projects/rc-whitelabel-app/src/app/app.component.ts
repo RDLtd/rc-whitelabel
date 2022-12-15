@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfig } from './app.config';
 import { ApiService } from './core/api.service';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import { DataService } from './core/data.service';
 import { filter } from 'rxjs/operators';
 import { Meta } from '@angular/platform-browser';
@@ -43,10 +43,7 @@ export class AppComponent implements OnInit {
               // range in which to offer a 'near me' search option
               if (!!params.d) { this.config.maxUserDistance = params.d; }
             }
-            this.data.loadTranslations(
-              this.config.channel.accessCode,
-              this.config.channel.apiKey,
-              this.config.language)
+            this.data.loadTranslations()
               .then((obj: any) => {
                 this.config.setLanguage(obj);
               })
@@ -66,6 +63,7 @@ export class AppComponent implements OnInit {
    * on Channel config
    */
   updateMetaData(): void {
+    console.log('Update meta tags', this.config.channel.openGraph);
     this.meta.updateTag({
       property: 'og:title',
       content: this.config.channel.openGraph.title

@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AppConfig } from '../../../app.config';
+import { AppConfig } from '../../app.config';
 import { FilterOptionsDialogComponent } from './filter-options-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RestaurantsService } from '../restaurants.service';
 import { Router } from '@angular/router';
-import { LocationService } from '../../../core/location.service';
+import { LocationService } from '../../core/location.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -18,6 +18,7 @@ export class FilterBtnComponent implements OnInit {
   @Input() view = 'list';
   @Output() onMapUpdate = new EventEmitter<number>();
 
+  minCuisineFilters = 3; // number of cuisine options to warrant offering filters
   showFilterOptions = false;
   userPosition: any;
   geoTarget: any;
@@ -36,17 +37,17 @@ export class FilterBtnComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // Observe user position
+    // Watch user position
     this.location.userLocationObs.subscribe(pos => this.userPosition = pos );
 
     // Current geoTarget
     this.geoTarget = this.restService.geo;
 
-    // TODO: This could do with being a bit more intelligent
-    // ie. only shpw cuisine filters if there are sensible choices to be made
+    // console.log('GEO',this.geoTarget);
+
     // Delay the filter options until results have loaded
     setTimeout(() => {
-      this.showFilterOptions = true;
+      this.showFilterOptions = this.restService.cuisineSummary.length > this.minCuisineFilters;
       }, 2000);
   }
 
@@ -55,39 +56,27 @@ export class FilterBtnComponent implements OnInit {
     const dialogRef = this.dialog.open(FilterOptionsDialogComponent, {
       data: {
         cuisines: this.restService.cuisineSummary,
-        landmarks: this.restService.landmarkSummary,
-        userPosition: this.userPosition
       },
+      maxWidth: '90vw',
       panelClass: 'rd-filter-dialog'
     });
-    dialogRef.afterClosed().subscribe((query: any) => {
+
+    dialogRef.afterClosed().subscribe((selected: any) => {
 
       // Guard clause
-      if (!query) { return;}
+      if (selected === null || selected === undefined || selected.length < 1) { return;}
 
+      // Extract the filter options that have been selected
+      const cuisineFilters: string[] = [];
+      selected.forEach((item: any) => {
+        cuisineFilters.push(item.value);
+      });
+
+      this.router
+        .navigateByUrl(
+          `/restaurants/${this.view}/${this.restService.geoCoords}/${cuisineFilters.join(',')}?label=${this.geoTarget.label}`)
+        .then(() => console.log(`Filtered by ${cuisineFilters}`));
       this.onMapUpdate.emit(0);
-
-      if (query.type === 'filter') {
-        this.router
-          .navigateByUrl(
-          `/restaurants/${this.view}/${this.restService.geoCoords}/${query.cuisine}?location=${this.geoTarget.label}`)
-          .then(() => console.log(`Filtered by ${query.cuisine}`));
-      } else {
-        if (query.lat == this.restService.geoLatitude && query.lng == this.restService.geoLongitude) {
-          console.log(`No change`);
-          this.onMapUpdate.emit(1);
-          return;
-        }
-
-        const loc = query.label ?? 'Your Location';
-
-        this.router
-          .navigateByUrl(
-            `/restaurants/map/${query.lat},${query.lng}?location=${loc}`)
-          .then(() => {
-            console.log('No cuisine filter');
-          });
-      }
     });
   }
 
@@ -97,11 +86,11 @@ export class FilterBtnComponent implements OnInit {
       lng: this.geoTarget.lng,
       filter: null,
       filterText: null,
-      location: this.geoTarget.label
+      label: this.geoTarget.label
     }
     this.router.navigate(
       ['/restaurants', this.view, `${this.geoTarget.lat},${this.geoTarget.lng}`],
-      { queryParams: { location: this.geoTarget.label }})
+      { queryParams: { label: this.geoTarget.label }})
   }
 
 }
