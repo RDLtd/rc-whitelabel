@@ -553,7 +553,6 @@ rd-footer {
       .mat-standard-chip {
         min-height: 24px;
         line-height: 1;
-        //border-radius: 10px;
       }
     }
     .rd-restaurant-img {
@@ -597,6 +596,7 @@ rd-footer {
     }
   }
 }
+
 .rd-load-more {
   position: relative;
   cursor: pointer;
@@ -699,7 +699,7 @@ rd-footer {
     span {
       font-size: .75rem;
       line-height: 1;
-      text-transform: uppercase
+      text-transform: uppercase;
     }
     svg {
       margin-left:4px;
@@ -843,6 +843,30 @@ rd-footer {
     grid-template-columns: 38% 1fr;
     padding:  16px 12px 12px;
     grid-row-gap: 16px;
+  }
+}
+.rd-promo-tag {
+  position: absolute;
+  top: 1rem;
+  left: .5rem;
+  width: auto;
+  display: flex;
+  align-items: center;
+  background-color: $clr-offers;
+  border-radius: 1rem;
+  padding-inline: .5rem .625rem;
+  padding-block: .375rem;
+  font-size: 14px !important;
+  color: white;
+  line-height: 1 !important;
+  @include mat.elevation(5);
+  &:before {
+    content: '★';
+    margin-right: .125rem;
+    color: currentColor;
+  }
+  &.map {
+    top: .5rem;
   }
 }
 
