@@ -46,9 +46,7 @@ export class DataService {
       await this.api.getChannelLanguage()
         .toPromise()
         .then((res: any) => {
-          if(!res) {
-            reject('Unable to load language!!');
-          }
+          if(!res) { reject('Unable to load language!!'); }
           resolve(res.language[0]);
         })
         .catch((error: any) => console.log(error));

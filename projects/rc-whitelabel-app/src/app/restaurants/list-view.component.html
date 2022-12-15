@@ -31,10 +31,11 @@
       </h3>
       <p>{{ restaurant?.strap_line }}</p>
       <span class="rd-flex-spacer"></span>
-      <mat-chip-list>
-        <mat-chip
-          *ngFor="let feature of restaurant['attributes']">
-          {{ feature }}
+      <mat-chip-list *ngIf="restaurant?.offers.length">
+        <mat-chip>
+          ★ OFFERS AVAILABLE
+<!--          *ngFor="let feature of restaurant['attributes']">-->
+<!--          {{ feature }}-->
         </mat-chip>
       </mat-chip-list>
     </div>

@@ -45,7 +45,7 @@ $clr-header-txt:      var(--clr-header-fgd);
 $img-channel-logo:    var(--img-logo);
 $img-channel-bgd:     var(--img-bgd);
 
-$clr-backdrop:        hsla(0 0% 15% / .85);
+$clr-backdrop:        hsla(0 0% 15% / .25);
 
 // For media queries
 $breakpoints: (
@@ -60,6 +60,13 @@ $breakpoints: (
     @content;
   }
 };
+@function set-text-color($color) {
+  @if (lightness($color) > 50) {
+    @return #000000;
+  } @else {
+    @return #ffffff;
+  }
+}
 
 // Typography vars
 $font-family-default: 'Roboto', sans-serif;
@@ -71,7 +78,7 @@ $font-weight-heavy: 500;
 $layout-header-height: 56px;
 $layout-max-width: 960px;
 $loaderSize: 48px;
-$container-padding: 16px;
+$container-padding: 12px;
 
 // Global resets
 * { box-sizing: border-box; }
@@ -128,7 +135,13 @@ a, a:active, a:focus {
   color: $clr-text;
   margin-inline: .25rem 0.1rem;
 }
-
+// Mat overrides for search form
+.mat-form-field.mat-focused .mat-form-field-ripple {
+  background-color: $clr-accent !important;
+}
+.mat-form-field.mat-focused .mat-form-field-label {
+  color: $clr-accent !important;
+}
 // Loading component
 // -------------------------------------------------------------------------
 rd-loader {
@@ -386,9 +399,10 @@ rd-footer {
         }
         &.open {
           max-height: 100vh;
+          top: 0;
           @include mq(med) {
-            top: 5vh;
-            max-height: 62vh;
+            top: 15vh;
+            max-height: 60vh;
           }
         }
 
@@ -532,12 +546,14 @@ rd-footer {
         font-size: 10px;
         text-transform: uppercase;
         margin: 0 3px 3px 0;
-        padding: 6px;
+        padding-inline: .6rem;
+        background-color: $clr-offers;
+        color: white;
       }
       .mat-standard-chip {
         min-height: 24px;
-        line-height: 13px;
-        border-radius: 10px;
+        line-height: 1;
+        //border-radius: 10px;
       }
     }
     .rd-restaurant-img {

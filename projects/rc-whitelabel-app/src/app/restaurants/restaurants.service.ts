@@ -298,6 +298,7 @@ export class RestaurantsService {
         if (this.restaurantsArray.length < this.totalRestaurants) {
           this.loadMoreRestaurants();
         }
+        console.log(this.restaurantsArray);
       })
       .catch((error) => console.log('ERROR:', error));
   }
