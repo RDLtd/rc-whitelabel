@@ -45,7 +45,7 @@ $clr-header-txt:      var(--clr-header-fgd);
 $img-channel-logo:    var(--img-logo);
 $img-channel-bgd:     var(--img-bgd);
 
-$clr-backdrop:        hsla(0 0% 15% / .25);
+$clr-backdrop:        hsla(0 0% 15% / .5);
 
 // For media queries
 $breakpoints: (
@@ -445,6 +445,8 @@ rd-footer {
         ul {
           margin: 0;
           padding: 0 24px 24px;
+          max-height: 60vh;
+          overflow-y: scroll;
           li {
             > a {
               cursor: pointer;
