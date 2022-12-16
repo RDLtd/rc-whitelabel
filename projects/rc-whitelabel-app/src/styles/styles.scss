@@ -812,17 +812,19 @@ rd-footer {
   }
   .offer-panel {
     background-color: rgba($clr-offers, .1);
-    color: $clr-offers;
-    padding: 8px;
     border-radius: 4px;
-    margin-top: 8px;
+    margin-top: .5rem;
     h4 {
       line-height: 1.1;
       color: $clr-offers;
-      margin-block: 0;
+      margin: 0 0 .25rem;
       font-size: .75rem;
       font-weight: $font-weight-heavy;
       text-transform: uppercase;
+      &:before {
+        content: '★';
+        margin-right: .25rem;
+      }
     }
   }
 }
@@ -853,12 +855,12 @@ rd-footer {
   left: .5rem;
   width: auto;
   display: flex;
-  align-items: center;
+  justify-content: center;
+  // align-items: center;
   background-color: $clr-offers;
   border-radius: 1rem;
-  padding-inline: .5rem .625rem;
-  padding-block: .375rem;
-  font-size: 14px !important;
+  padding: 5px 10px 4px 8px;
+  font-size: .9rem !important;
   color: white;
   line-height: 1 !important;
   @include mat.elevation(5);
@@ -866,6 +868,7 @@ rd-footer {
     content: '★';
     margin-right: .125rem;
     color: currentColor;
+    font-size: .8rem !important;
   }
   &.map {
     top: .5rem;

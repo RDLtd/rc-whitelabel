@@ -35,10 +35,11 @@
     <div class="rd-restaurant-img">
       <img [src]="getFormattedImage(restaurant.image)" loading="lazy" [alt]="restaurant?.restaurant_name">
       <span class="img-credit">LIBRARY IMAGE</span>
-      <span *ngIf="restaurant?.offers.length" class="rd-promo-tag card">OFFERS</span>
+      <span *ngIf="restaurant?.offers.length" class="rd-promo-tag card">OFFERS AVAILABLE</span>
     </div>
   </div>
 </div>
+
 <div class="rd-load-more" *ngIf="moreRestaurantsPreloaded | async" @fadeInSlideUp>
   <div class="rd-btn-more" (click)="loadMore()"><span>{{ config.i18n['Load_more'] }}</span></div>
 </div>
