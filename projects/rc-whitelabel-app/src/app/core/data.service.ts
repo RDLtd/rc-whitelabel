@@ -30,9 +30,7 @@ export class DataService {
       await this.api.getChannelByDomain(domain)
         .toPromise()
         .then((res: any) => {
-          if(!res) {
-            reject('Failed to load channel config!!');
-          }
+          if(!res) { reject('Failed to load channel config!!'); }
           resolve(res);
         })
         .catch((error: any) => console.log(error));
@@ -82,14 +80,13 @@ export class DataService {
 
     // Do we have a cache?
     if (this.summaryCache.length > 0) {
-      // Have we got a summary for this latLng
-      // in our cache?
+      // Check cache for this latLng?
       let cachedData =
         this.summaryCache.find(element => element.latLng === `${lat},${lng}`);
-      if(cachedData) {
+      if (cachedData) {
         this.summarisedResults = cachedData.data;
         return new Promise<any>( resolve => {
-          console.log('CACHED', this.summaryCache);
+          console.log('Summary loaded from cache:', this.summaryCache);
           resolve(this.summarisedResults);
         });
       }
@@ -100,7 +97,7 @@ export class DataService {
         .then((data: any) => {
           if(!data) { reject('Failed to load restaurant summary!!')}
           this.summarisedResults = data;
-          // Store in our cache
+          // Add to cache
           this.summaryCache.push({
             latLng: `${lat},${lng}`,
             data: this.summarisedResults
@@ -118,9 +115,7 @@ export class DataService {
       await this.api.getRestaurantsByParamsFast(params)
         .toPromise()
         .then((data: any) => {
-          if(!data) {
-            reject('No restaurant results!!');
-          }
+          if (!data) { reject('No restaurant results!!'); }
           resolve(data);
         })
         .catch((error: any) => console.log(error));
@@ -132,9 +127,7 @@ export class DataService {
       await this.api.getFeaturedRestaurants()
         .toPromise()
         .then((data: any) => {
-          if(!data) {
-            reject('No featured restaurants defined!!!');
-          }
+          if(!data) { reject('No featured restaurants defined!!'); }
           resolve(data);
         })
         .catch((error: any) => console.log(error))
@@ -143,8 +136,6 @@ export class DataService {
 
 // recently viewed
   setRecentlyViewed(restaurant: any): void {
-    console.log('Recent', restaurant);
-
     // Check whether this restaurant is already in the array
     const maxNum = 5;
     if (this.recentlyViewed) {
