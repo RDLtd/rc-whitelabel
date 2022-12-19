@@ -237,6 +237,8 @@ rd-header {
     font-size: 1.1rem;
     letter-spacing: 1px;
     min-width: 0;
+    color: currentColor;
+    background-color: inherit;
     @include mq(med) {
       .mat-icon { margin-right: .25rem; }
     }
@@ -315,6 +317,7 @@ rd-footer {
 .rd-search-dialog {
   @include mq(med) { transform: translateY(10vh); }
   .mat-dialog-container {
+    background-color: white;
     border-radius: 0;
     padding: 0;
     max-height: 100vh;
@@ -361,7 +364,7 @@ rd-footer {
         }
       }
       .mat-error {
-        margin: -12px 0 24px;
+        margin-block: 1rem;
         color: $clr-text;
       }
       .rd-search-autofill {
@@ -371,7 +374,7 @@ rd-footer {
         transition:max-height 0.3s ease-out;
         overflow: auto;
         width: 100%;
-        margin: -16px 0 0;
+        margin: .75rem 0 0;
         padding: 0;
         li {
           border-top: 1px solid #eee;
@@ -416,7 +419,6 @@ rd-footer {
       width: 100%;
       display: flex;
       flex-direction: column;
-      margin: 0;
       @include mq(small) {
         flex-direction: row;
         > * { width: 100%; }
