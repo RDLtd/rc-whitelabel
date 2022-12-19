@@ -1,6 +1,6 @@
 {
   "name": "rc-whitelabel",
-  "version": "13.6.3",
+  "version": "14.0.0",
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
