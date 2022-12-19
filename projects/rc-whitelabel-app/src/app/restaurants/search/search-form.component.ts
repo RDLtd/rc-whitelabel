@@ -8,7 +8,7 @@ import { LocationService } from '../../core/location.service';
 import { fadeIn, fadeInSlideUp } from '../../shared/animations';
 import { Title } from '@angular/platform-browser';
 import { AnalyticsService } from '../../core/analytics.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 
 interface SearchSuggestion {
   cat: string;

@@ -7,7 +7,7 @@ import { LocationService } from '../core/location.service';
 import { AppConfig } from '../app.config';
 import { DataService } from '../core/data.service';
 import { Title } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 @Component({
   selector: 'rd-list-view',
