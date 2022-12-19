@@ -4,7 +4,7 @@
     *ngIf="!filterOn && (resultsLoaded$ | async)"
     mat-raised-button
     (click)="openFilterOptions()">
-    {{ config.i18n.Sort_filter }}
+    {{ config.i18n['Sort_filter'] }}
     <mat-icon>filter_list</mat-icon>
   </button>
 
@@ -14,7 +14,7 @@
     mat-raised-button
     [title]="searchFilter"
     (click)="clearFilters()">
-    {{ config.i18n.Clear_filters }}
+    {{ config.i18n['Clear_filters'] }}
     <mat-icon>cancel</mat-icon>
   </button>
 
