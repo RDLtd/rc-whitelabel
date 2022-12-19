@@ -2,7 +2,7 @@
 <a [title]="config.channel.name" (click)="reset()">
   <img
     class="rd-logo"
-    [src]="config.channel.brand?.imgLogo"
+    [src]="config.channel.brand.imgLogo"
     alt="Logo">
 </a>
 <a routerLink="" class="rd-logo" *ngIf="!!config.channel.rcLogo">

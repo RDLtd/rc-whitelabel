@@ -68,7 +68,7 @@
 
       <!-- Popular searches -->
       <div class="rd-popular-links-container"
-           [class.rd-invisible]="searchSuggestions?.length">
+           [class.rd-invisible]="searchSuggestions.length">
 
         <section class="rd-popular-links"
                  *ngIf="(landmarks?.length || userPosition?.inRange) && channelConfig.showLandmarks">
