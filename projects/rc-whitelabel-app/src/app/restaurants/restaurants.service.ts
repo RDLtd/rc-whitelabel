@@ -6,7 +6,7 @@ import { DataService } from '../core/data.service';
 import { AnalyticsService } from '../core/analytics.service';
 import { ActivatedRoute } from '@angular/router';
 import { SearchFormComponent } from './search/search-form.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'

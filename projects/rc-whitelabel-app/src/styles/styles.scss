@@ -315,18 +315,20 @@ rd-footer {
 }
 // the class passed to dialog on init
 .rd-search-dialog {
+  background-color: red;
   @include mq(med) { transform: translateY(10vh); }
-  .mat-dialog-container {
-    background-color: white;
-    border-radius: 0;
+  .mat-mdc-dialog-container .mdc-dialog__content {
+
+    border-radius: 12px;
     padding: 0;
-    max-height: 100vh;
-    overflow-x: hidden;
+    // max-height: 100vh;
+    // overflow-x: hidden;
     @include mq(med) {
       border-radius: 12px;
     }
   }
-  .mat-dialog-content {
+  .mat-mdc-dialog-content {
+    border-radius: 12px;
     max-height: 100vh;
     height: 100vh;
     @include mq(med) {
@@ -334,141 +336,141 @@ rd-footer {
     }
   }
 }
-.rd-search-form-container {
-  width: min(100vw, 640px);
-  .rd-search-content {
-    opacity: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 1.6rem;
-    overflow-x: hidden;
-    transition: all .3s ease-out;
-    .rd-search-autofill-container {
-      form mat-label {
-        display: flex;
-        .mat-icon {
-          height: 20px;
-          width: 20px;
-          font-size: 20px;
-          margin-right: 4px;
-        }
-      }
-      .mat-form-field {
-        margin-top: 2rem;
-        font-size: 18px;
-        line-height: 20px;
-        width: 100%;
-        @include mq(med) {
-          margin-top: 1rem;
-        }
-      }
-      .mat-error {
-        margin-block: 1rem;
-        color: $clr-text;
-      }
-      .rd-search-autofill {
-        display: block;
-        height: auto;
-        max-height: 0;
-        transition:max-height 0.3s ease-out;
-        overflow: auto;
-        width: 100%;
-        margin: .75rem 0 0;
-        padding: 0;
-        li {
-          border-top: 1px solid #eee;
-          border-radius: 6px;
-        }
-        li:first-child { border-top: 0; }
-        li > a {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          padding: 16px 8px;
-          font-size: 16px;
-          color: $clr-text;
-          transition: all .3s ease-out;
-          outline: none;
-          cursor: pointer;
-          .mat-icon {
-            width: 22px;
-            height: 22px;
-            font-size: 20px;
-            margin-right: 4px;
-            color: lightgray;
-          }
-          &:focus { background: #eee; }
-        }
-        &.open {
-          max-height: 100vh;
-          top: 0;
-          @include mq(med) {
-            top: 15vh;
-            max-height: 60vh;
-          }
-        }
-
-        .rd-search-item-selected {
-          background-color: hsla(0 0% 90% / 1);
-          a { color: black; }
-        }
-      }
-    }
-    .rd-popular-links-container {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      @include mq(small) {
-        flex-direction: row;
-        > * { width: 100%; }
-      }
-      .rd-popular-links {
-        margin-top: 10px;
-        > div {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          h2 {
-            display: inline-block;
-            margin: 0;
-            padding: 0;
-            font-family: $font-family-heading;
-            font-size: 18px;
-          }
-          > .mat-icon {
-            font-size: 20px;
-            height: 20px;
-            width: 20px;
-            margin-right: 4px;
-            color: #666;
-          }
-        }
-        ul {
-          margin: 0;
-          padding: 0 24px 24px;
-          max-height: 60vh;
-          overflow-y: scroll;
-          li {
-            > a {
-              cursor: pointer;
-              display: flex;
-              align-items: center;
-              padding: 6px 0;
-              font-size: 16px;
-              color: hsla(0 0% 50% / 1);
-              font-weight: $font-weight-regular;
-              transition: color 200ms ease-out;
-              &.rd-my-location svg { margin: 0 5px 0 -23px; height: 12px;}
-              span:last-child { font-size: 11px; }
-              &:hover { color: hsla(0 0% 0% / 1); }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+//.rd-search-form-container {
+//  width: min(100vw, 640px);
+//  .rd-search-content {
+//    opacity: 0;
+//    display: flex;
+//    flex-direction: column;
+//    justify-content: flex-start;
+//    padding: 1.6rem;
+//    overflow-x: hidden;
+//    transition: all .3s ease-out;
+//    .rd-search-autofill-container {
+//      form mat-label {
+//        display: flex;
+//        .mat-icon {
+//          height: 20px;
+//          width: 20px;
+//          font-size: 20px;
+//          margin-right: 4px;
+//        }
+//      }
+//      .mat-form-field {
+//        margin-top: 2rem;
+//        font-size: 18px;
+//        line-height: 20px;
+//        width: 100%;
+//        @include mq(med) {
+//          margin-top: 1rem;
+//        }
+//      }
+//      .mat-error {
+//        margin-block: 1rem;
+//        color: $clr-text;
+//      }
+//      .rd-search-autofill {
+//        display: block;
+//        height: auto;
+//        max-height: 0;
+//        transition:max-height 0.3s ease-out;
+//        overflow: auto;
+//        width: 100%;
+//        margin: .75rem 0 0;
+//        padding: 0;
+//        li {
+//          border-top: 1px solid #eee;
+//          border-radius: 6px;
+//        }
+//        li:first-child { border-top: 0; }
+//        li > a {
+//          display: flex;
+//          align-items: center;
+//          width: 100%;
+//          padding: 16px 8px;
+//          font-size: 16px;
+//          color: $clr-text;
+//          transition: all .3s ease-out;
+//          outline: none;
+//          cursor: pointer;
+//          .mat-icon {
+//            width: 22px;
+//            height: 22px;
+//            font-size: 20px;
+//            margin-right: 4px;
+//            color: lightgray;
+//          }
+//          &:focus { background: #eee; }
+//        }
+//        &.open {
+//          max-height: 100vh;
+//          top: 0;
+//          @include mq(med) {
+//            top: 15vh;
+//            max-height: 60vh;
+//          }
+//        }
+//
+//        .rd-search-item-selected {
+//          background-color: hsla(0 0% 90% / 1);
+//          a { color: black; }
+//        }
+//      }
+//    }
+//    .rd-popular-links-container {
+//      width: 100%;
+//      display: flex;
+//      flex-direction: column;
+//      @include mq(small) {
+//        flex-direction: row;
+//        > * { width: 100%; }
+//      }
+//      .rd-popular-links {
+//        margin-top: 10px;
+//        > div {
+//          display: flex;
+//          flex-direction: row;
+//          align-items: center;
+//          h2 {
+//            display: inline-block;
+//            margin: 0;
+//            padding: 0;
+//            font-family: $font-family-heading;
+//            font-size: 18px;
+//          }
+//          > .mat-icon {
+//            font-size: 20px;
+//            height: 20px;
+//            width: 20px;
+//            margin-right: 4px;
+//            color: #666;
+//          }
+//        }
+//        ul {
+//          margin: 0;
+//          padding: 0 24px 24px;
+//          max-height: 60vh;
+//          overflow-y: scroll;
+//          li {
+//            > a {
+//              cursor: pointer;
+//              display: flex;
+//              align-items: center;
+//              padding: 6px 0;
+//              font-size: 16px;
+//              color: hsla(0 0% 50% / 1);
+//              font-weight: $font-weight-regular;
+//              transition: color 200ms ease-out;
+//              &.rd-my-location svg { margin: 0 5px 0 -23px; height: 12px;}
+//              span:last-child { font-size: 11px; }
+//              &:hover { color: hsla(0 0% 0% / 1); }
+//            }
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
 
 // Results: List view
 // -------------------------------------------------------------------------
@@ -922,7 +924,7 @@ rd-footer {
 .rd-filter-dialog {
   width: 100vw;
   @include mq(med) { width: clamp(38vw, 62vw, 480px)}
-  .mat-dialog-container {
+  .mat-mdc-dialog-container {
     position: relative;
     width: 100%;
     border-radius: 12px;

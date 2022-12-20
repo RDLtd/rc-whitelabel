@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, Inject, ViewChild} from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConfig } from '../../app.config';
-import {MatLegacySelectionList as MatSelectionList} from '@angular/material/legacy-list';
+import {MatSelectionList} from '@angular/material/list';
 
 @Component({
   selector: 'rd-filter-options-dialog',
