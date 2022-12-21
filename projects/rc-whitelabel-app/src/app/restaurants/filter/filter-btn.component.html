@@ -1,15 +1,16 @@
-<div class="rd-filter-btn" [class.scale-in-center]="showFilterOptions">
+<div class="rd-filter-btn-wrapper" [class.scale-in-center]="showFilterOptions">
 
   <button
     *ngIf="!filterOn && (resultsLoaded$ | async)"
     mat-raised-button
+    class="rd-filter-btn"
     (click)="openFilterOptions()">
     {{ config.i18n['Sort_filter'] }}
     <mat-icon>filter_list</mat-icon>
   </button>
 
   <button
-    class="rd-btn-clear"
+    class="rd-filter-btn rd-btn-clear"
     *ngIf="filterOn && (resultsLoaded$ | async)"
     mat-raised-button
     [title]="searchFilter"

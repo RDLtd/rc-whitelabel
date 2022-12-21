@@ -22,6 +22,8 @@ $rc-whitelabel-app-theme: mat.define-light-theme((
 ));
 
 @include mat.all-component-themes($rc-whitelabel-app-theme);
+@include mat.all-component-typographies();
+
 
 // Brand theming
 // Referencing CSS vars that have been added to index.html
@@ -135,13 +137,7 @@ a, a:active, a:focus {
   color: $clr-text;
   margin-inline: .25rem 0.1rem;
 }
-// Mat overrides for search form
-.mat-form-field.mat-focused .mat-form-field-ripple {
-  background-color: $clr-accent !important;
-}
-.mat-form-field.mat-focused .mat-form-field-label {
-  color: $clr-accent !important;
-}
+
 // Loading component
 // -------------------------------------------------------------------------
 rd-loader {
@@ -231,17 +227,12 @@ rd-header {
       display: inline-block;
     }
   }
-  .mat-button {
-    padding-inline: .5rem;
+  .rd-btn-nav {
     font-weight: $font-weight-regular;
     font-size: 1.1rem;
-    letter-spacing: 1px;
     min-width: 0;
-    color: currentColor;
-    background-color: inherit;
-    @include mq(med) {
-      .mat-icon { margin-right: .25rem; }
-    }
+    color: currentColor !important;
+    // See Material overrides
   }
 }
 main {
@@ -309,165 +300,127 @@ rd-footer {
 
 // Search form dialog
 // -------------------------------------------------------------------------
-.rd-dialog-backdrop {
-  //backdrop-filter: blur(20px);
-  background-color: $clr-backdrop;
-}
-// the class passed to dialog on init
-.rd-search-dialog {
+.rd-dialog-backdrop { background-color: $clr-backdrop; }
+// dialog panelClass
+.rd-dialog-search {
+  width: min(100vw, 480px);
   @include mq(med) { transform: translateY(10vh); }
-  .mat-dialog-container {
-    background-color: white;
-    border-radius: 0;
-    padding: 0;
-    max-height: 100vh;
-    overflow-x: hidden;
-    @include mq(med) {
-      border-radius: 12px;
-    }
-  }
-  .mat-dialog-content {
-    max-height: 100vh;
-    height: 100vh;
-    @include mq(med) {
-      height: auto;
-    }
-  }
 }
-.rd-search-form-container {
-  width: min(100vw, 640px);
-  .rd-search-content {
-    opacity: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 1.6rem;
-    overflow-x: hidden;
-    transition: all .3s ease-out;
-    .rd-search-autofill-container {
-      form mat-label {
+.rd-search-form-container {padding-top: 2rem;}
+.rd-search-content {
+
+  .rd-search-autofill-container {
+    .rd-search-input { width: 100%; }
+    .rd-search-autofill {
+      height: auto;
+      max-height: 0;
+      transition:max-height 0.3s ease-out;
+      overflow: auto;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      li {
+        border-top: 1px solid #eee;
+        border-radius: 6px;
+      }
+      li:first-child { border-top: 0; }
+      li > a {
         display: flex;
-        .mat-icon {
-          height: 20px;
-          width: 20px;
+        align-items: center;
+        width: 100%;
+        padding: .75rem .5rem;
+        font-size: 1rem;
+        color: $clr-text;
+        transition: all .3s ease-out;
+        outline: none;
+        cursor: pointer;
+        .rd-autofill-icon {
+          width: 22px;
+          height: 22px;
           font-size: 20px;
           margin-right: 4px;
+          color: lightgray;
         }
+        &:focus { background: #eee; }
       }
-      .mat-form-field {
-        margin-top: 2rem;
-        font-size: 18px;
-        line-height: 20px;
-        width: 100%;
+      &.open {
+        max-height: 100vh;
+        top: 0;
         @include mq(med) {
-          margin-top: 1rem;
-        }
-      }
-      .mat-error {
-        margin-block: 1rem;
-        color: $clr-text;
-      }
-      .rd-search-autofill {
-        display: block;
-        height: auto;
-        max-height: 0;
-        transition:max-height 0.3s ease-out;
-        overflow: auto;
-        width: 100%;
-        margin: .75rem 0 0;
-        padding: 0;
-        li {
-          border-top: 1px solid #eee;
-          border-radius: 6px;
-        }
-        li:first-child { border-top: 0; }
-        li > a {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          padding: 16px 8px;
-          font-size: 16px;
-          color: $clr-text;
-          transition: all .3s ease-out;
-          outline: none;
-          cursor: pointer;
-          .mat-icon {
-            width: 22px;
-            height: 22px;
-            font-size: 20px;
-            margin-right: 4px;
-            color: lightgray;
-          }
-          &:focus { background: #eee; }
-        }
-        &.open {
-          max-height: 100vh;
-          top: 0;
-          @include mq(med) {
-            top: 15vh;
-            max-height: 60vh;
-          }
-        }
-
-        .rd-search-item-selected {
-          background-color: hsla(0 0% 90% / 1);
-          a { color: black; }
-        }
-      }
-    }
-    .rd-popular-links-container {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      @include mq(small) {
-        flex-direction: row;
-        > * { width: 100%; }
-      }
-      .rd-popular-links {
-        margin-top: 10px;
-        > div {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          h2 {
-            display: inline-block;
-            margin: 0;
-            padding: 0;
-            font-family: $font-family-heading;
-            font-size: 18px;
-          }
-          > .mat-icon {
-            font-size: 20px;
-            height: 20px;
-            width: 20px;
-            margin-right: 4px;
-            color: #666;
-          }
-        }
-        ul {
-          margin: 0;
-          padding: 0 24px 24px;
+          top: 15vh;
           max-height: 60vh;
-          overflow-y: scroll;
-          li {
-            > a {
-              cursor: pointer;
-              display: flex;
-              align-items: center;
-              padding: 6px 0;
-              font-size: 16px;
-              color: hsla(0 0% 50% / 1);
-              font-weight: $font-weight-regular;
-              transition: color 200ms ease-out;
-              &.rd-my-location svg { margin: 0 5px 0 -23px; height: 12px;}
-              span:last-child { font-size: 11px; }
-              &:hover { color: hsla(0 0% 0% / 1); }
-            }
-          }
         }
+      }
+
+      .rd-search-item-selected {
+        background-color: hsla(0 0% 90% / 1);
+        a { color: black; }
       }
     }
   }
+}
+.rd-popular-links-container { width: 100%; }
+.rd-popular-links {
+  margin-left: 1rem;
+  h2 {
+    font-family: $font-family-heading;
+    font-size: 1.125rem;
+    color: $clr-grey-900;
+    margin: 0 0 .25rem;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  li > a {
+    position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: .25rem 0;
+      font-size: 1rem;
+      color: $clr-text;
+      font-weight: $font-weight-regular;
+      transition: color 200ms ease-out;
+      &.rd-my-location svg {
+        position: absolute;
+        left: -1.25rem;
+        height: 1rem;
+      }
+      span:last-child { font-size: 11px; }
+      &:hover { color: hsla(0 0% 0% / 1); }
+  }
+
+
+  //  > .mat-icon {
+  //    font-size: 20px;
+  //    height: 20px;
+  //    width: 20px;
+  //    margin-right: 4px;
+  //    color: #666;
+  //  }
+  //}
+  //ul {
+  //  margin: 0;
+  //  padding: 0 24px 24px;
+  //  max-height: 60vh;
+  //  overflow-y: scroll;
+  //  li {
+  //    > a {
+  //      cursor: pointer;
+  //      display: flex;
+  //      align-items: center;
+  //      padding: 6px 0;
+  //      font-size: 16px;
+  //      color: hsla(0 0% 50% / 1);
+  //      font-weight: $font-weight-regular;
+  //      transition: color 200ms ease-out;
+  //      &.rd-my-location svg { margin: 0 5px 0 -23px; height: 12px;}
+  //      span:last-child { font-size: 11px; }
+  //      &:hover { color: hsla(0 0% 0% / 1); }
+  //    }
+  //  }
+  //}
 }
 
 // Results: List view
@@ -600,7 +553,6 @@ rd-footer {
     }
   }
 }
-
 .rd-load-more {
   position: relative;
   cursor: pointer;
@@ -879,7 +831,7 @@ rd-footer {
 
 // Cuisine Filters
 // -------------------------------------------------------------------------
-.rd-filter-btn {
+.rd-filter-btn-wrapper {
   z-index: 20;
   position: fixed;
   bottom: 24px; left: auto; right: auto;
@@ -890,26 +842,19 @@ rd-footer {
     width: auto;
     bottom: 64px; left: auto; right: 96px;
   }
-  .mat-raised-button {
+  .rd-filter-btn {
     margin: 0;
-    padding: 8px 20px;
+    padding: 24px 20px;
     border-radius: 32px;
     line-height: 40px;
     text-transform: uppercase;
     font-weight: $font-weight-regular;
-    background: $clr-cta;
-    color: white;
+    background: $clr-cta !important;
+    color: white !important;
     @include mat.elevation(10);
     &.rd-btn-clear { background-color: #000; }
   }
-  .mat-button-wrapper {
-    display: flex;
-    align-items: center;
-  }
-  .mat-icon { margin-left: 8px; }
 }
-// checkbox bgd color
-.mat-primary .mat-pseudo-checkbox-checked { background-color: $clr-cta;}
 .rd-filter-list-container {
   display: flex;
   flex-direction: column;
@@ -922,7 +867,7 @@ rd-footer {
 .rd-filter-dialog {
   width: 100vw;
   @include mq(med) { width: clamp(38vw, 62vw, 480px)}
-  .mat-dialog-container {
+  .mat-mdc-dialog-container {
     position: relative;
     width: 100%;
     border-radius: 12px;
@@ -930,7 +875,7 @@ rd-footer {
 }
 .rd-dialog-close {
   position: absolute !important;
-  top: 1rem; right: 1rem;
+  top: 0; right: 0;
   z-index: 100;
   color: gray;
 }
@@ -1005,4 +950,33 @@ rd-footer {
 }
 @keyframes spin {
   to { transform: scale(1) rotateZ(60deg); }
+}
+
+/**
+* MATERIAL COMPONENT OVERRIDES
+* -------------------------------------------------------
+ */
+.rd-btn-nav {
+  .mat-icon { margin-right: 0;}
+  @include mq(med) {
+    .mat-icon { margin-right: .25rem; }
+  }
+}
+// checkbox bgd color
+.mat-primary .mat-pseudo-checkbox-checked { background-color: $clr-cta;}
+
+.rd-dialog-search {
+  .mat-mdc-dialog-container {
+    .mdc-dialog__surface {
+      border-radius: 0;
+      @include mq(med) { border-radius: 12px; }
+    }
+    .mdc-dialog__content { padding: 1rem; }
+  }
+}
+.mdc-line-ripple::before, .mdc-line-ripple::after {
+  border-bottom-color: $clr-accent !important;
+}
+.rd-clr-accent {
+  color: $clr-accent !important;
 }

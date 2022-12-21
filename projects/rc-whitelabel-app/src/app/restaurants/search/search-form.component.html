@@ -1,7 +1,5 @@
 <mat-dialog-content>
-  <div
-    [class.loaded]="isLoaded"
-    class="rd-search-form-container">
+  <div [class.loaded]="isLoaded" class="rd-search-form-container">
 
     <rd-loader
       class="fill-accent"
@@ -9,18 +7,15 @@
       [loadText]="config.i18n['Loading']">
     </rd-loader>
 
-    <div class="rd-search-content"
-         [class.rd-show]="isLoaded && config.channelLoaded">
+    <div class="rd-search-content" [class.rd-show]="isLoaded && config.channelLoaded">
 
       <div class="rd-search-autofill-container">
 
         <!-- Search input form -->
         <form>
-          <mat-form-field floatLabel="never" appearance="standard">
-            <mat-label>
-              <mat-icon>search</mat-icon>
-              {{ config.i18n['Search'] }}
-            </mat-label>
+          <mat-form-field class="rd-search-input">
+            <mat-label class="rd-clr-accent">{{ config.i18n['Search'] }}</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
             <input
               #rdSearchInput
               name="searchString"
@@ -47,7 +42,7 @@
             <!-- Landmarks -->
             <a *ngSwitchCase="'location'"
                (click)="doGeoSearch(suggestion)">
-              <mat-icon class="rd-icon-location">{{ icons['location'] }}</mat-icon>
+              <mat-icon class="rd-autofill-icon rd-icon-location">{{ icons['location'] }}</mat-icon>
               {{ suggestion?.name }}
               <span class="rd-flex-spacer"></span>
               <span></span>
@@ -56,7 +51,7 @@
             <!-- Restaurants -->
             <a *ngSwitchCase="'restaurant'"
                (click)="viewRestaurantSpw(suggestion)">
-              <mat-icon class="rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
+              <mat-icon class="rd-autofill-icon rd-icon-restaurant">{{ icons['restaurant'] }}</mat-icon>
               {{ suggestion?.name }}
               <span class="rd-flex-spacer"></span>
               <span></span>
@@ -67,23 +62,17 @@
       </div>
 
       <!-- Popular searches -->
-      <div class="rd-popular-links-container"
-           [class.rd-invisible]="searchSuggestions.length">
+      <div class="rd-popular-links-container" [class.rd-invisible]="searchSuggestions.length">
 
-        <section class="rd-popular-links"
-                 *ngIf="(landmarks?.length || userPosition?.inRange) && channelConfig.showLandmarks">
-          <div>
-            <mat-icon class="rd-icon-location">{{ icons.location }}</mat-icon>
-            <h2>{{ config.i18n["Nearest_to"] }}</h2>
-          </div>
+        <section class="rd-popular-links" *ngIf="(landmarks?.length || userPosition?.inRange) && channelConfig.showLandmarks">
+          <h2>{{ config.i18n["Nearest_to"] }}</h2>
           <ul>
             <!-- User current location -->
             <li *ngIf="userPosition?.inRange">
               <a
                 class="rd-my-location"
-                (click)="doGeoSearch(
-                {latLng: userPosition?.lat + ',' + userPosition?.lng, name: 'my location'})">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
+                (click)="doGeoSearch({latLng: userPosition?.lat + ',' + userPosition?.lng, name: 'my location'})">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path d="M0 0h24v24H0z" fill="none"/>
                   <path
                     class="rd-icon-my-location"
