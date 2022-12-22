@@ -130,6 +130,7 @@ a, a:active, a:focus {
   fill: $clr-icon-location
 }
 .rd-fill-accent { fill: $clr-accent; }
+.rd-clr-accent { color: $clr-accent !important; }
 .rd-separator:after {
   display: inline-block;
   content: '|';
@@ -300,68 +301,64 @@ rd-footer {
 
 // Search form dialog
 // -------------------------------------------------------------------------
-.rd-dialog-backdrop { background-color: $clr-backdrop; }
-// dialog panelClass
-.rd-dialog-search {
+.rd-search {
   width: min(100vw, 480px);
-  @include mq(med) { transform: translateY(10vh); }
+  @include mq(med) { transform: translateY(15vh); }
 }
-.rd-search-form-container {padding-top: 2rem;}
-.rd-search-content {
+.rd-search-form-container {}
+.rd-search-content {}
+.rd-search-autofill-container {}
+.rd-search-input { width: 100%; }
+.rd-search-error { margin-top: -1rem;}
+.rd-search-autofill {
+  height: auto;
+  max-height: 0;
+  transition:max-height 0.3s ease-out;
+  overflow: auto;
+  width: 100%;
+  margin: -.5rem 0 0;
+  padding: 0 0 1rem 0;
+  li {
+    border-top: 1px solid $clr-grey-100;
+    border-radius: 6px;
+  }
+  li:first-child { border-top: 0; }
+  li > a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: .75rem .5rem;
+    font-size: 1rem;
+    color: $clr-text;
+    transition: all .3s ease-out;
+    outline: none;
+    cursor: pointer;
 
-  .rd-search-autofill-container {
-    .rd-search-input { width: 100%; }
-    .rd-search-autofill {
-      height: auto;
-      max-height: 0;
-      transition:max-height 0.3s ease-out;
-      overflow: auto;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      li {
-        border-top: 1px solid #eee;
-        border-radius: 6px;
-      }
-      li:first-child { border-top: 0; }
-      li > a {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: .75rem .5rem;
-        font-size: 1rem;
-        color: $clr-text;
-        transition: all .3s ease-out;
-        outline: none;
-        cursor: pointer;
-        .rd-autofill-icon {
-          width: 22px;
-          height: 22px;
-          font-size: 20px;
-          margin-right: 4px;
-          color: lightgray;
-        }
-        &:focus { background: #eee; }
-      }
-      &.open {
-        max-height: 100vh;
-        top: 0;
-        @include mq(med) {
-          top: 15vh;
-          max-height: 60vh;
-        }
-      }
-
-      .rd-search-item-selected {
-        background-color: hsla(0 0% 90% / 1);
-        a { color: black; }
-      }
+    .rd-autofill-icon {
+      width: 22px;
+      height: 22px;
+      font-size: 20px;
+      margin-right: 4px;
+      color: lightgray;
+    }
+    &:focus { background: #eee; }
+  }
+  &.open {
+    max-height: 100vh;
+    @include mq(med) {
+      max-height: 60vh;
     }
   }
+  .rd-search-item-selected {
+    background-color: $clr-grey-100;
+    a { color: black; }
+  }
 }
-.rd-popular-links-container { width: 100%; }
+.rd-popular-links-container {
+  width: 100%;
+  margin: 0 1rem 1rem 0.25rem;
+}
 .rd-popular-links {
-  margin-left: 1rem;
   h2 {
     font-family: $font-family-heading;
     font-size: 1.125rem;
@@ -369,7 +366,7 @@ rd-footer {
     margin: 0 0 .25rem;
   }
   ul {
-    margin: 0;
+    margin: 0 0 0 1.25rem;
     padding: 0;
   }
   li > a {
@@ -422,6 +419,7 @@ rd-footer {
   //  }
   //}
 }
+.rd-dialog-backdrop { background-color: $clr-backdrop; }
 
 // Results: List view
 // -------------------------------------------------------------------------
@@ -955,7 +953,7 @@ rd-footer {
 /**
 * MATERIAL COMPONENT OVERRIDES
 * -------------------------------------------------------
- */
+*/
 .rd-btn-nav {
   .mat-icon { margin-right: 0;}
   @include mq(med) {
@@ -963,20 +961,23 @@ rd-footer {
   }
 }
 // checkbox bgd color
-.mat-primary .mat-pseudo-checkbox-checked { background-color: $clr-cta;}
-
-.rd-dialog-search {
+.mat-primary .mat-pseudo-checkbox-checked {
+  background-color: $clr-cta;
+}
+.rd-search {
   .mat-mdc-dialog-container {
     .mdc-dialog__surface {
       border-radius: 0;
-      @include mq(med) { border-radius: 12px; }
+      padding: 1rem;
+      @include mq(med) {
+        border-radius: 12px;
+      }
     }
-    .mdc-dialog__content { padding: 1rem; }
+    .mdc-dialog__content { padding: 0; }
   }
 }
-.mdc-line-ripple::before, .mdc-line-ripple::after {
+.mdc-line-ripple::before,
+.mdc-line-ripple::after {
   border-bottom-color: $clr-accent !important;
 }
-.rd-clr-accent {
-  color: $clr-accent !important;
-}
+

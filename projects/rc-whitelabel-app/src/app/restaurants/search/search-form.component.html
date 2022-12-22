@@ -27,7 +27,7 @@
               placeholder="{{ channelConfig.searchPlaceholderTxt }}"
               tabindex="0">
           </mat-form-field>
-          <mat-error *ngIf="noSuggestions" @fadeIn>
+          <mat-error class="rd-search-error" *ngIf="noSuggestions" @fadeIn>
             {{ config.i18n["No_matching_search_results"] }}
           </mat-error>
         </form>
@@ -97,9 +97,9 @@
   </div>
 </mat-dialog-content>
 
-<button mat-icon-button
-        [mat-dialog-close]="false"
-        class="rd-dialog-close">
-  <mat-icon>close</mat-icon>
-</button>
+<!--<button mat-icon-button-->
+<!--        [mat-dialog-close]="false"-->
+<!--        class="rd-dialog-close">-->
+<!--  <mat-icon>close</mat-icon>-->
+<!--</button>-->
 
