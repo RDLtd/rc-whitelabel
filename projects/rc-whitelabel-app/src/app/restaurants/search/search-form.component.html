@@ -1,16 +1,12 @@
+<rd-loader
+  class="fill-accent"
+  [class.rd-hide]="isLoaded && config.channelLoaded"
+  [loadText]="config.i18n['Loading']">
+</rd-loader>
 <mat-dialog-content>
   <div [class.loaded]="isLoaded" class="rd-search-form-container">
-
-    <rd-loader
-      class="fill-accent"
-      [class.rd-hide]="isLoaded && config.channelLoaded"
-      [loadText]="config.i18n['Loading']">
-    </rd-loader>
-
     <div class="rd-search-content" [class.rd-show]="isLoaded && config.channelLoaded">
-
       <div class="rd-search-autofill-container">
-
         <!-- Search input form -->
         <form>
           <mat-form-field class="rd-search-input">
@@ -31,7 +27,6 @@
             {{ config.i18n["No_matching_search_results"] }}
           </mat-error>
         </form>
-
         <!--  Search Results -->
         <ul class="rd-search-autofill"
             [class.open]="!!rdSearchInput.value && !!searchSuggestions">
@@ -93,13 +88,10 @@
 
       </div>
     </div>
-
   </div>
 </mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button [mat-dialog-close]="null">DONE</button>
+</mat-dialog-actions>
 
-<!--<button mat-icon-button-->
-<!--        [mat-dialog-close]="false"-->
-<!--        class="rd-dialog-close">-->
-<!--  <mat-icon>close</mat-icon>-->
-<!--</button>-->
 

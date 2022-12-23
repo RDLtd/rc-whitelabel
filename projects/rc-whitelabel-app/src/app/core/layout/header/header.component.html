@@ -25,7 +25,7 @@
       *ngIf="isMapView"
       mat-button (click)="toggleView('list')"
       class="rd-btn-nav">
-      <mat-icon>list_alt</mat-icon>
+      <mat-icon class="rd-btn-nav-icon">list_alt</mat-icon>
       <span class="hide-small">LIST</span>
     </button>
     <button
@@ -33,7 +33,7 @@
       mat-button
       (click)="toggleView('map')"
       class="rd-btn-nav">
-      <mat-icon>fmd_good</mat-icon>
+      <mat-icon class="rd-btn-nav-icon">fmd_good</mat-icon>
       <span class="hide-small">MAP</span>
     </button>
   </ng-container>
@@ -43,7 +43,7 @@
     (click)="openSearchForm()"
     class="rd-btn-nav"
     @fadeIn>
-    <mat-icon>search</mat-icon>
+    <mat-icon class="rd-btn-nav-icon">search</mat-icon>
     <span class="hide-small">{{ config.i18n.Search }}</span>
   </button>
 </ng-container>

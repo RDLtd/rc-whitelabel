@@ -10,14 +10,14 @@ $rc-whitelabel-app-primary: mat.define-palette(mat.$deep-orange-palette, A200);
 $rc-whitelabel-app-accent: mat.define-palette(mat.$orange-palette, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$rc-whitelabel-app-warn: mat.define-palette(mat.$deep-orange-palette);
+// $rc-whitelabel-app-warn: mat.define-palette(mat.$deep-orange-palette);
 
 // Create a custom theme object
 $rc-whitelabel-app-theme: mat.define-light-theme((
   color: (
     primary: $rc-whitelabel-app-primary,
     accent: $rc-whitelabel-app-accent,
-    warn: $rc-whitelabel-app-warn,
+    //warn: $rc-whitelabel-app-warn,
   )
 ));
 
@@ -62,13 +62,6 @@ $breakpoints: (
     @content;
   }
 };
-@function set-text-color($color) {
-  @if (lightness($color) > 50) {
-    @return #000000;
-  } @else {
-    @return #ffffff;
-  }
-}
 
 // Typography vars
 $font-family-default: 'Roboto', sans-serif;
@@ -131,7 +124,7 @@ a, a:active, a:focus {
 }
 .rd-fill-accent { fill: $clr-accent; }
 .rd-clr-accent { color: $clr-accent !important; }
-.rd-separator:after {
+.rd-separator::after {
   display: inline-block;
   content: '|';
   font-size: 1rem;
@@ -233,7 +226,12 @@ rd-header {
     font-size: 1.1rem;
     min-width: 0;
     color: currentColor !important;
-    // See Material overrides
+  }
+  .rd-btn-nav-icon {
+    margin-right: 0 !important;
+    @include mq(med) {
+      margin-right: .25rem !important;
+    }
   }
 }
 main {
@@ -303,11 +301,16 @@ rd-footer {
 // -------------------------------------------------------------------------
 .rd-search {
   width: min(100vw, 480px);
-  @include mq(med) { transform: translateY(15vh); }
+  height: 100vh;
+  overflow-y: hidden;
+  @include mq(med) {
+    height: auto;
+    transform: translateY(15vh);
+  }
 }
-.rd-search-form-container {}
-.rd-search-content {}
-.rd-search-autofill-container {}
+.rd-search-form-container { background-color: blue;}
+.rd-search-content { background-color: green;}
+.rd-search-autofill-container {background-color: red;}
 .rd-search-input { width: 100%; }
 .rd-search-error { margin-top: -1rem;}
 .rd-search-autofill {
@@ -333,7 +336,6 @@ rd-footer {
     transition: all .3s ease-out;
     outline: none;
     cursor: pointer;
-
     .rd-autofill-icon {
       width: 22px;
       height: 22px;
@@ -385,39 +387,8 @@ rd-footer {
         height: 1rem;
       }
       span:last-child { font-size: 11px; }
-      &:hover { color: hsla(0 0% 0% / 1); }
+      &:hover { color: $clr-grey-100; }
   }
-
-
-  //  > .mat-icon {
-  //    font-size: 20px;
-  //    height: 20px;
-  //    width: 20px;
-  //    margin-right: 4px;
-  //    color: #666;
-  //  }
-  //}
-  //ul {
-  //  margin: 0;
-  //  padding: 0 24px 24px;
-  //  max-height: 60vh;
-  //  overflow-y: scroll;
-  //  li {
-  //    > a {
-  //      cursor: pointer;
-  //      display: flex;
-  //      align-items: center;
-  //      padding: 6px 0;
-  //      font-size: 16px;
-  //      color: hsla(0 0% 50% / 1);
-  //      font-weight: $font-weight-regular;
-  //      transition: color 200ms ease-out;
-  //      &.rd-my-location svg { margin: 0 5px 0 -23px; height: 12px;}
-  //      span:last-child { font-size: 11px; }
-  //      &:hover { color: hsla(0 0% 0% / 1); }
-  //    }
-  //  }
-  //}
 }
 .rd-dialog-backdrop { background-color: $clr-backdrop; }
 
@@ -495,19 +466,6 @@ rd-footer {
         line-height: 20px;
         margin: 0 0 12px;
         padding: 0;
-      }
-      .mat-chip-list-wrapper { margin: 0; }
-      .mat-chip {
-        font-size: 10px;
-        text-transform: uppercase;
-        margin: 0 3px 3px 0;
-        padding-inline: .6rem;
-        background-color: $clr-offers;
-        color: white;
-      }
-      .mat-standard-chip {
-        min-height: 24px;
-        line-height: 1;
       }
     }
     .rd-restaurant-img {
@@ -672,9 +630,7 @@ rd-footer {
       color: white;
       font-size: 0.75rem;
     }
-
   }
-
   @include mq(med) {
     height: calc(100vh - #{$layout-header-height} - 6 * #{$container-padding});
   }
@@ -806,21 +762,19 @@ rd-footer {
   top: 1rem;
   left: .5rem;
   width: auto;
-  display: flex;
-  justify-content: center;
-  // align-items: center;
   background-color: $clr-offers;
   border-radius: 1rem;
-  padding: 5px 10px 4px 6px;
+  padding-inline: .5rem 1rem;
   font-size: .9rem !important;
+  font-weight: normal;
   color: white;
-  line-height: 1 !important;
+  line-height: 2rem !important;
   @include mat.elevation(5);
-  &:before {
+  &::before {
     content: '★';
-    margin-right: .125rem;
+    margin-right: .25rem;
     color: currentColor;
-    font-size: .8rem !important;
+    font-size: 1rem !important;
   }
   &.map {
     top: .5rem;
@@ -840,18 +794,17 @@ rd-footer {
     width: auto;
     bottom: 64px; left: auto; right: 96px;
   }
-  .rd-filter-btn {
-    margin: 0;
-    padding: 24px 20px;
-    border-radius: 32px;
-    line-height: 40px;
-    text-transform: uppercase;
-    font-weight: $font-weight-regular;
-    background: $clr-cta !important;
-    color: white !important;
-    @include mat.elevation(10);
-    &.rd-btn-clear { background-color: #000; }
-  }
+}
+.rd-filter-btn {
+  margin: 0;
+  padding: 1.25rem 1rem !important;
+  border-radius: 32px !important;
+  text-transform: uppercase;
+  font-weight: $font-weight-regular;
+  background: $clr-cta !important;
+  color: white !important;
+  @include mat.elevation(10);
+  &.rd-btn-clear { background-color: #000 !important; }
 }
 .rd-filter-list-container {
   display: flex;
@@ -954,30 +907,24 @@ rd-footer {
 * MATERIAL COMPONENT OVERRIDES
 * -------------------------------------------------------
 */
-.rd-btn-nav {
-  .mat-icon { margin-right: 0;}
-  @include mq(med) {
-    .mat-icon { margin-right: .25rem; }
-  }
-}
 // checkbox bgd color
-.mat-primary .mat-pseudo-checkbox-checked {
-  background-color: $clr-cta;
-}
-.rd-search {
-  .mat-mdc-dialog-container {
-    .mdc-dialog__surface {
-      border-radius: 0;
-      padding: 1rem;
-      @include mq(med) {
-        border-radius: 12px;
-      }
-    }
-    .mdc-dialog__content { padding: 0; }
-  }
+.mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+  background-color: $clr-accent !important;
+  border-color: $clr-accent !important;
 }
 .mdc-line-ripple::before,
 .mdc-line-ripple::after {
   border-bottom-color: $clr-accent !important;
+}
+.mdc-dialog__content {
+  max-height: 85vh !important;
+  padding: 0 !important;
+}
+.mdc-dialog__surface {
+  border-radius: 0 !important;
+  padding: 1rem;
+  @include mq(med) {
+    border-radius: 12px !important;
+  }
 }
 
