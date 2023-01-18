@@ -1,9 +1,11 @@
-<rd-loader
-  class="fill-accent"
-  [class.rd-hide]="isLoaded && config.channelLoaded"
-  [loadText]="config.i18n['Loading']">
-</rd-loader>
 <mat-dialog-content>
+
+  <rd-loader
+    class="fill-accent"
+    [class.rd-hide]="isLoaded && config.channelLoaded"
+    [loadText]="config.i18n['Loading']">
+  </rd-loader>
+
   <div [class.loaded]="isLoaded" class="rd-search-form-container">
     <div class="rd-search-content" [class.rd-show]="isLoaded && config.channelLoaded">
       <div class="rd-search-autofill-container">
@@ -91,7 +93,7 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-stroked-button [mat-dialog-close]="null">DONE</button>
+  <button mat-stroked-button [mat-dialog-close]="null">CLOSE</button>
 </mat-dialog-actions>
 
 

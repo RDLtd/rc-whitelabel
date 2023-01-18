@@ -308,9 +308,9 @@ rd-footer {
     transform: translateY(15vh);
   }
 }
-.rd-search-form-container { background-color: blue;}
-.rd-search-content { background-color: green;}
-.rd-search-autofill-container {background-color: red;}
+.rd-search-form-container { }
+.rd-search-content { }
+.rd-search-autofill-container { }
 .rd-search-input { width: 100%; }
 .rd-search-error { margin-top: -1rem;}
 .rd-search-autofill {
@@ -387,7 +387,7 @@ rd-footer {
         height: 1rem;
       }
       span:last-child { font-size: 11px; }
-      &:hover { color: $clr-grey-100; }
+      &:hover { color: $clr-grey-900; }
   }
 }
 .rd-dialog-backdrop { background-color: $clr-backdrop; }
