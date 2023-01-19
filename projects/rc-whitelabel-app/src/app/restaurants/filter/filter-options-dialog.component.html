@@ -1,4 +1,5 @@
-<h1 mat-dialog-title>{{ config.i18n["Filter_by_cuisine"] }} </h1>
+<!--suppress ALL -->
+<h1 mat-dialog-title>{{ config.i18n["Filter_by_cuisine"] }}</h1>
 <div mat-dialog-content>
   <div class="rd-filter-list-container">
     <section class="rd-filter-list" *ngIf="data['cuisines'].length > 1">
@@ -13,10 +14,10 @@
     </section>
   </div>
 </div>
-<mat-dialog-actions class="rd-flex-end">
+<mat-dialog-actions align="end">
   <button mat-button [mat-dialog-close]="null">CANCEL</button>
   <button
-    mat-flat-button
+    mat-stroked-button
     class="rd-cta"
-    [mat-dialog-close]="cuisineSection?.selectedOptions?.selected">APPLY FILTER</button>
+    [mat-dialog-close]="cuisineSection?.selectedOptions?.selected">FILTER</button>
 </mat-dialog-actions>

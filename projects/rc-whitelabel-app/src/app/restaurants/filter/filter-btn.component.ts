@@ -90,7 +90,7 @@ export class FilterBtnComponent implements OnInit {
     }
     this.router.navigate(
       ['/restaurants', this.view, `${this.geoTarget.lat},${this.geoTarget.lng}`],
-      { queryParams: { label: this.geoTarget.label }})
+      { queryParams: { label: this.geoTarget.label }}).catch((error => console.log(error)));
   }
 
 }

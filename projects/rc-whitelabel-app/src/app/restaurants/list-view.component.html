@@ -20,7 +20,7 @@
         </span>
         <span class="rd-flex-spacer"></span>
         <ng-container *ngIf="restaurant?.distance">
-          <mat-icon class="rd-icon-my-location">my_location</mat-icon>&nbsp;
+          <mat-icon class="rd-icon-my-location rd-icon-12">my_location</mat-icon>&nbsp;
           <span *ngIf="restaurant?.distance <= 0.5" class="rd-distance">
             {{ restaurant?.distance * 1000 | number: '1.0-0' }} m
           </span>

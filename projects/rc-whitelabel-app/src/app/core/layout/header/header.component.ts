@@ -76,7 +76,7 @@ export class HeaderComponent implements OnInit {
     console.log(this.router.url);
     if(this.router.url === '/restaurants'){ return; }
     this.restService.resetAll();
-    this.router.navigateByUrl('/restaurants');
+    this.router.navigateByUrl('/restaurants').catch((error => console.log(error)));
   }
 }
 

@@ -334,7 +334,7 @@ export class RestaurantsService {
       maxHeight: '100vh',
       maxWidth: '100vw',
       backdropClass: 'rd-dialog-backdrop',
-      panelClass: 'rd-search-dialog'
+      panelClass: 'rd-search'
     });
   }
 }

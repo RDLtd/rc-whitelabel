@@ -47,12 +47,6 @@ export class AppConfig {
    */
   public maxUserDistance = 15;
 
-  // Number of restaurant returned in each batch
-  public resultsBatchTotal = 8;
-
-  // How many cuisines to display as quick links
-  public maxTopCuisines = 10;
-
   // Use browser settings
   public language = window.navigator.language.substr(0, 2) ?? 'en';
   public channel!: Channel;

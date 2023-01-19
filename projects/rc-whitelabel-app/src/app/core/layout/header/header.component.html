@@ -2,7 +2,7 @@
 <a [title]="config.channel.name" (click)="reset()">
   <img
     class="rd-logo"
-    [src]="config.channel.brand?.imgLogo"
+    [src]="config.channel.brand.imgLogo"
     alt="Logo">
 </a>
 <a routerLink="" class="rd-logo" *ngIf="!!config.channel.rcLogo">
@@ -21,12 +21,19 @@
 <ng-container *ngIf="showSearchOption">
 
   <ng-container *ngIf="showViews">
-    <button *ngIf="isMapView" mat-button (click)="toggleView('list')">
-      <mat-icon>list_alt</mat-icon>
+    <button
+      *ngIf="isMapView"
+      mat-button (click)="toggleView('list')"
+      class="rd-btn-nav">
+      <mat-icon class="rd-btn-nav-icon">list_alt</mat-icon>
       <span class="hide-small">LIST</span>
     </button>
-    <button *ngIf="!isMapView" mat-button (click)="toggleView('map')">
-      <mat-icon>fmd_good</mat-icon>
+    <button
+      *ngIf="!isMapView"
+      mat-button
+      (click)="toggleView('map')"
+      class="rd-btn-nav">
+      <mat-icon class="rd-btn-nav-icon">fmd_good</mat-icon>
       <span class="hide-small">MAP</span>
     </button>
   </ng-container>
@@ -34,8 +41,9 @@
   <button
     mat-button
     (click)="openSearchForm()"
+    class="rd-btn-nav"
     @fadeIn>
-    <mat-icon>search</mat-icon>
+    <mat-icon class="rd-btn-nav-icon">search</mat-icon>
     <span class="hide-small">{{ config.i18n.Search }}</span>
   </button>
 </ng-container>
