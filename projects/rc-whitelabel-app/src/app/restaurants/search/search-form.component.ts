@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import { ApiService } from '../../core/api.service';
 import { LocalStorageService } from '../../core/local-storage.service';
 import { DataService } from '../../core/data.service';
@@ -82,6 +82,33 @@ export class SearchFormComponent implements OnInit {
     showCuisines: false,
     searchPlaceholderTxt: 'Type a location, postcode or restaurant name',
     noResultsTxt: 'No matches'
+  };
+
+  // ks 230123 some cheat stuff for testing...
+  @HostListener('window:keydown', ['$event'])
+  handleKeyDown($event: KeyboardEvent): void {
+    if (($event.ctrlKey || $event.metaKey) && $event.key === 's') {
+      console.log('Search');
+      // @ts-ignore
+      this.data.loadSearchRestaurants(document.getElementById('searchInput').value)
+        .then((res: any) => {
+          console.log(res);
+        })
+        .catch((error: Error) => {
+          console.log(`ERROR: ${error}`);
+        });
+    }
+    if (($event.ctrlKey || $event.metaKey) && $event.key === 'q') {
+      console.log('Quick Search');
+      // @ts-ignore
+      this.data.loadQuickSearchRestaurants(document.getElementById('searchInput').value)
+        .then((res: any) => {
+          console.log(res);
+        })
+        .catch((error: Error) => {
+          console.log(`ERROR: ${error}`);
+        });
+    }
   }
 
   constructor(
@@ -137,7 +164,7 @@ export class SearchFormComponent implements OnInit {
       itemsTotal = this.searchSuggestions.length;
 
       // Is it a key we're interested in?
-      if(this.listNavKeys.includes(event.which)) {
+      if (this.listNavKeys.includes(event.which)) {
         switch (event.which) {
           // arrow-down, arrow-right, tab
           case 40:
@@ -168,14 +195,14 @@ export class SearchFormComponent implements OnInit {
       }
 
       // Are there any suggestion items?
-      if(itemsList.length > 0) {
+      if (itemsList.length > 0) {
 
         // set the targets
         itemSelected = itemsList[itemIndex];
         itemTarget = itemSelected.querySelector('a');
 
         // clear the last selection
-        if (!!lastItem) { lastItem.classList.remove('rd-search-item-selected') }
+        if (!!lastItem) { lastItem.classList.remove('rd-search-item-selected'); }
 
         // highlight selected item
         itemSelected.classList.add('rd-search-item-selected');
@@ -240,7 +267,7 @@ export class SearchFormComponent implements OnInit {
         this.landmarks.forEach((item: any) => {
           // record the match position
           // lower number = higher relevancy
-          matchPosition = item.channel_landmark_name.toUpperCase().search(regex)
+          matchPosition = item.channel_landmark_name.toUpperCase().search(regex);
           if (matchPosition >= 0) {
             this.searchSuggestions.push({
               name: item.channel_landmark_name,
@@ -275,7 +302,7 @@ export class SearchFormComponent implements OnInit {
         return a.index - b.index;
       });
 
-      if(this.maxSuggestions) { this.searchSuggestions.splice(this.maxSuggestions); }
+      if (this.maxSuggestions) { this.searchSuggestions.splice(this.maxSuggestions); }
       this.noSuggestions = this.searchSuggestions.length === 0;
       this.searchItemsCount = this.searchSuggestions.length;
 
@@ -309,7 +336,7 @@ export class SearchFormComponent implements OnInit {
   viewRecentlyViewed(restaurant: any): void {
     console.log('recent', restaurant);
     this.viewRestaurantSpw(restaurant);
-    this.searchReset()
+    this.searchReset();
   }
 
   viewRestaurantSpw(restaurant: any): void {
@@ -326,7 +353,7 @@ export class SearchFormComponent implements OnInit {
     this.ga.eventEmitter(
       'page_view_spw',
       'search_recently_viewed',
-      'open_spw', `spw/${restName.replace(/\s/g , "-")}`,
+      'open_spw', `spw/${restName.replace(/\s/g , '-')}`,
       0);
     window.open(restaurant.spw || restaurant.restaurant_spw_url, '_blank');
     this.closeSearchForm();

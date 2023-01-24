@@ -30,7 +30,7 @@ export class DataService {
       await this.api.getChannelByDomain(domain)
         .toPromise()
         .then((res: any) => {
-          if(!res) { reject('Failed to load channel config!!'); }
+          if (!res) { reject('Failed to load channel config!!'); }
           resolve(res);
         })
         .catch((error: any) => console.log(error));
@@ -44,7 +44,7 @@ export class DataService {
       await this.api.getChannelLanguage()
         .toPromise()
         .then((res: any) => {
-          if(!res) { reject('Unable to load language!!'); }
+          if (!res) { reject('Unable to load language!!'); }
           resolve(res.language[0]);
         })
         .catch((error: any) => console.log(error));
@@ -54,25 +54,28 @@ export class DataService {
   /**
    * Get channel configuration
    */
-  loadChannelSettings(): Promise <any> {
-    return new Promise(async (resolve, reject) => {
-      await this.api.getChannelSettings()
-        .toPromise()
-        .then((data: any) => {
-          if(!data){ reject('Failed to load channel settings!!')}
-          console.log('Channel settings loaded', data);
-          resolve(data);
-        })
-        .catch((error: any) => console.log(error));
-    });
-  }
+  // ks 240123 commented out - no usages
+  // loadChannelSettings(): Promise <any> {
+  //   return new Promise(async (resolve, reject) => {
+  //     await this.api.getChannelSettings()
+  //       .toPromise()
+  //       .then((data: any) => {
+  //         if (!data){ reject('Failed to load channel settings!!'); }
+  //         console.log('Channel settings loaded', data);
+  //         resolve(data);
+  //       })
+  //       .catch((error: any) => console.log(error));
+  //   });
+  // }
 
-  /**
-   * Get summarised results of search query
-   * @param lat
-   * @param lng
-   * @param boundary
-   */
+  //   ks 230123 converted to other style comment to avoid linter error
+  //   **
+  //  * Get summarised results of search query
+  //  * @param lat
+  //  * @param lng
+  //  * @param boundary
+  //  */
+
   loadResultsSummary(
     lat = +this.config.channel.latitude.toFixed(6),
     lng = +this.config.channel.longitude.toFixed(6),
@@ -81,7 +84,7 @@ export class DataService {
     // Do we have a cache?
     if (this.summaryCache.length > 0) {
       // Check cache for this latLng?
-      let cachedData =
+      const cachedData =
         this.summaryCache.find(element => element.latLng === `${lat},${lng}`);
       if (cachedData) {
         this.summarisedResults = cachedData.data;
@@ -95,7 +98,7 @@ export class DataService {
       await this.api.getRestaurantsSummary(lat, lng, boundary)
         .toPromise()
         .then((data: any) => {
-          if(!data) { reject('Failed to load restaurant summary!!')}
+          if (!data) { reject('Failed to load restaurant summary!!'); }
           this.summarisedResults = data;
           // Add to cache
           this.summaryCache.push({
@@ -127,10 +130,34 @@ export class DataService {
       await this.api.getFeaturedRestaurants()
         .toPromise()
         .then((data: any) => {
-          if(!data) { reject('No featured restaurants defined!!'); }
+          if (!data) { reject('No featured restaurants defined!!'); }
           resolve(data);
         })
-        .catch((error: any) => console.log(error))
+        .catch((error: any) => console.log(error));
+    });
+  }
+
+  loadSearchRestaurants(searchText: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      await this.api.getSearchRestaurants(searchText)
+        .toPromise()
+        .then((data: any) => {
+          if (!data) { reject('No search matches found!!'); }
+          resolve(data);
+        })
+        .catch((error: any) => console.log(error));
+    });
+  }
+
+  loadQuickSearchRestaurants(searchText: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      await this.api.getQuickSearchRestaurants(searchText)
+        .toPromise()
+        .then((data: any) => {
+          if (!data) { reject('No search matches found!!'); }
+          resolve(data);
+        })
+        .catch((error: any) => console.log(error));
     });
   }
 

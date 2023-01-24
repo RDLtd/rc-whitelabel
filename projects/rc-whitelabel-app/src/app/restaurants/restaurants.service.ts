@@ -30,7 +30,7 @@ export class RestaurantsService {
     label: string | null;
     lat: number;
     lng: number;
-  }
+  };
 
   cuisines?: any[] = [];
   features?: any[];
@@ -64,7 +64,7 @@ export class RestaurantsService {
     this.ga.eventEmitter(
       'page_view_spw',
       cat,
-      'open_spw', `spw/${restaurant.restaurant_name.replace(/\s/g , "-")}`,
+      'open_spw', `spw/${restaurant.restaurant_name.replace(/\s/g , '-')}`,
       0);
     window.open(restaurant.restaurant_spw_url, '_target');
   }
@@ -95,7 +95,7 @@ export class RestaurantsService {
     return this.geoTarget.label;
   }
   get geoCoords(): string {
-    if(this.geoTarget.lat === undefined) {
+    if (this.geoTarget.lat === undefined) {
       return `${this.config.channel.latitude},${this.config.channel.longitude}`;
     }
     return `${this.geoTarget.lat},${this.geoTarget.lng}`;
@@ -166,13 +166,14 @@ export class RestaurantsService {
       });
   }
 
-  /**
-   * A summary of the available restaurants to
-   * a channel or filtered channel
-   * @param lat
-   * @param lng
-   * @param boundary
-   */
+
+  //   ks 230123 converted to other style comment to avoid linter error
+  //   **
+  //  * A summary of the available restaurants to a channel or filtered channel
+  //  * @param lat
+  //  * @param lng
+  //  * @param boundary
+  //  */
   loadSummarisedResults(
     lat: number = this.params.lat,
     lng: number = this.params.lng,
@@ -196,7 +197,7 @@ export class RestaurantsService {
         if (!!this.params.filter) {
           let cuisineCount = 0;
           this.cuisines?.forEach((obj: any) => {
-            if(this.params.filterText.includes(obj.Cuisine)) {
+            if (this.params.filterText.includes(obj.Cuisine)) {
               // console.log(`Add ${obj.Count}`);
               cuisineCount += obj.Count;
             }
@@ -207,12 +208,12 @@ export class RestaurantsService {
       .catch((error) => console.log(`ERROR: ${error}`));
   }
 
-  /**
-   * Add a batch (defined by offset = limit) to
-   * the results array
-   * @param params
-   * @param initialLoad
-   */
+  // /**
+  //  * Add a batch (defined by offset = limit) to
+  //  * the results array
+  //  * @param params
+  //  * @param initialLoad
+  //  */
   loadRestaurantBatch(
     params: any = {},
     initialLoad: boolean = false): void {
@@ -275,7 +276,7 @@ export class RestaurantsService {
 
     this.data.loadRestaurantResults(this.params)
       .then((res) => {
-        if(res === null) {
+        if (res === null) {
           throw new Error(`No restaurants returned within ${this.params.boundary}km of geocode`);
         }
         // Is this just a preload call
@@ -324,13 +325,13 @@ export class RestaurantsService {
     if (this.restaurantsArray.length < this.totalResults) {
       this.loadRestaurants({ offset: this.restaurantsArray.length }, true);
     } else {
-      console.log(`All ${this.totalResults} results loaded`)
+      console.log(`All ${this.totalResults} results loaded`);
     }
   }
 
   openSearchForm(): void {
     this.dialog.open(SearchFormComponent, {
-      position: {'top': '0'},
+      position: {top: '0'},
       maxHeight: '100vh',
       maxWidth: '100vw',
       backdropClass: 'rd-dialog-backdrop',

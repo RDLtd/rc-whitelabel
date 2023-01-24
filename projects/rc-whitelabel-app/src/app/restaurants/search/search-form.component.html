@@ -16,6 +16,7 @@
             <mat-icon matPrefix>search</mat-icon>
             <input
               #rdSearchInput
+              id="searchInput"
               name="searchString"
               matInput
               (keyup)="getAutoSuggestions(rdSearchInput.value)"
