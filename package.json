@@ -7,8 +7,8 @@
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
+    "apptiser": "npm run cert & ng serve --port 52194",
     "rdl": "npm run cert & ng serve --port 54747",
-    "camc": "ng serve --port 8006",
     "ssl": "npm run cert & ng serve --port",
     "cert": "mkdir -p ./tls & mkcert -cert-file ./tls/localhost-cert.pem -key-file ./tls/localhost-key.pem -ecdsa localhost 127.0.0.1 ::1",
     "build": "ng build",

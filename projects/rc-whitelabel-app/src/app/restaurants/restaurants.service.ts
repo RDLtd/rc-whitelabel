@@ -60,13 +60,15 @@ export class RestaurantsService {
   }
 
   openSpw(restaurant: any, cat: string): void {
+    const prodUrl = this.getProductionUrl(restaurant.restaurant_spw_url);
+    console.log(prodUrl);
     this.data.setRecentlyViewed(restaurant);
     this.ga.eventEmitter(
       'page_view_spw',
       cat,
       'open_spw', `spw/${restaurant.restaurant_name.replace(/\s/g , '-')}`,
       0);
-    window.open(restaurant.restaurant_spw_url, '_target');
+    window.open(prodUrl, '_target');
   }
 
   // SEARCH PARAMS
@@ -339,21 +341,28 @@ export class RestaurantsService {
     });
   }
 
-  // getUrl(url: string, isProduction = false): string {
-  //   // AWS S3 bucket domain
-  //   const aws = 's3.eu-west-2.amazonaws.com';
-  //   // If it's not an AWS ignore it
-  //   if (url.indexOf(aws) < 0) {
-  //     console.error(`${url} is not an AWS url`);
-  //     return url
-  //   }
-  //   // remove the AWS domain
-  //   let apptiserUrl = url.replace(`${aws}/`, '').trim();
-  //   // For production urls we don't need the index.html ref.
-  //   if (isProduction) {
-  //     return apptiserUrl.replace(`index.html`, '');
-  //   }
-  //   return apptiserUrl;
-  // }
+  getProductionUrl(url: string, isProduction = false): string {
+    // Cache buster
+    const time = new Date().getTime();
+
+    // AWS S3 bucket domain
+    const aws = 's3.eu-west-2.amazonaws.com';
+
+    // If it's not an AWS domain, abort
+    if (url.indexOf(aws) < 0) {
+      console.error(`${url} is not an AWS url`);
+      return url
+    }
+
+    // Remove the AWS domain
+    let apptiserUrl = url.replace(`${aws}/`, '').trim();
+
+    // For production urls we don't need the index.html ref or cache buster
+    if (isProduction) {
+      return apptiserUrl.replace(`index.html`, '');
+    }
+    // Add cache busting parameter
+    return `${apptiserUrl}?cache=${time}`;
+  }
 }
 

@@ -40,8 +40,6 @@ export class AppConfig {
   public readonly geoApiKey = environment.GOOGLE_MAP_API_KEY;
   public testMode = environment.testMode;
 
-  public readonly spwMarkerDomain = environment.SPW_DOMAIN_PATH;
-
   /** Only show 'near me' search option if
    * user is within maxDistance km range
    */
