@@ -88,4 +88,22 @@ export class ApiService {
         channel_access_api_key: this.config.channel.apiKey
       });
   }
+
+  getSearchRestaurants(searchText: string): any {
+    return this.http.post(this.apiUrl + '/channel/restaurants/search',
+      {
+        channel_access_code: this.config.channel.accessCode,
+        channel_access_api_key: this.config.channel.apiKey,
+        searchText
+      });
+  }
+
+  getQuickSearchRestaurants(searchText: string): any {
+    return this.http.post(this.apiUrl + '/channel/restaurants/quicksearch',
+      {
+        channel_access_code: this.config.channel.accessCode,
+        channel_access_api_key: this.config.channel.apiKey,
+        searchText
+      });
+  }
 }

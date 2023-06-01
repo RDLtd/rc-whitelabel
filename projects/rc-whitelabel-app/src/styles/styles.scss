@@ -304,11 +304,13 @@ rd-footer {
   height: 100vh;
   overflow-y: hidden;
   @include mq(med) {
-    height: auto;
+    height: 62vh;
     transform: translateY(15vh);
   }
 }
-.rd-search-form-container { }
+.rd-search-form-container {
+  max-height: calc(62vh - 5rem);
+}
 .rd-search-content { }
 .rd-search-autofill-container { }
 .rd-search-input { width: 100%; }
