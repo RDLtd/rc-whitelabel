@@ -351,18 +351,18 @@ export class RestaurantsService {
     // If it's not an AWS domain, abort
     if (url.indexOf(aws) < 0) {
       console.error(`${url} is not an AWS url`);
-      return url
+      return url;
     }
 
     // Remove the AWS domain
-    let apptiserUrl = url.replace(`${aws}/`, '').trim();
+    const productionUrl = url.replace(`${aws}/`, '').trim();
 
     // For production urls we don't need the index.html ref or cache buster
     if (isProduction) {
-      return apptiserUrl.replace(`index.html`, '');
+      return productionUrl.replace(`index.html`, '');
     }
     // Add cache busting parameter
-    return `${apptiserUrl}?cache=${time}`;
+    return `${productionUrl}?cache=${time}`;
   }
 }
 
