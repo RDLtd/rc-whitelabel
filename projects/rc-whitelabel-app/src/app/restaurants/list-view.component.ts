@@ -80,7 +80,7 @@ export class ListViewComponent implements OnInit {
           lat: Number(latLng[0]).toFixed(6),
           lng: Number(latLng[1]).toFixed(6),
           label: queryParams.label
-        }
+        };
         // Update search params
         this.restService.searchParams = {
           lat: this.restService.geoLatitude,
@@ -88,7 +88,7 @@ export class ListViewComponent implements OnInit {
           filter: this.searchFilter !== null ? 'cuisine' : null,
           filterText: this.searchFilter?.split(','),
           label: this.restService.geoLabel
-        }
+        };
       });
 
       // load summary for filter/sort options
@@ -112,7 +112,7 @@ export class ListViewComponent implements OnInit {
   // Todo: we need to store on the Cloudinary ids so that
   //  we an appropriately sized & formatted image
   getFormattedImage(url: string): string | boolean {
-    if(!url) {
+    if (!url) {
       console.log('ERROR: No image url provided');
       return false;
     }
