@@ -293,7 +293,7 @@ export class MapViewComponent implements OnInit {
     this.svgMarker = {
       path:
         'M11.9858571,34.9707603 C5.00209157,32.495753 0,25.8320271 0,18 C0,8.0588745 8.0588745,0 18,0 C27.9411255,0 36,8.0588745 36,18 C36,25.8320271 30.9979084,32.495753 24.0141429,34.9707603 C24.0096032,34.980475 24.0048892,34.9902215 24,35 C20,37 18,40.6666667 18,46 C18,40.6666667 16,37 12,35 C11.9951108,34.9902215 11.9903968,34.980475 11.9858571,34.9707603 Z',
-      fillColor: this.config.channel.brand?.clrPrimaryCta,
+      fillColor: this.config.channel.brand?.clrAccent,
       fillOpacity: 1,
       strokeWeight: 1,
       strokeColor: '#fff',
@@ -305,15 +305,18 @@ export class MapViewComponent implements OnInit {
     // Duplicate and edit to use as the 'active' icon
     this.svgMarkerOffer = Object.assign({}, this.svgMarker);
     this.svgMarkerOffer.fillOpacity = 1;
-    this.svgMarkerOffer.fillColor = this.config.channel.brand?.clrAccent;
+    this.svgMarkerOffer.scale = 1.1;
+    this.svgMarkerOffer.fillColor = this.config.channel.brand?.clrPrimaryCta;
+
     this.svgMarkerActive = Object.assign({}, this.svgMarker);
-    this.svgMarkerActive.scale = 1.5;
+    this.svgMarkerActive.scale = 2;
     this.svgMarkerActive.fillOpacity = 1;
     this.svgMarkerActive.fillColor = '#000';
     // Centre point
     this.svgMarkerCentre = Object.assign({}, this.svgMarker);
-    this.svgMarkerCentre.fillOpacity = 1;
-    this.svgMarkerCentre.fillColor = '#000';
+    this.svgMarkerCentre.fillOpacity = .75;
+    this.svgMarkerCentre.fillColor = 'red';
+    this.svgMarkerCentre.scale = .85;
     // initialise the map bounds
     this.bounds = new google.maps.LatLngBounds();
     // subscribe to restaurant results
@@ -380,7 +383,7 @@ export class MapViewComponent implements OnInit {
       options: {
         strokeColor: '#fff',
         label: {
-          text: '◎',
+          text: '▲',
           color: '#fff',
           fontSize: '18px'
         },
