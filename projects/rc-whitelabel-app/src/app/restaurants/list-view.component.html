@@ -35,7 +35,7 @@
     <div class="rd-restaurant-img">
       <img [src]="getFormattedImage(restaurant.image)" loading="lazy" [alt]="restaurant?.restaurant_name">
 <!--      <span class="img-credit">LIBRARY IMAGE</span>-->
-      <span *ngIf="restaurant?.offers.length" class="rd-promo-tag card">OFFERS AVAILABLE</span>
+      <span *ngIf="restaurant?.offers.length" class="rd-promo-tag card list" title="Offers available"></span>
     </div>
   </div>
 </div>
@@ -50,5 +50,3 @@
   [view]="'list'"
   [filterOn]="!!searchFilter">
 </rd-filter-btn>
-
-

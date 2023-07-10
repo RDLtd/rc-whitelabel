@@ -40,7 +40,7 @@ export class MapViewComponent implements OnInit {
   };
   mapOpacity = 0;
   svgMarker: any;
-  svgMarkerOffer: any
+  svgMarkerOffer: any;
   svgMarkerActive: any;
   svgMarkerCentre: any;
   markers!: any[];
@@ -125,6 +125,8 @@ export class MapViewComponent implements OnInit {
     this.restaurantBatch$ = this.restService.restaurants;
     this.showFilters$ = this.restService.showCuisineFilters;
 
+    console.log('R', this.restaurants$);
+
   }
 
   ngOnInit(): void {
@@ -133,18 +135,18 @@ export class MapViewComponent implements OnInit {
     this.loadMapsApi();
 
     // Check for route params & query params
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      if (params.get('latLng') === null) {
+    this.route.paramMap.subscribe((paramObj: ParamMap) => {
+      if (paramObj.get('latLng') === null) {
         // We may need to reset the restaurant results
         // if the user has already interacted with the site
         this.restService.resetRestaurantsSubject();
         this.restService.openSearchForm();
         return;
       }
-      this.latLng = params.get('latLng')?.split(',') ?? [];
-      this.searchFilter = params.get('filter') ?? null;
+      this.latLng = paramObj.get('latLng')?.split(',') ?? [];
+      this.searchFilter = paramObj.get('filter') ?? null;
 
-      this.route.queryParams.subscribe(params => {
+      this.route.queryParams.subscribe((params: any) => {
 
         // console.log(params);
 
@@ -153,7 +155,7 @@ export class MapViewComponent implements OnInit {
           lat: Number(this.latLng[0]).toFixed(6),
           lng: Number(this.latLng[1]).toFixed(6),
           label: params.label
-        }
+        };
 
         // Set maps object
         this.geoLatLngLiteral = {
@@ -168,7 +170,7 @@ export class MapViewComponent implements OnInit {
           filter: this.searchFilter !== null ? 'cuisine' : null,
           filterText: this.searchFilter?.split(','),
           label: this.restService.geoLabel
-        }
+        };
       });
 
       // Reset the offset
@@ -227,6 +229,7 @@ export class MapViewComponent implements OnInit {
       return;
     }
 
+
     // Otherwise, we'll slice of our existing array
     const batch = this.restaurants.slice(this.currentOffset, this.currentOffset + this.batchTotal);
 
@@ -259,11 +262,11 @@ export class MapViewComponent implements OnInit {
     // Filtered: only include cuisine name if there's
     // just 1 otherwise we run out of UI space
     if (!!this.restService.geoLabel && this.searchFilter?.split(',').length === 1) {
-      return `${this.searchFilter} Restaurants within ${this.boundary} km of ${this.restService.geoLabel}`
+      return `${this.searchFilter} Restaurants within ${this.boundary} km of ${this.restService.geoLabel}`;
     }
     // With location label
     if (!!this.restService.geoLabel) {
-      return `Restaurants within ${this.boundary} km of ${this.restService.geoLabel}`
+      return `Restaurants within ${this.boundary} km of ${this.restService.geoLabel}`;
     }
     // Just boundary
     return `Restaurants within ${this.boundary} km`;
@@ -290,7 +293,7 @@ export class MapViewComponent implements OnInit {
     this.svgMarker = {
       path:
         'M11.9858571,34.9707603 C5.00209157,32.495753 0,25.8320271 0,18 C0,8.0588745 8.0588745,0 18,0 C27.9411255,0 36,8.0588745 36,18 C36,25.8320271 30.9979084,32.495753 24.0141429,34.9707603 C24.0096032,34.980475 24.0048892,34.9902215 24,35 C20,37 18,40.6666667 18,46 C18,40.6666667 16,37 12,35 C11.9951108,34.9902215 11.9903968,34.980475 11.9858571,34.9707603 Z',
-      fillColor: this.config.channel.brand?.clrPrimaryCta,
+      fillColor: this.config.channel.brand?.clrAccent,
       fillOpacity: 1,
       strokeWeight: 1,
       strokeColor: '#fff',
@@ -302,15 +305,18 @@ export class MapViewComponent implements OnInit {
     // Duplicate and edit to use as the 'active' icon
     this.svgMarkerOffer = Object.assign({}, this.svgMarker);
     this.svgMarkerOffer.fillOpacity = 1;
-    this.svgMarkerOffer.fillColor = this.config.channel.brand?.clrAccent;
+    this.svgMarkerOffer.scale = 1.1;
+    this.svgMarkerOffer.fillColor = this.config.channel.brand?.clrPrimaryCta;
+
     this.svgMarkerActive = Object.assign({}, this.svgMarker);
-    this.svgMarkerActive.scale = 1.5;
+    this.svgMarkerActive.scale = 2;
     this.svgMarkerActive.fillOpacity = 1;
     this.svgMarkerActive.fillColor = '#000';
     // Centre point
     this.svgMarkerCentre = Object.assign({}, this.svgMarker);
-    this.svgMarkerCentre.fillOpacity = 1;
-    this.svgMarkerCentre.fillColor = '#000';
+    this.svgMarkerCentre.fillOpacity = .75;
+    this.svgMarkerCentre.fillColor = 'red';
+    this.svgMarkerCentre.scale = .85;
     // initialise the map bounds
     this.bounds = new google.maps.LatLngBounds();
     // subscribe to restaurant results
@@ -350,7 +356,7 @@ export class MapViewComponent implements OnInit {
           lat: r.restaurant_lat as number,
           lng: r.restaurant_lng as number
         },
-        //zIndex: i + 1,
+        // zIndex: i + 1,
         options: {
           icon: r.offers.length ? this.svgMarkerOffer : this.svgMarker,
           label: {
@@ -377,7 +383,7 @@ export class MapViewComponent implements OnInit {
       options: {
         strokeColor: '#fff',
         label: {
-          text: '◎',
+          text: '▲',
           color: '#fff',
           fontSize: '18px'
         },
@@ -413,9 +419,9 @@ export class MapViewComponent implements OnInit {
         cuisine: null,
         spw: null,
         offers: null
-      }
+      };
       this.infoWindow.open(marker);
-      return
+      return;
     }
     this.updateMarkerList(batchIndex);
     this.selectMapMarker(marker, this.restaurants[restaurantIndex]);
@@ -441,7 +447,7 @@ export class MapViewComponent implements OnInit {
   /**
    * Reference all marker elements and highlight
    * the currently selected option
-   * @param index
+   * @param index of marker
    */
   updateMarkerList(index: number): void {
     const currentMarkerList = document.querySelectorAll('.rd-map-list-item');
@@ -463,13 +469,13 @@ export class MapViewComponent implements OnInit {
     this.infoWindow.close();
     this.selectedMarker?.marker?.setOptions({
       zIndex: 1,
-      //icon: restaurant.offers.length? this.svgMarkerOffer : this.svgMarker
+      // icon: restaurant.offers.length? this.svgMarkerOffer : this.svgMarker
     });
     // Apply active icon and bring to front of any stack
     this.selectedMarker = marker;
     this.selectedMarker.marker?.setOptions({
       zIndex: 100,
-      //icon: this.svgMarkerActive
+      // icon: this.svgMarkerActive
     });
     // @ts-ignore
     this.map.panTo(marker.getPosition());
@@ -495,7 +501,7 @@ export class MapViewComponent implements OnInit {
   /**
    * Query the google maps distance api for both
    * driving & walking distance/times
-   * @param latLng
+   * @param latLng geo position tocalculate
    */
   getDistanceData(latLng: any): void {
     this.showDistanceData = true;
