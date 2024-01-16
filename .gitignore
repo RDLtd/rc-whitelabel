@@ -47,4 +47,3 @@ testem.log
 .DS_Store
 Thumbs.db
 /partner-assets/
-projects/rc-whitelabel-app/src/environments/*
