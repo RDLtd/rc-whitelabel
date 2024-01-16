@@ -1,6 +1,6 @@
 {
   "name": "rc-whitelabel",
-  "version": "16.2.0",
+  "version": "17.0.0",
   "browserslist": [
     "defaults"
   ],
@@ -19,38 +19,38 @@
     "heroku-postbuild": "ng build --configuration production --aot"
   },
   "engines": {
-    "node": "18.12.1",
-    "npm": "8.19.2"
+    "node": "20.11.0",
+    "npm": "10.2.4"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^16.2.12",
-    "@angular/cdk": "^16.2.13",
-    "@angular/common": "^16.2.12",
-    "@angular/compiler": "^16.2.12",
-    "@angular/core": "^16.2.12",
-    "@angular/forms": "^16.2.12",
-    "@angular/google-maps": "^16.2.13",
-    "@angular/material": "^16.2.13",
-    "@angular/platform-browser": "^16.2.12",
-    "@angular/platform-browser-dynamic": "^16.2.12",
-    "@angular/router": "^16.2.12",
+    "@angular/animations": "^17.0.9",
+    "@angular/cdk": "^17.0.5",
+    "@angular/common": "^17.0.9",
+    "@angular/compiler": "^17.0.9",
+    "@angular/core": "^17.0.9",
+    "@angular/forms": "^17.0.9",
+    "@angular/google-maps": "^17.0.5",
+    "@angular/material": "^17.0.5",
+    "@angular/platform-browser": "^17.0.9",
+    "@angular/platform-browser-dynamic": "^17.0.9",
+    "@angular/router": "^17.0.9",
     "compression": "^1.7.4",
     "express": "^4.18.2",
     "path": "^0.12.7",
     "rxjs": "~6.5.5",
     "tslib": "^2.6.2",
-    "zone.js": "^0.13.3"
+    "zone.js": "^0.14.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.2.11",
-    "@angular/cli": "^16.2.11",
-    "@angular/compiler-cli": "^16.2.12",
-    "@types/node": "^16.18.71",
+    "@angular-devkit/build-angular": "^17.0.10",
+    "@angular/cli": "^17.0.10",
+    "@angular/compiler-cli": "^17.0.9",
+    "@types/node": "^20.11.4",
     "codelyzer": "^6.0.2",
     "protractor": "~7.0.0",
     "ts-node": "~10.9.1",
     "tslint": "~6.1.0",
-    "typescript": "~4.9.5"
+    "typescript": "~5.2.2"
   }
 }
