@@ -1,5 +1,5 @@
 
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule, inject, provideAppInitializer } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,12 +36,10 @@ export function appStartUpFactory(data: DataService, config: AppConfig): any {
         CoreModule], providers: [
         ApiService,
         AppConfig,
-        {
-            provide: APP_INITIALIZER,
-            useFactory: appStartUpFactory,
-            deps: [DataService, AppConfig],
-            multi: true
-        },
+        provideAppInitializer(() => {
+        const initializerFn = (appStartUpFactory)(inject(DataService), inject(AppConfig));
+        return initializerFn();
+      }),
         provideHttpClient(withInterceptorsFromDi())
     ] })
 export class AppModule { }

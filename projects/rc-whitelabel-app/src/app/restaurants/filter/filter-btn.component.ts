@@ -8,8 +8,9 @@ import { LocationService } from '../../core/location.service';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'rd-filter-btn',
-  templateUrl: './filter-btn.component.html'
+    selector: 'rd-filter-btn',
+    templateUrl: './filter-btn.component.html',
+    standalone: false
 })
 export class FilterBtnComponent implements OnInit {
 

@@ -27,9 +27,10 @@ interface Landmark {
 }
 
 @Component({
-  selector: 'rd-search-form',
-  templateUrl: './search-form.component.html',
-  animations: [fadeIn, fadeInSlideUp]
+    selector: 'rd-search-form',
+    templateUrl: './search-form.component.html',
+    animations: [fadeIn, fadeInSlideUp],
+    standalone: false
 })
 
 export class SearchFormComponent implements OnInit {

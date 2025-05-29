@@ -3,9 +3,10 @@ import { AppConfig } from '../../../app.config';
 import { fadeIn } from '../../../shared/animations';
 
 @Component({
-  selector: 'rd-main-layout',
-  templateUrl: './main-layout.component.html',
-  animations: [fadeIn]
+    selector: 'rd-main-layout',
+    templateUrl: './main-layout.component.html',
+    animations: [fadeIn],
+    standalone: false
 })
 export class MainLayoutComponent implements OnInit {
   scrolling = false;
