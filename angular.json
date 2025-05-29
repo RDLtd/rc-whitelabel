@@ -18,12 +18,15 @@
       "prefix": "rd",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/rc-whitelabel-app",
+            "outputPath": {
+              "base": "dist/rc-whitelabel-app"
+            },
             "index": "projects/rc-whitelabel-app/src/index.html",
-            "main": "projects/rc-whitelabel-app/src/main.ts",
-            "polyfills": "projects/rc-whitelabel-app/src/polyfills.ts",
+            "polyfills": [
+              "projects/rc-whitelabel-app/src/polyfills.ts"
+            ],
             "tsConfig": "projects/rc-whitelabel-app/tsconfig.app.json",
             "assets": [
               "projects/rc-whitelabel-app/src/assets",
@@ -40,12 +43,11 @@
               "projects/rc-whitelabel-app/src/styles/styles.scss"
             ],
             "scripts": [],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "browser": "projects/rc-whitelabel-app/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -60,8 +62,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -87,8 +87,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
