@@ -1,8 +1,4 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "cli": {
-    "analytics": false
-  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -122,35 +118,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "buildTarget": "rc-whitelabel-app:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/rc-whitelabel-app/src/test.ts",
-            "polyfills": "projects/rc-whitelabel-app/src/polyfills.ts",
-            "tsConfig": "projects/rc-whitelabel-app/tsconfig.spec.json",
-            "karmaConfig": "projects/rc-whitelabel-app/karma.conf.js",
-            "assets": [
-              "projects/rc-whitelabel-app/src/favicon.ico",
-              "projects/rc-whitelabel-app/src/assets"
-            ],
-            "styles": [
-              "projects/rc-whitelabel-app/src/styles.scss"
-            ],
-            "scripts": []
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "projects/rc-whitelabel-app/e2e/protractor.conf.js",
-            "devServerTarget": "rc-whitelabel-app:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "rc-whitelabel-app:serve:production"
-            }
           }
         }
       }
