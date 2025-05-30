@@ -21,7 +21,8 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
-              "base": "dist/rc-whitelabel-app"
+              "base": "./dist",
+              "browser": ""
             },
             "index": "projects/rc-whitelabel-app/src/index.html",
             "polyfills": [
@@ -46,7 +47,8 @@
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "browser": "projects/rc-whitelabel-app/src/main.ts"
           },
           "configurations": {
             "production": {
