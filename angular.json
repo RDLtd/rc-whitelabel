@@ -46,8 +46,7 @@
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true,
-            "browser": "projects/rc-whitelabel-app/src/main.ts"
+            "namedChunks": true
           },
           "configurations": {
             "production": {
