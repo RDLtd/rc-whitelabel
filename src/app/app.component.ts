@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        gtag('config', 'G-LB1KHS83QH', { 'page_path': event.urlAfterRedirects });
+        gtag('config', 'G-LB1KHS83QH', { page_path: event.urlAfterRedirects });
         this.activatedRoute.queryParamMap
           .subscribe((data: any) => {
             const params = data.params;
