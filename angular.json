@@ -9,49 +9,49 @@
           "style": "scss"
         }
       },
-      "root": "projects/rc-whitelabel-app",
-      "sourceRoot": "projects/rc-whitelabel-app/src",
+      "root": "",
+      "sourceRoot": "src",
       "prefix": "rd",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
-              "base": "dist/rc-whitelabel-app",
+              "base": "dist",
               "browser": ""
             },
-            "index": "projects/rc-whitelabel-app/src/index.html",
+            "index": "src/index.html",
             "polyfills": [
-              "projects/rc-whitelabel-app/src/polyfills.ts"
+              "src/polyfills.ts"
             ],
-            "tsConfig": "projects/rc-whitelabel-app/tsconfig.app.json",
+            "tsConfig": "tsconfig.app.json",
             "assets": [
-              "projects/rc-whitelabel-app/src/assets",
-              "projects/rc-whitelabel-app/src/favicon.ico",
-              "projects/rc-whitelabel-app/src/favicon.svg",
-              "projects/rc-whitelabel-app/src/favicon-16x16.png",
-              "projects/rc-whitelabel-app/src/favicon-32x32.png",
-              "projects/rc-whitelabel-app/src/apple-touch-icon.png",
-              "projects/rc-whitelabel-app/src/android-chrome-512x512.png",
-              "projects/rc-whitelabel-app/src/android-chrome-192x192.png",
-              "projects/rc-whitelabel-app/src/site.webmanifest"
+              "src/assets",
+              "src/favicon.ico",
+              "src/favicon.svg",
+              "src/favicon-16x16.png",
+              "src/favicon-32x32.png",
+              "src/apple-touch-icon.png",
+              "src/android-chrome-512x512.png",
+              "src/android-chrome-192x192.png",
+              "src/site.webmanifest"
             ],
             "styles": [
-              "projects/rc-whitelabel-app/src/styles/styles.scss"
+              "src/styles/styles.scss"
             ],
             "scripts": [],
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
-            "browser": "projects/rc-whitelabel-app/src/main.ts"
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "projects/rc-whitelabel-app/src/environments/environment.ts",
-                  "with": "projects/rc-whitelabel-app/src/environments/environment.prod.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -75,8 +75,8 @@
             "staging": {
               "fileReplacements": [
                 {
-                  "replace": "projects/rc-whitelabel-app/src/environments/environment.ts",
-                  "with": "projects/rc-whitelabel-app/src/environments/environment.staging.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
                 }
               ],
               "optimization": true,
