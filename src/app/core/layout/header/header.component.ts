@@ -35,7 +35,7 @@ export class HeaderComponent implements OnInit {
     this.router.events
       .subscribe(
         (event: NavigationEvent) => {
-          if(event instanceof NavigationEnd) {
+          if (event instanceof NavigationEnd) {
             const url = this.router.url;
             this.isDeepLink = url !== this.defaultRoute;
             this.isMapView = event.url.indexOf('map') > 0;
@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openSearchForm(): void {
-    this.restService.openSearchForm()
+    this.restService.openSearchForm();
   }
 
   /**
@@ -65,7 +65,7 @@ export class HeaderComponent implements OnInit {
    */
   toggleView(view: string): void {
     // Ignore the query params and split the url into its parts
-    let path = this.router.url.split('?')[0].split('/');
+    const path = this.router.url.split('?')[0].split('/');
     // Replace the view element
     path[2] = view;
     this.restService.resetRestaurantsSubject();
@@ -75,7 +75,7 @@ export class HeaderComponent implements OnInit {
   }
   reset(): void {
     console.log(this.router.url);
-    if(this.router.url === '/restaurants'){ return; }
+    if (this.router.url === '/restaurants'){ return; }
     this.restService.resetAll();
     this.router.navigateByUrl('/restaurants').catch((error => console.log(error)));
   }
