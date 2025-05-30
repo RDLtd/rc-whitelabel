@@ -1,11 +1,11 @@
 
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule, inject, provideAppInitializer } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { ApiService } from './core/api.service';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppConfig } from './app.config';
 import { DataService } from './core/data.service';
 
@@ -29,25 +29,17 @@ export function appStartUpFactory(data: DataService, config: AppConfig): any {
   };
 }
 
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    AppRoutingModule,
-    CoreModule,
-    HttpClientModule
-  ],
-  providers: [
-    ApiService,
-    AppConfig,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: appStartUpFactory,
-      deps: [DataService, AppConfig],
-      multi: true
-    }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent
+    ],
+    bootstrap: [AppComponent], imports: [AppRoutingModule,
+        CoreModule], providers: [
+        ApiService,
+        AppConfig,
+        provideAppInitializer(() => {
+        const initializerFn = (appStartUpFactory)(inject(DataService), inject(AppConfig));
+        return initializerFn();
+      }),
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }

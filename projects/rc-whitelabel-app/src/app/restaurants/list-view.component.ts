@@ -10,9 +10,10 @@ import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'rd-list-view',
-  templateUrl: './list-view.component.html',
-  animations: [fadeInSlideUp, fadeInStagger]
+    selector: 'rd-list-view',
+    templateUrl: './list-view.component.html',
+    animations: [fadeInSlideUp, fadeInStagger],
+    standalone: false
 })
 export class ListViewComponent implements OnInit {
 

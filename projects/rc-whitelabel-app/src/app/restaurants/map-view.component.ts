@@ -12,9 +12,10 @@ import { DataService } from '../core/data.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'rd-restaurants-map',
-  templateUrl: './map-view.component.html',
-  animations: [fadeInSlideUp, fadeInStaggerIn, fadeIn]
+    selector: 'rd-restaurants-map',
+    templateUrl: './map-view.component.html',
+    animations: [fadeInSlideUp, fadeInStaggerIn, fadeIn],
+    standalone: false
 })
 
 export class MapViewComponent implements OnInit {

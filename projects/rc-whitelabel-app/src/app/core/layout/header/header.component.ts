@@ -5,9 +5,10 @@ import { fadeIn } from '../../../shared/animations';
 import { RestaurantsService } from '../../../restaurants/restaurants.service';
 
 @Component({
-  selector: 'rd-header',
-  templateUrl: './header.component.html',
-  animations: [fadeIn]
+    selector: 'rd-header',
+    templateUrl: './header.component.html',
+    animations: [fadeIn],
+    standalone: false
 })
 
 export class HeaderComponent implements OnInit {

@@ -4,8 +4,9 @@ import { AppConfig } from '../../app.config';
 import {MatSelectionList} from '@angular/material/list';
 
 @Component({
-  selector: 'rd-filter-options-dialog',
-  templateUrl: './filter-options-dialog.component.html'
+    selector: 'rd-filter-options-dialog',
+    templateUrl: './filter-options-dialog.component.html',
+    standalone: false
 })
 export class FilterOptionsDialogComponent implements AfterViewInit {
 

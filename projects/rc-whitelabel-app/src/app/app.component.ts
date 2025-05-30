@@ -9,8 +9,9 @@ import { Meta } from '@angular/platform-browser';
 declare const gtag: Function;
 
 @Component({
-  selector: 'rd-root',
-  templateUrl: './app.component.html'
+    selector: 'rd-root',
+    templateUrl: './app.component.html',
+    standalone: false
 })
 
 export class AppComponent implements OnInit {
