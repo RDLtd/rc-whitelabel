@@ -65,7 +65,7 @@ export class FilterBtnComponent implements OnInit {
     dialogRef.afterClosed().subscribe((selected: any) => {
 
       // Guard clause
-      if (selected === null || selected === undefined || selected.length < 1) { return;}
+      if (selected === null || selected === undefined || selected.length < 1) { return; }
 
       // Extract the filter options that have been selected
       const cuisineFilters: string[] = [];
@@ -88,7 +88,7 @@ export class FilterBtnComponent implements OnInit {
       filter: null,
       filterText: null,
       label: this.geoTarget.label
-    }
+    };
     this.router.navigate(
       ['/restaurants', this.view, `${this.geoTarget.lat},${this.geoTarget.lng}`],
       { queryParams: { label: this.geoTarget.label }}).catch((error => console.log(error)));

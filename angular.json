@@ -2,56 +2,53 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rc-whitelabel-app": {
+    "rdl-whitelabel": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "projects/rc-whitelabel-app",
-      "sourceRoot": "projects/rc-whitelabel-app/src",
+      "root": "",
+      "sourceRoot": "src",
       "prefix": "rd",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
-              "base": "dist/rc-whitelabel-app",
+              "base": "dist",
               "browser": ""
             },
-            "index": "projects/rc-whitelabel-app/src/index.html",
+            "index": "src/index.html",
             "polyfills": [
-              "projects/rc-whitelabel-app/src/polyfills.ts"
+              "src/polyfills.ts"
             ],
-            "tsConfig": "projects/rc-whitelabel-app/tsconfig.app.json",
+            "tsConfig": "tsconfig.app.json",
             "assets": [
-              "projects/rc-whitelabel-app/src/assets",
-              "projects/rc-whitelabel-app/src/favicon.ico",
-              "projects/rc-whitelabel-app/src/favicon.svg",
-              "projects/rc-whitelabel-app/src/favicon-16x16.png",
-              "projects/rc-whitelabel-app/src/favicon-32x32.png",
-              "projects/rc-whitelabel-app/src/apple-touch-icon.png",
-              "projects/rc-whitelabel-app/src/android-chrome-512x512.png",
-              "projects/rc-whitelabel-app/src/android-chrome-192x192.png",
-              "projects/rc-whitelabel-app/src/site.webmanifest"
+              {
+                "glob": "*.png|*.svg|*.ico",
+                "input": "src",
+                "output": ""
+              },
+              "src/site.webmanifest"
             ],
             "styles": [
-              "projects/rc-whitelabel-app/src/styles/styles.scss"
+              "src/styles/styles.scss"
             ],
             "scripts": [],
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
-            "browser": "projects/rc-whitelabel-app/src/main.ts"
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "projects/rc-whitelabel-app/src/environments/environment.ts",
-                  "with": "projects/rc-whitelabel-app/src/environments/environment.prod.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -75,8 +72,8 @@
             "staging": {
               "fileReplacements": [
                 {
-                  "replace": "projects/rc-whitelabel-app/src/environments/environment.ts",
-                  "with": "projects/rc-whitelabel-app/src/environments/environment.staging.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
                 }
               ],
               "optimization": true,
@@ -106,18 +103,18 @@
             "ssl": true,
             "sslCert": "tls/localhost-cert.pem",
             "sslKey": "tls/localhost-key.pem",
-            "buildTarget": "rc-whitelabel-app:build"
+            "buildTarget": "rdl-whitelabel:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "rc-whitelabel-app:build:production"
+              "buildTarget": "rdl-whitelabel:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "rc-whitelabel-app:build"
+            "buildTarget": "rdl-whitelabel:build"
           }
         }
       }

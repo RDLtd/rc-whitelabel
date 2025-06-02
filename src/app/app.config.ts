@@ -24,7 +24,7 @@ export interface Channel {
   centre: {
     lat: number,
     lng: number
-  }
+  };
   boundary: number;
   language?: string;
   brand: Brand;
