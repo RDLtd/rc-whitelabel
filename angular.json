@@ -2,7 +2,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rc-whitelabel-app": {
+    "rdl-whitelabel": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -103,18 +103,18 @@
             "ssl": true,
             "sslCert": "tls/localhost-cert.pem",
             "sslKey": "tls/localhost-key.pem",
-            "buildTarget": "rc-whitelabel-app:build"
+            "buildTarget": "rdl-whitelabel:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "rc-whitelabel-app:build:production"
+              "buildTarget": "rdl-whitelabel:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "rc-whitelabel-app:build"
+            "buildTarget": "rdl-whitelabel:build"
           }
         }
       }
